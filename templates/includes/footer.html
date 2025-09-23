@@ -1,0 +1,173 @@
+{% load static %}
+
+<div class="footer-main">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-sm-6">
+                <div class="footer-section">
+                    <h4 class="footer-title">BEAUTY SHOP</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'core:contacts' %}">Контакти</a></li>
+                        <li><a href="{% url 'core:catalog' %}">Каталог товарів</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="col-md-3 col-sm-6">
+                <div class="footer-section">
+                    <h4 class="footer-title">ІНФОРМАЦІЯ</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'core:about' %}">Про нас</a></li>
+                        <li><a href="{% url 'core:delivery' %}">Доставка та оплата</a></li>
+                        <li><a href="{% url 'core:returns' %}">Повернення та обмін</a></li>
+                        <li><a href="#">Угода користувача</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="col-md-3 col-sm-6">
+                <div class="footer-section">
+                    <h4 class="footer-title">КЛІЄНТУ</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Особистий кабінет</a></li>
+                        <li><a href="#">Обрані товари</a></li>
+                        <li><a href="#">Акції</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="col-md-3 col-sm-6">
+                <div class="footer-section">
+                    <h4 class="footer-title">КОНТАКТИ</h4>
+                    <div class="footer-contact">
+                        <p><strong>{{ site_phone }}</strong></p>
+                        <p>{{ site_email }}</p>
+                        <div class="footer-schedule">
+                            <p>Пн-Пт 09:00-18:00</p>
+                            <p>Сб 10:00-16:00</p>
+                            <p>Нд 10:00-15:00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer-bottom">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="copyright">
+                    © Всі права захищені BEAUTY SHOP, 2002-2024
+                </p>
+            </div>
+            <div class="col-md-6">
+                <div class="footer-payment">
+                    <p class="footer-dev">Розробка сайту PrometeyLabs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.footer-main {
+    background: var(--neutral-dark);
+    color: var(--white);
+    padding: var(--spacing-xxl) 0 var(--spacing-xl);
+}
+
+.footer-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.footer-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-lg);
+    color: var(--white);
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: var(--spacing-sm);
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color var(--transition-fast);
+}
+
+.footer-links a:hover {
+    color: var(--accent-gold);
+}
+
+.footer-contact p {
+    margin-bottom: var(--spacing-xs);
+    font-size: 0.875rem;
+}
+
+.footer-contact strong {
+    color: var(--white);
+    font-size: 1rem;
+}
+
+.footer-schedule {
+    margin-top: var(--spacing-md);
+}
+
+.footer-schedule p {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 2px;
+}
+
+.footer-bottom {
+    background: rgba(0, 0, 0, 0.2);
+    padding: var(--spacing-lg) 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.copyright {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+
+.footer-payment {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--spacing-md);
+}
+
+.payment-icon {
+    height: 24px;
+    width: auto;
+}
+
+.footer-dev {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+}
+
+@media (max-width: 767.98px) {
+    .footer-payment {
+        justify-content: flex-start;
+        margin-top: var(--spacing-md);
+    }
+    
+    .footer-main {
+        padding: var(--spacing-xl) 0;
+    }
+}
+</style>

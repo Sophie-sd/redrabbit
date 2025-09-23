@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Каталог товарів - Beauty Shop{% endblock %}
+{% block description %}Каталог професійної косметики Beauty Shop. Широкий вибір товарів для салонів краси та майстрів.{% endblock %}
+
+{% block content %}
+<section class="catalog-section section-padding">
+    <div class="container">
+        
+        <div class="section-header text-center">
+            <h1 class="section-title">Каталог</h1>
+        </div>
+        
+        <div class="categories-grid grid grid-cols-xs-2 grid-cols-sm-3 grid-cols-md-4 grid-cols-lg-6 gap-4">
+            <!-- Заглушки для категорій -->
+            <div class="category-card card fade-in">
+                <a href="#" class="category-link">
+                    <div class="category-image">
+                        <div class="category-placeholder">
+                            <span class="category-emoji">💅</span>
+                        </div>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-name">Нігті</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="category-card card fade-in">
+                <a href="#" class="category-link">
+                    <div class="category-image">
+                        <div class="category-placeholder">
+                            <span class="category-emoji">💇</span>
+                        </div>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-name">Волосся</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="category-card card fade-in">
+                <a href="#" class="category-link">
+                    <div class="category-image">
+                        <div class="category-placeholder">
+                            <span class="category-emoji">👁️</span>
+                        </div>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-name">Брови та вії</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="category-card card fade-in">
+                <a href="#" class="category-link">
+                    <div class="category-image">
+                        <div class="category-placeholder">
+                            <span class="category-emoji">✨</span>
+                        </div>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-name">Депіляція</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="category-card card fade-in">
+                <a href="#" class="category-link">
+                    <div class="category-image">
+                        <div class="category-placeholder">
+                            <span class="category-emoji">💄</span>
+                        </div>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-name">Косметика</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="category-card card fade-in">
+                <a href="#" class="category-link">
+                    <div class="category-image">
+                        <div class="category-placeholder">
+                            <span class="category-emoji">💋</span>
+                        </div>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-name">Макіяж</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="category-card card fade-in">
+                <a href="#" class="category-link">
+                    <div class="category-image">
+                        <div class="category-placeholder">
+                            <span class="category-emoji">🧼</span>
+                        </div>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-name">Одноразова продукція</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="category-card card fade-in">
+                <a href="#" class="category-link">
+                    <div class="category-image">
+                        <div class="category-placeholder">
+                            <span class="category-emoji">🧴</span>
+                        </div>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-name">Дезінфекція та стерилізація</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="category-card card fade-in">
+                <a href="#" class="category-link">
+                    <div class="category-image">
+                        <div class="category-placeholder">
+                            <span class="category-emoji">🔬</span>
+                        </div>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-name">Косметологія</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="category-card card fade-in">
+                <a href="#" class="category-link">
+                    <div class="category-image">
+                        <div class="category-placeholder">
+                            <span class="category-emoji">🪑</span>
+                        </div>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-name">Меблі для салонів</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="category-card card fade-in">
+                <a href="#" class="category-link">
+                    <div class="category-image">
+                        <div class="category-placeholder">
+                            <span class="category-emoji">🏺</span>
+                        </div>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-name">Порожня тара</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="category-card card fade-in">
+                <a href="#" class="category-link">
+                    <div class="category-image">
+                        <div class="category-placeholder">
+                            <span class="category-emoji">🏷️</span>
+                        </div>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-name">Знижки</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- SEO контент -->
+        <div class="catalog-content mt-5">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="content-section">
+                        <h2>Професійні засоби для догляду та салонного використання</h2>
+                        <p>Інтернет-магазин Beautyshop-Ukraine пропонує широкий асортимент професійних засобів для догляду та салонного використання від провідних світових брендів. Наш асортимент включає все необхідне для догляду за волоссям, шкірою, нігтями та багато іншого.</p>
+                        
+                        <h3>Засоби для догляду за волоссям, нігтями, шкірою та салонне обладнання</h3>
+                        <p>Серед найпопулярніших засобів для догляду за волоссям – шампуні та маски. В асортименті нашого магазину ви знайдете відновлюючі маски для пошкодженого та фарбованого волосся, а також локони допоможуть повернути вашому волоссю здоровий вигляд і блиск.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

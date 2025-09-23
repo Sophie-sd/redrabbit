@@ -1,0 +1,404 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Beauty Shop - Професійна косметика для салонів краси{% endblock %}
+{% block description %}Інтернет-магазин Beauty Shop пропонує професійну косметику, інструменти та обладнання для салонів краси. Якісні товари, швидка доставка по Україні.{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section vh-100" aria-label="Головний банер">
+    <div class="hero-background">
+        <picture>
+            <source media="(max-width: 767px)" srcset="{% static 'images/hero-mobile.jpg' %}">
+            <source media="(max-width: 1199px)" srcset="{% static 'images/hero-tablet.jpg' %}">
+            <img src="{% static 'images/hero-desktop.jpg' %}" alt="Професійна косметика Beauty Shop" class="hero-image">
+        </picture>
+        <div class="hero-overlay"></div>
+    </div>
+    
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title slide-in-up">
+                НА БАЗІ <span class="text-primary">SILLER</span> ТА<br>
+                ФАЙЛИ <span class="text-secondary">STALEKS!</span>
+            </h1>
+            <p class="hero-subtitle slide-in-up">
+                <span class="highlight-text">АКЦІЙНІ ЦІНИ</span>
+            </p>
+            <div class="hero-actions slide-in-up">
+                <a href="{% url 'products:sale' %}" class="btn btn-primary btn-lg">
+                    Переглянути акції
+                </a>
+                <a href="{% url 'core:catalog' %}" class="btn btn-outline btn-lg">
+                    Каталог товарів
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator">
+        <div class="scroll-arrow pulse"></div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section section-padding" aria-label="Категорії товарів">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2 class="section-title">Категорії товарів</h2>
+            <p class="section-subtitle">
+                Професійні засоби для догляду та салонного використання
+            </p>
+        </div>
+        
+        <div class="categories-slider-container">
+            <div class="categories-slider">
+                {% for category in categories %}
+                    <div class="category-card card fade-in">
+                        <a href="{{ category.get_absolute_url }}" class="category-link">
+                            <div class="category-image">
+                                {% if category.image %}
+                                    <img src="{{ category.image.url }}" alt="{{ category.name }}" loading="lazy">
+                                {% else %}
+                                    <div class="category-placeholder">
+                                        <i class="icon-category" aria-hidden="true">💄</i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="category-content">
+                                <h3 class="category-name">{{ category.name }}</h3>
+                                {% if category.description %}
+                                    <p class="category-description">{{ category.description|truncatewords:10 }}</p>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="slider-btn slider-btn-prev" aria-label="Попередні категорії">‹</button>
+            <button class="slider-btn slider-btn-next" aria-label="Наступні категорії">›</button>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="featured-section section-padding bg-light" aria-label="Рекомендовані товари">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2 class="section-title">Рекомендовані товари</h2>
+            <p class="section-subtitle">
+                Найкращі товари для професійного використання
+            </p>
+        </div>
+        
+        <div class="products-slider-container">
+            <div class="products-slider">
+                {% for product in featured_products %}
+                    <div class="product-card card fade-in">
+                        <div class="product-image">
+                            <a href="{{ product.get_absolute_url }}">
+                                {% if product.images.first %}
+                                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" loading="lazy">
+                                {% else %}
+                                    <div class="product-placeholder">
+                                        <i class="icon-product" aria-hidden="true">📦</i>
+                                    </div>
+                                {% endif %}
+                                
+                                {% if product.is_sale %}
+                                    <span class="product-badge sale-badge">
+                                        -{{ product.get_discount_percentage }}%
+                                    </span>
+                                {% endif %}
+                                
+                                {% if product.is_featured %}
+                                    <span class="product-badge featured-badge">
+                                        ТОП
+                                    </span>
+                                {% endif %}
+                            </a>
+                        </div>
+                        
+                        <div class="product-content">
+                            <h3 class="product-name">
+                                <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                            </h3>
+                            
+                            <div class="product-price">
+                                {% if product.is_sale and product.sale_price %}
+                                    <span class="price-old">{{ product.retail_price }} ₴</span>
+                                    <span class="price-current">{{ product.sale_price }} ₴</span>
+                                {% else %}
+                                    <span class="price-current">
+                                        {% if user.is_authenticated and user.is_wholesale and product.wholesale_price %}
+                                            {{ product.wholesale_price }} ₴
+                                            <small class="price-type">опт</small>
+                                        {% else %}
+                                            {{ product.retail_price }} ₴
+                                        {% endif %}
+                                    </span>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="product-actions">
+                                <button class="btn btn-primary btn-sm add-to-cart" 
+                                        data-product-id="{{ product.id }}"
+                                        data-product-name="{{ product.name }}"
+                                        {% if not product.is_in_stock %}disabled{% endif %}>
+                                    {% if product.is_in_stock %}
+                                        Купити
+                                    {% else %}
+                                        Немає в наявності
+                                    {% endif %}
+                                </button>
+                                <button class="btn btn-outline btn-sm wishlist-btn" 
+                                        data-product-id="{{ product.id }}"
+                                        aria-label="Додати в список бажань">
+                                    <i class="icon-heart" aria-hidden="true">♡</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="slider-btn slider-btn-prev" aria-label="Попередні товари">‹</button>
+            <button class="slider-btn slider-btn-next" aria-label="Наступні товари">›</button>
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="{% url 'core:catalog' %}" class="btn btn-secondary btn-lg">
+                Переглянути всі товари
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Sale Products Section -->
+{% if sale_products %}
+<section class="sale-section section-padding" aria-label="Акційні товари">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2 class="section-title text-primary">Акційні товари</h2>
+            <p class="section-subtitle">
+                Встигніть придбати за вигідними цінами!
+            </p>
+        </div>
+        
+        <div class="products-grid mobile-grid">
+            {% for product in sale_products %}
+                <div class="product-card card fade-in">
+                    <div class="product-image">
+                        <a href="{{ product.get_absolute_url }}">
+                            {% if product.images.first %}
+                                <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" loading="lazy">
+                            {% else %}
+                                <div class="product-placeholder">
+                                    <i class="icon-product" aria-hidden="true"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <span class="product-badge sale-badge">
+                                -{{ product.get_discount_percentage }}%
+                            </span>
+                        </a>
+                    </div>
+                    
+                    <div class="product-content">
+                        <h3 class="product-name">
+                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                        </h3>
+                        
+                        <div class="product-price">
+                            <span class="price-old">{{ product.retail_price }} ₴</span>
+                            <span class="price-current">{{ product.sale_price }} ₴</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn btn-primary btn-sm add-to-cart" 
+                                    data-product-id="{{ product.id }}"
+                                    data-product-name="{{ product.name }}"
+                                    {% if not product.is_in_stock %}disabled{% endif %}>
+                                {% if product.is_in_stock %}
+                                    Купити
+                                {% else %}
+                                    Немає в наявності
+                                {% endif %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="{% url 'products:sale' %}" class="btn btn-primary btn-lg">
+                Всі акційні товари
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Features Section -->
+<section class="features-section section-padding bg-light" aria-label="Наші переваги">
+    <div class="container">
+        <div class="features-grid">
+            <div class="feature-item fade-in">
+                <div class="feature-icon">
+                    <i class="icon-truck" aria-hidden="true"></i>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Доставка по Україні</h3>
+                    <p class="feature-description">Відправка впродовж дня</p>
+                </div>
+            </div>
+            
+            <div class="feature-item fade-in">
+                <div class="feature-icon">
+                    <i class="icon-support" aria-hidden="true"></i>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Консультація та підбір</h3>
+                    <p class="feature-description">Максимальна сумісність</p>
+                </div>
+            </div>
+            
+            <div class="feature-item fade-in">
+                <div class="feature-icon">
+                    <i class="icon-wallet" aria-hidden="true"></i>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Зручна оплата</h3>
+                    <p class="feature-description">Онлайн або накладений платіж</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Banners -->
+<section class="cta-banners section-padding" aria-label="Спеціальні пропозиції">
+    <div class="container">
+        <div class="banners-grid">
+            <div class="cta-banner cta-banner-primary">
+                <div class="banner-content">
+                    <h3 class="banner-title">ОПТ</h3>
+                    <p class="banner-subtitle">ми готові до співпраці</p>
+                    <a href="{% url 'users:register' %}" class="btn btn-white">Детальніше</a>
+                </div>
+                <div class="banner-decoration">
+                    <div class="decoration-stars"></div>
+                </div>
+            </div>
+            
+            <div class="cta-banner cta-banner-secondary">
+                <div class="banner-content">
+                    <h3 class="banner-title">КУПУЙ ПРОДУКЦІЮ</h3>
+                    <h4 class="banner-subtitle text-primary">METT EXPERT</h4>
+                    <p class="banner-text">НА СУМУ ВІД 500 ГРН ТА ОТРИМУЙ ТОП L1+</p>
+                    <p class="banner-text">METT EXPERT У ПОДАРУНОК</p>
+                    <a href="{% url 'products:category' slug='mett-expert' %}" class="btn btn-primary">Обрати</a>
+                </div>
+                <div class="banner-image">
+                    <img src="{% static 'images/mett-expert-gift.jpg' %}" alt="Подарунок Mett Expert" loading="lazy">
+                </div>
+                <div class="banner-decoration">
+                    <div class="decoration-gift"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Reviews Section -->
+{% if latest_articles %}
+<section class="reviews-section section-padding bg-light" aria-label="Відгуки наших клієнтів">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2 class="section-title">Відгуки наших клієнтів</h2>
+        </div>
+        
+        <div class="reviews-grid">
+            <!-- Тут будуть відгуки клієнтів -->
+            <div class="review-item fade-in">
+                <div class="review-content">
+                    <div class="review-rating">
+                        <i class="icon-star filled" aria-hidden="true"></i>
+                        <i class="icon-star filled" aria-hidden="true"></i>
+                        <i class="icon-star filled" aria-hidden="true"></i>
+                        <i class="icon-star filled" aria-hidden="true"></i>
+                        <i class="icon-star filled" aria-hidden="true"></i>
+                    </div>
+                    <p class="review-text">
+                        "Трусики зі спанбонду, ціна і якість супер. Повністю задоволена."
+                    </p>
+                    <div class="review-author">
+                        <span class="author-name">Оля</span>
+                        <span class="review-date">2025-05-10 23:16:30</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Blog Section -->
+{% if latest_articles %}
+<section class="blog-section section-padding" aria-label="Останні статті блогу">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2 class="section-title">Статті</h2>
+            <p class="section-subtitle">
+                Корисні поради та новини індустрії краси
+            </p>
+        </div>
+        
+        <div class="articles-grid mobile-grid">
+            {% for article in latest_articles %}
+                <article class="article-card card fade-in">
+                    <div class="article-image">
+                        <a href="{{ article.get_absolute_url }}">
+                            {% if article.image %}
+                                <img src="{{ article.image.url }}" alt="{{ article.title }}" loading="lazy">
+                            {% else %}
+                                <div class="article-placeholder">
+                                    <i class="icon-article" aria-hidden="true"></i>
+                                </div>
+                            {% endif %}
+                        </a>
+                    </div>
+                    
+                    <div class="article-content">
+                        <h3 class="article-title">
+                            <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+                        </h3>
+                        
+                        {% if article.excerpt %}
+                            <p class="article-excerpt">{{ article.excerpt|truncatewords:15 }}</p>
+                        {% endif %}
+                        
+                        <div class="article-meta">
+                            <time datetime="{{ article.created_at|date:'c' }}">
+                                {{ article.created_at|date:'d.m.Y' }}
+                            </time>
+                        </div>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="{% url 'blog:list' %}" class="btn btn-secondary">
+                Всі статті
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/home.js' %}"></script>
+{% endblock %}

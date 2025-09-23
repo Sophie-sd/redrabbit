@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="uk" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO Meta Tags -->
+    <title>{% block title %}Beauty Shop - Професійна косметика для салонів краси{% endblock %}</title>
+    <meta name="description" content="{% block description %}Інтернет-магазин Beauty Shop пропонує професійну косметику, інструменти та обладнання для салонів краси. Якісні товари, швидка доставка по Україні.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}професійна косметика, салон краси, манікюр, педикюр, гель-лаки, косметологія{% endblock %}">
+    <meta name="author" content="Beauty Shop">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:title" content="{% block og_title %}{{ block.super }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ block.super }}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{% load static %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/og-image.jpg' %}{% endblock %}">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ request.build_absolute_uri }}">
+    <meta property="twitter:title" content="{% block twitter_title %}{{ block.super }}{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}{{ block.super }}{% endblock %}">
+    <meta property="twitter:image" content="{% block twitter_image %}{{ block.super }}{% endblock %}">
+    
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'images/site.webmanifest' %}">
+    
+    <!-- iOS Safari specific -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Beauty Shop">
+    
+    <!-- Android Chrome specific -->
+    <meta name="theme-color" content="#FF1493">
+    <meta name="msapplication-TileColor" content="#FF1493">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap"></noscript>
+    
+    <!-- CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sliders.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mobile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ios-safari.css' %}">
+    {% block extra_css %}{% endblock %}
+    
+    <!-- Structured Data -->
+    {% block structured_data %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Beauty Shop",
+        "url": "{{ request.scheme }}://{{ request.get_host }}",
+        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}",
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+380681752654",
+            "contactType": "Customer Service",
+            "availableLanguage": "Ukrainian"
+        },
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "вул. Соборна, 126д",
+            "addressLocality": "Монастирище",
+            "postalCode": "19101",
+            "addressCountry": "UA"
+        },
+        "sameAs": [
+            "https://www.facebook.com/beautyshop",
+            "https://www.instagram.com/beautyshop"
+        ]
+    }
+    </script>
+    {% endblock %}
+    
+    <!-- Modernizr для перевірки можливостей браузера -->
+    <script>
+        document.documentElement.classList.remove('no-js');
+        document.documentElement.classList.add('js');
+    </script>
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <!-- Skip link для accessibility -->
+    <a href="#main-content" class="skip-link">Перейти до основного вмісту</a>
+    
+    <!-- Header -->
+    <header class="header" role="banner">
+        {% include 'includes/header.html' %}
+    </header>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Мобільне меню">
+        {% include 'includes/mobile-menu.html' %}
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+    
+    <!-- Main Content -->
+    <main id="main-content" class="main-content" role="main">
+        {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} fade-in" role="alert">
+                        {{ message }}
+                        <button type="button" class="alert-close" aria-label="Закрити повідомлення">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        {% include 'includes/footer.html' %}
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="{% static 'js/utils.js' %}"></script>
+    <script src="{% static 'js/mobile-menu.js' %}"></script>
+    <script src="{% static 'js/sliders.js' %}"></script>
+    <script src="{% static 'js/cart.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+    
+    <!-- Service Worker для PWA (опціонально) -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('{% static "js/sw.js" %}')
+                    .then(function(registration) {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(function(registrationError) {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+    
+    <!-- Google Analytics (замініть на ваш ID) -->
+    {% if not debug %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+    {% endif %}
+</body>
+</html>

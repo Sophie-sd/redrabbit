@@ -1,0 +1,246 @@
+/**
+ * Beauty Shop - Слайдери
+ * Горизонтальні слайдери для категорій і товарів
+ */
+
+/* Загальні стилі для слайдерів */
+.categories-slider-container,
+.products-slider-container {
+    position: relative;
+    margin: 0 -15px;
+}
+
+.categories-slider,
+.products-slider {
+    display: flex;
+    gap: var(--spacing-lg);
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 0 var(--spacing-lg);
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+.categories-slider::-webkit-scrollbar,
+.products-slider::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Opera */
+}
+
+/* Картки в слайдері */
+.categories-slider .category-card,
+.products-slider .product-card {
+    flex: 0 0 auto;
+    width: 280px;
+    margin-bottom: 0;
+}
+
+.categories-slider .category-card {
+    width: 200px;
+}
+
+/* Кнопки слайдера */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--primary-pink);
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    z-index: 10;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slider-btn:hover {
+    background: var(--primary-pink);
+    color: var(--white);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.slider-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.slider-btn-prev {
+    left: -25px;
+}
+
+.slider-btn-next {
+    right: -25px;
+}
+
+/* Приховуємо кнопки на мобільних */
+@media (max-width: 767.98px) {
+    .slider-btn {
+        display: none;
+    }
+    
+    .categories-slider,
+    .products-slider {
+        padding: 0 var(--spacing-md);
+        gap: var(--spacing-md);
+    }
+    
+    .categories-slider .category-card,
+    .products-slider .product-card {
+        width: 250px;
+    }
+    
+    .categories-slider .category-card {
+        width: 180px;
+    }
+}
+
+/* Touch-friendly scrolling для мобільних */
+@media (max-width: 1024px) {
+    .categories-slider,
+    .products-slider {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .categories-slider .category-card,
+    .products-slider .product-card {
+        scroll-snap-align: start;
+    }
+}
+
+/* Анімації для smooth scroll */
+.categories-slider.scrolling,
+.products-slider.scrolling {
+    scroll-behavior: smooth;
+}
+
+/* Індикатори прокрутки (опціонально) */
+.slider-indicators {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-lg);
+}
+
+.slider-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gray-light);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.slider-indicator.active {
+    background: var(--primary-pink);
+}
+
+/* Стилі для збільшеного кошика */
+.cart-icon {
+    font-size: 28px;
+    line-height: 1;
+    display: inline-block;
+    transition: transform var(--transition-fast);
+}
+
+.cart-link:hover .cart-icon {
+    transform: scale(1.1);
+}
+
+.cart-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-sm);
+    text-decoration: none;
+}
+
+.cart-link .badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--primary-pink);
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 50%;
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+/* Мобільна адаптація для кошика */
+@media (max-width: 767.98px) {
+    .cart-icon {
+        font-size: 24px;
+    }
+    
+    .cart-link .badge {
+        font-size: 11px;
+        min-width: 18px;
+        height: 18px;
+        top: -3px;
+        right: -3px;
+    }
+}
+
+/* iOS Safari специфічні фікси */
+@supports (-webkit-touch-callout: none) {
+    .categories-slider,
+    .products-slider {
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+    }
+    
+    .categories-slider .category-card,
+    .products-slider .product-card {
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+    }
+}
+
+/* Smooth scroll для всіх браузерів */
+@media (prefers-reduced-motion: no-preference) {
+    .categories-slider,
+    .products-slider {
+        scroll-behavior: smooth;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .categories-slider,
+    .products-slider {
+        scroll-behavior: auto;
+    }
+    
+    .slider-btn {
+        transition: none;
+    }
+    
+    .cart-icon {
+        transition: none;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .slider-btn {
+        border: 2px solid currentColor;
+    }
+    
+    .cart-link .badge {
+        border: 2px solid var(--white);
+    }
+}

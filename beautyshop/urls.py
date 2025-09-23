@@ -1,0 +1,39 @@
+"""
+Beauty Shop URL Configuration
+"""
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+# Sitemaps будуть додані пізніше
+# from django.contrib.sitemaps.views import sitemap
+
+urlpatterns = [
+    # Admin
+    path('admin/', admin.site.urls),
+    
+    # CKEditor
+    path('ckeditor/', include('ckeditor_uploader.urls')),
+    
+    # Main apps
+    path('', include('apps.core.urls')),
+    path('products/', include('apps.products.urls')),
+    path('cart/', include('apps.cart.urls')),
+    path('orders/', include('apps.orders.urls')),
+    path('blog/', include('apps.blog.urls')),
+    path('users/', include('apps.users.urls')),
+    
+    # SEO (будуть додані пізніше)
+    # path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    # path('robots.txt', include('django_robots.urls')),
+]
+
+# Static and media files for development
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Admin customization
+admin.site.site_header = "Beauty Shop Адміністрування"
+admin.site.site_title = "Beauty Shop Admin"
+admin.site.index_title = "Панель управління"

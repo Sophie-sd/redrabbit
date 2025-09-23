@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Доставка та оплата - Beauty Shop{% endblock %}
+
+{% block content %}
+<section class="delivery-section section-padding">
+    <div class="container">
+        
+        <h1 class="section-title">Доставка та оплата</h1>
+        
+        <div class="info-section">
+            <h2>Інформація про доставку</h2>
+            
+            <div class="delivery-methods grid grid-cols-1 grid-cols-md-3 gap-4 mb-5">
+                <div class="delivery-method card">
+                    <div class="method-icon">
+                        <i class="icon-nova-poshta">📦</i>
+                    </div>
+                    <h3>Нова Пошта</h3>
+                    <p>Доставка за тарифами перевізника</p>
+                </div>
+                
+                <div class="delivery-method card">
+                    <div class="method-icon">
+                        <i class="icon-ukr-poshta">📮</i>
+                    </div>
+                    <h3>Укр Пошта</h3>
+                    <p>Доставка за тарифами перевізника</p>
+                </div>
+                
+                <div class="delivery-method card">
+                    <div class="method-icon">
+                        <i class="icon-pickup">🏪</i>
+                    </div>
+                    <h3>Самовивіз</h3>
+                    <p>Україна, Черкаська область,<br>м.Монастирище, вул. Соборна 126Д</p>
+                </div>
+            </div>
+            
+            <h2>Способи оплати</h2>
+            
+            <div class="payment-methods grid grid-cols-1 grid-cols-md-3 gap-4">
+                <div class="payment-method card">
+                    <div class="method-icon">
+                        <i class="icon-cash">💵</i>
+                    </div>
+                    <h3>Оплата при доставці</h3>
+                    <p>Комісія за переказ грошей оплачує отримувач</p>
+                </div>
+                
+                <div class="payment-method card">
+                    <div class="method-icon">
+                        <i class="icon-card">💳</i>
+                    </div>
+                    <h3>Онлайн-оплата Visa, Mastercard</h3>
+                    <p>Оплата товару на сайті за допомогою сервісу LiqPay</p>
+                </div>
+                
+                <div class="payment-method card">
+                    <div class="method-icon">
+                        <i class="icon-bank">🏦</i>
+                    </div>
+                    <h3>Оплата по реквізитам</h3>
+                    <p>Оплата по офіційним реквізитам компанії</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.delivery-method,
+.payment-method {
+    text-align: center;
+    padding: var(--spacing-xl);
+}
+
+.method-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-lg);
+    color: var(--primary-pink);
+}
+
+.delivery-method h3,
+.payment-method h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    color: var(--neutral-dark);
+}
+
+.delivery-method p,
+.payment-method p {
+    color: var(--gray-medium);
+    line-height: 1.5;
+}
+</style>
+{% endblock %}

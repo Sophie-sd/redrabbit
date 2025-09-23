@@ -1,0 +1,162 @@
+{% load static %}
+
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="container">
+        <div class="top-bar-content">
+            <div class="top-bar-left">
+                <div class="contact-info">
+                    <span class="phone">
+                        <i class="icon-phone" aria-hidden="true"></i>
+                        <a href="tel:+380681752654">{{ site_phone }}</a>
+                    </span>
+                    <span class="schedule">
+                        <i class="icon-clock" aria-hidden="true"></i>
+                        Пн-Пт 09:00-18:00, Сб 10:00-16:00, Нд 10:00-15:00
+                    </span>
+                </div>
+            </div>
+            <div class="top-bar-right">
+                <div class="user-actions">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'users:profile' %}" class="user-link">
+                            <i class="icon-user" aria-hidden="true"></i>
+                            {{ user.first_name|default:user.username }}
+                            {% if user.is_wholesale %}
+                                <span class="wholesale-badge">ОПТ</span>
+                            {% endif %}
+                        </a>
+                        <a href="{% url 'users:logout' %}" class="logout-link">Вихід</a>
+                    {% else %}
+                        <a href="{% url 'users:login' %}" class="login-link">
+                            <i class="icon-user" aria-hidden="true"></i>
+                            Вхід
+                        </a>
+                        <a href="{% url 'users:register' %}" class="register-link">
+                            Реєстрація (ОПТ)
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Header -->
+<div class="main-header">
+    <div class="container">
+        <div class="header-content">
+            <!-- Logo -->
+            <div class="logo">
+                <a href="{% url 'core:home' %}" class="logo-link" aria-label="Beauty Shop - Головна сторінка">
+                    <img src="{% static 'images/logo.svg' %}" alt="Beauty Shop" class="logo-img">
+                    <div class="logo-text">
+                        <span class="logo-main">BEAUTY SHOP</span>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Search -->
+            <div class="search-container">
+                <form action="{% url 'core:search' %}" method="get" class="search-form" role="search">
+                    <div class="search-input-group">
+                        <input 
+                            type="search" 
+                            name="q" 
+                            placeholder="Пошук товарів..." 
+                            class="search-input"
+                            value="{{ request.GET.q|default:'' }}"
+                            aria-label="Пошук товарів"
+                            autocomplete="off"
+                        >
+                        <button type="submit" class="search-btn" aria-label="Знайти">
+                            <i class="icon-search" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Cart & Mobile Menu -->
+            <div class="header-actions">
+                <!-- Wishlist (майбутня функція) -->
+                <a href="#" class="wishlist-link" aria-label="Список бажань">
+                    <i class="icon-heart" aria-hidden="true"></i>
+                    <span class="badge">0</span>
+                </a>
+                
+                <!-- Cart -->
+                <a href="{% url 'cart:detail' %}" class="cart-link" aria-label="Кошик покупок">
+                    <span class="cart-icon">🛒</span>
+                    {% if cart_total_items %}
+                        <span class="badge">{{ cart_total_items }}</span>
+                    {% endif %}
+                </a>
+                
+                <!-- Mobile Menu Button -->
+                <button class="hamburger" id="mobile-menu-btn" aria-label="Відкрити меню" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation -->
+<nav class="main-nav desktop-nav" role="navigation" aria-label="Головне меню">
+    <div class="container">
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a href="{% url 'core:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                    Головна
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="{% url 'core:catalog' %}" class="nav-link {% if request.resolver_match.url_name == 'catalog' %}active{% endif %}">
+                    Каталог
+                    <i class="icon-chevron-down" aria-hidden="true"></i>
+                </a>
+                <div class="dropdown-menu">
+                    <div class="dropdown-content">
+                        {% for category in main_categories %}
+                            <a href="{{ category.get_absolute_url }}" class="dropdown-link">
+                                {{ category.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'products:sale' %}" class="nav-link {% if request.resolver_match.url_name == 'sale' %}active{% endif %}">
+                    Акційні товари
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'core:delivery' %}" class="nav-link {% if request.resolver_match.url_name == 'delivery' %}active{% endif %}">
+                    Доставка та оплата
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'core:returns' %}" class="nav-link {% if request.resolver_match.url_name == 'returns' %}active{% endif %}">
+                    Повернення та обмін
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'blog:list' %}" class="nav-link {% if request.resolver_match.url_name == 'list' %}active{% endif %}">
+                    Блог
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'core:about' %}" class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">
+                    Про нас
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'core:contacts' %}" class="nav-link {% if request.resolver_match.url_name == 'contacts' %}active{% endif %}">
+                    Контакти
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

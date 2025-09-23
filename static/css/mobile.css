@@ -1,0 +1,430 @@
+/*
+Beauty Shop - Мобільна адаптація
+Особлива увага iOS Safari та Android Chrome
+Адаптивні брейкпоінти та мобільне меню
+*/
+
+/* Mobile-first approach - базові стилі для мобільних */
+
+/* Extra Small devices (портретні телефони, менше 576px) */
+@media (max-width: 575.98px) {
+  :root {
+    --spacing-xs: 0.125rem;
+    --spacing-sm: 0.25rem;
+    --spacing-md: 0.75rem;
+    --spacing-lg: 1rem;
+    --spacing-xl: 1.5rem;
+    --spacing-xxl: 2rem;
+  }
+  
+  html {
+    font-size: 14px;
+  }
+  
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+  h4 { font-size: 1.125rem; }
+  h5 { font-size: 1rem; }
+  h6 { font-size: 0.875rem; }
+  
+  .btn {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 1rem;
+    min-height: 44px; /* iOS рекомендована мінімальна висота для touch targets */
+    min-width: 44px;
+  }
+  
+  .btn-sm {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.875rem;
+    min-height: 38px;
+  }
+  
+  .btn-lg {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    font-size: 1.125rem;
+    min-height: 50px;
+  }
+  
+  .form-control {
+    padding: var(--spacing-md);
+    font-size: 16px; /* Запобігає зуму в iOS Safari */
+    min-height: 44px;
+  }
+  
+  .card {
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+  }
+  
+  .card-body {
+    padding: var(--spacing-md);
+  }
+}
+
+/* Small devices (ландшафтні телефони, 576px і більше) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  html {
+    font-size: 15px;
+  }
+  
+  .btn {
+    min-height: 42px;
+  }
+  
+  .form-control {
+    font-size: 16px;
+    min-height: 42px;
+  }
+}
+
+/* Medium devices (планшети, 768px і більше) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  html {
+    font-size: 15px;
+  }
+  
+  h1 { font-size: 2.25rem; }
+  h2 { font-size: 1.875rem; }
+  h3 { font-size: 1.5rem; }
+}
+
+/* Large devices (десктопи, 992px і більше) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* Extra Large devices (великі десктопи, 1200px і більше) */
+@media (min-width: 1200px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* iOS Safari специфічні стилі */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari specific styles */
+  
+  body {
+    /* Фіксить bounce scroll */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+  }
+  
+  .btn,
+  .form-control,
+  input,
+  select,
+  textarea {
+    /* Прибирає стандартне оформлення iOS */
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    border-radius: var(--border-radius-md);
+  }
+  
+  /* Safe area для iPhone X+ */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  /* Фіксить проблему з viewport в iOS Safari */
+  .full-height {
+    height: -webkit-fill-available;
+  }
+}
+
+/* Android Chrome оптимізація */
+@media screen and (-webkit-min-device-pixel-ratio: 2) {
+  .card,
+  .btn {
+    /* Покращує рендеринг на high-DPI екранах */
+    transform: translateZ(0);
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}
+
+/* Мобільне меню */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 280px;
+  height: 100vh;
+  background: var(--white);
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  transition: left var(--transition-normal);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-menu.active {
+  left: 0;
+}
+
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-normal), visibility var(--transition-normal);
+}
+
+.mobile-menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu-header {
+  padding: var(--spacing-lg);
+  background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-pink-light) 100%);
+  color: var(--white);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mobile-menu-close {
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  transition: background var(--transition-fast);
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-menu-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-menu-nav {
+  padding: var(--spacing-lg) 0;
+}
+
+.mobile-menu-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-menu-nav li {
+  margin: 0;
+}
+
+.mobile-menu-nav a {
+  display: block;
+  padding: var(--spacing-md) var(--spacing-lg);
+  color: var(--neutral-dark);
+  text-decoration: none;
+  border-bottom: 1px solid var(--neutral-light);
+  transition: background var(--transition-fast);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.mobile-menu-nav a:hover {
+  background: var(--gray-light);
+  color: var(--primary-pink);
+}
+
+.mobile-menu-nav a.active {
+  background: var(--primary-pink);
+  color: var(--white);
+}
+
+/* Hamburger menu button */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  min-height: 44px;
+  min-width: 44px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hamburger span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background: var(--neutral-dark);
+  margin: 3px 0;
+  transition: all var(--transition-fast);
+  border-radius: 2px;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Відображаємо мобільне меню тільки на мобільних пристроях */
+@media (max-width: 991.98px) {
+  .hamburger {
+    display: flex;
+  }
+  
+  .desktop-nav {
+    display: none;
+  }
+}
+
+@media (min-width: 992px) {
+  .mobile-menu,
+  .mobile-menu-overlay,
+  .hamburger {
+    display: none;
+  }
+}
+
+/* Touch-friendly елементи */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Swipe gestures для каруселей */
+.swipe-container {
+  touch-action: pan-y pinch-zoom;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Покращена прокрутка для мобільних */
+.scroll-smooth {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Фіксить проблему з зумом при фокусі на input в iOS */
+@media screen and (max-width: 767px) {
+  select,
+  textarea,
+  input[type="text"],
+  input[type="password"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="date"],
+  input[type="month"],
+  input[type="time"],
+  input[type="week"],
+  input[type="number"],
+  input[type="email"],
+  input[type="url"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="color"] {
+    font-size: 16px; /* Запобігає автоматичному зуму в iOS Safari */
+  }
+}
+
+/* Покращення для landscape орієнтації на мобільних */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .mobile-menu {
+    width: 250px;
+  }
+  
+  .mobile-menu-header {
+    padding: var(--spacing-sm) var(--spacing-lg);
+  }
+  
+  .mobile-menu-nav a {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    min-height: 36px;
+  }
+}
+
+/* Responsive images */
+@media (max-width: 767.98px) {
+  .img-responsive {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* Responsive typography */
+.responsive-text {
+  font-size: clamp(0.875rem, 2.5vw, 1.125rem);
+}
+
+.responsive-heading {
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+}
+
+/* Grid system для мобільних */
+.mobile-grid {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+@media (max-width: 575.98px) {
+  .mobile-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .mobile-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+/* Покращена доступність на мобільних */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+    scroll-behavior: auto;
+  }
+}

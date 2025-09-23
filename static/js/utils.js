@@ -1,0 +1,368 @@
+/**
+ * Beauty Shop - Утиліти
+ * Загальні функції та хелпери
+ */
+
+// Утиліти для роботи з DOM
+const DOM = {
+    ready(fn) {
+        if (document.readyState !== 'loading') {
+            fn();
+        } else {
+            document.addEventListener('DOMContentLoaded', fn);
+        }
+    },
+    
+    $(selector, context = document) {
+        return context.querySelector(selector);
+    },
+    
+    $$(selector, context = document) {
+        return Array.from(context.querySelectorAll(selector));
+    },
+    
+    createElement(tag, attributes = {}, children = []) {
+        const element = document.createElement(tag);
+        
+        Object.entries(attributes).forEach(([key, value]) => {
+            if (key === 'className') {
+                element.className = value;
+            } else if (key === 'dataset') {
+                Object.entries(value).forEach(([dataKey, dataValue]) => {
+                    element.dataset[dataKey] = dataValue;
+                });
+            } else {
+                element.setAttribute(key, value);
+            }
+        });
+        
+        children.forEach(child => {
+            if (typeof child === 'string') {
+                element.appendChild(document.createTextNode(child));
+            } else {
+                element.appendChild(child);
+            }
+        });
+        
+        return element;
+    }
+};
+
+// Утиліти для роботи з формами
+const Forms = {
+    serialize(form) {
+        const formData = new FormData(form);
+        const data = {};
+        
+        for (let [key, value] of formData.entries()) {
+            if (data[key]) {
+                if (Array.isArray(data[key])) {
+                    data[key].push(value);
+                } else {
+                    data[key] = [data[key], value];
+                }
+            } else {
+                data[key] = value;
+            }
+        }
+        
+        return data;
+    },
+    
+    validate(form) {
+        const inputs = form.querySelectorAll('input, select, textarea');
+        let isValid = true;
+        
+        inputs.forEach(input => {
+            if (input.hasAttribute('required') && !input.value.trim()) {
+                this.showError(input, 'Це поле обов\'язкове');
+                isValid = false;
+            } else if (input.type === 'email' && input.value && !this.isValidEmail(input.value)) {
+                this.showError(input, 'Введіть коректний email');
+                isValid = false;
+            } else {
+                this.clearError(input);
+            }
+        });
+        
+        return isValid;
+    },
+    
+    isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    },
+    
+    showError(input, message) {
+        this.clearError(input);
+        
+        input.classList.add('is-invalid');
+        const errorDiv = DOM.createElement('div', {
+            className: 'invalid-feedback'
+        }, [message]);
+        
+        input.parentNode.appendChild(errorDiv);
+    },
+    
+    clearError(input) {
+        input.classList.remove('is-invalid');
+        const errorDiv = input.parentNode.querySelector('.invalid-feedback');
+        if (errorDiv) {
+            errorDiv.remove();
+        }
+    }
+};
+
+// Утиліти для роботи з localStorage
+const Storage = {
+    set(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+            return true;
+        } catch (e) {
+            console.warn('localStorage не доступний:', e);
+            return false;
+        }
+    },
+    
+    get(key, defaultValue = null) {
+        try {
+            const item = localStorage.getItem(key);
+            return item ? JSON.parse(item) : defaultValue;
+        } catch (e) {
+            console.warn('Помилка читання з localStorage:', e);
+            return defaultValue;
+        }
+    },
+    
+    remove(key) {
+        try {
+            localStorage.removeItem(key);
+            return true;
+        } catch (e) {
+            console.warn('Помилка видалення з localStorage:', e);
+            return false;
+        }
+    },
+    
+    clear() {
+        try {
+            localStorage.clear();
+            return true;
+        } catch (e) {
+            console.warn('Помилка очищення localStorage:', e);
+            return false;
+        }
+    }
+};
+
+// Утиліти для AJAX запитів
+const Ajax = {
+    async request(url, options = {}) {
+        const defaults = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        };
+        
+        const config = { ...defaults, ...options };
+        
+        // Додаємо CSRF токен для POST запитів
+        if (config.method !== 'GET') {
+            const csrfToken = this.getCSRFToken();
+            if (csrfToken) {
+                config.headers['X-CSRFToken'] = csrfToken;
+            }
+        }
+        
+        try {
+            const response = await fetch(url, config);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return await response.json();
+            } else {
+                return await response.text();
+            }
+        } catch (error) {
+            console.error('AJAX помилка:', error);
+            throw error;
+        }
+    },
+    
+    getCSRFToken() {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'csrftoken') {
+                return value;
+            }
+        }
+        
+        // Альтернативний спосіб - з мета тегу
+        const metaToken = DOM.$('meta[name="csrf-token"]');
+        return metaToken ? metaToken.getAttribute('content') : null;
+    },
+    
+    async get(url) {
+        return this.request(url);
+    },
+    
+    async post(url, data) {
+        return this.request(url, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    },
+    
+    async postForm(url, formData) {
+        return this.request(url, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': this.getCSRFToken()
+            },
+            body: formData
+        });
+    }
+};
+
+// Утиліти для анімацій
+const Animations = {
+    fadeIn(element, duration = 300) {
+        element.style.opacity = '0';
+        element.style.display = 'block';
+        
+        const start = performance.now();
+        
+        const animate = (currentTime) => {
+            const elapsed = currentTime - start;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            element.style.opacity = progress;
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            }
+        };
+        
+        requestAnimationFrame(animate);
+    },
+    
+    fadeOut(element, duration = 300) {
+        const start = performance.now();
+        const initialOpacity = parseFloat(getComputedStyle(element).opacity);
+        
+        const animate = (currentTime) => {
+            const elapsed = currentTime - start;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            element.style.opacity = initialOpacity * (1 - progress);
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                element.style.display = 'none';
+            }
+        };
+        
+        requestAnimationFrame(animate);
+    },
+    
+    slideUp(element, duration = 300) {
+        const height = element.offsetHeight;
+        element.style.overflow = 'hidden';
+        element.style.height = height + 'px';
+        
+        const start = performance.now();
+        
+        const animate = (currentTime) => {
+            const elapsed = currentTime - start;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            element.style.height = (height * (1 - progress)) + 'px';
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                element.style.display = 'none';
+                element.style.height = '';
+                element.style.overflow = '';
+            }
+        };
+        
+        requestAnimationFrame(animate);
+    },
+    
+    slideDown(element, duration = 300) {
+        element.style.display = 'block';
+        const height = element.offsetHeight;
+        element.style.overflow = 'hidden';
+        element.style.height = '0px';
+        
+        const start = performance.now();
+        
+        const animate = (currentTime) => {
+            const elapsed = currentTime - start;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            element.style.height = (height * progress) + 'px';
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                element.style.height = '';
+                element.style.overflow = '';
+            }
+        };
+        
+        requestAnimationFrame(animate);
+    }
+};
+
+// Утиліти для роботи з пристроями
+const Device = {
+    isMobile() {
+        return window.innerWidth <= 767;
+    },
+    
+    isTablet() {
+        return window.innerWidth > 767 && window.innerWidth <= 1024;
+    },
+    
+    isDesktop() {
+        return window.innerWidth > 1024;
+    },
+    
+    isIOS() {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent);
+    },
+    
+    isAndroid() {
+        return /Android/.test(navigator.userAgent);
+    },
+    
+    isSafari() {
+        return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    },
+    
+    supportsTouch() {
+        return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    }
+};
+
+// Експортуємо утиліти в глобальну область
+window.BeautyShop = {
+    DOM,
+    Forms,
+    Storage,
+    Ajax,
+    Animations,
+    Device
+};

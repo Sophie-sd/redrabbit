@@ -1,0 +1,151 @@
+{% load static %}
+
+<div class="mobile-menu-header">
+    <div class="mobile-menu-logo">
+        <img src="{% static 'images/logo.svg' %}" alt="Beauty Shop" class="logo-img">
+        <span class="logo-text">BEAUTY SHOP</span>
+    </div>
+    <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Закрити меню">
+        <i class="icon-close" aria-hidden="true"></i>
+    </button>
+</div>
+
+<div class="mobile-menu-nav">
+    <!-- User Info -->
+    {% if user.is_authenticated %}
+        <div class="mobile-user-info">
+            <div class="user-avatar">
+                <i class="icon-user" aria-hidden="true"></i>
+            </div>
+            <div class="user-details">
+                <span class="user-name">{{ user.first_name|default:user.username }}</span>
+                {% if user.is_wholesale %}
+                    <span class="wholesale-badge">Оптовий клієнт</span>
+                {% else %}
+                    <span class="retail-badge">Роздрібний клієнт</span>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Navigation Links -->
+    <ul>
+        <li>
+            <a href="{% url 'core:home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                <i class="icon-home" aria-hidden="true"></i>
+                Головна
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'core:catalog' %}" class="{% if request.resolver_match.url_name == 'catalog' %}active{% endif %}">
+                <i class="icon-grid" aria-hidden="true"></i>
+                Каталог
+            </a>
+        </li>
+        
+        <!-- Categories -->
+        {% if main_categories %}
+            <li class="mobile-submenu">
+                <span class="submenu-title">Категорії</span>
+                <ul class="submenu-list">
+                    {% for category in main_categories %}
+                        <li>
+                            <a href="{{ category.get_absolute_url }}">
+                                {{ category.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endif %}
+        
+        <li>
+            <a href="{% url 'products:sale' %}" class="{% if request.resolver_match.url_name == 'sale' %}active{% endif %}">
+                <i class="icon-tag" aria-hidden="true"></i>
+                Акційні товари
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'cart:detail' %}">
+                <i class="icon-cart" aria-hidden="true"></i>
+                Кошик
+                {% if cart_total_items %}
+                    <span class="mobile-badge">{{ cart_total_items }}</span>
+                {% endif %}
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'core:delivery' %}" class="{% if request.resolver_match.url_name == 'delivery' %}active{% endif %}">
+                <i class="icon-truck" aria-hidden="true"></i>
+                Доставка та оплата
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'core:returns' %}" class="{% if request.resolver_match.url_name == 'returns' %}active{% endif %}">
+                <i class="icon-return" aria-hidden="true"></i>
+                Повернення та обмін
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'blog:list' %}" class="{% if request.resolver_match.url_name == 'list' %}active{% endif %}">
+                <i class="icon-book" aria-hidden="true"></i>
+                Блог
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'core:about' %}" class="{% if request.resolver_match.url_name == 'about' %}active{% endif %}">
+                <i class="icon-info" aria-hidden="true"></i>
+                Про нас
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'core:contacts' %}" class="{% if request.resolver_match.url_name == 'contacts' %}active{% endif %}">
+                <i class="icon-phone" aria-hidden="true"></i>
+                Контакти
+            </a>
+        </li>
+    </ul>
+    
+    <!-- User Actions -->
+    <div class="mobile-user-actions">
+        {% if user.is_authenticated %}
+            <a href="{% url 'users:profile' %}" class="mobile-action-btn">
+                <i class="icon-user" aria-hidden="true"></i>
+                Особистий кабінет
+            </a>
+            <a href="{% url 'users:orders' %}" class="mobile-action-btn">
+                <i class="icon-list" aria-hidden="true"></i>
+                Мої замовлення
+            </a>
+            <a href="{% url 'users:logout' %}" class="mobile-action-btn logout">
+                <i class="icon-logout" aria-hidden="true"></i>
+                Вихід
+            </a>
+        {% else %}
+            <a href="{% url 'users:login' %}" class="mobile-action-btn">
+                <i class="icon-login" aria-hidden="true"></i>
+                Вхід
+            </a>
+            <a href="{% url 'users:register' %}" class="mobile-action-btn primary">
+                <i class="icon-user-plus" aria-hidden="true"></i>
+                Реєстрація (ОПТ)
+            </a>
+        {% endif %}
+    </div>
+    
+    <!-- Contact Info -->
+    <div class="mobile-contact-info">
+        <div class="contact-item">
+            <i class="icon-phone" aria-hidden="true"></i>
+            <a href="tel:+380681752654">{{ site_phone }}</a>
+        </div>
+        <div class="contact-item">
+            <i class="icon-mail" aria-hidden="true"></i>
+            <a href="mailto:{{ site_email }}">{{ site_email }}</a>
+        </div>
+        <div class="contact-item">
+            <i class="icon-clock" aria-hidden="true"></i>
+            <span>Пн-Пт 09:00-18:00</span>
+        </div>
+    </div>
+</div>

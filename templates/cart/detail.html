@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Кошик - Beauty Shop{% endblock %}
+
+{% block content %}
+<section class="cart-section section-padding">
+    <div class="container">
+        
+        <h1 class="section-title">Кошик покупок</h1>
+        
+        {% if cart %}
+            <div class="cart-content">
+                <div class="cart-items">
+                    {% for item in cart %}
+                        <div class="cart-item" data-product-id="{{ item.product.id }}" data-price="{{ item.price }}">
+                            <div class="item-image">
+                                {% if item.product.images.first %}
+                                    <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}">
+                                {% else %}
+                                    <div class="product-placeholder">
+                                        <i class="icon-product">📦</i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="item-details">
+                                <h3 class="item-name">{{ item.product.name }}</h3>
+                                <p class="item-price">{{ item.price }} ₴</p>
+                            </div>
+                            
+                            <div class="item-quantity">
+                                <label for="quantity-{{ item.product.id }}">Кількість:</label>
+                                <input type="number" 
+                                       id="quantity-{{ item.product.id }}"
+                                       class="cart-quantity form-control" 
+                                       value="{{ item.quantity }}" 
+                                       min="1" 
+                                       data-product-id="{{ item.product.id }}">
+                            </div>
+                            
+                            <div class="item-total">
+                                <span class="total-price">{{ item.total_price }} ₴</span>
+                            </div>
+                            
+                            <div class="item-actions">
+                                <button class="btn btn-outline btn-sm remove-from-cart" 
+                                        data-product-id="{{ item.product.id }}"
+                                        data-product-name="{{ item.product.name }}">
+                                    Видалити
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Загальна сума:</span>
+                        <span class="cart-grand-total">{{ cart.get_total_price }} ₴</span>
+                    </div>
+                    
+                    <div class="cart-actions">
+                        <a href="{% url 'core:catalog' %}" class="btn btn-outline">Продовжити покупки</a>
+                        <button class="btn btn-secondary clear-cart">Очистити кошик</button>
+                        <a href="{% url 'orders:create' %}" class="btn btn-primary">Оформити замовлення</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-cart text-center">
+                <div class="empty-cart-icon">
+                    <i class="icon-cart">🛒</i>
+                </div>
+                <h2>Ваш кошик порожній</h2>
+                <p>Додайте товари до кошика, щоб продовжити покупки</p>
+                <a href="{% url 'core:catalog' %}" class="btn btn-primary">Перейти до каталогу</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    border: 1px solid var(--neutral-light);
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.item-image {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+.item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--border-radius-sm);
+}
+
+.item-details {
+    flex: 1;
+}
+
+.item-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.item-price {
+    color: var(--primary-pink);
+    font-weight: 500;
+}
+
+.item-quantity {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.cart-quantity {
+    width: 80px;
+}
+
+.item-total {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-pink);
+}
+
+.cart-summary {
+    background: var(--gray-light);
+    padding: var(--spacing-xl);
+    border-radius: var(--border-radius-lg);
+    margin-top: var(--spacing-xl);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-lg);
+}
+
+.cart-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.empty-cart {
+    padding: var(--spacing-xxl);
+}
+
+.empty-cart-icon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-lg);
+}
+
+@media (max-width: 767.98px) {
+    .cart-item {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-md);
+    }
+    
+    .item-details {
+        order: -1;
+    }
+    
+    .cart-actions {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}
