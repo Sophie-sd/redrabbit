@@ -5,40 +5,28 @@
 {% block description %}Інтернет-магазин Beauty Shop пропонує професійну косметику, інструменти та обладнання для салонів краси. Якісні товари, швидка доставка по Україні.{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section vh-100" aria-label="Головний банер">
-    <div class="hero-background">
-        <picture>
-            <source media="(max-width: 767px)" srcset="{% static 'images/hero-mobile.jpg' %}">
-            <source media="(max-width: 1199px)" srcset="{% static 'images/hero-tablet.jpg' %}">
-            <img src="{% static 'images/hero-desktop.jpg' %}" alt="Професійна косметика Beauty Shop" class="hero-image">
-        </picture>
-        <div class="hero-overlay"></div>
-    </div>
-    
-    <div class="container">
-        <div class="hero-content">
-            <h1 class="hero-title slide-in-up">
-                НА БАЗІ <span class="text-primary">SILLER</span> ТА<br>
-                ФАЙЛИ <span class="text-secondary">STALEKS!</span>
-            </h1>
-            <p class="hero-subtitle slide-in-up">
-                <span class="highlight-text">АКЦІЙНІ ЦІНИ</span>
-            </p>
-            <div class="hero-actions slide-in-up">
-                <a href="{% url 'products:sale' %}" class="btn btn-primary btn-lg">
-                    Переглянути акції
-                </a>
-                <a href="{% url 'core:catalog' %}" class="btn btn-outline btn-lg">
-                    Каталог товарів
-                </a>
+<!-- Banner Slider Section -->
+<section class="banner-slider-section" aria-label="Рекламні банери">
+    <div class="banner-slider-container">
+        <div class="banner-slider" id="bannerSlider">
+            <div class="banner-slide active">
+                <img src="{% static 'images/baner1_beautyshop.jpg' %}" alt="Акційні пропозиції Beauty Shop" class="banner-image">
             </div>
+            <!-- Додаткові слайди будуть додані пізніше -->
         </div>
-    </div>
-    
-    <!-- Scroll indicator -->
-    <div class="scroll-indicator">
-        <div class="scroll-arrow pulse"></div>
+        
+        <!-- Navigation arrows -->
+        <button class="banner-nav banner-nav-prev" id="bannerPrev" aria-label="Попередній банер">
+            <span class="nav-arrow">‹</span>
+        </button>
+        <button class="banner-nav banner-nav-next" id="bannerNext" aria-label="Наступний банер">
+            <span class="nav-arrow">›</span>
+        </button>
+        
+        <!-- Dots indicator -->
+        <div class="banner-dots" id="bannerDots">
+            <button class="banner-dot active" data-slide="0" aria-label="Банер 1"></button>
+        </div>
     </div>
 </section>
 
@@ -400,5 +388,6 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'js/banner-slider.js' %}"></script>
 <script src="{% static 'js/home.js' %}"></script>
 {% endblock %}

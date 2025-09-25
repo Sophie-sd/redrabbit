@@ -83,8 +83,15 @@ Beauty Shop - Компонентні стилі
 }
 
 .logo-img {
-  height: 40px;
+  height: 80px;
   width: auto;
+  max-width: 280px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
 }
 
 .logo-text {
@@ -138,6 +145,12 @@ Beauty Shop - Компонентні стилі
 
 .search-btn:hover {
   background: linear-gradient(135deg, var(--primary-pink-dark) 0%, var(--primary-pink) 100%);
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  color: currentColor;
 }
 
 .header-actions {

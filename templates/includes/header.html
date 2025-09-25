@@ -49,10 +49,7 @@
             <!-- Logo -->
             <div class="logo">
                 <a href="{% url 'core:home' %}" class="logo-link" aria-label="Beauty Shop - Головна сторінка">
-                    <img src="{% static 'images/logo.svg' %}" alt="Beauty Shop" class="logo-img">
-                    <div class="logo-text">
-                        <span class="logo-main">BEAUTY SHOP</span>
-                    </div>
+                    <img src="{% static 'images/logo_beautyshop.png' %}" alt="Beauty Shop" class="logo-img">
                 </a>
             </div>
             
@@ -70,7 +67,9 @@
                             autocomplete="off"
                         >
                         <button type="submit" class="search-btn" aria-label="Знайти">
-                            <i class="icon-search" aria-hidden="true"></i>
+                            <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
                         </button>
                     </div>
                 </form>

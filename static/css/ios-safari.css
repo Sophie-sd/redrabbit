@@ -29,9 +29,25 @@
     .btn,
     .nav-link,
     .cart-link,
-    .wishlist-link {
+    .wishlist-link,
+    .logo-img,
+    .search-btn {
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
         touch-action: manipulation;
+    }
+    
+    /* Logo optimizations for iOS */
+    .logo-img {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+    
+    /* Search icon optimizations */
+    .search-icon {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
     }
     
     /* Prevent zoom on input focus */
