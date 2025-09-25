@@ -135,21 +135,6 @@
     <script src="{% static 'js/main.js' %}"></script>
     {% block extra_js %}{% endblock %}
     
-    <!-- Service Worker для PWA (опціонально) -->
-    <script>
-        // Service Worker відключено для продакшну
-        // if ('serviceWorker' in navigator) {
-        //     window.addEventListener('load', function() {
-        //         navigator.serviceWorker.register('{% static "js/sw.js" %}')
-        //             .then(function(registration) {
-        //                 console.log('SW registered: ', registration);
-        //             })
-        //             .catch(function(registrationError) {
-        //                 console.log('SW registration failed: ', registrationError);
-        //             });
-        //     });
-        // }
-    </script>
     
     <!-- Google Analytics (замініть на ваш ID) -->
     {% if not debug %}
