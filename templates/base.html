@@ -16,7 +16,7 @@
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:title" content="{% block og_title %}{{ block.super }}{% endblock %}">
     <meta property="og:description" content="{% block og_description %}{{ block.super }}{% endblock %}">
-    <meta property="og:image" content="{% block og_image %}{% load static %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/og-image.jpg' %}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{% load static %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/baner1_beautyshop.jpg' %}{% endblock %}">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -26,10 +26,10 @@
     <meta property="twitter:image" content="{% block twitter_image %}{{ block.super }}{% endblock %}">
     
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
-    <link rel="manifest" href="{% static 'images/site.webmanifest' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/logo_beautyshop.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/logo_beautyshop.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/logo_beautyshop.png' %}">
+    <!-- <link rel="manifest" href="{% static 'images/site.webmanifest' %}"> -->
     
     <!-- iOS Safari specific -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -62,7 +62,7 @@
         "@type": "Organization",
         "name": "Beauty Shop",
         "url": "{{ request.scheme }}://{{ request.get_host }}",
-        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}",
+        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo_beautyshop.png' %}",
         "contactPoint": {
             "@type": "ContactPoint",
             "telephone": "+380681752654",
