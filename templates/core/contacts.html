@@ -4,44 +4,137 @@
 {% block title %}Контакти - Beauty Shop{% endblock %}
 
 {% block content %}
-<section class="contacts-section section-padding">
+<section class="contacts-hero section-padding-sm bg-primary">
     <div class="container">
-        
-        <h1 class="section-title">Контакти</h1>
-        
+        <div class="hero-content text-center text-white">
+            <h1 class="hero-title">Контакти</h1>
+            <p class="hero-subtitle">Зв'яжіться з нами будь-яким зручним способом</p>
+        </div>
+    </div>
+</section>
+
+<section class="contacts-main section-padding">
+    <div class="container">
         <div class="row">
-            <div class="col-lg-6">
-                <div class="contact-info">
-                    <h2>BEAUTY SHOP</h2>
-                    
-                    <div class="contact-item">
-                        <h3>Адреса</h3>
-                        <p>{{ site_address }}</p>
+            <div class="col-lg-8">
+                <div class="contacts-grid">
+                    <!-- Основна інформація -->
+                    <div class="contact-card card-primary">
+                        <div class="contact-icon">
+                            <i class="icon-building">🏢</i>
+                        </div>
+                        <div class="contact-content">
+                            <h3 class="contact-title">BEAUTY SHOP</h3>
+                            <p class="contact-subtitle">Професійна косметика для салонів краси</p>
+                        </div>
                     </div>
                     
-                    <div class="contact-item">
-                        <h3>Графік роботи</h3>
-                        <p>Пн-Пт 09:00-18:00 Сб 10:00-16:00 Нд 10:00-15:00</p>
+                    <!-- Адреса -->
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="icon-location">📍</i>
+                        </div>
+                        <div class="contact-content">
+                            <h3 class="contact-title">Адреса</h3>
+                            <p class="contact-text">{{ site_address }}</p>
+                        </div>
                     </div>
                     
-                    <div class="contact-item">
-                        <h3>Електронна адреса</h3>
-                        <p><a href="mailto:{{ site_email }}">{{ site_email }}</a></p>
+                    <!-- Телефон -->
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="icon-phone">📞</i>
+                        </div>
+                        <div class="contact-content">
+                            <h3 class="contact-title">Телефон</h3>
+                            <p class="contact-text">
+                                <a href="tel:+380681752654" class="contact-link">{{ site_phone }}</a>
+                            </p>
+                        </div>
                     </div>
                     
-                    <div class="contact-item">
-                        <h3>Телефони</h3>
-                        <p><a href="tel:+380681752654">{{ site_phone }}</a></p>
+                    <!-- Email -->
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="icon-email">✉️</i>
+                        </div>
+                        <div class="contact-content">
+                            <h3 class="contact-title">Електронна пошта</h3>
+                            <p class="contact-text">
+                                <a href="mailto:{{ site_email }}" class="contact-link">{{ site_email }}</a>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <div class="col-lg-6">
-                <div class="map-container">
-                    <div id="google-map" class="google-map">
-                        <!-- Google Maps буде тут -->
-                        <div class="map-placeholder">
-                            <p>Карта завантажується...</p>
+            <div class="col-lg-4">
+                <!-- Графік роботи -->
+                <div class="schedule-card card">
+                    <div class="card-header">
+                        <div class="schedule-icon">
+                            <i class="icon-clock">🕒</i>
+                        </div>
+                        <h3 class="card-title">Графік роботи</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="schedule-list">
+                            <div class="schedule-item">
+                                <span class="schedule-day">Понеділок - П'ятниця</span>
+                                <span class="schedule-time">09:00 - 18:00</span>
+                            </div>
+                            <div class="schedule-item">
+                                <span class="schedule-day">Субота</span>
+                                <span class="schedule-time">10:00 - 16:00</span>
+                            </div>
+                            <div class="schedule-item">
+                                <span class="schedule-day">Неділя</span>
+                                <span class="schedule-time">10:00 - 15:00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Контактна форма -->
+                <div class="contact-form-card card">
+                    <div class="card-header">
+                        <h3 class="card-title">Швидкий зв'язок</h3>
+                    </div>
+                    <div class="card-body">
+                        <form class="contact-form" method="post" action="#">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="name" placeholder="Ваше ім'я" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" class="form-control" name="phone" placeholder="Ваш телефон" required>
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" name="message" rows="4" placeholder="Ваше повідомлення" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                Відправити повідомлення
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Карта -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="map-section">
+                    <h2 class="map-title text-center">Як нас знайти</h2>
+                    <div class="map-container">
+                        <div id="google-map" class="google-map">
+                            <div class="map-placeholder">
+                                <div class="map-placeholder-content">
+                                    <i class="map-icon">🗺️</i>
+                                    <h4>Інтерактивна карта</h4>
+                                    <p>м. Монастирище, вул. Соборна, 126д</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -50,52 +143,4 @@
     </div>
 </section>
 
-<style>
-.contact-item {
-    margin-bottom: var(--spacing-xl);
-}
-
-.contact-item h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-bottom: var(--spacing-sm);
-    color: var(--primary-pink);
-}
-
-.contact-item p {
-    color: var(--neutral-dark);
-    margin: 0;
-}
-
-.contact-item a {
-    color: var(--primary-pink);
-    text-decoration: none;
-}
-
-.contact-item a:hover {
-    text-decoration: none;
-}
-
-.map-container {
-    height: 400px;
-    border-radius: var(--border-radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-}
-
-.google-map {
-    width: 100%;
-    height: 100%;
-}
-
-.map-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    background: var(--gray-light);
-    color: var(--gray-medium);
-}
-</style>
 {% endblock %}
