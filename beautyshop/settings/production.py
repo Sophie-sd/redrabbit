@@ -35,15 +35,7 @@ else:
         }
     }
 
-# Static files для Django з whitenoise для Render
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
+# Static files налаштування успадковуються з base.py
 
 # Security settings для продакшну
 SECURE_SSL_REDIRECT = True
