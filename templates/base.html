@@ -29,7 +29,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/logo_beautyshop.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/logo_beautyshop.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/logo_beautyshop.png' %}">
-    <!-- <link rel="manifest" href="{% static 'images/site.webmanifest' %}"> -->
     
     <!-- iOS Safari specific -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -138,17 +137,18 @@
     
     <!-- Service Worker для PWA (опціонально) -->
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('{% static "js/sw.js" %}')
-                    .then(function(registration) {
-                        console.log('SW registered: ', registration);
-                    })
-                    .catch(function(registrationError) {
-                        console.log('SW registration failed: ', registrationError);
-                    });
-            });
-        }
+        // Service Worker відключено для продакшну
+        // if ('serviceWorker' in navigator) {
+        //     window.addEventListener('load', function() {
+        //         navigator.serviceWorker.register('{% static "js/sw.js" %}')
+        //             .then(function(registration) {
+        //                 console.log('SW registered: ', registration);
+        //             })
+        //             .catch(function(registrationError) {
+        //                 console.log('SW registration failed: ', registrationError);
+        //             });
+        //     });
+        // }
     </script>
     
     <!-- Google Analytics (замініть на ваш ID) -->
