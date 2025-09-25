@@ -7,6 +7,9 @@ import os
 
 DEBUG = False
 
+# Override SECRET_KEY for production
+SECRET_KEY = os.getenv('SECRET_KEY', config('SECRET_KEY', default='django-insecure-change-me-in-production'))
+
 # ALLOWED_HOSTS для Render
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
@@ -41,9 +44,6 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-
-# Whitenoise налаштування для Render
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Security settings для продакшну
 SECURE_SSL_REDIRECT = True
