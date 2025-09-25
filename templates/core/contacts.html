@@ -6,9 +6,13 @@
 {% block content %}
 <section class="contacts-hero section-padding-sm bg-primary">
     <div class="container">
-        <div class="hero-content text-center text-white">
-            <h1 class="hero-title">Контакти</h1>
-            <p class="hero-subtitle">Зв'яжіться з нами будь-яким зручним способом</p>
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="hero-content text-center text-white">
+                    <h1 class="hero-title">Контакти</h1>
+                    <p class="hero-subtitle">Зв'яжіться з нами будь-яким зручним способом</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -16,59 +20,42 @@
 <section class="contacts-main section-padding">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8">
-                <div class="contacts-grid">
-                    <!-- Основна інформація -->
-                    <div class="contact-card card-primary">
-                        <div class="contact-icon">
-                            <i class="icon-building">🏢</i>
-                        </div>
-                        <div class="contact-content">
-                            <h3 class="contact-title">BEAUTY SHOP</h3>
-                            <p class="contact-subtitle">Професійна косметика для салонів краси</p>
-                        </div>
+            <div class="col-lg-7">
+                <div class="contact-info-section">
+                    <div class="company-header">
+                        <h2 class="company-name">BEAUTY SHOP</h2>
+                        <p class="company-tagline">Професійна косметика для салонів краси</p>
                     </div>
                     
-                    <!-- Адреса -->
-                    <div class="contact-card">
-                        <div class="contact-icon">
-                            <i class="icon-location">📍</i>
-                        </div>
-                        <div class="contact-content">
-                            <h3 class="contact-title">Адреса</h3>
-                            <p class="contact-text">{{ site_address }}</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Телефон -->
-                    <div class="contact-card">
-                        <div class="contact-icon">
-                            <i class="icon-phone">📞</i>
-                        </div>
-                        <div class="contact-content">
-                            <h3 class="contact-title">Телефон</h3>
-                            <p class="contact-text">
-                                <a href="tel:+380681752654" class="contact-link">{{ site_phone }}</a>
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <!-- Email -->
-                    <div class="contact-card">
-                        <div class="contact-icon">
-                            <i class="icon-email">✉️</i>
-                        </div>
-                        <div class="contact-content">
-                            <h3 class="contact-title">Електронна пошта</h3>
-                            <p class="contact-text">
-                                <a href="mailto:{{ site_email }}" class="contact-link">{{ site_email }}</a>
-                            </p>
-                        </div>
+                    <div class="contact-details">
+                        <ul class="contact-list">
+                            <li class="contact-list-item">
+                                <div class="contact-item-icon">📍</div>
+                                <div class="contact-item-content">
+                                    <strong>Адреса:</strong>
+                                    <span>{{ site_address }}</span>
+                                </div>
+                            </li>
+                            <li class="contact-list-item">
+                                <div class="contact-item-icon">📞</div>
+                                <div class="contact-item-content">
+                                    <strong>Телефон:</strong>
+                                    <a href="tel:+380681752654" class="contact-link">{{ site_phone }}</a>
+                                </div>
+                            </li>
+                            <li class="contact-list-item">
+                                <div class="contact-item-icon">✉️</div>
+                                <div class="contact-item-content">
+                                    <strong>Електронна пошта:</strong>
+                                    <a href="mailto:{{ site_email }}" class="contact-link">{{ site_email }}</a>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
             
-            <div class="col-lg-4">
+            <div class="col-lg-5">
                 <!-- Графік роботи -->
                 <div class="schedule-card card">
                     <div class="card-header">
