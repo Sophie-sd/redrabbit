@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Блог - Beauty Shop{% endblock %}
+{% block description %}Корисні поради та новини індустрії краси від Beauty Shop. Професійні рекомендації для салонів краси.{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header section-padding-sm bg-light">
+    <div class="container">
+        <div class="page-header-content text-center">
+            <h1 class="page-title">Блог</h1>
+            <p class="page-subtitle">Корисні поради та новини індустрії краси</p>
+            
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center">
+                    <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Головна</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Блог</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Articles -->
+<section class="blog-section section-padding">
+    <div class="container">
+        {% if articles %}
+            <div class="articles-grid">
+                {% for article in articles %}
+                    <article class="article-card card fade-in">
+                        <div class="article-image">
+                            <a href="{{ article.get_absolute_url }}">
+                                {% if article.image %}
+                                    <img src="{{ article.image.url }}" alt="{{ article.title }}" loading="lazy">
+                                {% else %}
+                                    <div class="article-placeholder">
+                                        <i class="icon-article" aria-hidden="true">📝</i>
+                                    </div>
+                                {% endif %}
+                            </a>
+                        </div>
+                        
+                        <div class="article-content">
+                            <h2 class="article-title">
+                                <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+                            </h2>
+                            
+                            {% if article.excerpt %}
+                                <p class="article-excerpt">{{ article.excerpt|truncatewords:20 }}</p>
+                            {% endif %}
+                            
+                            <div class="article-meta">
+                                <time datetime="{{ article.created_at|date:'c' }}">
+                                    {{ article.created_at|date:'d.m.Y' }}
+                                </time>
+                                {% if article.author %}
+                                    <span class="article-author">{{ article.author.get_full_name|default:article.author.username }}</span>
+                                {% endif %}
+                            </div>
+                            
+                            <a href="{{ article.get_absolute_url }}" class="btn btn-outline btn-sm">
+                                Читати далі
+                            </a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if is_paginated %}
+                <nav aria-label="Пагінація блогу" class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1" aria-label="Перша сторінка">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Попередня">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active" aria-current="page">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Наступна">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Остання сторінка">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <!-- Empty State -->
+            <div class="empty-state text-center">
+                <div class="empty-state-icon">
+                    <i class="icon-blog" aria-hidden="true">📝</i>
+                </div>
+                <h3 class="empty-state-title">Поки що немає статей</h3>
+                <p class="empty-state-text">
+                    Ми працюємо над створенням корисного контенту для вас. 
+                    Незабаром тут з'являться цікаві статті про індустрію краси.
+                </p>
+                <a href="{% url 'core:home' %}" class="btn btn-primary">
+                    Повернутися на головну
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-xxl);
+}
+
+.article-card {
+    overflow: hidden;
+    transition: all var(--transition-normal);
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.article-image {
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    background: var(--gray-light);
+}
+
+.article-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-normal);
+}
+
+.article-card:hover .article-image img {
+    transform: scale(1.05);
+}
+
+.article-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 3rem;
+    color: var(--gray-medium);
+}
+
+.article-content {
+    padding: var(--spacing-lg);
+}
+
+.article-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+}
+
+.article-title a {
+    color: var(--neutral-dark);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.article-title a:hover {
+    color: var(--primary-pink);
+}
+
+.article-excerpt {
+    color: var(--gray-medium);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.6;
+}
+
+.article-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    font-size: 0.875rem;
+    color: var(--gray-medium);
+    margin-bottom: var(--spacing-lg);
+}
+
+.empty-state {
+    padding: var(--spacing-xxl) var(--spacing-lg);
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-lg);
+}
+
+.empty-state-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    color: var(--neutral-dark);
+}
+
+.empty-state-text {
+    color: var(--gray-medium);
+    margin-bottom: var(--spacing-xl);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 767.98px) {
+    .articles-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    .article-content {
+        padding: var(--spacing-md);
+    }
+}
+</style>
+{% endblock %}
