@@ -725,9 +725,6 @@
     gap: var(--spacing-xs);
 }
 
-.page-item {
-    /* empty selector for BEM consistency */
-}
 
 .page-link {
     display: block;
@@ -1731,10 +1728,6 @@
     .footer-payment {
         justify-content: flex-start;
         margin-top: var(--spacing-md);
-    }
-    
-    .footer-main {
-        padding: var(--spacing-xl) 0;
     }
 }
 

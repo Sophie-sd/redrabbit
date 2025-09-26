@@ -372,6 +372,36 @@ img {
     }
 }
 
+/* Common Utilities */
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.flex-col-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.touch-target {
+    min-height: 48px;
+    min-width: 48px;
+}
+
+.touch-target-sm {
+    min-height: 44px;
+    min-width: 44px;
+}
+
 /* Utility Classes */
 .d-none {
     display: none;
