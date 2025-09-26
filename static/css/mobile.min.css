@@ -1081,6 +1081,7 @@
         flex-direction: column;
         gap: var(--spacing-md);
         max-width: 100%;
+        align-items: center;
     }
     
     .newsletter-form .form-control {
@@ -1089,7 +1090,7 @@
     }
     
     .newsletter-form .btn {
-        width: 100%;
+        width: 50%;
         border-radius: var(--border-radius-md);
     }
 }
