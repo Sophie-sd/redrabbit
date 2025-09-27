@@ -1,0 +1,160 @@
+/* Custom Admin Styles для Beauty Shop */
+
+/* Покращуємо зовнішній вигляд форм */
+.form-row {
+    margin-bottom: 15px;
+}
+
+.form-row .field-box {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* Кастомні кнопки */
+.button.default,
+input[type="submit"].default {
+    background: #ff1493;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.button.default:hover,
+input[type="submit"].default:hover {
+    background: #e6127a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(255, 20, 147, 0.3);
+}
+
+/* Покращуємо відображення зображень */
+.field-image img {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.field-image img:hover {
+    transform: scale(1.05);
+}
+
+/* Стилізуємо таблиці */
+#result_list {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+#result_list thead th {
+    background: linear-gradient(135deg, #ff1493, #ffd700);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+#result_list tbody tr:hover {
+    background: #fff5f8;
+    transition: background 0.3s ease;
+}
+
+/* Покращуємо пагінацію */
+.paginator {
+    background: #f8f9fa;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 15px;
+}
+
+.paginator a {
+    color: #ff1493;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.paginator a:hover {
+    color: #e6127a;
+    text-decoration: underline;
+}
+
+/* Покращуємо фільтри */
+#changelist-filter {
+    background: #f8f9fa;
+    border-left: 3px solid #ff1493;
+    border-radius: 5px;
+}
+
+#changelist-filter h2 {
+    background: #ff1493;
+    color: white;
+    padding: 8px 10px;
+    margin: 0;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+#changelist-filter li.selected a {
+    background: #ff1493;
+    color: white;
+    border-radius: 3px;
+}
+
+/* Покращуємо поля вводу */
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+    border: 2px solid #e9ecef;
+    border-radius: 5px;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #ff1493;
+    box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.1);
+    outline: none;
+}
+
+/* Статуси публікації */
+.field-is_published img[alt="True"] {
+    content: "✅";
+}
+
+.field-is_published img[alt="False"] {
+    content: "❌";
+}
+
+/* Responsive покращення */
+@media (max-width: 768px) {
+    #changelist {
+        margin: 0;
+    }
+    
+    #changelist-filter {
+        width: 100%;
+        margin-top: 20px;
+    }
+    
+    .results {
+        overflow-x: auto;
+    }
+    
+    #result_list {
+        min-width: 600px;
+    }
+}
