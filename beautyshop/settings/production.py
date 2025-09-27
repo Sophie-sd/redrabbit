@@ -35,7 +35,19 @@ else:
         }
     }
 
-# Static files налаштування успадковуються з base.py
+# Static and Media files для продакшну
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Media files (зображення користувачів) для продакшну
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Whitenoise для статичних файлів
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Додаємо middleware для статичних файлів
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 # Security settings для продакшну
 SECURE_SSL_REDIRECT = True

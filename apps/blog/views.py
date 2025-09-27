@@ -21,3 +21,15 @@ class ArticleDetailView(DetailView):
     
     def get_queryset(self):
         return Article.objects.filter(is_published=True)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Додаємо схожі статті (останні 3, окрім поточної)
+        context['related_articles'] = Article.objects.filter(
+            is_published=True
+        ).exclude(
+            pk=self.object.pk
+        ).order_by('-created_at')[:3]
+        
+        return context
