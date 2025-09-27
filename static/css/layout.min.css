@@ -477,6 +477,17 @@
     align-items: stretch;
 }
 
+/* Catalog Grid Desktop Fix */
+@media (min-width: 992px) {
+    .categories-grid {
+        gap: var(--spacing-lg);
+    }
+    
+    .categories-grid .category-card {
+        min-height: 200px;
+    }
+}
+
 .grid > * {
     display: flex;
     flex-direction: column;
