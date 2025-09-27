@@ -28,9 +28,13 @@ urlpatterns = [
     # path('robots.txt', include('django_robots.urls')),
 ]
 
-# Static and media files 
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Static and media files - завжди додаємо (для development та production)
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    # Production: додаємо тільки media файли, static обробляє Whitenoise
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Admin customization
 admin.site.site_header = "Beauty Shop Адміністрування"

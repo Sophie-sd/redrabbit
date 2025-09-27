@@ -5,6 +5,10 @@ set -o errexit
 # Install dependencies
 pip install -r requirements.txt
 
+# Create media directory for uploads
+mkdir -p media
+chmod 755 media
+
 # Collect static files
 python manage.py collectstatic --noinput
 

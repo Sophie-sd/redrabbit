@@ -12,16 +12,14 @@
 <!-- Article Header -->
 <section class="article-header section-padding-sm bg-light">
     <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="{% url 'core:home' %}">Головна</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a href="{% url 'blog:list' %}">Блог</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">{{ article.title }}</li>
-            </ol>
+        <nav aria-label="breadcrumb" class="breadcrumb-nav">
+            <div class="breadcrumb-links">
+                <a href="{% url 'core:home' %}" class="breadcrumb-link">Головна</a>
+                <span class="breadcrumb-separator">→</span>
+                <a href="{% url 'blog:list' %}" class="breadcrumb-link">Блог</a>
+                <span class="breadcrumb-separator">→</span>
+                <span class="breadcrumb-current">{{ article.title }}</span>
+            </div>
         </nav>
         
         <div class="article-header-content">

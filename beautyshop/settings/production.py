@@ -53,6 +53,11 @@ STORAGES = {
     },
 }
 
+# Whitenoise також обслуговує media файли на production
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_AUTOREFRESH = True
+WHITENOISE_MAX_AGE = 31536000  # 1 рік кешування для статичних файлів
+
 # Whitenoise middleware для статичних файлів на production
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
