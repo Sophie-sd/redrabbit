@@ -377,37 +377,173 @@
 </section>
 
 <!-- Reviews Section -->
-{% if latest_articles %}
 <section class="reviews-section section-padding bg-light" aria-label="Відгуки наших клієнтів">
     <div class="container">
         <div class="section-header text-center">
             <h2 class="section-title">Відгуки наших клієнтів</h2>
+            <p class="section-subtitle">Що кажуть про нас наші клієнти</p>
         </div>
         
-        <div class="reviews-grid">
-            <!-- Тут будуть відгуки клієнтів -->
-            <div class="review-item fade-in">
-                <div class="review-content">
-                    <div class="review-rating">
-                        <i class="icon-star filled" aria-hidden="true"></i>
-                        <i class="icon-star filled" aria-hidden="true"></i>
-                        <i class="icon-star filled" aria-hidden="true"></i>
-                        <i class="icon-star filled" aria-hidden="true"></i>
-                        <i class="icon-star filled" aria-hidden="true"></i>
+        <div class="reviews-slider-container">
+            <button class="reviews-nav-btn reviews-prev-btn" aria-label="Попередній відгук">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            
+            <div class="reviews-slider" id="reviewsSlider">
+                <div class="review-item">
+                    <div class="review-content">
+                        <div class="review-rating">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                        </div>
+                        <p class="review-text">"Замовляла гель-лак для нігтів. Якість просто неймовірна! Тримається 3 тижні без сколів. Обов'язково замовлятиму ще!"</p>
+                        <div class="review-author">
+                            <span class="author-name">Марина Коваленко</span>
+                            <span class="review-location">Київ</span>
+                        </div>
                     </div>
-                    <p class="review-text">
-                        "Трусики зі спанбонду, ціна і якість супер. Повністю задоволена."
-                    </p>
-                    <div class="review-author">
-                        <span class="author-name">Оля</span>
-                        <span class="review-date">2025-05-10 23:16:30</span>
+                </div>
+
+                <div class="review-item">
+                    <div class="review-content">
+                        <div class="review-rating">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                        </div>
+                        <p class="review-text">"Відмінний магазин для майстрів! Швидка доставка, все упаковано ідеально. Фарба для брів - топ якість за доступною ціною."</p>
+                        <div class="review-author">
+                            <span class="author-name">Анна Петренко</span>
+                            <span class="review-location">Львів</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-item">
+                    <div class="review-content">
+                        <div class="review-rating">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                        </div>
+                        <p class="review-text">"Замовляю тут косметику для свого салону постійно. Оптові ціни чудові, а якість завжди на висоті. Рекомендую!"</p>
+                        <div class="review-author">
+                            <span class="author-name">Олена Сидоренко</span>
+                            <span class="review-location">Дніпро</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-item">
+                    <div class="review-content">
+                        <div class="review-rating">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                        </div>
+                        <p class="review-text">"Професійні інструменти для манікюру просто бомба! Гострі, зручні, якісні. Працюю ними вже півроку - як нові."</p>
+                        <div class="review-author">
+                            <span class="author-name">Ірина Шевченко</span>
+                            <span class="review-location">Харків</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-item">
+                    <div class="review-content">
+                        <div class="review-rating">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                        </div>
+                        <p class="review-text">"Beauty Shop - мій фаворит! Замовляю засоби для депіляції, воски, крем. Все приходить швидко і якісно упаковано."</p>
+                        <div class="review-author">
+                            <span class="author-name">Тетяна Мельничук</span>
+                            <span class="review-location">Одеса</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-item">
+                    <div class="review-content">
+                        <div class="review-rating">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                        </div>
+                        <p class="review-text">"Шампуні та маски для волосся - просто знахідка! Волосся стало м'якшим і блискучішим. Дякую за якісну продукцію!"</p>
+                        <div class="review-author">
+                            <span class="author-name">Вікторія Левченко</span>
+                            <span class="review-location">Запоріжжя</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-item">
+                    <div class="review-content">
+                        <div class="review-rating">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                        </div>
+                        <p class="review-text">"Одноразовий посуд для салону замовляю тільки тут. Якість відмінна, ціни адекватні. Менеджери завжди допомагають з вибором."</p>
+                        <div class="review-author">
+                            <span class="author-name">Світлана Кравець</span>
+                            <span class="review-location">Вінниця</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-item">
+                    <div class="review-content">
+                        <div class="review-rating">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                        </div>
+                        <p class="review-text">"Засоби для дезінфекції купую постійно. Ефективні, безпечні, за доступною ціною. Доставка завжди вчасно!"</p>
+                        <div class="review-author">
+                            <span class="author-name">Наталія Бондаренко</span>
+                            <span class="review-location">Полтава</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-item">
+                    <div class="review-content">
+                        <div class="review-rating">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                        </div>
+                        <p class="review-text">"Професійний макіяж від Beauty Shop - це щось неймовірне! Стійкий, яскравий, легко наноситься. Клієнти в захваті!"</p>
+                        <div class="review-author">
+                            <span class="author-name">Юлія Мороз</span>
+                            <span class="review-location">Чернівці</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-item">
+                    <div class="review-content">
+                        <div class="review-rating">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                        </div>
+                        <p class="review-text">"Меблі для салону замовляла тут - якість просто вражає! Зручно, стильно, надійно. Дякую за професійний підхід!"</p>
+                        <div class="review-author">
+                            <span class="author-name">Катерина Іваненко</span>
+                            <span class="review-location">Кропивницький</span>
+                        </div>
                     </div>
                 </div>
             </div>
+            
+            <button class="reviews-nav-btn reviews-next-btn" aria-label="Наступний відгук">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="reviews-indicators" id="reviewsIndicators">
+            <button class="indicator active" data-slide="0"></button>
+            <button class="indicator" data-slide="1"></button>
+            <button class="indicator" data-slide="2"></button>
+            <button class="indicator" data-slide="3"></button>
+            <button class="indicator" data-slide="4"></button>
+            <button class="indicator" data-slide="5"></button>
+            <button class="indicator" data-slide="6"></button>
+            <button class="indicator" data-slide="7"></button>
+            <button class="indicator" data-slide="8"></button>
+            <button class="indicator" data-slide="9"></button>
         </div>
     </div>
 </section>
-{% endif %}
 
 <!-- Blog Section -->
 {% if latest_articles %}
