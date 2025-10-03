@@ -2,69 +2,195 @@
 {% load static %}
 
 {% block title %}Доставка та оплата - Beauty Shop{% endblock %}
+{% block description %}Способи доставки та оплати Beauty Shop. Нова Пошта, Укр Пошта, самовивіз. Оплата при доставці, онлайн, за реквізитами.{% endblock %}
 
 {% block content %}
-<section class="delivery-section section-padding">
+<!-- Page Header -->
+<section class="page-header section-padding-sm bg-primary">
     <div class="container">
+        <div class="page-header-content text-center text-white">
+            <h1 class="page-title">Доставка та оплата</h1>
+            <p class="page-subtitle">Зручні способи отримання та оплати ваших замовлень</p>
+        </div>
+    </div>
+</section>
+
+<!-- Delivery Methods -->
+<section class="delivery-methods-section section-padding">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2 class="section-title">Способи доставки</h2>
+            <p class="section-subtitle">Оберіть найзручніший для вас варіант отримання товару</p>
+        </div>
         
-        <h1 class="section-title">Доставка та оплата</h1>
-        
-        <div class="info-section">
-            <h2>Інформація про доставку</h2>
-            
-            <div class="delivery-methods grid grid-cols-1 grid-cols-md-3 gap-4 mb-5">
-                <div class="delivery-method card">
-                    <div class="method-icon">
-                        <i class="icon-nova-poshta">📦</i>
-                    </div>
-                    <h3>Нова Пошта</h3>
-                    <p>Доставка за тарифами перевізника</p>
+        <div class="delivery-grid">
+            <div class="delivery-card card fade-in">
+                <div class="delivery-image">
+                    <img src="{% static 'images/nova_posta.png' %}" alt="Нова Пошта" loading="lazy">
                 </div>
-                
-                <div class="delivery-method card">
-                    <div class="method-icon">
-                        <i class="icon-ukr-poshta">📮</i>
-                    </div>
-                    <h3>Укр Пошта</h3>
-                    <p>Доставка за тарифами перевізника</p>
-                </div>
-                
-                <div class="delivery-method card">
-                    <div class="method-icon">
-                        <i class="icon-pickup">🏪</i>
-                    </div>
-                    <h3>Самовивіз</h3>
-                    <p>Україна, Черкаська область,<br>м.Монастирище, вул. Соборна 126Д</p>
+                <div class="delivery-content">
+                    <h3 class="delivery-title">Нова Пошта</h3>
+                    <p class="delivery-description">Доставка за тарифами перевізника</p>
+                    <ul class="delivery-features">
+                        <li>Понад 7000 відділень по Україні</li>
+                        <li>Швидка доставка 1-2 дні</li>
+                        <li>Відстеження посилки онлайн</li>
+                        <li>Доставка до дому або поштомату</li>
+                    </ul>
+                    <div class="delivery-badge">Популярно</div>
                 </div>
             </div>
             
-            <h2>Способи оплати</h2>
-            
-            <div class="payment-methods grid grid-cols-1 grid-cols-md-3 gap-4">
-                <div class="payment-method card">
-                    <div class="method-icon">
-                        <i class="icon-cash">💵</i>
-                    </div>
-                    <h3>Оплата при доставці</h3>
-                    <p>Комісія за переказ грошей оплачує отримувач</p>
+            <div class="delivery-card card fade-in">
+                <div class="delivery-image">
+                    <img src="{% static 'images/ukr_posta.png' %}" alt="Укр Пошта" loading="lazy">
                 </div>
-                
-                <div class="payment-method card">
-                    <div class="method-icon">
-                        <i class="icon-card">💳</i>
-                    </div>
-                    <h3>Онлайн-оплата Visa, Mastercard</h3>
-                    <p>Оплата товару на сайті за допомогою сервісу LiqPay</p>
-                </div>
-                
-                <div class="payment-method card">
-                    <div class="method-icon">
-                        <i class="icon-bank">🏦</i>
-                    </div>
-                    <h3>Оплата по реквізитам</h3>
-                    <p>Оплата по офіційним реквізитам компанії</p>
+                <div class="delivery-content">
+                    <h3 class="delivery-title">Укр Пошта</h3>
+                    <p class="delivery-description">Доставка за тарифами перевізника</p>
+                    <ul class="delivery-features">
+                        <li>Найбільша мережа відділень</li>
+                        <li>Доступні ціни на доставку</li>
+                        <li>Доставка в сільську місцевість</li>
+                        <li>Надійна державна служба</li>
+                    </ul>
+                    <div class="delivery-badge economical">Економно</div>
                 </div>
             </div>
+            
+            <div class="delivery-card card fade-in">
+                <div class="delivery-image">
+                    <img src="{% static 'images/samovyviz.png' %}" alt="Самовивіз" loading="lazy">
+                </div>
+                <div class="delivery-content">
+                    <h3 class="delivery-title">Самовивіз</h3>
+                    <p class="delivery-description perfect-location">Україна, Черкаська область, м.Монастирище, вул. Соборна 126Д</p>
+                    <ul class="delivery-features">
+                        <li>Безкоштовно</li>
+                        <li>Можна оглянути товар</li>
+                        <li>Консультація майстра</li>
+                        <li>Режим роботи: Пн-П 9:00-17:00</li>
+                    </ul>
+                    <div class="delivery-badge free">Безкоштовно</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Payment Methods -->
+<section class="payment-methods-section section-padding bg-light">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2 class="section-title">Способи оплати</h2>
+            <p class="section-subtitle">Безпечні та зручні методи оплати для вашого комфорту</p>
+        </div>
+        
+        <div class="payment-grid">
+            <div class="payment-card card fade-in">
+                <div class="payment-image">
+                    <img src="{% static 'images/oplata_pry_dostavtsi.png' %}" alt="Оплата при доставці" loading="lazy">
+                </div>
+                <div class="payment-content">
+                    <h3 class="payment-title">Оплата при доставці</h3>
+                    <p class="payment-description">Комісія за переказ грошей оплачує отримувач</p>
+                    <ul class="payment-features">
+                        <li>Оплачуєте тільки після огляду товару</li>
+                        <li>Готівкою кур'єру або на пошті</li>
+                        <li>Додаткова комісія 2% + 20 грн</li>
+                        <li>Можливість відміни замовлення</li>
+                    </ul>
+                    <div class="payment-badge trusted">Надійно</div>
+                </div>
+            </div>
+            
+            <div class="payment-card card fade-in">
+                <div class="payment-image">
+                    <img src="{% static 'images/online_pay.png' %}" alt="Онлайн оплата" loading="lazy">
+                </div>
+                <div class="payment-content">
+                    <h3 class="payment-title">Онлайн-оплата Visa, Mastercard</h3>
+                    <p class="payment-description">Оплата товару на сайті за допомогою сервісу LiqPay</p>
+                    <ul class="payment-features">
+                        <li>Безпечна оплата картою</li>
+                        <li>Миттєве підтвердження платежу</li>
+                        <li>Захист даних по стандарту PCI DSS</li>
+                        <li>Без додаткових комісій</li>
+                    </ul>
+                    <div class="payment-badge instant">Миттєво</div>
+                </div>
+            </div>
+            
+            <div class="payment-card card fade-in">
+                <div class="payment-image">
+                    <img src="{% static 'images/za_recvizitamy.png' %}" alt="Оплата по реквізитам" loading="lazy">
+                </div>
+                <div class="payment-content">
+                    <h3 class="payment-title">Оплата по реквізитам</h3>
+                    <p class="payment-description">Оплата по офіційним реквізитам компанії</p>
+                    <ul class="payment-features">
+                        <li>Банківський переказ</li>
+                        <li>Оплата через інтернет-банкінг</li>
+                        <li>Для юридичних осіб</li>
+                        <li>Документообіг та звітність</li>
+                    </ul>
+                    <div class="payment-badge business">Для бізнесу</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Additional Info -->
+<section class="additional-info-section section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="info-block">
+                    <h3 class="info-title">
+                        <i class="info-icon">🚚</i>
+                        Умови доставки
+                    </h3>
+                    <ul class="info-list">
+                        <li><strong>Безкоштовна доставка</strong> від 1500 грн по Україні</li>
+                        <li><strong>Термін доставки:</strong> 1-3 робочих дні</li>
+                        <li><strong>Упаковка:</strong> надійна упаковка в фірмову коробку</li>
+                        <li><strong>Відправка:</strong> щодня до 16:00</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="info-block">
+                    <h3 class="info-title">
+                        <i class="info-icon">🛡️</i>
+                        Гарантії та повернення
+                    </h3>
+                    <ul class="info-list">
+                        <li><strong>Гарантія якості</strong> на всі товари</li>
+                        <li><strong>Повернення</strong> протягом 14 днів</li>
+                        <li><strong>Обмін</strong> неякісного товару</li>
+                        <li><strong>Підтримка:</strong> консультації майстрів</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Info -->
+<section class="contact-delivery-section section-padding bg-light">
+    <div class="container text-center">
+        <h3 class="contact-title">Маєте питання щодо доставки?</h3>
+        <p class="contact-description">Наші менеджери готові допомогти вам з вибором оптимального способу доставки</p>
+        <div class="contact-buttons">
+            <a href="tel:+380681752654" class="btn btn-primary btn-lg me-3">
+                <i class="btn-icon">📞</i>
+                Подзвонити
+            </a>
+            <a href="{% url 'core:contacts' %}" class="btn btn-outline btn-lg">
+                <i class="btn-icon">💬</i>
+                Написати нам
+            </a>
         </div>
     </div>
 </section>
