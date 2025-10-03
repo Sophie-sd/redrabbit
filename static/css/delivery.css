@@ -106,24 +106,46 @@
 
 .delivery-badge {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: -8px;
+    right: -8px;
     background: #e91e63;
     color: white;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.8em;
-    font-weight: 600;
+    padding: 8px 15px;
+    border-radius: 25px;
+    font-size: 0.75em;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+    border: 3px solid white;
+    z-index: 10;
+    transform: rotate(-5deg);
+    transition: all 0.3s ease;
+}
+
+.delivery-badge:hover {
+    transform: rotate(0deg) scale(1.1);
+    box-shadow: 0 6px 20px rgba(233, 30, 99, 0.6);
 }
 
 .delivery-badge.economical {
     background: #28a745;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+    transform: rotate(3deg);
+}
+
+.delivery-badge.economical:hover {
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
 }
 
 .delivery-badge.free {
     background: #17a2b8;
+    box-shadow: 0 4px 15px rgba(23, 162, 184, 0.4);
+    transform: rotate(-3deg);
+}
+
+.delivery-badge.free:hover {
+    box-shadow: 0 6px 20px rgba(23, 162, 184, 0.6);
 }
 
 /* Payment Methods Section */
@@ -232,28 +254,56 @@
 
 .payment-badge {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: -8px;
+    right: -8px;
     background: #343a40;
     color: white;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.8em;
-    font-weight: 600;
+    padding: 8px 15px;
+    border-radius: 25px;
+    font-size: 0.75em;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
+    box-shadow: 0 4px 15px rgba(52, 58, 64, 0.4);
+    border: 3px solid white;
+    z-index: 10;
+    transform: rotate(4deg);
+    transition: all 0.3s ease;
+}
+
+.payment-badge:hover {
+    transform: rotate(0deg) scale(1.1);
+    box-shadow: 0 6px 20px rgba(52, 58, 64, 0.6);
 }
 
 .payment-badge.trusted {
     background: #28a745;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+    transform: rotate(-4deg);
+}
+
+.payment-badge.trusted:hover {
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
 }
 
 .payment-badge.instant {
     background: #007bff;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+    transform: rotate(2deg);
+}
+
+.payment-badge.instant:hover {
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6);
 }
 
 .payment-badge.business {
     background: #6f42c1;
+    box-shadow: 0 4px 15px rgba(111, 66, 193, 0.4);
+    transform: rotate(-2deg);
+}
+
+.payment-badge.business:hover {
+    box-shadow: 0 6px 20px rgba(111, 66, 193, 0.6);
 }
 
 /* Additional Info Section */
