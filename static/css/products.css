@@ -10,11 +10,23 @@
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+/* Newsletter section на сторінці акцій */
+.newsletter-section .newsletter-title {
+    max-width: 700px;
+    margin: 0 auto 30px;
+    line-height: 1.4;
+}
+
 /* Адаптивність */
 @media (max-width: 768px) {
     .page-title-text {
         font-size: 1.3em;
         font-weight: 600;
+    }
+    
+    .newsletter-section .newsletter-title {
+        max-width: 100%;
+        line-height: 1.3;
     }
 }
 
@@ -22,5 +34,9 @@
     .page-title-text {
         font-size: 1.2em;
         line-height: 1.4;
+    }
+    
+    .newsletter-section .newsletter-title {
+        line-height: 1.2;
     }
 }
