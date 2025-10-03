@@ -1,0 +1,152 @@
+[
+    {
+        "model": "products.category",
+        "pk": 1,
+        "fields": {
+            "name": "Акційні товари",
+            "slug": "sale",
+            "parent": null,
+            "image": "",
+            "description": "",
+            "is_active": true,
+            "sort_order": 1,
+            "meta_title": "",
+            "meta_description": ""
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 2,
+        "fields": {
+            "name": "Нігті",
+            "slug": "nigti",
+            "parent": null,
+            "image": "",
+            "description": "",
+            "is_active": true,
+            "sort_order": 2,
+            "meta_title": "",
+            "meta_description": ""
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 3,
+        "fields": {
+            "name": "Волосся",
+            "slug": "volossia",
+            "parent": null,
+            "image": "",
+            "description": "",
+            "is_active": true,
+            "sort_order": 3,
+            "meta_title": "",
+            "meta_description": ""
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 4,
+        "fields": {
+            "name": "Брови та вії",
+            "slug": "brovy-ta-vii",
+            "parent": null,
+            "image": "",
+            "description": "",
+            "is_active": true,
+            "sort_order": 4,
+            "meta_title": "",
+            "meta_description": ""
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 5,
+        "fields": {
+            "name": "Депіляція",
+            "slug": "depilyatsiya",
+            "parent": null,
+            "image": "",
+            "description": "",
+            "is_active": true,
+            "sort_order": 5,
+            "meta_title": "",
+            "meta_description": ""
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 6,
+        "fields": {
+            "name": "Косметика",
+            "slug": "kosmetyka",
+            "parent": null,
+            "image": "",
+            "description": "",
+            "is_active": true,
+            "sort_order": 6,
+            "meta_title": "",
+            "meta_description": ""
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 7,
+        "fields": {
+            "name": "Макіяж",
+            "slug": "makiyazh",
+            "parent": null,
+            "image": "",
+            "description": "",
+            "is_active": true,
+            "sort_order": 7,
+            "meta_title": "",
+            "meta_description": ""
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 8,
+        "fields": {
+            "name": "Одноразова продукція",
+            "slug": "odnorazova-produktsia",
+            "parent": null,
+            "image": "",
+            "description": "",
+            "is_active": true,
+            "sort_order": 8,
+            "meta_title": "",
+            "meta_description": ""
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 9,
+        "fields": {
+            "name": "Дезінфекція та стерилізація",
+            "slug": "dezinfektsiya-ta-sterylizatsiya",
+            "parent": null,
+            "image": "",
+            "description": "",
+            "is_active": true,
+            "sort_order": 9,
+            "meta_title": "",
+            "meta_description": ""
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 10,
+        "fields": {
+            "name": "Меблі для салонів",
+            "slug": "mebli-dlya-saloniv",
+            "parent": null,
+            "image": "",
+            "description": "",
+            "is_active": true,
+            "sort_order": 10,
+            "meta_title": "",
+            "meta_description": ""
+        }
+    }
+]
