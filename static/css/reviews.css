@@ -11,88 +11,97 @@
     max-width: 1200px;
     margin: 40px auto 0;
     padding: 0 60px;
+    overflow: hidden;
 }
 
 .reviews-slider {
     display: flex;
     transition: transform 0.4s ease-in-out;
-    gap: 30px;
+    gap: 20px;
 }
 
 .review-item {
-    flex: 0 0 100%;
-    max-width: 800px;
-    margin: 0 auto;
+    flex: 0 0 calc(50% - 10px);
+    max-width: 580px;
 }
 
 .review-content {
     background: white;
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
     border: 1px solid rgba(233, 30, 99, 0.1);
     position: relative;
     text-align: center;
     transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .review-content:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(233, 30, 99, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(233, 30, 99, 0.15);
     border-color: rgba(233, 30, 99, 0.2);
 }
 
 .review-content::before {
     content: '"';
     position: absolute;
-    top: -10px;
-    left: 20px;
-    font-size: 80px;
+    top: -5px;
+    left: 15px;
+    font-size: 50px;
     color: rgba(233, 30, 99, 0.1);
     font-family: serif;
     line-height: 1;
 }
 
 .review-rating {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .review-rating .star {
-    font-size: 24px;
+    font-size: 20px;
     color: #ffd700;
-    margin: 0 2px;
+    margin: 0 1px;
     text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);
 }
 
 .review-text {
-    font-size: 1.1em;
-    line-height: 1.6;
+    font-size: 1em;
+    line-height: 1.5;
     color: #333;
-    margin: 0 0 25px 0;
+    margin: 0 0 20px 0;
     font-style: italic;
     position: relative;
     z-index: 1;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .review-author {
     border-top: 1px solid #eee;
-    padding-top: 20px;
+    padding-top: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
     flex-wrap: wrap;
+    margin-top: auto;
 }
 
 .author-name {
     font-weight: 600;
     color: #e91e63;
-    font-size: 1.1em;
+    font-size: 1em;
 }
 
 .review-location {
     color: #666;
-    font-size: 0.9em;
+    font-size: 0.85em;
     position: relative;
 }
 
@@ -175,28 +184,32 @@
         margin-top: 30px;
     }
     
+    .review-item {
+        flex: 0 0 100%; /* На мобільному показуємо по 1 відгуку */
+    }
+    
     .review-content {
-        padding: 25px;
-        border-radius: 15px;
+        padding: 20px;
+        border-radius: 12px;
     }
     
     .review-content::before {
-        font-size: 60px;
-        top: -5px;
-        left: 15px;
+        font-size: 40px;
+        top: -3px;
+        left: 12px;
     }
     
     .review-text {
-        font-size: 1em;
-        margin-bottom: 20px;
+        font-size: 0.95em;
+        margin-bottom: 15px;
     }
     
     .author-name {
-        font-size: 1em;
+        font-size: 0.95em;
     }
     
     .review-location {
-        font-size: 0.85em;
+        font-size: 0.8em;
     }
     
     .reviews-nav-btn {

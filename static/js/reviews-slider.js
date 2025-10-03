@@ -8,7 +8,20 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!slider || !prevBtn || !nextBtn) return;
     
     let currentSlide = 0;
-    const totalSlides = document.querySelectorAll('.review-item').length;
+    const totalReviews = document.querySelectorAll('.review-item').length;
+    let reviewsPerSlide = window.innerWidth <= 768 ? 1 : 2; // 1 для мобільних, 2 для десктопу
+    let totalSlides = Math.ceil(totalReviews / reviewsPerSlide);
+    
+    // Функція для оновлення кількості відгуків на слайді при зміні розміру екрану
+    function updateReviewsPerSlide() {
+        const newReviewsPerSlide = window.innerWidth <= 768 ? 1 : 2;
+        if (newReviewsPerSlide !== reviewsPerSlide) {
+            reviewsPerSlide = newReviewsPerSlide;
+            totalSlides = Math.ceil(totalReviews / reviewsPerSlide);
+            currentSlide = Math.min(currentSlide, totalSlides - 1);
+            updateSlider();
+        }
+    }
     
     // Функція для оновлення позиції слайдера
     function updateSlider() {
@@ -20,9 +33,10 @@ document.addEventListener('DOMContentLoaded', function() {
             indicator.classList.toggle('active', index === currentSlide);
         });
         
-        // Додаємо клас active до поточного слайду
+        // Додаємо клас active до поточних слайдів
         document.querySelectorAll('.review-item').forEach((item, index) => {
-            item.classList.toggle('active', index === currentSlide);
+            const isActive = index >= currentSlide * reviewsPerSlide && index < (currentSlide + 1) * reviewsPerSlide;
+            item.classList.toggle('active', isActive);
         });
     }
     
@@ -116,6 +130,9 @@ document.addEventListener('DOMContentLoaded', function() {
             nextSlide();
         }
     });
+    
+    // Обробник зміни розміру вікна
+    window.addEventListener('resize', updateReviewsPerSlide);
     
     // Ініціалізація
     updateSlider();
