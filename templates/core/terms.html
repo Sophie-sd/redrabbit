@@ -1,0 +1,342 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Умови використання - Beauty Shop{% endblock %}
+
+{% block content %}
+<section class="legal-section section-padding">
+    <div class="container">
+        
+        <h1 class="section-title">Умови користування сайтом</h1>
+        
+        <div class="legal-content">
+            
+            <div class="info-block">
+                <h2>📋 Загальні положення</h2>
+                <p>Ці Умови користування (далі - "Умови") визначають правила використання інтернет-магазину Beauty Shop, розташованого за адресою beautyshop-ukraine.com.ua (далі - "Сайт").</p>
+                
+                <p>Використовуючи наш Сайт, ви автоматично погоджуєтеся з цими Умовами. Якщо ви не погоджуєтеся з будь-якою частиною цих Умов, будь ласка, не користуйтеся нашим Сайтом.</p>
+            </div>
+
+            <div class="info-block">
+                <h2>🏢 Інформація про продавця</h2>
+                <ul class="info-list">
+                    <li><strong>Назва:</strong> Beauty Shop</li>
+                    <li><strong>Телефон:</strong> (068) 175-26-54</li>
+                    <li><strong>Email:</strong> beauty_shop_monte@ukr.net</li>
+                    <li><strong>Час роботи:</strong> Пн-Пт 09:00-18:00, Сб 10:00-16:00, Нд 10:00-15:00</li>
+                </ul>
+            </div>
+
+            <div class="info-block">
+                <h2>🛒 Замовлення товарів</h2>
+                <h3>Процедура оформлення замовлення:</h3>
+                <ol class="process-list">
+                    <li>Вибір товару та додавання до корзини</li>
+                    <li>Заповнення контактної інформації</li>
+                    <li>Вибір способу доставки та оплати</li>
+                    <li>Підтвердження замовлення</li>
+                </ol>
+                
+                <p><strong>Важливо:</strong> Замовлення вважається підтвердженим після дзвінка нашого менеджера.</p>
+            </div>
+
+            <div class="info-block">
+                <h2>💰 Ціни та оплата</h2>
+                <ul class="conditions-list">
+                    <li><strong>Валюта:</strong> Всі ціни вказані в українських гривнях (грн)</li>
+                    <li><strong>Оптові ціни:</strong> Доступні зареєстрованим користувачам після підтвердження статусу</li>
+                    <li><strong>Акційні ціни:</strong> Діють до закінчення акції або до вичерпання товару</li>
+                    <li><strong>Зміна цін:</strong> Ми залишаємо за собою право змінювати ціни</li>
+                </ul>
+                
+                <h3>Способи оплати:</h3>
+                <ul>
+                    <li>💳 Оплата карткою онлайн</li>
+                    <li>💰 Готівка при отриманні</li>
+                    <li>🏦 Банківський переказ</li>
+                    <li>📱 LiqPay</li>
+                </ul>
+            </div>
+
+            <div class="info-block">
+                <h2>🚚 Доставка</h2>
+                <div class="delivery-grid">
+                    <div class="delivery-method">
+                        <h4>📦 Нова Пошта</h4>
+                        <p>Доставка по всій Україні у відділення або поштомат</p>
+                        <p><strong>Термін:</strong> 1-3 робочих дні</p>
+                    </div>
+                    
+                    <div class="delivery-method">
+                        <h4>📮 Укрпошта</h4>
+                        <p>Доставка у відділення Укрпошти</p>
+                        <p><strong>Термін:</strong> 3-7 робочих днів</p>
+                    </div>
+                    
+                    <div class="delivery-method">
+                        <h4>🚴 Кур'єр</h4>
+                        <p>Доставка кур'єром по місту</p>
+                        <p><strong>Термін:</strong> 1-2 робочих дні</p>
+                    </div>
+                    
+                    <div class="delivery-method">
+                        <h4>🏪 Самовивіз</h4>
+                        <p>Забрати товар особисто</p>
+                        <p><strong>Термін:</strong> В день замовлення</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <h2>👤 Реєстрація та особистий кабінет</h2>
+                <p>Для оформлення замовлення реєстрація не обов'язкова, але вона надає додаткові можливості:</p>
+                <ul>
+                    <li>✨ Швидке оформлення повторних замовлень</li>
+                    <li>📈 Історія покупок</li>
+                    <li>💼 Доступ до оптових цін (після підтвердження)</li>
+                    <li>❤️ Список обраних товарів</li>
+                    <li>🎯 Персональні пропозиції</li>
+                </ul>
+            </div>
+
+            <div class="info-block">
+                <h2>🔒 Безпека та конфіденційність</h2>
+                <p>Ми гарантуємо:</p>
+                <ul>
+                    <li>🛡️ Захист персональних даних</li>
+                    <li>🔐 Безпечну передачу платіжної інформації</li>
+                    <li>📧 Відсутність спаму</li>
+                    <li>🚫 Неукладення договорів з третіми особами без згоди</li>
+                </ul>
+            </div>
+
+            <div class="info-block warning">
+                <h2>⚠️ Обмеження відповідальності</h2>
+                <ul>
+                    <li>Ми не несемо відповідальності за тимчасову недоступність сайту</li>
+                    <li>Зображення товарів можуть відрізнятися від оригіналу</li>
+                    <li>Характеристики товарів можуть змінюватися виробником</li>
+                    <li>Ми не несемо відповідальності за неправильне використання товарів</li>
+                </ul>
+            </div>
+
+            <div class="info-block">
+                <h2>📝 Зміни умов</h2>
+                <p>Beauty Shop залишає за собою право вносити зміни до цих Умов у будь-який час. Зміни набувають чинності з моменту їх публікації на сайті.</p>
+                
+                <p>Рекомендуємо періодично переглядати цю сторінку для ознайомлення з можливими змінами.</p>
+            </div>
+
+            <div class="contact-block">
+                <h2>📞 Контакти для питань</h2>
+                <p>З питаннями щодо цих Умов звертайтеся:</p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <strong>📞 Телефон:</strong> (068) 175-26-54
+                    </div>
+                    <div class="contact-item">
+                        <strong>📧 Email:</strong> beauty_shop_monte@ukr.net
+                    </div>
+                </div>
+            </div>
+
+            <div class="date-block">
+                <p><small>Остання редакція: січень 2024 року</small></p>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+<style>
+.legal-section {
+    padding: 40px 0;
+    background: #f8f9fa;
+}
+
+.legal-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.info-block {
+    margin-bottom: 40px;
+    padding: 30px;
+    border-left: 4px solid #2196f3;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.info-block.warning {
+    border-left-color: #ff9800;
+    background: #fff8f0;
+}
+
+.info-block h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+}
+
+.info-block h3 {
+    color: #555;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.info-block h4 {
+    color: #2196f3;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.info-list, .conditions-list {
+    list-style: none;
+    padding: 0;
+}
+
+.info-list li, .conditions-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.info-list li:last-child, .conditions-list li:last-child {
+    border-bottom: none;
+}
+
+.process-list {
+    counter-reset: step-counter;
+    list-style: none;
+    padding: 0;
+}
+
+.process-list li {
+    counter-increment: step-counter;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    position: relative;
+    padding-left: 60px;
+}
+
+.process-list li:before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 25px;
+    height: 25px;
+    background: #2196f3;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.delivery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.delivery-method {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
+.delivery-method h4 {
+    margin-bottom: 10px;
+    color: #2196f3;
+}
+
+.contact-block {
+    background: #e3f2fd;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.contact-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.contact-item {
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.date-block {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    color: #666;
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .legal-content {
+        padding: 20px;
+        margin: 20px;
+    }
+    
+    .info-block {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .delivery-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .process-list li {
+        padding-left: 50px;
+    }
+    
+    .process-list li:before {
+        left: 15px;
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .legal-section {
+        padding: 20px 0;
+    }
+    
+    .legal-content {
+        margin: 10px;
+        padding: 15px;
+    }
+    
+    .info-block {
+        padding: 15px;
+    }
+}
+</style>
+{% endblock %}

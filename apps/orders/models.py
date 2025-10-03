@@ -193,3 +193,60 @@ class Promotion(models.Model):
     
     def __str__(self):
         return self.name
+
+
+class PromotionBanner(models.Model):
+    """Банери акцій для головної сторінки"""
+    
+    title = models.CharField('Заголовок', max_length=200)
+    image = models.ImageField('Зображення банера', upload_to='banners/')
+    link_type = models.CharField('Тип посилання', max_length=20, choices=[
+        ('category', 'Категорія'),
+        ('product', 'Товар'),
+        ('promotion', 'Акція'),
+        ('custom', 'Довільне посилання'),
+    ])
+    category = models.ForeignKey(
+        'products.Category', 
+        on_delete=models.CASCADE, 
+        null=True, 
+        blank=True,
+        verbose_name='Категорія'
+    )
+    product = models.ForeignKey(
+        'products.Product', 
+        on_delete=models.CASCADE, 
+        null=True, 
+        blank=True,
+        verbose_name='Товар'
+    )
+    promotion = models.ForeignKey(
+        Promotion, 
+        on_delete=models.CASCADE, 
+        null=True, 
+        blank=True,
+        verbose_name='Акція'
+    )
+    custom_url = models.URLField('Довільне посилання', blank=True)
+    
+    is_active = models.BooleanField('Активний', default=True)
+    sort_order = models.PositiveIntegerField('Порядок', default=0)
+    created_at = models.DateTimeField('Створено', auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'Банер акції'
+        verbose_name_plural = 'Банери акцій'
+        ordering = ['sort_order', '-created_at']
+    
+    def get_link_url(self):
+        """Повертає URL для банера"""
+        if self.link_type == 'category' and self.category:
+            return self.category.get_absolute_url()
+        elif self.link_type == 'product' and self.product:
+            return self.product.get_absolute_url()
+        elif self.link_type == 'custom' and self.custom_url:
+            return self.custom_url
+        return '/'
+    
+    def __str__(self):
+        return self.title

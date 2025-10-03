@@ -27,6 +27,10 @@ class ArticleAdmin(admin.ModelAdmin):
             'fields': ('content',),
             'classes': ('wide',)
         }),
+        ('Зв\'язані товари', {
+            'fields': ('related_products',),
+            'description': 'Оберіть до 5 товарів для відображення в кінці статті'
+        }),
         ('Публікація', {
             'fields': ('is_published',)
         }),
@@ -35,6 +39,8 @@ class ArticleAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+    
+    filter_horizontal = ['related_products']
     
     # Кастомні віджети
     formfield_overrides = {

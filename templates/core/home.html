@@ -94,16 +94,15 @@
                                     </div>
                                 {% endif %}
                                 
-                                {% if product.is_sale %}
-                                    <span class="product-badge sale-badge">
-                                        -{{ product.get_discount_percentage }}%
-                                    </span>
-                                {% endif %}
-                                
-                                {% if product.is_featured %}
-                                    <span class="product-badge featured-badge">
-                                        ТОП
-                                    </span>
+                                <!-- Стікери товару -->
+                                {% if product.get_stickers %}
+                                    <div class="product-stickers">
+                                        {% for sticker in product.get_stickers %}
+                                            <span class="product-sticker sticker-{{ sticker.type }}">
+                                                {{ sticker.text }}
+                                            </span>
+                                        {% endfor %}
+                                    </div>
                                 {% endif %}
                             </a>
                         </div>
@@ -118,14 +117,32 @@
                                     <span class="price-old">{{ product.retail_price }} ₴</span>
                                     <span class="price-current">{{ product.sale_price }} ₴</span>
                                 {% else %}
-                                    <span class="price-current">
-                                        {% if user.is_authenticated and user.is_wholesale and product.wholesale_price %}
-                                            {{ product.wholesale_price }} ₴
+                                    <div class="price-row">
+                                        <span class="price-current">{{ product.retail_price }} ₴</span>
+                                        <small class="price-type">роздріб</small>
+                                    </div>
+                                    {% if product.wholesale_price %}
+                                        <div class="price-row wholesale">
+                                            <span class="price-wholesale">{{ product.wholesale_price }} ₴</span>
                                             <small class="price-type">опт</small>
-                                        {% else %}
-                                            {{ product.retail_price }} ₴
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                                
+                                <!-- Градація цін -->
+                                {% if product.price_3_qty or product.price_5_qty %}
+                                    <div class="quantity-prices">
+                                        {% if product.price_3_qty %}
+                                            <div class="qty-price">
+                                                <span>від 3 шт: <strong>{{ product.price_3_qty }} ₴</strong></span>
+                                            </div>
                                         {% endif %}
-                                    </span>
+                                        {% if product.price_5_qty %}
+                                            <div class="qty-price">
+                                                <span>від 5 шт: <strong>{{ product.price_5_qty }} ₴</strong></span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
                                 {% endif %}
                             </div>
                             
@@ -164,10 +181,10 @@
 
 <!-- Sale Products Section -->
 {% if sale_products %}
-<section class="sale-section section-padding" aria-label="Акційні товари">
+<section class="sale-section section-padding" aria-label="Акції">
     <div class="container">
         <div class="section-header text-center">
-            <h2 class="section-title text-primary">Акційні товари</h2>
+            <h2 class="section-title text-primary">Акції</h2>
             <p class="section-subtitle">
                 Встигніть придбати за вигідними цінами!
             </p>
@@ -186,9 +203,16 @@
                                 </div>
                             {% endif %}
                             
-                            <span class="product-badge sale-badge">
-                                -{{ product.get_discount_percentage }}%
-                            </span>
+                            <!-- Стікери товару -->
+                            {% if product.get_stickers %}
+                                <div class="product-stickers">
+                                    {% for sticker in product.get_stickers %}
+                                        <span class="product-sticker sticker-{{ sticker.type }}">
+                                            {{ sticker.text }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                         </a>
                     </div>
                     
@@ -200,6 +224,32 @@
                         <div class="product-price">
                             <span class="price-old">{{ product.retail_price }} ₴</span>
                             <span class="price-current">{{ product.sale_price }} ₴</span>
+                            
+                            <!-- Додаткові ціни -->
+                            {% if product.wholesale_price %}
+                                <div class="additional-prices">
+                                    <div class="price-row wholesale">
+                                        <span class="price-wholesale">{{ product.wholesale_price }} ₴</span>
+                                        <small class="price-type">опт</small>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Градація цін -->
+                            {% if product.price_3_qty or product.price_5_qty %}
+                                <div class="quantity-prices">
+                                    {% if product.price_3_qty %}
+                                        <div class="qty-price">
+                                            <span>від 3 шт: <strong>{{ product.price_3_qty }} ₴</strong></span>
+                                        </div>
+                                    {% endif %}
+                                    {% if product.price_5_qty %}
+                                        <div class="qty-price">
+                                            <span>від 5 шт: <strong>{{ product.price_5_qty }} ₴</strong></span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
                         </div>
                         
                         <div class="product-actions">
@@ -221,7 +271,7 @@
         
         <div class="text-center mt-5">
             <a href="{% url 'products:sale' %}" class="btn btn-primary btn-lg">
-                Всі акційні товари
+                Всі акції
             </a>
         </div>
     </div>

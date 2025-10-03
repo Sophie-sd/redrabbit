@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Акційні товари - Beauty Shop{% endblock %}
-{% block description %}Акційні товари Beauty Shop зі знижками до 50%. Професійна косметика та інструменти за вигідними цінами.{% endblock %}
+{% block title %}Акції - Beauty Shop{% endblock %}
+{% block description %}Акції Beauty Shop зі знижками до 50%. Професійна косметика та інструменти за вигідними цінами.{% endblock %}
 
 {% block content %}
 <!-- Page Header -->
 <section class="page-header section-padding-sm bg-primary">
     <div class="container">
         <div class="page-header-content text-center text-white">
-            <h1 class="page-title">Акційні товари</h1>
+            <h1 class="page-title">Акції</h1>
             <p class="page-subtitle">Встигніть придбати за вигідними цінами!</p>
             
         </div>
@@ -89,9 +89,35 @@
                             <div class="product-price">
                                 <span class="price-old">{{ product.retail_price }} ₴</span>
                                 <span class="price-current">{{ product.sale_price }} ₴</span>
-                                <span class="price-save">
-                                    Економія: {{ product.get_discount_amount }} ₴
-                                </span>
+                                <div class="price-save">
+                                    Економія: {{ product.get_discount_amount|default:"0" }} ₴
+                                </div>
+                                
+                                <!-- Додаткові ціни -->
+                                {% if product.wholesale_price %}
+                                    <div class="additional-prices">
+                                        <div class="price-row wholesale">
+                                            <span class="price-wholesale">{{ product.wholesale_price }} ₴</span>
+                                            <small class="price-type">опт</small>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                <!-- Градація цін -->
+                                {% if product.price_3_qty or product.price_5_qty %}
+                                    <div class="quantity-prices">
+                                        {% if product.price_3_qty %}
+                                            <div class="qty-price">
+                                                <span>від 3 шт: <strong>{{ product.price_3_qty }} ₴</strong></span>
+                                            </div>
+                                        {% endif %}
+                                        {% if product.price_5_qty %}
+                                            <div class="qty-price">
+                                                <span>від 5 шт: <strong>{{ product.price_5_qty }} ₴</strong></span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
                             </div>
                             
                             <div class="product-actions">

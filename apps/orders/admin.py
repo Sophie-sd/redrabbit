@@ -3,13 +3,16 @@
 """
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Order, OrderItem, Newsletter, Promotion
+from django.db.models import Q
+from datetime import datetime, timedelta
+from .models import Order, OrderItem, Newsletter, Promotion, PromotionBanner
 
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
     readonly_fields = ['get_cost']
+    fields = ['product', 'quantity', 'price', 'get_cost']
     
     def get_cost(self, obj):
         if obj.id:
@@ -21,25 +24,30 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    """Адміністрування замовлень"""
+    """Адміністрування замовлень з розширеними фільтрами"""
     
     list_display = [
         'order_number', 'get_customer_name', 'status', 
         'total', 'payment_method', 'is_paid', 'created_at'
     ]
     list_filter = [
-        'status', 'payment_method', 'delivery_method', 
-        'is_paid', 'created_at'
+        'status', 
+        'payment_method', 
+        'delivery_method', 
+        'is_paid', 
+        ('created_at', admin.DateFieldListFilter),
+        'user__is_wholesale',
     ]
     search_fields = [
         'order_number', 'first_name', 'last_name', 
-        'email', 'phone'
+        'email', 'phone', 'delivery_city'
     ]
     readonly_fields = [
         'order_number', 'created_at', 'updated_at',
         'get_total_cost', 'get_customer_info'
     ]
     list_editable = ['status', 'is_paid']
+    date_hierarchy = 'created_at'
     
     inlines = [OrderItemInline]
     
@@ -68,21 +76,28 @@ class OrderAdmin(admin.ModelAdmin):
         }),
     )
     
-    actions = ['mark_as_confirmed', 'mark_as_shipped', 'mark_as_delivered']
+    actions = [
+        'mark_as_confirmed', 'mark_as_shipped', 'mark_as_delivered',
+        'export_orders_csv', 'send_order_confirmation'
+    ]
+    
+    def get_queryset(self, request):
+        """Оптимізуємо запити"""
+        return super().get_queryset(request).select_related('user').prefetch_related('items__product')
     
     def get_customer_info(self, obj):
         """Інформація про клієнта"""
         if obj.user:
-            wholesale_status = "Опт" if obj.user.is_wholesale else "Роздріб"
+            wholesale_status = "🔥 Опт" if hasattr(obj.user, 'is_wholesale') and obj.user.is_wholesale else "👤 Роздріб"
             return format_html(
-                '<strong>{}</strong><br>Email: {}<br>Телефон: {}<br>Статус: {}',
+                '<strong>{}</strong><br>📧 {}<br>📞 {}<br>💼 {}',
                 obj.get_customer_name(),
                 obj.email,
                 obj.phone,
                 wholesale_status
             )
         return format_html(
-            '<strong>{}</strong><br>Email: {}<br>Телефон: {}',
+            '<strong>{}</strong><br>📧 {}<br>📞 {}',
             obj.get_customer_name(),
             obj.email,
             obj.phone
@@ -92,7 +107,10 @@ class OrderAdmin(admin.ModelAdmin):
     
     def get_total_cost(self, obj):
         """Загальна вартість з доставкою"""
-        return f"{obj.get_total_cost():.2f} грн"
+        return format_html(
+            '<strong style="color: green;">{:.2f} грн</strong>',
+            obj.get_total_cost()
+        )
     
     get_total_cost.short_description = "Загальна вартість"
     
@@ -192,4 +210,54 @@ class PromotionAdmin(admin.ModelAdmin):
         updated = queryset.update(is_active=False)
         self.message_user(request, f"Деактивовано {updated} акцій")
     
-    deactivate_promotions.short_description = "Деактивувати акції"
+@admin.register(PromotionBanner)
+class PromotionBannerAdmin(admin.ModelAdmin):
+    """Адміністрування банерів акцій"""
+    
+    list_display = [
+        'title', 'get_banner_preview', 'link_type', 'is_active', 
+        'sort_order', 'created_at'
+    ]
+    list_filter = ['is_active', 'link_type', 'created_at']
+    search_fields = ['title']
+    list_editable = ['is_active', 'sort_order']
+    
+    fieldsets = (
+        ('Основна інформація', {
+            'fields': ('title', 'image', 'sort_order', 'is_active')
+        }),
+        ('Посилання', {
+            'fields': (
+                'link_type', 
+                'category', 'product', 'promotion', 'custom_url'
+            ),
+            'description': 'Оберіть тип посилання та заповніть відповідне поле'
+        }),
+    )
+    
+    def get_banner_preview(self, obj):
+        """Попередній перегляд банера"""
+        if obj.image:
+            return format_html(
+                '<img src="{}" style="width: 100px; height: 50px; object-fit: cover; border-radius: 5px;" />',
+                obj.image.url
+            )
+        return "🖼️ Немає"
+    
+    get_banner_preview.short_description = "Прев'ю"
+    
+    actions = ['activate_banners', 'deactivate_banners']
+    
+    def activate_banners(self, request, queryset):
+        """Активувати банери"""
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f"Активовано {updated} банерів")
+    
+    activate_banners.short_description = "Активувати банери"
+    
+    def deactivate_banners(self, request, queryset):
+        """Деактивувати банери"""
+        updated = queryset.update(is_active=False)
+        self.message_user(request, f"Деактивовано {updated} банерів")
+    
+    deactivate_banners.short_description = "Деактивувати банери"

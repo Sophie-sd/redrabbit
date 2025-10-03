@@ -88,7 +88,25 @@ class Product(models.Model):
         blank=True
     )
     
-    # Кількісні знижки
+    # Градація цін
+    price_3_qty = models.DecimalField(
+        'Ціна від 3 шт', 
+        max_digits=10, 
+        decimal_places=2, 
+        null=True, 
+        blank=True,
+        help_text='Ціна при покупці від 3 штук'
+    )
+    price_5_qty = models.DecimalField(
+        'Ціна від 5 шт', 
+        max_digits=10, 
+        decimal_places=2, 
+        null=True, 
+        blank=True,
+        help_text='Ціна при покупці від 5 штук'
+    )
+    
+    # Кількісні знижки (залишаємо для зворотної сумісності)
     min_quantity_discount = models.PositiveIntegerField(
         'Мінімальна кількість для знижки', 
         default=1,
@@ -102,15 +120,29 @@ class Product(models.Model):
         blank=True
     )
     
+    # Стікери
+    is_top = models.BooleanField('Топ', default=False, help_text='Топ товар')
+    is_new = models.BooleanField('Новинка', default=False, help_text='Новий товар')
+    # is_sale вже є вище для акційних товарів
+    
     # Додаткові поля
     sku = models.CharField('Артикул', max_length=50, unique=True, blank=True)
     stock = models.PositiveIntegerField('Кількість на складі', default=0)
     is_active = models.BooleanField('Активний', default=True)
     is_featured = models.BooleanField('Рекомендований', default=False)
+    sort_order = models.PositiveIntegerField('Порядок сортування', default=0)
     
     # Дати
     created_at = models.DateTimeField('Створено', auto_now_add=True)
     updated_at = models.DateTimeField('Оновлено', auto_now=True)
+    
+    # Зв'язки
+    tags = models.ManyToManyField(
+        'ProductTag', 
+        verbose_name='Теги', 
+        blank=True,
+        help_text='Теги для фільтрації товарів'
+    )
     
     # SEO поля
     meta_title = models.CharField('SEO заголовок', max_length=200, blank=True)
@@ -135,11 +167,12 @@ class Product(models.Model):
         """
         Повертає ціну для конкретного користувача з урахуванням:
         - Оптового статусу
+        - Градації цін (3 шт, 5 шт)
         - Кількісних знижок
         - Акційних цін
         """
         # Базова ціна
-        if user and user.is_authenticated and user.is_wholesale and self.wholesale_price:
+        if user and user.is_authenticated and hasattr(user, 'is_wholesale') and user.is_wholesale and self.wholesale_price:
             base_price = self.wholesale_price
         else:
             base_price = self.retail_price
@@ -148,11 +181,46 @@ class Product(models.Model):
         if self.is_sale and self.sale_price:
             base_price = min(base_price, self.sale_price)
         
-        # Кількісна знижка
+        # Градація цін (нова система)
+        if quantity >= 5 and self.price_5_qty:
+            base_price = min(base_price, self.price_5_qty)
+        elif quantity >= 3 and self.price_3_qty:
+            base_price = min(base_price, self.price_3_qty)
+        
+        # Стара система кількісних знижок (для зворотної сумісності)
         if quantity >= self.min_quantity_discount and self.quantity_discount_price:
             base_price = min(base_price, self.quantity_discount_price)
         
         return base_price
+    
+    def get_all_prices(self):
+        """Повертає всі доступні ціни для відображення"""
+        prices = {
+            'retail': self.retail_price,
+            'wholesale': self.wholesale_price,
+            'sale': self.sale_price if self.is_sale else None,
+            'qty_3': self.price_3_qty,
+            'qty_5': self.price_5_qty,
+        }
+        return {k: v for k, v in prices.items() if v is not None}
+    
+    def get_stickers(self):
+        """Повертає список активних стікерів"""
+        stickers = []
+        if self.is_top:
+            stickers.append({'type': 'top', 'text': 'Топ'})
+        if self.is_new:
+            stickers.append({'type': 'new', 'text': 'Новинка'})
+        if self.is_sale:
+            stickers.append({'type': 'sale', 'text': f'-{self.get_discount_percentage()}%'})
+        return stickers
+    
+    def get_similar_products(self, limit=4):
+        """Повертає схожі товари з тієї ж категорії"""
+        return Product.objects.filter(
+            category=self.category,
+            is_active=True
+        ).exclude(id=self.id).order_by('?')[:limit]
     
     def get_discount_percentage(self):
         """Розраховує відсоток знижки"""
@@ -195,6 +263,27 @@ class ProductImage(models.Model):
     
     def __str__(self):
         return f"Зображення для {self.product.name}"
+
+
+class ProductTag(models.Model):
+    """Теги товарів для фільтрації"""
+    
+    name = models.CharField('Назва тегу', max_length=50, unique=True)
+    slug = models.SlugField('URL', max_length=50, unique=True, blank=True)
+    is_active = models.BooleanField('Активний', default=True)
+    
+    class Meta:
+        verbose_name = 'Тег товару'
+        verbose_name_plural = 'Теги товарів'
+        ordering = ['name']
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.name
 
 
 class ProductAttribute(models.Model):

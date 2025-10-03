@@ -14,4 +14,8 @@ urlpatterns = [
     path('about/', views.AboutView.as_view(), name='about'),
     path('contacts/', views.ContactsView.as_view(), name='contacts'),
     path('search/', views.SearchView.as_view(), name='search'),
+    
+    # Нові юридичні сторінки
+    path('terms/', views.TermsView.as_view(), name='terms'),
+    path('privacy/', views.PrivacyView.as_view(), name='privacy'),
 ]

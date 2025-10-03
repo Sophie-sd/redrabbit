@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, ProductImage, ProductAttribute
+from .models import Category, Product, ProductImage, ProductAttribute, ProductTag
 
 
 class ProductImageInline(admin.TabularInline):
@@ -10,6 +10,17 @@ class ProductImageInline(admin.TabularInline):
 class ProductAttributeInline(admin.TabularInline):
     model = ProductAttribute
     extra = 1
+
+
+@admin.register(ProductTag)
+class ProductTagAdmin(admin.ModelAdmin):
+    """Адміністрування тегів товарів"""
+    
+    list_display = ['name', 'slug', 'is_active']
+    list_filter = ['is_active']
+    search_fields = ['name']
+    prepopulated_fields = {'slug': ('name',)}
+    list_editable = ['is_active']
 
 
 @admin.register(Category)
@@ -28,29 +39,40 @@ class ProductAdmin(admin.ModelAdmin):
     """Адміністрування товарів"""
     
     list_display = [
-        'name', 'category', 'retail_price', 'wholesale_price', 
-        'is_sale', 'is_active', 'is_featured', 'stock'
+        'name', 'category', 'sku', 'retail_price', 'wholesale_price', 
+        'is_top', 'is_new', 'is_sale', 'is_active', 'is_featured', 'stock', 'sort_order'
     ]
-    list_filter = ['is_active', 'is_sale', 'is_featured', 'category']
-    search_fields = ['name', 'sku']
+    list_filter = [
+        'is_active', 'is_sale', 'is_featured', 'is_top', 'is_new', 
+        'category', 'tags'
+    ]
+    search_fields = ['name', 'sku', 'description']
     prepopulated_fields = {'slug': ('name',)}
-    list_editable = ['is_active', 'is_sale', 'is_featured']
+    list_editable = ['is_active', 'is_sale', 'is_featured', 'is_top', 'is_new', 'sort_order']
+    filter_horizontal = ['tags']
     
     inlines = [ProductImageInline, ProductAttributeInline]
     
     fieldsets = (
         ('Основна інформація', {
-            'fields': ('name', 'slug', 'category', 'description', 'sku')
+            'fields': ('name', 'slug', 'category', 'description', 'sku', 'tags')
         }),
         ('Ціни', {
             'fields': (
-                'retail_price', 'wholesale_price', 
-                'is_sale', 'sale_price',
-                'min_quantity_discount', 'quantity_discount_price'
+                ('retail_price', 'wholesale_price'),
+                ('is_sale', 'sale_price'),
+                ('price_3_qty', 'price_5_qty'),
+                ('min_quantity_discount', 'quantity_discount_price')
+            )
+        }),
+        ('Стікери та позиціонування', {
+            'fields': (
+                ('is_top', 'is_new', 'is_featured'),
+                'sort_order'
             )
         }),
         ('Склад та статус', {
-            'fields': ('stock', 'is_active', 'is_featured')
+            'fields': ('stock', 'is_active')
         }),
         ('SEO', {
             'fields': ('meta_title', 'meta_description'),

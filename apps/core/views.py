@@ -53,6 +53,16 @@ class ContactsView(TemplateView):
     template_name = 'core/contacts.html'
 
 
+class TermsView(TemplateView):
+    """Умови використання"""
+    template_name = 'core/terms.html'
+
+
+class PrivacyView(TemplateView):
+    """Політика конфіденційності"""
+    template_name = 'core/privacy.html'
+
+
 class SearchView(TemplateView):
     """Пошук товарів"""
     template_name = 'core/search.html'

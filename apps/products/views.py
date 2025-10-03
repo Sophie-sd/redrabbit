@@ -31,7 +31,7 @@ class ProductDetailView(DetailView):
 
 
 class SaleProductsView(ListView):
-    """Акційні товари"""
+    """Акції"""
     model = Product
     template_name = 'products/sale.html'
     context_object_name = 'products'
