@@ -43,7 +43,11 @@
         <div class="categories-grid">
             {% for category in categories %}
                 <div class="category-card card fade-in{% if category.name == 'Акційні товари' %} category-featured{% endif %}">
-                    <a href="{{ category.get_absolute_url }}" class="category-link">
+                    {% if category.name == 'Акційні товари' %}
+                        <a href="{% url 'products:sale' %}" class="category-link">
+                    {% else %}
+                        <a href="{{ category.get_absolute_url }}" class="category-link">
+                    {% endif %}
                         <div class="category-image">
                             {% if category.image %}
                                 <img src="{{ category.image.url }}" alt="{{ category.name }}" loading="lazy">
