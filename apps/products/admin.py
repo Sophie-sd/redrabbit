@@ -32,6 +32,13 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ['name']
     prepopulated_fields = {'slug': ('name',)}
     list_editable = ['is_active', 'sort_order']
+    ordering = ['sort_order', 'name']
+    
+    def get_queryset(self, request):
+        """Виключаємо видалені категорії"""
+        qs = super().get_queryset(request)
+        # Можемо додати фільтрацію тут, якщо потрібно
+        return qs
 
 
 @admin.register(Product)
@@ -79,3 +86,9 @@ class ProductAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """Налаштування падаючого списку для категорій"""
+        if db_field.name == "category":
+            kwargs["queryset"] = Category.objects.filter(is_active=True).order_by('sort_order', 'name')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)

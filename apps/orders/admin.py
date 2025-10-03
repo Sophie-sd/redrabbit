@@ -246,6 +246,16 @@ class PromotionBannerAdmin(admin.ModelAdmin):
     
     get_banner_preview.short_description = "Прев'ю"
     
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """Налаштування падаючих списків"""
+        if db_field.name == "category":
+            from apps.products.models import Category
+            kwargs["queryset"] = Category.objects.filter(is_active=True).order_by('sort_order', 'name')
+        elif db_field.name == "product":
+            from apps.products.models import Product
+            kwargs["queryset"] = Product.objects.filter(is_active=True).order_by('name')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
     actions = ['activate_banners', 'deactivate_banners']
     
     def activate_banners(self, request, queryset):

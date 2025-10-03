@@ -40,32 +40,54 @@
             </p>
         </div>
         
-        <div class="categories-slider-container">
-            <div class="categories-slider">
-                {% for category in categories %}
-                    <div class="category-card card fade-in">
-                        <a href="{{ category.get_absolute_url }}" class="category-link">
-                            <div class="category-image">
-                                {% if category.image %}
-                                    <img src="{{ category.image.url }}" alt="{{ category.name }}" loading="lazy">
-                                {% else %}
-                                    <div class="category-placeholder">
-                                        <i class="icon-category" aria-hidden="true">💄</i>
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="category-content">
-                                <h3 class="category-name">{{ category.name }}</h3>
-                                {% if category.description %}
-                                    <p class="category-description">{{ category.description|truncatewords:10 }}</p>
-                                {% endif %}
-                            </div>
-                        </a>
-                    </div>
-                {% endfor %}
-            </div>
-            <button class="slider-btn slider-btn-prev" aria-label="Попередні категорії">‹</button>
-            <button class="slider-btn slider-btn-next" aria-label="Наступні категорії">›</button>
+        <div class="categories-grid">
+            {% for category in categories %}
+                <div class="category-card card fade-in{% if category.name == 'Акційні товари' %} category-featured{% endif %}">
+                    <a href="{{ category.get_absolute_url }}" class="category-link">
+                        <div class="category-image">
+                            {% if category.image %}
+                                <img src="{{ category.image.url }}" alt="{{ category.name }}" loading="lazy">
+                            {% else %}
+                                <div class="category-placeholder">
+                                    {% if category.name == 'Акційні товари' %}
+                                        <span class="category-emoji">🔥</span>
+                                    {% elif category.name == 'Нігті' %}
+                                        <span class="category-emoji">💅</span>
+                                    {% elif category.name == 'Волосся' %}
+                                        <span class="category-emoji">💇</span>
+                                    {% elif category.name == 'Брови та вії' %}
+                                        <span class="category-emoji">👁️</span>
+                                    {% elif category.name == 'Депіляція' %}
+                                        <span class="category-emoji">✨</span>
+                                    {% elif category.name == 'Косметика' %}
+                                        <span class="category-emoji">💄</span>
+                                    {% elif category.name == 'Макіяж' %}
+                                        <span class="category-emoji">💋</span>
+                                    {% elif category.name == 'Одноразова продукція' %}
+                                        <span class="category-emoji">🧼</span>
+                                    {% elif category.name == 'Дезінфекція та стерилізація' %}
+                                        <span class="category-emoji">🧴</span>
+                                    {% elif category.name == 'Меблі для салонів' %}
+                                        <span class="category-emoji">🪑</span>
+                                    {% else %}
+                                        <span class="category-emoji">📦</span>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            
+                            {% if category.name == 'Акційні товари' %}
+                                <div class="category-badge">ГАРЯЧІ ПРОПОЗИЦІЇ</div>
+                            {% endif %}
+                        </div>
+                        <div class="category-content">
+                            <h3 class="category-name">{{ category.name }}</h3>
+                            {% if category.description %}
+                                <p class="category-description">{{ category.description|truncatewords:8 }}</p>
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
         </div>
     </div>
 </section>
