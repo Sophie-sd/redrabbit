@@ -40,14 +40,6 @@
             </p>
         </div>
         
-        <!-- ДЕБАГ: Показуємо кількість категорій -->
-        <div style="background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px;">
-            <strong>ДЕБАГ:</strong> Кількість категорій: {{ categories|length }}
-            {% for cat in categories %}
-                <div>{{ forloop.counter }}. {{ cat.name }} ({{ cat.slug }})</div>
-            {% endfor %}
-        </div>
-        
         <div class="categories-grid">
             {% for category in categories %}
                 <div class="category-card card fade-in{% if category.name == 'Акційні товари' %} category-featured{% endif %}">
