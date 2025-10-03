@@ -1,4 +1,4 @@
-/* Стилі для категорій товарів */
+/* Стилі для категорій товарів - ОСНОВНИЙ ФАЙЛ */
 
 .categories-grid {
     display: grid;
@@ -9,10 +9,15 @@
 
 .category-card {
     position: relative;
-    transition: all 0.3s ease;
+    background: white;
+    border: 1px solid #eee;
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .category-card:hover {
@@ -25,6 +30,8 @@
     text-decoration: none;
     color: inherit;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .category-image {
@@ -60,6 +67,10 @@
 .category-content {
     padding: 20px;
     background: white;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .category-name {
@@ -68,6 +79,7 @@
     margin: 0 0 8px 0;
     color: #333;
     transition: color 0.3s ease;
+    text-align: center;
 }
 
 .category-description {
@@ -75,6 +87,7 @@
     color: #666;
     margin: 0;
     line-height: 1.4;
+    text-align: center;
 }
 
 .category-card:hover .category-name {
@@ -128,6 +141,7 @@
     letter-spacing: 0.5px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     animation: badgeBounce 1.5s ease-in-out infinite;
+    z-index: 2;
 }
 
 /* Анімації */
@@ -219,5 +233,10 @@
     .category-card:hover {
         -webkit-transform: translateY(-5px) translateZ(0);
         transform: translateY(-5px) translateZ(0);
+    }
+    
+    .category-featured:hover {
+        -webkit-transform: translateY(-8px) translateZ(0);
+        transform: translateY(-8px) translateZ(0);
     }
 }

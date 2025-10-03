@@ -17,7 +17,7 @@ class HomeView(TemplateView):
         context.update({
             'featured_products': Product.objects.filter(is_featured=True, is_active=True)[:8],
             'sale_products': Product.objects.filter(is_sale=True, is_active=True)[:5],
-            'categories': Category.objects.filter(parent=None, is_active=True)[:12],
+            'categories': Category.objects.filter(parent=None, is_active=True).order_by('sort_order', 'name'),
             'latest_articles': Article.objects.filter(is_published=True)[:3],
         })
         return context
@@ -29,7 +29,7 @@ class CatalogView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.filter(parent=None, is_active=True)
+        context['categories'] = Category.objects.filter(parent=None, is_active=True).order_by('sort_order', 'name')
         return context
 
 
