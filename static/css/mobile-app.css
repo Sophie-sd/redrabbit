@@ -67,13 +67,6 @@
     margin-bottom: 30px;
 }
 
-.subscribe-title {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 20px;
-    color: white;
-}
-
 .subscribe-form .form-group {
     margin-bottom: 15px;
 }
@@ -284,6 +277,38 @@
     text-decoration: underline;
 }
 
+/* Кнопка каталогу для мобільних */
+.mobile-catalog-btn {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-catalog-btn {
+        display: block;
+        text-align: center;
+        padding: 30px 15px;
+        background: linear-gradient(135deg, #e91e63 0%, #f06292 100%);
+        margin: 0;
+    }
+    
+    .mobile-catalog-btn .btn {
+        background: white;
+        color: #e91e63;
+        border: none;
+        padding: 15px 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .mobile-catalog-btn .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+}
+
 /* Media запити */
 @media (max-width: 768px) {
     /* Показуємо мобільні елементи */
@@ -327,6 +352,51 @@
         flex: 1;
         max-width: none;
         margin: 0 0 0 15px;
+    }
+    
+    /* Ховаємо категорії на мобільних */
+    .categories-section {
+        display: none;
+    }
+    
+    /* Центруємо текст у features */
+    .feature-description {
+        text-align: center;
+    }
+    
+    /* Кнопка прокрутки вгору над навігацією */
+    .scroll-to-top {
+        position: fixed;
+        bottom: calc(70px + env(safe-area-inset-bottom));
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        background: #e91e63;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 999;
+        box-shadow: 0 4px 12px rgba(233, 30, 99, 0.4);
+    }
+    
+    .scroll-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .scroll-to-top:hover {
+        background: #c2185b;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(233, 30, 99, 0.5);
+    }
+    
+    .scroll-to-top:active {
+        transform: translateY(-1px);
     }
     
     /* Додаємо відступ знизу для контенту */
