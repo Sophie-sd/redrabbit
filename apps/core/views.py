@@ -4,7 +4,7 @@ Core Views - основні представлення сайту
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.db.models import Q
-from apps.products.models import Product, Category
+from apps.products.models import Product, Category, RecommendedProduct
 from apps.blog.models import Article
 
 
@@ -14,11 +14,16 @@ class HomeView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
+        # Отримуємо рекомендовані товари
+        recommended_products = RecommendedProduct.objects.filter(
+            is_active=True,
+            product__is_active=True
+        ).select_related('product')[:10]
+        
         context.update({
-            'featured_products': Product.objects.filter(is_featured=True, is_active=True)[:8],
-            'sale_products': Product.objects.filter(is_sale=True, is_active=True)[:5],
+            'recommended_products': [rp.product for rp in recommended_products],
             'categories': Category.objects.filter(parent=None, is_active=True).order_by('sort_order', 'name'),
-            'latest_articles': Article.objects.filter(is_published=True)[:3],
         })
         return context
 

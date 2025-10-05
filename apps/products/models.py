@@ -301,3 +301,25 @@ class ProductAttribute(models.Model):
     
     def __str__(self):
         return f"{self.name}: {self.value}"
+
+
+class RecommendedProduct(models.Model):
+    """Рекомендовані товари на головній сторінці"""
+    
+    product = models.ForeignKey(
+        Product, 
+        on_delete=models.CASCADE, 
+        verbose_name='Товар',
+        limit_choices_to={'is_active': True}
+    )
+    sort_order = models.PositiveIntegerField('Порядок відображення', default=0)
+    is_active = models.BooleanField('Активний', default=True)
+    created_at = models.DateTimeField('Додано', auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'Рекомендований товар'
+        verbose_name_plural = 'Рекомендовані товари'
+        ordering = ['sort_order', '-created_at']
+    
+    def __str__(self):
+        return f"{self.product.name} (позиція {self.sort_order})"

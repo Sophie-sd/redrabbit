@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, ProductImage, ProductAttribute, ProductTag
+from .models import Category, Product, ProductImage, ProductAttribute, ProductTag, RecommendedProduct
 
 
 class ProductImageInline(admin.TabularInline):
@@ -92,3 +92,31 @@ class ProductAdmin(admin.ModelAdmin):
         if db_field.name == "category":
             kwargs["queryset"] = Category.objects.filter(is_active=True).order_by('sort_order', 'name')
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+@admin.register(RecommendedProduct)
+class RecommendedProductAdmin(admin.ModelAdmin):
+    """Адміністрування рекомендованих товарів на головній сторінці"""
+    
+    list_display = ['product', 'sort_order', 'is_active', 'created_at']
+    list_filter = ['is_active', 'created_at']
+    search_fields = ['product__name']
+    list_editable = ['sort_order', 'is_active']
+    ordering = ['sort_order', '-created_at']
+    
+    def get_queryset(self, request):
+        """Обмежуємо список 10 товарами"""
+        qs = super().get_queryset(request)
+        return qs[:10]
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """Налаштування падаючого списку для товарів"""
+        if db_field.name == "product":
+            kwargs["queryset"] = Product.objects.filter(is_active=True).order_by('name')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
+    def has_add_permission(self, request):
+        """Обмежуємо кількість рекомендованих товарів до 10"""
+        if RecommendedProduct.objects.count() >= 10:
+            return False
+        return super().has_add_permission(request)
