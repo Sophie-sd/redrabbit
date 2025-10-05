@@ -287,25 +287,26 @@
         display: block;
         text-align: center;
         padding: 30px 15px;
-        background: linear-gradient(135deg, #e91e63 0%, #f06292 100%);
+        background: #f8f9fa;
         margin: 0;
     }
     
     .mobile-catalog-btn .btn {
-        background: white;
-        color: #e91e63;
+        background: #e91e63;
+        color: white;
         border: none;
         padding: 15px 50px;
         font-size: 1.1rem;
         font-weight: 600;
         border-radius: 30px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
         transition: all 0.3s ease;
     }
     
     .mobile-catalog-btn .btn:hover {
+        background: #c2185b;
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
     }
 }
 

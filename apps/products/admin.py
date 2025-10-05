@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, ProductImage, ProductAttribute, ProductTag, RecommendedProduct
+from .models import Category, Product, ProductImage, ProductAttribute, ProductTag, RecommendedProduct, PromotionProduct
 
 
 class ProductImageInline(admin.TabularInline):
@@ -120,3 +120,60 @@ class RecommendedProductAdmin(admin.ModelAdmin):
         if RecommendedProduct.objects.count() >= 10:
             return False
         return super().has_add_permission(request)
+
+
+@admin.register(PromotionProduct)
+class PromotionProductAdmin(admin.ModelAdmin):
+    """Адміністрування акційних пропозицій на головній сторінці"""
+    
+    list_display = [
+        'product', 
+        'get_original_price_display', 
+        'discount_price', 
+        'get_discount_display',
+        'sort_order', 
+        'is_active', 
+        'updated_at'
+    ]
+    list_filter = ['is_active', 'created_at', 'updated_at']
+    search_fields = ['product__name', 'product__sku']
+    list_editable = ['discount_price', 'sort_order', 'is_active']
+    ordering = ['sort_order', '-created_at']
+    readonly_fields = ['created_at', 'updated_at', 'get_discount_percentage']
+    
+    fieldsets = (
+        ('Товар', {
+            'fields': ('product',)
+        }),
+        ('Ціни', {
+            'fields': (
+                'discount_price',
+                'get_discount_percentage'
+            ),
+            'description': 'Оригінальна ціна буде перекреслена на сайті, відображатиметься акційна ціна'
+        }),
+        ('Налаштування', {
+            'fields': ('sort_order', 'is_active')
+        }),
+        ('Дати', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def get_original_price_display(self, obj):
+        """Відображення оригінальної ціни"""
+        return f"{obj.get_original_price()} ₴"
+    get_original_price_display.short_description = 'Оригінальна ціна'
+    
+    def get_discount_display(self, obj):
+        """Відображення знижки у відсотках"""
+        percentage = obj.get_discount_percentage()
+        return f"-{percentage}%"
+    get_discount_display.short_description = 'Знижка'
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """Налаштування падаючого списку для товарів"""
+        if db_field.name == "product":
+            kwargs["queryset"] = Product.objects.filter(is_active=True).order_by('name')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)

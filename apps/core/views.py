@@ -4,7 +4,7 @@ Core Views - основні представлення сайту
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.db.models import Q
-from apps.products.models import Product, Category, RecommendedProduct
+from apps.products.models import Product, Category, RecommendedProduct, PromotionProduct
 from apps.blog.models import Article
 
 
@@ -21,8 +21,15 @@ class HomeView(TemplateView):
             product__is_active=True
         ).select_related('product')[:10]
         
+        # Отримуємо акційні пропозиції
+        promotion_products = PromotionProduct.objects.filter(
+            is_active=True,
+            product__is_active=True
+        ).select_related('product__category')[:20]
+        
         context.update({
             'recommended_products': [rp.product for rp in recommended_products],
+            'promotion_products': promotion_products,
             'categories': Category.objects.filter(parent=None, is_active=True).order_by('sort_order', 'name'),
         })
         return context

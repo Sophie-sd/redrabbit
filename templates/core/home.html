@@ -32,6 +32,76 @@
     <a href="{% url 'core:catalog' %}" class="btn">Переглянути каталог</a>
 </div>
 
+<!-- Mobile Promotions Section (показується тільки на мобільних) -->
+<section class="promotions-section mobile-only" aria-label="Акційні пропозиції">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2 class="section-title">Акційні пропозиції</h2>
+            <p class="section-subtitle">Вигідні пропозиції з обмеженим терміном дії</p>
+        </div>
+        
+        {% if promotion_products %}
+        <div class="promotions-slider-container">
+            <button class="promo-nav-btn promo-prev-btn" aria-label="Попередні товари">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            
+            <div class="promotions-slider" id="promotionsSlider">
+                {% for promo in promotion_products %}
+                    <div class="promo-card">
+                        <div class="promo-image">
+                            <a href="{{ promo.product.get_absolute_url }}">
+                                {% if promo.product.images.first %}
+                                    <img src="{{ promo.product.images.first.image.url }}" alt="{{ promo.product.name }}" loading="lazy">
+                                {% else %}
+                                    <div class="product-placeholder">
+                                        <span class="placeholder-icon">📦</span>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="promo-badge">-{{ promo.get_discount_percentage }}%</div>
+                            </a>
+                        </div>
+                        
+                        <div class="promo-content">
+                            <h3 class="promo-name">
+                                <a href="{{ promo.product.get_absolute_url }}">{{ promo.product.name }}</a>
+                            </h3>
+                            
+                            <div class="promo-price">
+                                <span class="price-old">{{ promo.get_original_price }} ₴</span>
+                                <span class="price-new">{{ promo.discount_price }} ₴</span>
+                            </div>
+                            
+                            <button class="btn btn-primary btn-sm add-to-cart" 
+                                    data-product-id="{{ promo.product.id }}"
+                                    data-product-name="{{ promo.product.name }}"
+                                    {% if not promo.product.is_in_stock %}disabled{% endif %}>
+                                {% if promo.product.is_in_stock %}
+                                    Купити
+                                {% else %}
+                                    Немає в наявності
+                                {% endif %}
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <button class="promo-nav-btn promo-next-btn" aria-label="Наступні товари">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+        {% else %}
+            <p class="text-center text-muted">Наразі немає акційних пропозицій</p>
+        {% endif %}
+    </div>
+</section>
+
 <!-- 2. Categories Section -->
 <section class="categories-section section-padding" aria-label="Категорії товарів">
     <div class="container">
@@ -99,6 +169,76 @@
                 </div>
             {% endfor %}
         </div>
+    </div>
+</section>
+
+<!-- Desktop Promotions Section (показується тільки на десктопі) -->
+<section class="promotions-section desktop-only" aria-label="Акційні пропозиції">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2 class="section-title">Акційні пропозиції</h2>
+            <p class="section-subtitle">Вигідні пропозиції з обмеженим терміном дії</p>
+        </div>
+        
+        {% if promotion_products %}
+        <div class="promotions-slider-container">
+            <button class="promo-nav-btn promo-prev-btn" aria-label="Попередні товари">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            
+            <div class="promotions-slider" id="promotionsSliderDesktop">
+                {% for promo in promotion_products %}
+                    <div class="promo-card">
+                        <div class="promo-image">
+                            <a href="{{ promo.product.get_absolute_url }}">
+                                {% if promo.product.images.first %}
+                                    <img src="{{ promo.product.images.first.image.url }}" alt="{{ promo.product.name }}" loading="lazy">
+                                {% else %}
+                                    <div class="product-placeholder">
+                                        <span class="placeholder-icon">📦</span>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="promo-badge">-{{ promo.get_discount_percentage }}%</div>
+                            </a>
+                        </div>
+                        
+                        <div class="promo-content">
+                            <h3 class="promo-name">
+                                <a href="{{ promo.product.get_absolute_url }}">{{ promo.product.name }}</a>
+                            </h3>
+                            
+                            <div class="promo-price">
+                                <span class="price-old">{{ promo.get_original_price }} ₴</span>
+                                <span class="price-new">{{ promo.discount_price }} ₴</span>
+                            </div>
+                            
+                            <button class="btn btn-primary btn-sm add-to-cart" 
+                                    data-product-id="{{ promo.product.id }}"
+                                    data-product-name="{{ promo.product.name }}"
+                                    {% if not promo.product.is_in_stock %}disabled{% endif %}>
+                                {% if promo.product.is_in_stock %}
+                                    Купити
+                                {% else %}
+                                    Немає в наявності
+                                {% endif %}
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <button class="promo-nav-btn promo-next-btn" aria-label="Наступні товари">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+        {% else %}
+            <p class="text-center text-muted">Наразі немає акційних пропозицій</p>
+        {% endif %}
     </div>
 </section>
 
@@ -295,4 +435,5 @@
 {% block extra_js %}
 <script src="{% static 'js/banner-slider.min.js' %}"></script>
 <script src="{% static 'js/recommended-slider.js' %}"></script>
+<script src="{% static 'js/promotions-slider.js' %}"></script>
 {% endblock %}
