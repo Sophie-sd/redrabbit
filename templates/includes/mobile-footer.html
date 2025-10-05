@@ -4,18 +4,10 @@
 <div class="mobile-footer">
     <!-- Форма підписки -->
     <div class="mobile-subscribe">
+        <p class="mobile-subscribe-title">Першими дізнавайтеся про нові товари та акції</p>
+        
         <form class="subscribe-form" id="mobileSubscribeForm">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="subscribeInterest">Мене цікавить<span class="required">*</span></label>
-                <select id="subscribeInterest" name="interest" class="form-control" required>
-                    <option value="">Всі акції</option>
-                    <option value="new">Новинки</option>
-                    <option value="sale">Знижки</option>
-                    <option value="promo">Акції</option>
-                </select>
-            </div>
-            
             <div class="form-group">
                 <label for="subscribeName">Ваше ім'я<span class="required">*</span></label>
                 <input type="text" id="subscribeName" name="name" class="form-control" placeholder="Ім'я" required>
@@ -27,8 +19,14 @@
             </div>
             
             <div class="form-privacy">
-                Даю згоду на обробку персональних даних згідно 
-                <a href="{% url 'core:privacy' %}">умови користувача</a>
+                <input type="checkbox" 
+                       id="mobilePrivacy" 
+                       name="privacy" 
+                       required>
+                <label for="mobilePrivacy">
+                    Даю згоду на обробку персональних даних згідно 
+                    <a href="{% url 'core:privacy' %}">політики конфіденційності</a>
+                </label>
             </div>
             
             <button type="submit" class="btn btn-subscribe">Підписатися</button>

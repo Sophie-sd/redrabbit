@@ -109,10 +109,11 @@
 }
 
 /* Форма підписки */
-.footer-subscribe-text {
-    font-size: 0.9rem;
-    color: #ccc;
-    margin-bottom: 20px;
+.footer-subscribe-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 25px;
     line-height: 1.5;
 }
 

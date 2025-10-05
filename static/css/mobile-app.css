@@ -67,6 +67,14 @@
     margin-bottom: 30px;
 }
 
+.mobile-subscribe-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
 .subscribe-form .form-group {
     margin-bottom: 15px;
 }
@@ -105,6 +113,23 @@
     color: #999;
     margin-bottom: 15px;
     line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.subscribe-form .form-privacy input[type="checkbox"] {
+    margin-top: 3px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #e91e63;
+    flex-shrink: 0;
+}
+
+.subscribe-form .form-privacy label {
+    cursor: pointer;
+    flex: 1;
 }
 
 .subscribe-form .form-privacy a {
@@ -246,7 +271,6 @@
 /* Копірайт */
 .mobile-copyright {
     padding-top: 20px;
-    border-top: 1px solid #444;
     text-align: center;
 }
 
@@ -368,7 +392,7 @@
     /* Кнопка прокрутки вгору над навігацією */
     .scroll-to-top {
         position: fixed;
-        bottom: calc(70px + env(safe-area-inset-bottom));
+        bottom: calc(80px + env(safe-area-inset-bottom));
         right: 20px;
         width: 45px;
         height: 45px;
