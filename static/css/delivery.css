@@ -105,20 +105,18 @@
     box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
     border: 3px solid white;
     z-index: 30;
-    transform: rotate(-5deg);
     transition: all 0.3s ease;
     cursor: default;
 }
 
 .delivery-badge:hover {
-    transform: rotate(0deg) scale(1.1);
+    transform: scale(1.1);
     box-shadow: 0 6px 20px rgba(233, 30, 99, 0.6);
 }
 
 .delivery-badge.economical {
     background: #28a745;
     box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
-    transform: rotate(3deg);
 }
 
 .delivery-badge.economical:hover {
@@ -128,7 +126,6 @@
 .delivery-badge.free {
     background: #17a2b8;
     box-shadow: 0 4px 15px rgba(23, 162, 184, 0.4);
-    transform: rotate(-3deg);
 }
 
 .delivery-badge.free:hover {
@@ -240,20 +237,18 @@
     box-shadow: 0 4px 15px rgba(52, 58, 64, 0.4);
     border: 3px solid white;
     z-index: 30;
-    transform: rotate(4deg);
     transition: all 0.3s ease;
     cursor: default;
 }
 
 .payment-badge:hover {
-    transform: rotate(0deg) scale(1.1);
+    transform: scale(1.1);
     box-shadow: 0 6px 20px rgba(52, 58, 64, 0.6);
 }
 
 .payment-badge.trusted {
     background: #28a745;
     box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
-    transform: rotate(-4deg);
 }
 
 .payment-badge.trusted:hover {
@@ -263,7 +258,6 @@
 .payment-badge.instant {
     background: #007bff;
     box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
-    transform: rotate(2deg);
 }
 
 .payment-badge.instant:hover {
@@ -273,7 +267,6 @@
 .payment-badge.business {
     background: #6f42c1;
     box-shadow: 0 4px 15px rgba(111, 66, 193, 0.4);
-    transform: rotate(-2deg);
 }
 
 .payment-badge.business:hover {
