@@ -268,6 +268,44 @@
     font-size: 13px;
 }
 
+/* Сітка контактів - 2 стовпчики */
+.contact-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    padding: 15px 0;
+}
+
+.contact-column p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #ccc;
+}
+
+.contact-column strong {
+    color: white;
+    font-size: 14px;
+}
+
+.schedule-column p {
+    margin-bottom: 5px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #999;
+}
+
+@media (max-width: 480px) {
+    .contact-info-grid {
+        gap: 12px;
+    }
+    
+    .contact-column p,
+    .schedule-column p {
+        font-size: 12px;
+    }
+}
+
 /* Копірайт */
 .mobile-copyright {
     padding-top: 20px;
