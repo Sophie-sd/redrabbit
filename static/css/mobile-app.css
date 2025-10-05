@@ -390,31 +390,96 @@
     }
     
     /* Ховаємо елементи header на мобільних */
-    .header-top {
-        display: none;
-    }
-    
-    .mobile-menu-btn,
-    .header-cart,
-    .header-actions .btn,
-    .header-nav {
+    .top-bar,
+    .header-actions,
+    .main-nav,
+    .desktop-nav {
         display: none;
     }
     
     /* Спрощений header для мобільних - тільки логотип і пошук */
-    .header-middle {
-        padding: 10px 15px;
+    .main-header {
+        padding: 10px 0;
     }
     
-    .header-logo {
+    .header-content {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .logo {
         flex: 0 0 auto;
-        max-width: 120px;
     }
     
-    .header-search {
+    .logo-img {
+        max-width: 100px;
+        height: auto;
+    }
+    
+    /* Мобільний пошук */
+    .search-container.desktop-only {
+        display: block;
         flex: 1;
-        max-width: none;
-        margin: 0 0 0 15px;
+    }
+    
+    .search-form {
+        width: 100%;
+    }
+    
+    .search-input-group {
+        display: flex;
+        width: 100%;
+    }
+    
+    .search-input {
+        flex: 1;
+        padding: 10px 15px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        border-radius: 8px 0 0 8px;
+        outline: none;
+        transition: border-color 0.3s ease;
+    }
+    
+    .search-input:focus {
+        border-color: #e91e63;
+    }
+    
+    .search-input::placeholder {
+        color: #999;
+    }
+    
+    .search-btn {
+        padding: 10px 15px;
+        background: #e91e63;
+        border: none;
+        border-radius: 0 8px 8px 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s ease;
+    }
+    
+    .search-btn:hover {
+        background: #c2185b;
+    }
+    
+    .search-btn:active {
+        background: #a1174e;
+    }
+    
+    .search-icon {
+        width: 20px;
+        height: 20px;
+        color: white;
+    }
+    
+    /* Ховаємо мобільне меню overlay */
+    .mobile-menu,
+    .mobile-menu-overlay {
+        display: none;
     }
     
     /* Ховаємо категорії на мобільних */
