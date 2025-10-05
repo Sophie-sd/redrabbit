@@ -254,13 +254,34 @@
 .mobile-copyright {
     padding-top: 20px;
     border-top: 1px solid #444;
+    text-align: center;
 }
 
-.mobile-copyright p {
+.mobile-copyright .copyright-text {
+    font-size: 12px;
+    color: #ccc;
+    line-height: 1.6;
+    margin: 0 0 10px 0;
+    font-weight: 500;
+}
+
+.mobile-copyright .developer-link {
     font-size: 11px;
     color: #999;
     line-height: 1.6;
     margin: 0;
+}
+
+.mobile-copyright .developer-link a {
+    color: #e91e63;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.mobile-copyright .developer-link a:hover {
+    color: #ff4081;
+    text-decoration: underline;
 }
 
 /* Media запити */
@@ -280,9 +301,32 @@
         display: none;
     }
     
-    /* Ховаємо десктопний header на мобільних */
+    /* Ховаємо елементи header на мобільних */
     .header-top {
         display: none;
+    }
+    
+    .mobile-menu-btn,
+    .header-cart,
+    .header-actions .btn,
+    .header-nav {
+        display: none;
+    }
+    
+    /* Спрощений header для мобільних - тільки логотип і пошук */
+    .header-middle {
+        padding: 10px 15px;
+    }
+    
+    .header-logo {
+        flex: 0 0 auto;
+        max-width: 120px;
+    }
+    
+    .header-search {
+        flex: 1;
+        max-width: none;
+        margin: 0 0 0 15px;
     }
     
     /* Додаємо відступ знизу для контенту */
