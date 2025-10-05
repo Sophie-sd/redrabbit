@@ -304,6 +304,34 @@
     .schedule-column p {
         font-size: 12px;
     }
+    
+    /* Ще менші розміри для маленьких екранів */
+    .logo-img {
+        max-width: 60px;
+    }
+    
+    .header-content {
+        gap: 8px;
+        padding: 0 8px;
+    }
+    
+    .search-input {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    
+    .search-input::placeholder {
+        font-size: 12px;
+    }
+    
+    .search-btn {
+        padding: 6px 10px;
+    }
+    
+    .search-icon {
+        width: 16px;
+        height: 16px;
+    }
 }
 
 /* Копірайт */
@@ -391,7 +419,7 @@
     
     /* Ховаємо елементи header на мобільних */
     .top-bar,
-    .header-actions,
+    .desktop-actions,
     .main-nav,
     .desktop-nav {
         display: none;
@@ -399,13 +427,14 @@
     
     /* Спрощений header для мобільних - тільки логотип і пошук */
     .main-header {
-        padding: 10px 0;
+        padding: 8px 0;
     }
     
     .header-content {
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 10px;
+        padding: 0 10px;
     }
     
     .logo {
@@ -413,12 +442,12 @@
     }
     
     .logo-img {
-        max-width: 100px;
+        max-width: 70px;
         height: auto;
     }
     
     /* Мобільний пошук */
-    .search-container.desktop-only {
+    .search-container {
         display: block;
         flex: 1;
     }
@@ -434,10 +463,10 @@
     
     .search-input {
         flex: 1;
-        padding: 10px 15px;
-        font-size: 14px;
+        padding: 8px 12px;
+        font-size: 13px;
         border: 1px solid #ddd;
-        border-radius: 8px 0 0 8px;
+        border-radius: 6px 0 0 6px;
         outline: none;
         transition: border-color 0.3s ease;
     }
@@ -448,18 +477,20 @@
     
     .search-input::placeholder {
         color: #999;
+        font-size: 13px;
     }
     
     .search-btn {
-        padding: 10px 15px;
+        padding: 8px 12px;
         background: #e91e63;
         border: none;
-        border-radius: 0 8px 8px 0;
+        border-radius: 0 6px 6px 0;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: background 0.3s ease;
+        flex-shrink: 0;
     }
     
     .search-btn:hover {
@@ -471,8 +502,8 @@
     }
     
     .search-icon {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
         color: white;
     }
     
