@@ -57,6 +57,7 @@
     <link rel="stylesheet" href="{% static 'css/delivery.css' %}">
     <link rel="stylesheet" href="{% static 'css/recommended-slider.css' %}">
     <link rel="stylesheet" href="{% static 'css/mobile.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mobile-app.css' %}">
     <link rel="stylesheet" href="{% static 'css/ios-safari.min.css' %}">
     {% block extra_css %}{% endblock %}
     
@@ -132,7 +133,11 @@
     <!-- Footer -->
     <footer class="footer" role="contentinfo">
         {% include 'includes/footer.html' %}
+        {% include 'includes/mobile-footer.html' %}
     </footer>
+    
+    <!-- Mobile Bottom Navigation -->
+    {% include 'includes/mobile-bottom-nav.html' %}
     
     <!-- JavaScript - Optimized -->
     <script src="{% static 'js/utils.min.js' %}"></script>

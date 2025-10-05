@@ -1,0 +1,308 @@
+/* Мобільна версія сайту */
+
+/* Мобільна нижня навігація */
+.mobile-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+}
+
+.mobile-bottom-nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-decoration: none;
+    color: #999;
+    transition: color 0.3s ease;
+    position: relative;
+    padding: 4px 0;
+}
+
+.mobile-bottom-nav .nav-item.active {
+    color: #e91e63;
+}
+
+.mobile-bottom-nav .nav-icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+}
+
+.mobile-bottom-nav .nav-label {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.mobile-bottom-nav .nav-badge {
+    position: absolute;
+    top: 0;
+    right: calc(50% - 20px);
+    background: #e91e63;
+    color: white;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 18px;
+    text-align: center;
+}
+
+/* Мобільний футер */
+.mobile-footer {
+    display: none;
+    background: #2c2c2c;
+    color: white;
+    padding: 30px 20px calc(80px + env(safe-area-inset-bottom));
+}
+
+.mobile-subscribe {
+    margin-bottom: 30px;
+}
+
+.subscribe-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.subscribe-form .form-group {
+    margin-bottom: 15px;
+}
+
+.subscribe-form label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.subscribe-form .required {
+    color: #e91e63;
+}
+
+.subscribe-form .form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background: #1a1a1a;
+    color: white;
+    font-size: 14px;
+}
+
+.subscribe-form select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23fff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 12px;
+}
+
+.subscribe-form .form-privacy {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.subscribe-form .form-privacy a {
+    color: #e91e63;
+    text-decoration: underline;
+}
+
+.btn-subscribe {
+    width: 100%;
+    padding: 14px;
+    background: #e91e63;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-subscribe:hover {
+    background: #d81b60;
+}
+
+/* Соціальні мережі */
+.mobile-social {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 20px 0;
+    border-top: 1px solid #444;
+    border-bottom: 1px solid #444;
+}
+
+.social-link {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+    border-radius: 50%;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    background: #e91e63;
+    transform: scale(1.1);
+}
+
+.social-link svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Акордеони */
+.mobile-accordions {
+    margin-bottom: 30px;
+}
+
+.accordion-item {
+    border-bottom: 1px solid #444;
+}
+
+.accordion-header {
+    width: 100%;
+    padding: 18px 0;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    text-align: left;
+}
+
+.accordion-icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+    stroke-width: 2;
+}
+
+.accordion-item.active .accordion-icon {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.accordion-links {
+    list-style: none;
+    padding: 0 0 15px 0;
+    margin: 0;
+}
+
+.accordion-links li {
+    margin-bottom: 10px;
+}
+
+.accordion-links a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.accordion-links a:hover {
+    color: #e91e63;
+}
+
+.contact-info {
+    padding-bottom: 15px;
+    font-size: 14px;
+}
+
+.contact-info p {
+    margin-bottom: 8px;
+    color: #ccc;
+}
+
+.contact-info strong {
+    color: white;
+}
+
+.contact-info .schedule {
+    color: #999;
+    font-size: 13px;
+}
+
+/* Копірайт */
+.mobile-copyright {
+    padding-top: 20px;
+    border-top: 1px solid #444;
+}
+
+.mobile-copyright p {
+    font-size: 11px;
+    color: #999;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Media запити */
+@media (max-width: 768px) {
+    /* Показуємо мобільні елементи */
+    .mobile-bottom-nav {
+        display: flex;
+    }
+    
+    .mobile-footer {
+        display: block;
+    }
+    
+    /* Ховаємо десктопний футер */
+    .footer-main,
+    .footer-bottom {
+        display: none;
+    }
+    
+    /* Ховаємо десктопний header на мобільних */
+    .header-top {
+        display: none;
+    }
+    
+    /* Додаємо відступ знизу для контенту */
+    body {
+        padding-bottom: calc(60px + env(safe-area-inset-bottom));
+    }
+    
+    main {
+        min-height: calc(100vh - 60px - env(safe-area-inset-bottom));
+    }
+}
+
+/* iOS Safari специфічні стилі */
+@supports (-webkit-touch-callout: none) {
+    .mobile-bottom-nav {
+        padding-bottom: max(8px, env(safe-area-inset-bottom));
+    }
+    
+    .mobile-footer {
+        padding-bottom: max(80px, calc(80px + env(safe-area-inset-bottom)));
+    }
+}
+
