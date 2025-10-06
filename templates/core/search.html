@@ -151,16 +151,6 @@
                             </a>
                         </div>
 
-                        <!-- Search Suggestions -->
-                        <div class="search-suggestions">
-                            <h3 class="suggestions-title">Поради для пошуку:</h3>
-                            <ul class="suggestions-list">
-                                <li>Перевірте правильність написання</li>
-                                <li>Використовуйте більш загальні терміни</li>
-                                <li>Спробуйте пошукати за категорією товару</li>
-                                <li>Зверніться до нашого каталогу</li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             {% endif %}
@@ -321,40 +311,6 @@
     margin-right: var(--spacing-sm);
 }
 
-/* Search Suggestions */
-.search-suggestions {
-    background: var(--gray-light);
-    padding: var(--spacing-lg);
-    border-radius: var(--border-radius);
-    text-align: left;
-    margin-top: var(--spacing-lg);
-}
-
-.suggestions-title {
-    color: var(--neutral-dark);
-    font-size: 1.1rem;
-    margin-bottom: var(--spacing-md);
-}
-
-.suggestions-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.suggestions-list li {
-    color: var(--gray-medium);
-    padding: var(--spacing-xs) 0;
-    position: relative;
-    padding-left: var(--spacing-md);
-}
-
-.suggestions-list li:before {
-    content: "•";
-    color: var(--primary-pink);
-    position: absolute;
-    left: 0;
-}
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
