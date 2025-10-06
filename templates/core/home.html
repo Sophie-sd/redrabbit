@@ -404,28 +404,12 @@
 <section class="cta-banners section-padding" aria-label="Спеціальні пропозиції">
     <div class="container">
         <div class="banners-grid">
-            <div class="cta-banner cta-banner-primary">
-                <div class="banner-content">
-                    <h3 class="banner-title">ОПТ</h3>
-                    <p class="banner-subtitle">ми готові до співпраці</p>
-                    <a href="{% url 'users:register' %}" class="btn btn-white">Детальніше</a>
-                </div>
-                <div class="banner-decoration">
-                    <div class="decoration-stars"></div>
-                </div>
+            <div class="cta-banner-image">
+                <img src="{% static 'images/baner1_down.png' %}" alt="Спеціальна пропозиція 1" loading="lazy">
             </div>
             
-            <div class="cta-banner cta-banner-secondary">
-                <div class="banner-content">
-                    <h3 class="banner-title">КУПУЙ ПРОДУКЦІЮ</h3>
-                    <h4 class="banner-subtitle text-primary">METT EXPERT</h4>
-                    <p class="banner-text">НА СУМУ ВІД 500 ГРН ТА ОТРИМУЙ ТОП L1+</p>
-                    <p class="banner-text">METT EXPERT У ПОДАРУНОК</p>
-                    <a href="{% url 'products:sale' %}" class="btn btn-primary">Обрати</a>
-                </div>
-                <div class="banner-decoration">
-                    <div class="decoration-gift"></div>
-                </div>
+            <div class="cta-banner-image">
+                <img src="{% static 'images/baner2_down.png' %}" alt="Спеціальна пропозиція 2" loading="lazy">
             </div>
         </div>
     </div>

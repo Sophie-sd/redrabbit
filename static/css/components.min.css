@@ -830,56 +830,35 @@
 
 .banners-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--spacing-xl);
 }
 
-.cta-banner {
+.cta-banner-image {
     position: relative;
-    padding: var(--spacing-xl);
+    width: 100%;
     border-radius: var(--border-radius-lg);
     overflow: hidden;
-    color: var(--white);
-    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
 }
 
-.cta-banner-primary {
-    background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-pink-light) 100%);
+.cta-banner-image:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
 }
 
-.cta-banner-secondary {
-    background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-light) 100%);
-    color: var(--neutral-dark);
+.cta-banner-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
 }
 
-.banner-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: var(--spacing-sm);
-}
-
-.banner-subtitle {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: var(--spacing-md);
-}
-
-.banner-text {
-    font-size: 1rem;
-    font-weight: 500;
-    margin-bottom: var(--spacing-sm);
-    line-height: 1.4;
-}
-
-.btn-white {
-    background: var(--white);
-    color: var(--primary-pink);
-    border-color: var(--white);
-}
-
-.btn-white:hover {
-    background: var(--gray-light);
-    color: var(--primary-pink-dark);
+@media (max-width: 991.98px) {
+    .banners-grid {
+        gap: var(--spacing-lg);
+    }
 }
 
 @media (max-width: 767.98px) {
@@ -888,20 +867,18 @@
         gap: var(--spacing-lg);
     }
     
-    .cta-banner {
-        padding: var(--spacing-lg);
+    .cta-banners {
+        padding: var(--spacing-xl) 0;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .cta-banners {
+        padding: var(--spacing-lg) 0;
     }
     
-    .banner-title {
-        font-size: 1.5rem;
-    }
-    
-    .banner-subtitle {
-        font-size: 1.125rem;
-    }
-    
-    .banner-text {
-        font-size: 0.875rem;
+    .banners-grid {
+        gap: var(--spacing-md);
     }
 }
 
