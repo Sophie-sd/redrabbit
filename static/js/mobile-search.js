@@ -1,138 +1,156 @@
 /**
- * Mobile Search Functionality
- * Відповідає за роботу мобільного пошуку - показ/приховування поля пошуку
+ * Мобільний пошук - функціонал переключення логотип/пошук
  */
-
-class MobileSearch {
-    constructor() {
-        this.searchToggle = document.getElementById('mobileSearchToggle');
-        this.searchContainer = document.getElementById('mobileSearchContainer');
-        this.searchInput = document.getElementById('mobileSearchInput');
-        this.searchClose = document.getElementById('mobileSearchClose');
-        this.header = document.querySelector('.main-header');
+(function() {
+    'use strict';
+    
+    // Елементи DOM
+    let searchToggle, searchForm, searchClose, searchInput, logo, headerContent;
+    let isSearchOpen = false;
+    
+    // Ініціалізація при завантаженні DOM
+    document.addEventListener('DOMContentLoaded', function() {
+        initElements();
+        bindEvents();
+    });
+    
+    /**
+     * Ініціалізація елементів
+     */
+    function initElements() {
+        searchToggle = document.getElementById('mobileSearchToggle');
+        searchForm = document.getElementById('mobileSearchForm');
+        searchClose = document.getElementById('mobileSearchClose');
+        searchInput = document.getElementById('mobileSearchInput');
+        logo = document.querySelector('.logo');
+        headerContent = document.querySelector('.header-content');
         
-        this.isActive = false;
+        // Перевірка наявності всіх необхідних елементів
+        if (!searchToggle || !searchForm || !searchClose || !searchInput || !logo) {
+            console.warn('Mobile search: Not all required elements found');
+            return false;
+        }
         
-        this.init();
+        return true;
     }
     
-    init() {
-        if (!this.searchToggle || !this.searchContainer) {
-            return;
-        }
+    /**
+     * Прив'язка подій
+     */
+    function bindEvents() {
+        if (!initElements()) return;
         
-        // Обробники подій
-        this.searchToggle.addEventListener('click', () => this.toggleSearch());
+        // Відкрити пошук
+        searchToggle.addEventListener('click', openSearch);
         
-        if (this.searchClose) {
-            this.searchClose.addEventListener('click', () => this.closeSearch());
-        }
+        // Закрити пошук
+        searchClose.addEventListener('click', closeSearch);
         
-        // Закриття при натисканні Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.isActive) {
-                this.closeSearch();
+        // Закрити пошук по ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isSearchOpen) {
+                closeSearch();
             }
         });
         
-        // Закриття при натисканні поза областю пошуку
-        document.addEventListener('click', (e) => {
-            if (this.isActive && 
-                !this.searchContainer.contains(e.target) && 
-                !this.searchToggle.contains(e.target)) {
-                this.closeSearch();
+        // Закрити пошук при кліку поза формою (тільки на мобільних)
+        document.addEventListener('click', function(e) {
+            if (isSearchOpen && 
+                window.innerWidth <= 768 && 
+                !searchForm.contains(e.target) && 
+                !searchToggle.contains(e.target)) {
+                closeSearch();
             }
         });
         
-        // Запобігання закриття при кліку всередині контейнера пошуку
-        this.searchContainer?.addEventListener('click', (e) => {
-            e.stopPropagation();
+        // Автофокус на поле пошуку при відкритті
+        searchForm.addEventListener('transitionend', function() {
+            if (isSearchOpen && searchInput) {
+                searchInput.focus();
+            }
+        });
+        
+        // Обробка подання форми
+        searchForm.querySelector('.mobile-search-form').addEventListener('submit', function(e) {
+            const query = searchInput.value.trim();
+            if (!query) {
+                e.preventDefault();
+                searchInput.focus();
+                return false;
+            }
         });
     }
     
-    toggleSearch() {
-        if (this.isActive) {
-            this.closeSearch();
-        } else {
-            this.openSearch();
-        }
-    }
-    
-    openSearch() {
-        if (!this.searchContainer) return;
+    /**
+     * Відкрити пошук
+     */
+    function openSearch() {
+        if (isSearchOpen) return;
         
-        this.isActive = true;
+        isSearchOpen = true;
         
-        // Додати клас активності
-        this.searchContainer.classList.add('active');
-        this.header?.classList.add('mobile-search-active');
+        // Додати класи для анімації
+        headerContent.classList.add('search-mode');
+        logo.classList.add('logo-hidden');
+        searchForm.classList.add('search-form-visible');
+        searchToggle.classList.add('search-btn-hidden');
         
-        // Затримка для анімації, потім фокус на поле
+        // Атрибути доступності
+        searchToggle.setAttribute('aria-expanded', 'true');
+        searchForm.setAttribute('aria-hidden', 'false');
+        
+        // Фокус на поле вводу з невеликою затримкою для анімації
         setTimeout(() => {
-            if (this.searchInput) {
-                this.searchInput.focus();
+            if (searchInput) {
+                searchInput.focus();
             }
         }, 300);
-        
-        // Запобігання прокручування сторінки
-        document.body.style.overflow = 'hidden';
-        
-        // Додати ARIA атрибути для доступності
-        this.searchToggle?.setAttribute('aria-expanded', 'true');
-        this.searchContainer?.setAttribute('aria-hidden', 'false');
     }
     
-    closeSearch() {
-        if (!this.searchContainer) return;
+    /**
+     * Закрити пошук
+     */
+    function closeSearch() {
+        if (!isSearchOpen) return;
         
-        this.isActive = false;
+        isSearchOpen = false;
         
-        // Прибрати клас активності
-        this.searchContainer.classList.remove('active');
-        this.header?.classList.remove('mobile-search-active');
+        // Видалити класи для анімації
+        headerContent.classList.remove('search-mode');
+        logo.classList.remove('logo-hidden');
+        searchForm.classList.remove('search-form-visible');
+        searchToggle.classList.remove('search-btn-hidden');
         
-        // Очистити поле пошуку при закритті (опціонально)
-        // if (this.searchInput) {
-        //     this.searchInput.value = '';
-        // }
+        // Атрибути доступності
+        searchToggle.setAttribute('aria-expanded', 'false');
+        searchForm.setAttribute('aria-hidden', 'true');
         
-        // Відновити прокручування сторінки
-        document.body.style.overflow = '';
-        
-        // Оновити ARIA атрибути
-        this.searchToggle?.setAttribute('aria-expanded', 'false');
-        this.searchContainer?.setAttribute('aria-hidden', 'true');
+        // Очистити поле пошуку
+        if (searchInput) {
+            searchInput.value = '';
+            searchInput.blur();
+        }
     }
     
-    // Метод для програматичного відкриття пошуку (може бути корисний)
-    focus() {
-        this.openSearch();
-    }
-}
-
-// Ініціалізація після завантаження DOM
-document.addEventListener('DOMContentLoaded', () => {
-    // Перевірка, чи це мобільний пристрій
-    const isMobile = window.innerWidth <= 768;
-    
-    if (isMobile) {
-        window.mobileSearch = new MobileSearch();
-    }
-    
-    // Переініціалізація при зміні розміру вікна
-    window.addEventListener('resize', () => {
-        const isMobile = window.innerWidth <= 768;
-        
-        if (isMobile && !window.mobileSearch) {
-            window.mobileSearch = new MobileSearch();
-        } else if (!isMobile && window.mobileSearch) {
-            // Закрити пошук при переключенні на десктоп
-            window.mobileSearch.closeSearch();
+    /**
+     * Обробка зміни розміру екрану
+     */
+    window.addEventListener('resize', function() {
+        // Закрити пошук на десктопі
+        if (window.innerWidth > 768 && isSearchOpen) {
+            closeSearch();
         }
     });
-});
-
-// Експорт для можливого використання в інших модулях
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = MobileSearch;
-}
+    
+    // Експорт функцій для глобального доступу (якщо потрібно)
+    window.MobileSearch = {
+        open: openSearch,
+        close: closeSearch,
+        toggle: function() {
+            isSearchOpen ? closeSearch() : openSearch();
+        },
+        isOpen: function() {
+            return isSearchOpen;
+        }
+    };
+})();

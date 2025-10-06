@@ -1,0 +1,243 @@
+/* Мобільний пошук - стилі для функціоналу пошуку в хедері */
+
+/* Приховати десктопні дії на мобільних */
+@media (max-width: 768px) {
+    .desktop-actions {
+        display: none;
+    }
+    
+    .search-container {
+        display: none;
+    }
+}
+
+/* Мобільні дії в хедері */
+.mobile-actions {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+}
+
+/* Кнопка мобільного пошуку */
+.mobile-search-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: none;
+    border-radius: var(--border-radius);
+    color: var(--neutral-dark);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    padding: var(--spacing-sm);
+}
+
+.mobile-search-btn:hover,
+.mobile-search-btn:focus {
+    background: var(--gray-light);
+    color: var(--primary-pink);
+}
+
+.mobile-search-btn .search-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Приховування кнопки пошуку при активному режимі */
+.mobile-search-btn.search-btn-hidden {
+    opacity: 0;
+    transform: scale(0.8);
+    pointer-events: none;
+}
+
+/* Контейнер форми мобільного пошуку */
+.mobile-search-form-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: var(--white);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    padding: 0 var(--spacing-md);
+}
+
+/* Показ форми пошуку */
+.mobile-search-form-container.search-form-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+/* Форма мобільного пошуку */
+.mobile-search-form {
+    width: 100%;
+}
+
+.mobile-search-input-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    width: 100%;
+    background: var(--gray-light);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xs);
+}
+
+/* Поле вводу мобільного пошуку */
+.mobile-search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: var(--spacing-sm);
+    font-size: 16px; /* Запобігання зуму на iOS */
+    color: var(--neutral-dark);
+    outline: none;
+}
+
+.mobile-search-input::placeholder {
+    color: var(--gray-medium);
+}
+
+/* Кнопки форми пошуку */
+.mobile-search-close,
+.mobile-search-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    color: var(--gray-medium);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    padding: var(--spacing-xs);
+}
+
+.mobile-search-close:hover,
+.mobile-search-close:focus,
+.mobile-search-submit:hover,
+.mobile-search-submit:focus {
+    background: var(--primary-pink);
+    color: var(--white);
+}
+
+.mobile-search-close svg,
+.mobile-search-submit svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Анімація приховування логотипу */
+@media (max-width: 768px) {
+    .logo {
+        transition: all 0.3s ease;
+    }
+    
+    .logo.logo-hidden {
+        opacity: 0;
+        transform: translateX(-50px);
+        pointer-events: none;
+    }
+}
+
+/* Режим пошуку для хедера */
+@media (max-width: 768px) {
+    .header-content {
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    
+    .header-content.search-mode {
+        overflow: hidden;
+    }
+    
+    /* Приховування елементів у режимі пошуку */
+    .header-content.search-mode .search-container {
+        display: none;
+    }
+}
+
+/* Покращення для дуже маленьких екранів */
+@media (max-width: 375px) {
+    .mobile-search-input-group {
+        padding: 4px;
+    }
+    
+    .mobile-search-input {
+        padding: 8px;
+        font-size: 16px;
+    }
+    
+    .mobile-search-close,
+    .mobile-search-submit {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .mobile-search-close svg,
+    .mobile-search-submit svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+/* iOS Safari оптимізації */
+@supports (-webkit-touch-callout: none) {
+    .mobile-search-input {
+        -webkit-appearance: none;
+        border-radius: 0;
+    }
+    
+    .mobile-search-form-container {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+    
+    .mobile-search-btn {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+}
+
+/* Accessibility покращення */
+@media (prefers-reduced-motion: reduce) {
+    .mobile-search-form-container,
+    .logo,
+    .mobile-search-btn,
+    .header-content {
+        transition: none;
+    }
+}
+
+/* Фокус стилі для клавіатурної навігації */
+.mobile-search-btn:focus-visible {
+    outline: 2px solid var(--primary-pink);
+    outline-offset: 2px;
+}
+
+.mobile-search-input:focus {
+    box-shadow: inset 0 0 0 2px var(--primary-pink);
+}
+
+.mobile-search-close:focus-visible,
+.mobile-search-submit:focus-visible {
+    outline: 2px solid var(--primary-pink);
+    outline-offset: 1px;
+}
