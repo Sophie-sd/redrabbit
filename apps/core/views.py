@@ -81,19 +81,27 @@ class SearchView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        query = self.request.GET.get('q', '')
+        query = self.request.GET.get('q', '').strip()
         
         if query:
-            products = Product.objects.filter(
+            # Спочатку отримуємо всі результати для підрахунку
+            all_products = Product.objects.filter(
                 Q(name__icontains=query) | 
                 Q(description__icontains=query) |
                 Q(category__name__icontains=query),
                 is_active=True
-            ).distinct()[:20]
+            ).distinct()
+            
+            # Підраховуємо загальну кількість
+            total_count = all_products.count()
+            
+            # Берем тільки перші 20 для відображення
+            products = all_products[:20]
+            
             context.update({
                 'products': products,
                 'query': query,
-                'results_count': products.count() if products else 0,
+                'results_count': total_count,
             })
         
         return context

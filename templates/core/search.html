@@ -1,0 +1,414 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if query %}Пошук: {{ query }} - Beauty Shop{% else %}Пошук товарів - Beauty Shop{% endif %}
+{% endblock %}
+
+{% block description %}
+    {% if query %}Результати пошуку товарів за запитом "{{ query }}" в інтернет-магазині Beauty Shop.{% else %}Пошук професійної косметики та обладнання для салонів краси.{% endif %}
+{% endblock %}
+
+{% block content %}
+<main class="search-page">
+    <div class="container">
+        <!-- Search Header -->
+        <div class="search-header">
+            {% if query %}
+                <h1 class="search-title">
+                    Результати пошуку: <span class="search-query">"{{ query }}"</span>
+                </h1>
+                <div class="search-meta">
+                    {% if results_count > 0 %}
+                        <p class="results-count">Знайдено {{ results_count }} товар{{ results_count|pluralize:"ів,ів,ів" }}</p>
+                    {% else %}
+                        <p class="results-count no-results">За вашим запитом нічого не знайдено</p>
+                    {% endif %}
+                </div>
+            {% else %}
+                <h1 class="search-title">Пошук товарів</h1>
+                <p class="search-description">Введіть назву товару або категорії для пошуку</p>
+            {% endif %}
+        </div>
+
+        <!-- Search Form -->
+        <div class="search-form-section">
+            <form action="{% url 'core:search' %}" method="get" class="main-search-form">
+                <div class="search-input-wrapper">
+                    <input 
+                        type="search" 
+                        name="q" 
+                        placeholder="Пошук товарів..." 
+                        class="search-input-main"
+                        value="{{ query|default:'' }}"
+                        aria-label="Пошук товарів"
+                        autocomplete="off"
+                        required
+                    >
+                    <button type="submit" class="search-submit-main" aria-label="Знайти">
+                        <img src="{% static 'images/lupa.png' %}" alt="Пошук" class="search-icon-main">
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        {% if query %}
+            {% if products %}
+                <!-- Search Results -->
+                <section class="search-results" aria-label="Результати пошуку">
+                    <div class="products-grid">
+                        {% for product in products %}
+                            <div class="product-card">
+                                <div class="product-image">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+                                    {% else %}
+                                        <div class="product-no-image">
+                                            <span class="no-image-text">Фото відсутнє</span>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <!-- Product Labels -->
+                                    <div class="product-labels">
+                                        {% if product.is_new %}
+                                            <span class="product-label new">Новинка</span>
+                                        {% endif %}
+                                        {% if product.is_top %}
+                                            <span class="product-label top">ХІТ</span>
+                                        {% endif %}
+                                        {% if product.discount_price %}
+                                            <span class="product-label sale">АКЦІЯ</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="product-info">
+                                    <h3 class="product-name">{{ product.name }}</h3>
+                                    
+                                    {% if product.category %}
+                                        <p class="product-category">{{ product.category.name }}</p>
+                                    {% endif %}
+                                    
+                                    <div class="product-pricing">
+                                        {% if product.discount_price %}
+                                            <div class="price-row">
+                                                <span class="price-current">{{ product.discount_price }} грн</span>
+                                                <span class="price-old">{{ product.price }} грн</span>
+                                            </div>
+                                        {% else %}
+                                            <div class="price-row">
+                                                <span class="price-current">{{ product.price }} грн</span>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        {% if product.wholesale_price and user.is_wholesale %}
+                                            <div class="price-row">
+                                                <span class="price-wholesale">Опт: {{ product.wholesale_price }} грн</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="product-actions">
+                                        <button class="btn btn-primary add-to-cart-btn" 
+                                                data-product-id="{{ product.id }}" 
+                                                aria-label="Додати {{ product.name }} до кошика">
+                                            <span class="cart-icon">🛒</span>
+                                            У кошик
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% else %}
+                <!-- No Results -->
+                <div class="no-results-section">
+                    <div class="no-results-content">
+                        <div class="no-results-icon">🔍</div>
+                        <h2 class="no-results-title">Товарів не знайдено</h2>
+                        <p class="no-results-text">
+                            За запитом <strong>"{{ query }}"</strong> нічого не знайдено. 
+                            Спробуйте змінити пошукові слова або скористайтеся каталогом.
+                        </p>
+                        
+                        <div class="no-results-actions">
+                            <a href="{% url 'core:home' %}" class="btn btn-primary">
+                                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                На головну
+                            </a>
+                            <a href="{% url 'core:catalog' %}" class="btn btn-secondary">
+                                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 3H3V10H10V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M21 3H14V10H21V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M21 14H14V21H21V14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M10 14H3V21H10V14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Переглянути каталог
+                            </a>
+                        </div>
+
+                        <!-- Search Suggestions -->
+                        <div class="search-suggestions">
+                            <h3 class="suggestions-title">Поради для пошуку:</h3>
+                            <ul class="suggestions-list">
+                                <li>Перевірте правильність написання</li>
+                                <li>Використовуйте більш загальні терміни</li>
+                                <li>Спробуйте пошукати за категорією товару</li>
+                                <li>Зверніться до нашого каталогу</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Search Page Styles */
+.search-page {
+    padding: var(--spacing-xl) 0;
+    min-height: 60vh;
+}
+
+.search-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.search-title {
+    color: var(--neutral-dark);
+    margin-bottom: var(--spacing-md);
+}
+
+.search-query {
+    color: var(--primary-pink);
+}
+
+.search-description {
+    color: var(--gray-medium);
+    font-size: 1.1rem;
+}
+
+.results-count {
+    color: var(--neutral-dark);
+    font-size: 1rem;
+    margin-bottom: var(--spacing-lg);
+}
+
+.results-count.no-results {
+    color: var(--gray-medium);
+}
+
+/* Main Search Form */
+.search-form-section {
+    margin-bottom: var(--spacing-xl);
+    display: flex;
+    justify-content: center;
+}
+
+.main-search-form {
+    width: 100%;
+    max-width: 600px;
+}
+
+.search-input-wrapper {
+    display: flex;
+    background: var(--white);
+    border: 2px solid var(--gray-light);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    transition: all var(--transition-fast);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-input-wrapper:focus-within {
+    border-color: var(--primary-pink);
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.2);
+}
+
+.search-input-main {
+    flex: 1;
+    border: none;
+    padding: var(--spacing-lg);
+    font-size: 1.1rem;
+    background: transparent;
+    color: var(--neutral-dark);
+    outline: none;
+}
+
+.search-input-main::placeholder {
+    color: var(--gray-medium);
+}
+
+.search-submit-main {
+    background: var(--primary-pink);
+    border: none;
+    padding: var(--spacing-lg);
+    color: var(--white);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+}
+
+.search-submit-main:hover {
+    background: var(--primary-dark);
+}
+
+.search-icon-main {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
+/* Products Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+/* No Results Section */
+.no-results-section {
+    text-align: center;
+    padding: var(--spacing-xxl) 0;
+}
+
+.no-results-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.no-results-icon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.6;
+}
+
+.no-results-title {
+    color: var(--neutral-dark);
+    margin-bottom: var(--spacing-md);
+}
+
+.no-results-text {
+    color: var(--gray-medium);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: var(--spacing-xl);
+}
+
+.no-results-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+}
+
+.btn-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: var(--spacing-sm);
+}
+
+/* Search Suggestions */
+.search-suggestions {
+    background: var(--gray-light);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    text-align: left;
+    margin-top: var(--spacing-lg);
+}
+
+.suggestions-title {
+    color: var(--neutral-dark);
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.suggestions-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.suggestions-list li {
+    color: var(--gray-medium);
+    padding: var(--spacing-xs) 0;
+    position: relative;
+    padding-left: var(--spacing-md);
+}
+
+.suggestions-list li:before {
+    content: "•";
+    color: var(--primary-pink);
+    position: absolute;
+    left: 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .search-page {
+        padding: var(--spacing-lg) 0;
+    }
+    
+    .search-header {
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .search-title {
+        font-size: 1.5rem;
+    }
+    
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: var(--spacing-lg);
+    }
+    
+    .no-results-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .no-results-actions .btn {
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .search-input-main {
+        padding: var(--spacing-md);
+        font-size: 1rem;
+    }
+    
+    .search-submit-main {
+        padding: var(--spacing-md);
+        min-width: 50px;
+    }
+    
+    .search-icon-main {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .no-results-icon {
+        font-size: 3rem;
+    }
+}
+</style>
+{% endblock %}

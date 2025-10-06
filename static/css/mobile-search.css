@@ -47,8 +47,8 @@
 }
 
 .mobile-search-btn .search-icon {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     object-fit: contain;
 }
 
@@ -120,29 +120,43 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    background: none;
-    border: none;
-    border-radius: var(--border-radius-sm);
-    color: var(--gray-medium);
+    width: 36px;
+    height: 36px;
+    background: var(--white);
+    border: 2px solid var(--gray-light);
+    border-radius: var(--border-radius);
+    color: var(--neutral-dark);
     cursor: pointer;
     transition: all var(--transition-fast);
     padding: var(--spacing-xs);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-search-close {
+    background: var(--gray-light);
+    border-color: var(--gray-medium);
 }
 
 .mobile-search-close:hover,
-.mobile-search-close:focus,
+.mobile-search-close:focus {
+    background: #ff4757;
+    border-color: #ff4757;
+    color: var(--white);
+    transform: scale(1.05);
+}
+
 .mobile-search-submit:hover,
 .mobile-search-submit:focus {
     background: var(--primary-pink);
+    border-color: var(--primary-pink);
     color: var(--white);
+    transform: scale(1.05);
 }
 
 .mobile-search-close svg,
 .mobile-search-submit svg {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
 }
 
 /* Анімація приховування логотипу */
@@ -177,6 +191,11 @@
 
 /* Покращення для дуже маленьких екранів */
 @media (max-width: 375px) {
+    .mobile-search-btn .search-icon {
+        width: 26px;
+        height: 26px;
+    }
+    
     .mobile-search-input-group {
         padding: 4px;
     }
@@ -188,14 +207,14 @@
     
     .mobile-search-close,
     .mobile-search-submit {
-        width: 28px;
-        height: 28px;
+        width: 32px;
+        height: 32px;
     }
     
     .mobile-search-close svg,
     .mobile-search-submit svg {
-        width: 14px;
-        height: 14px;
+        width: 16px;
+        height: 16px;
     }
 }
 
