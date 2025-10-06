@@ -25,7 +25,7 @@ class Banner(models.Model):
     mobile_image = models.ImageField(
         upload_to='banners/mobile/',
         verbose_name="Зображення для мобільного",
-        help_text="Розмір: 375×200 пікселів (співвідношення 1.875:1)",
+        help_text="Розмір: 375×280 пікселів (співвідношення 1.34:1)",
         validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'webp'])]
     )
     

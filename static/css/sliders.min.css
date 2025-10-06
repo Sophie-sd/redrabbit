@@ -179,7 +179,7 @@
 
 @media (max-width: 768px) {
     .banner-slider-section {
-        height: 200px;
+        height: 280px;
     }
     
     .placeholder-content h3 {
@@ -191,7 +191,11 @@
     }
     
     .placeholder-icon {
-        font-size: 3rem;
+        font-size: 3.5rem;
+    }
+    
+    .placeholder-content {
+        padding: var(--spacing-lg);
     }
     
     .banner-nav {
@@ -328,6 +332,27 @@
     
     .categories-slider .category-card {
         width: 180px;
+    }
+}
+
+/* Додаткові стилі для дуже маленьких екранів */
+@media (max-width: 480px) {
+    .banner-slider-section {
+        height: 260px;
+    }
+}
+
+@media (max-width: 375px) {
+    .banner-slider-section {
+        height: 240px;
+    }
+    
+    .placeholder-content h3 {
+        font-size: 1.125rem;
+    }
+    
+    .placeholder-icon {
+        font-size: 3rem;
     }
 }
 
