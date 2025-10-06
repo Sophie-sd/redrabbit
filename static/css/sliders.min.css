@@ -179,7 +179,7 @@
 
 @media (max-width: 768px) {
     .banner-slider-section {
-        height: 280px;
+        height: 280px !important;
     }
     
     .placeholder-content h3 {
