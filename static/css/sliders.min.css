@@ -39,6 +39,49 @@
     display: block;
 }
 
+/* Banner Placeholder Styles */
+.banner-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px dashed var(--primary-pink);
+    border-radius: var(--border-radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.placeholder-content {
+    text-align: center;
+    color: var(--gray-medium);
+    padding: var(--spacing-xl);
+}
+
+.placeholder-icon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-md);
+    opacity: 0.6;
+}
+
+.placeholder-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-sm);
+    color: var(--neutral-dark);
+}
+
+.placeholder-text {
+    font-size: 1rem;
+    margin-bottom: var(--spacing-sm);
+    color: var(--primary-pink);
+    font-weight: 600;
+}
+
+.placeholder-content small {
+    font-size: 0.875rem;
+    color: var(--gray-medium);
+}
+
 .banner-nav {
     position: absolute;
     top: 50%;
@@ -137,6 +180,18 @@
 @media (max-width: 768px) {
     .banner-slider-section {
         height: 200px;
+    }
+    
+    .placeholder-content h3 {
+        font-size: 1.25rem;
+    }
+    
+    .placeholder-text {
+        font-size: 0.875rem;
+    }
+    
+    .placeholder-icon {
+        font-size: 3rem;
     }
     
     .banner-nav {
