@@ -75,7 +75,7 @@
                 </form>
             </div>
             
-            <!-- Cart & Wishlist - Desktop Only -->
+            <!-- Desktop Actions -->
             <div class="header-actions desktop-actions">
                 <!-- Wishlist -->
                 <a href="#" class="wishlist-link" aria-label="Список бажань">
@@ -90,6 +90,44 @@
                         <span class="badge">{{ cart_total_items }}</span>
                     {% endif %}
                 </a>
+            </div>
+            
+            <!-- Mobile Actions -->
+            <div class="header-actions mobile-actions">
+                <!-- Mobile Search Toggle -->
+                <button id="mobileSearchToggle" class="mobile-search-btn" aria-label="Відкрити пошук" aria-expanded="false" type="button">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Mobile Search Container -->
+            <div class="mobile-search-container" id="mobileSearchContainer" aria-hidden="true" role="search">
+                <form action="{% url 'core:search' %}" method="get" class="mobile-search-form">
+                    <div class="mobile-search-input-group">
+                        <input 
+                            type="search" 
+                            name="q" 
+                            placeholder="Пошук товарів..." 
+                            class="mobile-search-input"
+                            value="{{ request.GET.q|default:'' }}"
+                            aria-label="Пошук товарів"
+                            autocomplete="off"
+                            id="mobileSearchInput"
+                        >
+                        <button type="submit" class="mobile-search-submit" aria-label="Знайти товари">
+                            <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button type="button" class="mobile-search-close" id="mobileSearchClose" aria-label="Закрити пошук">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
