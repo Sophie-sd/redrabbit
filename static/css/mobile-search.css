@@ -49,6 +49,7 @@
 .mobile-search-btn .search-icon {
     width: 24px;
     height: 24px;
+    object-fit: contain;
 }
 
 /* Приховування кнопки пошуку при активному режимі */

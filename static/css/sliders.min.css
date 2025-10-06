@@ -344,8 +344,7 @@
 
 @media (max-width: 375px) {
     .banner-slider-section {
-        height: 240px !important;
-        border: 3px solid purple !important; /* Тимчасовий індикатор */
+        height: 240px;
     }
     
     .placeholder-content h3 {
