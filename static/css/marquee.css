@@ -100,10 +100,21 @@ html, body {
     .marquee-content {
         font-size: 13px;
         animation-duration: 10s;
+        animation-name: marqueeScrollMobile;
     }
     
     .marquee-text {
         gap: 1.5rem;
+    }
+    
+    /* Спеціальна анімація для мобільного - повний цикл */
+    @keyframes marqueeScrollMobile {
+        from {
+            transform: translateX(100%);
+        }
+        to {
+            transform: translateX(-150%);
+        }
     }
 }
 
@@ -115,7 +126,8 @@ html, body {
     
     .marquee-content {
         font-size: 14px;
-        animation-duration: 38s; /* Швидше для планшетів */
+        animation-duration: 38s;
+        animation-name: marqueeScrollMobile;
     }
 }
 
@@ -127,7 +139,8 @@ html, body {
     
     .marquee-content {
         font-size: 12px;
-        animation-duration: 12s; /* Дуже швидко для маленьких екранів */
+        animation-duration: 12s;
+        animation-name: marqueeScrollMobile;
     }
     
     .marquee-text {
@@ -144,6 +157,20 @@ html, body {
         perspective: 1000px;
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
+    }
+    
+    /* iOS Safari мобільна анімація */
+    @media (max-width: 991.98px) {
+        @keyframes marqueeScrollMobile {
+            from {
+                -webkit-transform: translateX(100%);
+                transform: translateX(100%);
+            }
+            to {
+                -webkit-transform: translateX(-150%);
+                transform: translateX(-150%);
+            }
+        }
     }
 }
 

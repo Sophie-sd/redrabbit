@@ -52,21 +52,27 @@ class MarqueeController {
 
     adjustAnimationSpeed(marquee, content) {
         const screenWidth = window.innerWidth;
-        let duration;
+        let duration, animationName;
 
         if (screenWidth >= 1200) {
             duration = '45s';
+            animationName = 'marqueeScroll';
         } else if (screenWidth >= 992) {
-            duration = '38s'; // Швидше для планшетів
+            duration = '45s';
+            animationName = 'marqueeScroll';
         } else if (screenWidth >= 768) {
-            duration = '38s'; // Швидше для планшетів
+            duration = '38s';
+            animationName = 'marqueeScrollMobile';
         } else if (screenWidth >= 576) {
-            duration = '10s'; // Дуже швидко для мобільних
+            duration = '10s';
+            animationName = 'marqueeScrollMobile';
         } else {
-            duration = '12s'; // Дуже швидко для маленьких екранів
+            duration = '12s';
+            animationName = 'marqueeScrollMobile';
         }
 
         content.style.animationDuration = duration;
+        content.style.animationName = animationName;
     }
 
     handleReducedMotion(content) {
