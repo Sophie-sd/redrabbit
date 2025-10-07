@@ -81,7 +81,7 @@
     
     .marquee-content {
         font-size: 13px;
-        animation-duration: 35s; /* Швидше для мобільних */
+        animation-duration: 18s; /* Швидше в 2 рази для мобільних */
     }
     
     .marquee-text {
@@ -109,7 +109,7 @@
     
     .marquee-content {
         font-size: 12px;
-        animation-duration: 40s; /* Швидше для маленьких екранів */
+        animation-duration: 20s; /* Швидше в 2 рази для маленьких екранів */
     }
     
     .marquee-text {

@@ -61,9 +61,9 @@ class MarqueeController {
         } else if (screenWidth >= 768) {
             duration = '38s'; // Швидше для планшетів
         } else if (screenWidth >= 576) {
-            duration = '35s'; // Швидше для мобільних
+            duration = '18s'; // Швидше в 2 рази для мобільних
         } else {
-            duration = '40s'; // Швидше для маленьких екранів
+            duration = '20s'; // Швидше в 2 рази для маленьких екранів
         }
 
         content.style.animationDuration = duration;
