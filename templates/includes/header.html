@@ -1,43 +1,28 @@
 {% load static %}
 
-<!-- Top Bar -->
-<div class="top-bar">
-    <div class="container">
-        <div class="top-bar-content">
-            <div class="top-bar-left">
-                <div class="contact-info">
-                    <span class="phone">
-                        <i class="icon-phone" aria-hidden="true"></i>
-                        <a href="tel:+380681752654">{{ site_phone }}</a>
-                    </span>
-                    <span class="schedule">
-                        <i class="icon-clock" aria-hidden="true"></i>
-                        Пн-Пт 09:00-18:00, Сб 10:00-16:00, Нд 10:00-15:00
-                    </span>
-                </div>
-            </div>
-            <div class="top-bar-right">
-                <div class="user-actions">
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'users:profile' %}" class="user-link">
-                            <i class="icon-user" aria-hidden="true"></i>
-                            {{ user.first_name|default:user.username }}
-                            {% if user.is_wholesale %}
-                                <span class="wholesale-badge">ОПТ</span>
-                            {% endif %}
-                        </a>
-                        <a href="{% url 'users:logout' %}" class="logout-link">Вихід</a>
-                    {% else %}
-                        <a href="{% url 'users:login' %}" class="login-link">
-                            <i class="icon-user" aria-hidden="true"></i>
-                            Вхід
-                        </a>
-                        <a href="{% url 'users:register' %}" class="register-link">
-                            Реєстрація (ОПТ)
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
+<!-- Desktop Marquee - замість Top Bar -->
+<div class="marquee-container desktop-marquee" role="banner" aria-label="Промо-повідомлення">
+    <div class="marquee-content">
+        <div class="marquee-text">
+            Знижки для оптових клієнтів 🎯
+            <span class="marquee-separator">•</span>
+            Швидка доставка по Україні 🚚
+            <span class="marquee-separator">•</span>
+            Новинки та хіти для салонів щотижня ✨
+            <span class="marquee-separator">•</span>
+            Повернення та обмін — легко й швидко 🔄
+            <span class="marquee-separator">•</span>
+            Промокоди та бонуси для постійних клієнтів 🎁
+            <span class="marquee-separator">•</span>
+            Знижки для оптових клієнтів 🎯
+            <span class="marquee-separator">•</span>
+            Швидка доставка по Україні 🚚
+            <span class="marquee-separator">•</span>
+            Новинки та хіти для салонів щотижня ✨
+            <span class="marquee-separator">•</span>
+            Повернення та обмін — легко й швидко 🔄
+            <span class="marquee-separator">•</span>
+            Промокоди та бонуси для постійних клієнтів 🎁
         </div>
     </div>
 </div>

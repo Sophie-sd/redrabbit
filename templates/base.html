@@ -62,6 +62,7 @@
     <link rel="stylesheet" href="{% static 'css/mobile-app.css' %}">
     <link rel="stylesheet" href="{% static 'css/ios-safari.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/mobile-search.css' %}">
+    <link rel="stylesheet" href="{% static 'css/marquee.css' %}">
     {% block extra_css %}{% endblock %}
     
     <!-- Structured Data -->
@@ -146,12 +147,13 @@
     <!-- JavaScript - Optimized -->
     <script src="{% static 'js/utils.min.js' %}"></script>
     <script src="{% static 'js/mobile-menu.min.js' %}"></script>
-    <script src="{% static 'js/mobile-search.js' %}"></script>
-    <script src="{% static 'js/sliders.min.js' %}"></script>
-    <script src="{% static 'js/cart.min.js' %}"></script>
-    <script src="{% static 'js/main.min.js' %}"></script>
-    <script src="{% static 'js/footer-subscribe.js' %}"></script>
-    {% block extra_js %}{% endblock %}
+        <script src="{% static 'js/mobile-search.js' %}"></script>
+        <script src="{% static 'js/marquee.js' %}"></script>
+        <script src="{% static 'js/sliders.min.js' %}"></script>
+        <script src="{% static 'js/cart.min.js' %}"></script>
+        <script src="{% static 'js/main.min.js' %}"></script>
+        <script src="{% static 'js/footer-subscribe.js' %}"></script>
+        {% block extra_js %}{% endblock %}
     
     
     <!-- Google Analytics (замініть на ваш ID) -->
