@@ -1,3 +1,9 @@
+/* Запобігання горизонтальній прокрутці */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
 /* Біжуча стрічка - Base Styles */
 .marquee-container {
     background: linear-gradient(135deg, #e91e63 0%, #f50057 100%);
@@ -7,6 +13,8 @@
     box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3);
     z-index: 100;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    max-width: 100vw;
 }
 
 .marquee-content {
@@ -19,9 +27,9 @@
     font-weight: 600;
     color: #ffffff;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    animation: marqueeScroll 15s linear infinite; /* Швидше базова швидкість для мобільних */
-    padding-left: 100%;
+    animation: marqueeScroll 15s linear infinite;
     transition: animation-play-state 0.3s ease;
+    width: max-content;
 }
 
 .marquee-container:hover .marquee-content {
@@ -44,7 +52,7 @@
 /* Анімація скролу */
 @keyframes marqueeScroll {
     0% {
-        transform: translate3d(0, 0, 0);
+        transform: translate3d(100%, 0, 0);
     }
     100% {
         transform: translate3d(-100%, 0, 0);
@@ -130,8 +138,8 @@
     
     @keyframes marqueeScroll {
         0% {
-            -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
+            -webkit-transform: translate3d(100%, 0, 0);
+            transform: translate3d(100%, 0, 0);
         }
         100% {
             -webkit-transform: translate3d(-100%, 0, 0);
