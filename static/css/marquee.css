@@ -45,23 +45,17 @@ html, body {
 .marquee-text {
     display: inline-flex;
     align-items: center;
-    gap: 2rem;
+    padding-right: 2rem;
     white-space: nowrap;
 }
 
-.marquee-separator {
-    color: rgba(255, 255, 255, 0.8);
-    font-weight: 400;
-    margin: 0;
-}
-
-/* Анімація скролу - безперервний цикл */
+/* Анімація скролу - справжній безперервний цикл */
 @keyframes marqueeScroll {
     from {
-        transform: translateX(100%);
+        transform: translateX(0%);
     }
     to {
-        transform: translateX(-100%);
+        transform: translateX(-50%);
     }
 }
 
