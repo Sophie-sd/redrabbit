@@ -17,6 +17,12 @@ html, body {
     max-width: 100vw;
 }
 
+/* Базова видимість для всіх контейнерів */
+.marquee-container.desktop-marquee,
+.marquee-container.mobile-marquee {
+    display: none; /* За замовчуванням приховані */
+}
+
 .marquee-content {
     display: flex;
     align-items: center;
@@ -29,7 +35,7 @@ html, body {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     animation: marqueeScroll 15s linear infinite;
     transition: animation-play-state 0.3s ease;
-    width: max-content;
+    will-change: transform;
 }
 
 .marquee-container:hover .marquee-content {
@@ -49,13 +55,13 @@ html, body {
     margin: 0;
 }
 
-/* Анімація скролу */
+/* Анімація скролу - безперервний цикл */
 @keyframes marqueeScroll {
-    0% {
-        transform: translate3d(100%, 0, 0);
+    from {
+        transform: translateX(100%);
     }
-    100% {
-        transform: translate3d(-100%, 0, 0);
+    to {
+        transform: translateX(-100%);
     }
 }
 
@@ -63,6 +69,8 @@ html, body {
 @media (min-width: 992px) {
     .marquee-container.desktop-marquee {
         display: block;
+        visibility: visible;
+        opacity: 1;
     }
     
     .marquee-container.mobile-marquee {
@@ -85,11 +93,13 @@ html, body {
         display: block;
         height: 36px;
         margin-top: 0;
+        visibility: visible;
+        opacity: 1;
     }
     
     .marquee-content {
         font-size: 13px;
-        animation-duration: 10s; /* Дуже швидко для мобільних */
+        animation-duration: 10s;
     }
     
     .marquee-text {
@@ -128,23 +138,12 @@ html, body {
 /* iOS Safari Optimizations */
 @supports (-webkit-touch-callout: none) {
     .marquee-content {
-        -webkit-transform: translate3d(0, 0, 0);
-        transform: translate3d(0, 0, 0);
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
         -webkit-perspective: 1000px;
         perspective: 1000px;
-    }
-    
-    @keyframes marqueeScroll {
-        0% {
-            -webkit-transform: translate3d(100%, 0, 0);
-            transform: translate3d(100%, 0, 0);
-        }
-        100% {
-            -webkit-transform: translate3d(-100%, 0, 0);
-            transform: translate3d(-100%, 0, 0);
-        }
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
     }
 }
 
