@@ -45,7 +45,7 @@ html, body {
 .marquee-text {
     display: inline-flex;
     align-items: center;
-    padding-right: 2rem;
+    padding-right: 4rem;
     white-space: nowrap;
 }
 
