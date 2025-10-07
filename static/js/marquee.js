@@ -52,27 +52,21 @@ class MarqueeController {
 
     adjustAnimationSpeed(marquee, content) {
         const screenWidth = window.innerWidth;
-        let duration, animationName;
+        let duration;
 
         if (screenWidth >= 1200) {
             duration = '45s';
-            animationName = 'marqueeScroll';
         } else if (screenWidth >= 992) {
             duration = '45s';
-            animationName = 'marqueeScroll';
         } else if (screenWidth >= 768) {
             duration = '38s';
-            animationName = 'marqueeScrollMobile';
         } else if (screenWidth >= 576) {
             duration = '10s';
-            animationName = 'marqueeScrollMobile';
         } else {
             duration = '12s';
-            animationName = 'marqueeScrollMobile';
         }
 
         content.style.animationDuration = duration;
-        content.style.animationName = animationName;
     }
 
     handleReducedMotion(content) {
