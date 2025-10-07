@@ -155,7 +155,8 @@
 }
 
 .wishlist-link,
-.cart-link {
+.cart-link,
+.account-link {
     position: relative;
     display: flex;
     align-items: center;
@@ -168,9 +169,22 @@
 }
 
 .wishlist-link:hover,
-.cart-link:hover {
+.cart-link:hover,
+.account-link:hover {
     background: var(--gray-light);
     color: var(--primary-pink);
+}
+
+.action-icon {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+}
+
+.account-text {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
 }
 
 .badge {
