@@ -40,6 +40,7 @@ LOCAL_APPS = [
     'apps.core',
     'apps.products',
     'apps.cart',
+    'apps.wishlist',
     'apps.orders',
     'apps.blog',
     'apps.users',
@@ -72,6 +73,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'apps.core.context_processors.base_context',
+                'apps.wishlist.context_processors.wishlist',
             ],
         },
     },
@@ -150,6 +152,9 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 # Cart settings
 CART_SESSION_ID = 'cart'
+
+# Wishlist settings
+WISHLIST_SESSION_ID = 'wishlist'
 
 # Security settings
 SECURE_BROWSER_XSS_FILTER = True
