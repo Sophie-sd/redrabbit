@@ -49,6 +49,7 @@
 .row {
     margin-right: calc(var(--spacing-md) * -0.5);
     margin-left: calc(var(--spacing-md) * -0.5);
+    display: flex;
 }
 
 .col {
