@@ -123,7 +123,7 @@
 }
 
 .status-wholesale {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%);
     color: #ffffff;
 }
 
@@ -156,8 +156,8 @@
 
 .btn-outline {
     background: transparent;
-    color: #3498db;
-    border: 2px solid #3498db;
+    color: #FF1493;
+    border: 2px solid #FF1493;
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
@@ -167,7 +167,7 @@
 }
 
 .btn-outline:hover {
-    background: #3498db;
+    background: #FF1493;
     color: #ffffff;
 }
 

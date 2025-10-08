@@ -23,14 +23,10 @@
             </div>
         </div>
     {% else %}
-        <div class="mobile-auth-links">
-            <a href="{% url 'users:login' %}" class="mobile-auth-btn login-btn">
+        <div class="mobile-auth-link">
+            <a href="{% url 'users:login' %}" class="mobile-cabinet-btn">
                 <i class="icon-user" aria-hidden="true"></i>
-                Вхід
-            </a>
-            <a href="{% url 'users:register' %}" class="mobile-auth-btn register-btn">
-                <i class="icon-user-plus" aria-hidden="true"></i>
-                Реєстрація (ОПТ)
+                Особистий кабінет
             </a>
         </div>
     {% endif %}

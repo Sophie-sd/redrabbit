@@ -8,8 +8,17 @@
     <div class="auth-wrapper">
         <div class="auth-card">
             <div class="auth-header">
-                <h1>Вхід</h1>
-                <p class="auth-subtitle">Увійдіть в особистий кабінет</p>
+                <h1>Вхід в особистий кабінет</h1>
+                <p class="auth-subtitle">Для оптових клієнтів</p>
+            </div>
+
+            <div class="wholesale-notice">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <p>Особистий кабінет призначений виключно для оптових покупців. Після входу вам стануть доступні спеціальні оптові ціни на всі товари.</p>
             </div>
 
             {% if messages %}
@@ -57,7 +66,8 @@
             </form>
 
             <div class="auth-footer">
-                <p>Немає облікового запису? <a href="{% url 'users:register' %}">Зареєструватися</a></p>
+                <p>Ще не зареєстровані? <a href="{% url 'users:register' %}">Зареєструватися для оптових цін</a></p>
+                <p class="footer-note">Особистий кабінет тільки для оптових клієнтів</p>
             </div>
         </div>
     </div>
