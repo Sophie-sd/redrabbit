@@ -228,11 +228,34 @@
     margin: 20px 0;
 }
 
+/* Desktop - 4 картки в 1 рядок */
+@media (min-width: 992px) {
+    .non-returnable-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+}
+
 .category {
     background: white;
     padding: 20px;
     border-radius: 8px;
     border: 1px solid #eee;
+}
+
+/* Зменшуємо padding для desktop щоб вмістилися 4 картки */
+@media (min-width: 992px) {
+    .category {
+        padding: 16px;
+    }
+    
+    .category h3 {
+        font-size: 1em;
+    }
+    
+    .category li {
+        font-size: 14px;
+    }
 }
 
 .category h3 {
