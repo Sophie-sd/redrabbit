@@ -424,6 +424,7 @@
 .info-block-simple .info-list li {
     padding: 12px 0;
     padding-left: 30px;
+    position: relative;
     color: #2c3e50;
     font-size: 15px;
     line-height: 1.6;
@@ -431,6 +432,9 @@
 
 .info-block-simple .info-list li::before {
     content: '→';
+    position: absolute;
+    left: 0;
+    top: 12px;
     color: #FF1493;
     font-weight: bold;
     font-size: 1.2em;
@@ -499,14 +503,19 @@
     .info-block-simple .info-list li {
         padding: 10px 0;
         padding-left: 28px;
+        position: relative;
         font-size: 14px;
+    }
+    
+    .info-block-simple .info-list li::before {
+        top: 10px;
     }
     
     /* Зменшуємо блок "Маєте питання" на мобільній */
     .contact-delivery-section {
         padding: 40px 20px;
         border-radius: 20px;
-        margin: 0 15px;
+        margin: 40px 15px 0 15px;
     }
     
     .contact-title {
@@ -553,13 +562,18 @@
         font-size: 0.85em;
         padding: 8px 0;
         padding-left: 25px;
+        position: relative;
+    }
+    
+    .info-block-simple .info-list li::before {
+        top: 8px;
     }
     
     /* Ще більше зменшуємо блок "Маєте питання" на маленьких екранах */
     .contact-delivery-section {
         padding: 30px 15px;
         border-radius: 15px;
-        margin: 0 10px;
+        margin: 35px 10px 0 10px;
     }
     
     .contact-title {
