@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Мої замовлення - BeautyShop{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-wrapper">
+        <div class="profile-header">
+            <h1>Мої замовлення</h1>
+            <p>Історія ваших покупок</p>
+        </div>
+
+        {% if orders %}
+            <div class="orders-list">
+                {% for order in orders %}
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-number">
+                                <strong>Замовлення #{{ order.order_number }}</strong>
+                                <span class="order-date">{{ order.created_at|date:"d.m.Y H:i" }}</span>
+                            </div>
+                            <div class="order-status status-{{ order.status }}">
+                                {{ order.get_status_display }}
+                            </div>
+                        </div>
+
+                        <div class="order-body">
+                            <div class="order-info">
+                                <div class="info-item">
+                                    <span class="label">Отримувач:</span>
+                                    <span class="value">{{ order.first_name }} {{ order.last_name }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Телефон:</span>
+                                    <span class="value">{{ order.phone }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Email:</span>
+                                    <span class="value">{{ order.email }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Доставка:</span>
+                                    <span class="value">{{ order.get_delivery_method_display }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Місто:</span>
+                                    <span class="value">{{ order.delivery_city }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Оплата:</span>
+                                    <span class="value">
+                                        {{ order.get_payment_method_display }}
+                                        {% if order.is_paid %}
+                                            <span class="badge badge-success">Оплачено</span>
+                                        {% else %}
+                                            <span class="badge badge-warning">Не оплачено</span>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="order-items">
+                                <h4>Товари:</h4>
+                                <ul class="items-list">
+                                    {% for item in order.items.all %}
+                                        <li class="order-item">
+                                            <span class="item-name">{{ item.product.name }}</span>
+                                            <span class="item-quantity">× {{ item.quantity }}</span>
+                                            <span class="item-price">{{ item.price }} ₴</span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="order-footer">
+                            <div class="order-total">
+                                <span class="label">Загальна сума:</span>
+                                <span class="amount">{{ order.total }} ₴</span>
+                            </div>
+                            <div class="order-actions">
+                                {% if order.can_be_cancelled %}
+                                    <button class="btn btn-sm btn-outline btn-danger" onclick="cancelOrder('{{ order.id }}')">
+                                        Скасувати
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <h3>У вас поки немає замовлень</h3>
+                <p>Почніть робити покупки, щоб побачити історію замовлень тут</p>
+                <a href="{% url 'core:catalog' %}" class="btn btn-primary">Перейти до каталогу</a>
+            </div>
+        {% endif %}
+
+        <div class="profile-actions">
+            <a href="{% url 'users:profile' %}" class="btn btn-outline">Назад до кабінету</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

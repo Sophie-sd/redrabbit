@@ -1,13 +1,14 @@
 """
 Views для користувачів
 """
-from django.shortcuts import render, redirect
-from django.views.generic import CreateView, TemplateView
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import CreateView, TemplateView, View
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from .models import CustomUser
 from .forms import WholesaleRegistrationForm
+from .utils import send_verification_email
 
 
 class WholesaleRegisterView(CreateView):
@@ -18,13 +19,58 @@ class WholesaleRegisterView(CreateView):
     template_name = 'users/register.html'
     
     def form_valid(self, form):
+        # Зберігаємо користувача (is_active=False)
         user = form.save()
-        login(self.request, user)
-        messages.success(
-            self.request, 
-            'Ви успішно зареєструвалися! Оптові ціни будуть доступні після досягнення обороту 5000₴ за місяць.'
-        )
-        return redirect('users:profile')
+        
+        # Надсилаємо лист з підтвердженням
+        if send_verification_email(user, self.request):
+            messages.success(
+                self.request, 
+                'Ви успішно зареєструвалися! Перевірте вашу пошту для підтвердження email.'
+            )
+        else:
+            messages.warning(
+                self.request,
+                'Реєстрація успішна, але виникла помилка при надсиланні листа. Зверніться до підтримки.'
+            )
+        
+        return redirect('users:registration_pending')
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Будь ласка, виправте помилки у формі.')
+        return super().form_invalid(form)
+
+
+class RegistrationPendingView(TemplateView):
+    """Сторінка після реєстрації - очікування підтвердження email"""
+    template_name = 'users/registration_pending.html'
+
+
+class EmailVerificationView(View):
+    """Підтвердження email через токен"""
+    
+    def get(self, request, token):
+        # Шукаємо користувача з таким токеном
+        try:
+            user = CustomUser.objects.get(email_verification_token=token)
+            
+            # Верифікуємо email
+            if user.verify_email(token):
+                # Логінимо користувача
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                
+                messages.success(
+                    request,
+                    'Email успішно підтверджено! Тепер вам доступні оптові ціни після входу.'
+                )
+                return redirect('users:profile')
+            else:
+                messages.error(request, 'Невірний токен верифікації.')
+                return redirect('users:login')
+                
+        except CustomUser.DoesNotExist:
+            messages.error(request, 'Невірний токен верифікації або токен вже використано.')
+            return redirect('users:login')
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):

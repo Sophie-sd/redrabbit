@@ -160,7 +160,7 @@
                                     <span class="price-current">{{ product.retail_price }} ₴</span>
                                     <small class="price-type">роздріб</small>
                                 </div>
-                                {% if product.wholesale_price %}
+                                {% if user.is_authenticated and product.wholesale_price %}
                                     <div class="price-row wholesale">
                                         <span class="price-wholesale">{{ product.wholesale_price }} ₴</span>
                                         <small class="price-type">опт</small>

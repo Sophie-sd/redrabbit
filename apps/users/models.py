@@ -4,13 +4,32 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
+from django.core.validators import RegexValidator
 from decimal import Decimal
+import secrets
 
 
 class CustomUser(AbstractUser):
     """Розширена модель користувача"""
     
-    phone = models.CharField('Телефон', max_length=20, blank=True)
+    phone_validator = RegexValidator(
+        regex=r'^\+380\d{9}$',
+        message='Невірний формат телефону. Використовуйте формат +380XXXXXXXXX'
+    )
+    
+    phone = models.CharField(
+        'Телефон', 
+        max_length=20, 
+        unique=True,
+        validators=[phone_validator],
+        help_text='Формат: +380XXXXXXXXX'
+    )
+    date_of_birth = models.DateField('Дата народження', null=True, blank=True)
+    
+    # Email верифікація
+    email_verified = models.BooleanField('Email підтверджено', default=False)
+    email_verification_token = models.CharField('Токен верифікації', max_length=100, blank=True)
+    
     is_wholesale = models.BooleanField('Оптовий клієнт', default=False)
     monthly_turnover = models.DecimalField(
         'Місячний оборот', 
@@ -27,6 +46,22 @@ class CustomUser(AbstractUser):
     class Meta:
         verbose_name = 'Користувач'
         verbose_name_plural = 'Користувачі'
+    
+    def generate_email_verification_token(self):
+        """Генерує токен для верифікації email"""
+        self.email_verification_token = secrets.token_urlsafe(32)
+        self.save(update_fields=['email_verification_token'])
+        return self.email_verification_token
+    
+    def verify_email(self, token):
+        """Верифікує email якщо токен збігається"""
+        if self.email_verification_token and self.email_verification_token == token:
+            self.email_verified = True
+            self.is_active = True
+            self.email_verification_token = ''
+            self.save(update_fields=['email_verified', 'is_active', 'email_verification_token'])
+            return True
+        return False
     
     def update_wholesale_status(self):
         """

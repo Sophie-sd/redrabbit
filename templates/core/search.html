@@ -101,7 +101,7 @@
                                             </div>
                                         {% endif %}
                                         
-                                        {% if product.wholesale_price and user.is_wholesale %}
+                                        {% if user.is_authenticated and product.wholesale_price %}
                                             <div class="price-row">
                                                 <span class="price-wholesale">Опт: {{ product.wholesale_price }} грн</span>
                                             </div>

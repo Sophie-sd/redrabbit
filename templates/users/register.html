@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Реєстрація - BeautyShop{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>Реєстрація для оптових клієнтів</h1>
+                <p class="auth-subtitle">Отримайте доступ до спеціальних оптових цін</p>
+            </div>
+
+            <div class="wholesale-info-block">
+                <div class="info-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z"></path>
+                        <path d="M2 17L12 22L22 17"></path>
+                        <path d="M2 12L12 17L22 12"></path>
+                    </svg>
+                </div>
+                <h3>Реєстрація ТІЛЬКИ для оптових покупців</h3>
+                <p class="info-description">
+                    Цей особистий кабінет призначений виключно для клієнтів, які планують замовляти товари оптом. 
+                    Після реєстрації та підтвердження email вам відкриється доступ до спеціальних оптових цін.
+                </p>
+            </div>
+
+            <div class="auth-info">
+                <h3>🎯 Що ви отримаєте:</h3>
+                <ul class="benefits-list">
+                    <li>✓ Доступ до спеціальних оптових цін на всі товари</li>
+                    <li>✓ Особистий кабінет з історією замовлень</li>
+                    <li>✓ Персональні знижки та акції</li>
+                    <li>✓ Пріоритетна обробка замовлень</li>
+                </ul>
+                <div class="note-box">
+                    <strong>Важливо:</strong> Ціни від 3 штук доступні всім користувачам без реєстрації. 
+                    Оптові ціни відображаються тільки після входу в особистий кабінет.
+                </div>
+            </div>
+
+            <form method="post" class="auth-form" novalidate>
+                {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                    <div class="alert alert-error">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.first_name.id_for_label }}">Ім'я *</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <div class="error-message">{{ form.first_name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.last_name.id_for_label }}">Прізвище *</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <div class="error-message">{{ form.last_name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.date_of_birth.id_for_label }}">Дата народження *</label>
+                    {{ form.date_of_birth }}
+                    {% if form.date_of_birth.errors %}
+                        <div class="error-message">{{ form.date_of_birth.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.phone.id_for_label }}">Телефон *</label>
+                    {{ form.phone }}
+                    <small class="form-help">Формат: +380991234567</small>
+                    {% if form.phone.errors %}
+                        <div class="error-message">{{ form.phone.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email *</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="error-message">{{ form.email.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}">Пароль *</label>
+                    {{ form.password1 }}
+                    <small class="form-help">Мінімум 8 символів</small>
+                    {% if form.password1.errors %}
+                        <div class="error-message">{{ form.password1.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}">Підтвердження паролю *</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        <div class="error-message">{{ form.password2.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">Зареєструватися</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Вже зареєстровані? <a href="{% url 'users:login' %}">Увійти</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

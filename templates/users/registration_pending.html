@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Підтвердіть email - BeautyShop{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-wrapper">
+        <div class="auth-card text-center">
+            <div class="success-icon">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </div>
+
+            <h1>Реєстрація майже завершена!</h1>
+            
+            <div class="message-box">
+                <p>Ми надіслали лист з підтвердженням на вашу email адресу.</p>
+                <p><strong>Будь ласка, перевірте вашу пошту та натисніть на посилання для активації облікового запису.</strong></p>
+            </div>
+
+            <div class="info-box">
+                <h3>Що далі?</h3>
+                <ol class="steps-list">
+                    <li>Відкрийте вашу електронну пошту</li>
+                    <li>Знайдіть лист від BeautyShop</li>
+                    <li>Натисніть на посилання для підтвердження</li>
+                    <li>Увійдіть в особистий кабінет</li>
+                </ol>
+            </div>
+
+            <div class="help-text">
+                <p><small>Не отримали лист? Перевірте папку "Спам" або зверніться до підтримки.</small></p>
+            </div>
+
+            <a href="{% url 'core:home' %}" class="btn btn-outline">Повернутися на головну</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

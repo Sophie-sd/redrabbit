@@ -92,7 +92,7 @@
                                 </div>
                                 
                                 <!-- Додаткові ціни -->
-                                {% if product.wholesale_price %}
+                                {% if user.is_authenticated and product.wholesale_price %}
                                     <div class="additional-prices">
                                         <div class="price-row wholesale">
                                             <span class="price-wholesale">{{ product.wholesale_price }} ₴</span>

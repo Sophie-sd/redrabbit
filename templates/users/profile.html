@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Особистий кабінет - BeautyShop{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-wrapper">
+        <div class="profile-header">
+            <h1>Особистий кабінет</h1>
+            <p>Вітаємо, <strong>{{ user.first_name }} {{ user.last_name }}</strong>!</p>
+        </div>
+
+        <div class="profile-grid">
+            <!-- Блок інформації про користувача -->
+            <div class="profile-card">
+                <div class="card-header">
+                    <h2>Мої дані</h2>
+                    <a href="#" class="btn btn-sm btn-outline">Редагувати</a>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <span class="info-label">Прізвище:</span>
+                        <span class="info-value">{{ user.last_name }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Ім'я:</span>
+                        <span class="info-value">{{ user.first_name }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Дата народження:</span>
+                        <span class="info-value">{{ user.date_of_birth|date:"d.m.Y"|default:"-" }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Телефон:</span>
+                        <span class="info-value">{{ user.phone }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">
+                            {{ user.email }}
+                            {% if user.email_verified %}
+                                <span class="badge badge-success">✓ Підтверджено</span>
+                            {% else %}
+                                <span class="badge badge-warning">Не підтверджено</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Блок статусу -->
+            <div class="profile-card">
+                <div class="card-header">
+                    <h2>Статус</h2>
+                </div>
+                <div class="card-body">
+                    {% if user.is_wholesale %}
+                        <div class="status-badge status-wholesale">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                            <div>
+                                <h3>Оптовий клієнт</h3>
+                                <p>Вам доступні спеціальні оптові ціни на всі товари</p>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="status-badge status-retail">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 6v6l4 2"></path>
+                            </svg>
+                            <div>
+                                <h3>Роздрібний клієнт</h3>
+                                <p>Щоб отримати оптовий статус, зверніться до адміністратора</p>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if monthly_turnover %}
+                        <div class="info-row">
+                            <span class="info-label">Оборот за місяць:</span>
+                            <span class="info-value">{{ monthly_turnover }} ₴</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок замовлень -->
+        <div class="profile-card">
+            <div class="card-header">
+                <h2>Мої замовлення</h2>
+                <a href="{% url 'users:orders' %}" class="btn btn-sm btn-outline">Всі замовлення</a>
+            </div>
+            <div class="card-body">
+                <p class="text-center text-muted">Історія замовлень буде доступна незабаром</p>
+            </div>
+        </div>
+
+        <!-- Дії -->
+        <div class="profile-actions">
+            <a href="{% url 'users:logout' %}" class="btn btn-outline">Вийти</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
