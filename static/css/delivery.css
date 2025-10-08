@@ -490,32 +490,48 @@
         box-shadow: none;
     }
     
-    /* Стилі для info-block-simple на мобільній */
+    /* Стилі для info-block-simple на мобільній - центруємо та оформлюємо */
     .info-block-simple {
-        margin-bottom: 30px;
+        margin-bottom: 40px;
+        text-align: center;
+        padding: 0 20px;
+        background: linear-gradient(135deg, rgba(255, 20, 147, 0.03) 0%, rgba(255, 105, 180, 0.03) 100%);
+        border-radius: 15px;
+        padding: 25px 20px;
     }
     
     .info-block-simple .info-title {
-        font-size: 1.2em;
-        margin-bottom: 15px;
+        font-size: 1.3em;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #e91e63;
+    }
+    
+    .info-block-simple .info-list {
+        text-align: left;
+        display: inline-block;
+        max-width: 100%;
+        padding-left: 0;
     }
     
     .info-block-simple .info-list li {
         padding: 10px 0;
-        padding-left: 28px;
+        padding-left: 0;
         position: relative;
-        font-size: 14px;
+        font-size: 15px;
+        line-height: 1.7;
     }
     
+    /* Прибираємо маркери зі списку */
     .info-block-simple .info-list li::before {
-        top: 10px;
+        content: none;
     }
     
-    /* Зменшуємо блок "Маєте питання" на мобільній */
+    /* Відділяємо блок "Маєте питання" від footer */
     .contact-delivery-section {
         padding: 40px 20px;
         border-radius: 20px;
-        margin: 40px 15px 0 15px;
+        margin: 50px 15px 60px 15px;
     }
     
     .contact-title {
@@ -557,23 +573,40 @@
         left: 3px;
     }
     
-    .info-list li,
-    .info-block-simple .info-list li {
+    .info-list li {
         font-size: 0.85em;
         padding: 8px 0;
         padding-left: 25px;
         position: relative;
     }
     
-    .info-block-simple .info-list li::before {
-        top: 8px;
+    /* Стилі для info-block-simple на маленьких екранах */
+    .info-block-simple {
+        margin-bottom: 35px;
+        padding: 20px 15px;
+        border-radius: 12px;
     }
     
-    /* Ще більше зменшуємо блок "Маєте питання" на маленьких екранах */
+    .info-block-simple .info-title {
+        font-size: 1.2em;
+        margin-bottom: 18px;
+    }
+    
+    .info-block-simple .info-list li {
+        font-size: 14px;
+        padding: 8px 0;
+        padding-left: 0;
+    }
+    
+    .info-block-simple .info-list li::before {
+        content: none;
+    }
+    
+    /* Відділяємо блок "Маєте питання" від footer на маленьких екранах */
     .contact-delivery-section {
         padding: 30px 15px;
         border-radius: 15px;
-        margin: 35px 10px 0 10px;
+        margin: 45px 10px 55px 10px;
     }
     
     .contact-title {
