@@ -46,10 +46,6 @@
     transform: scale(1.1);
 }
 
-.delivery-content {
-    /* Прибираємо позиціонування, щоб не заважало стікерам */
-}
-
 .delivery-title {
     font-size: 1.3em;
     font-weight: 700;
@@ -178,10 +174,6 @@
     transform: scale(1.1);
 }
 
-.payment-content {
-    /* Прибираємо позиціонування, щоб не заважало стікерам */
-}
-
 .payment-title {
     font-size: 1.3em;
     font-weight: 700;
@@ -278,37 +270,54 @@
     background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
 }
 
-.info-block {
+/* Об'єднаний блок */
+.info-combined-block {
     background: white;
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-    border-left: 4px solid #e91e63;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    border: 2px solid rgba(233, 30, 99, 0.1);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px;
     transition: all 0.3s ease;
 }
 
-.info-block:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(233, 30, 99, 0.15);
+.info-combined-block:hover {
+    box-shadow: 0 12px 40px rgba(233, 30, 99, 0.15);
+    border-color: rgba(233, 30, 99, 0.2);
+}
+
+.info-section {
+    position: relative;
+}
+
+.info-section:first-child::after {
+    content: '';
+    position: absolute;
+    right: -25px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, transparent 0%, #e91e63 50%, transparent 100%);
 }
 
 .info-title {
-    font-size: 1.2em;
+    font-size: 1.3em;
     font-weight: 700;
-    color: #333;
-    margin: 0 0 20px 0;
+    color: #e91e63;
+    margin: 0 0 25px 0;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .info-icon {
-    font-size: 1.5em;
-    display: inline-block;
-    transform: none;
-    vertical-align: middle;
+    font-size: 1.4em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-style: normal;
-    margin-right: 10px;
 }
 
 .info-list {
@@ -318,19 +327,27 @@
 }
 
 .info-list li {
-    padding: 10px 0;
-    padding-left: 25px;
+    padding: 12px 0;
+    padding-left: 30px;
     position: relative;
-    color: #555;
-    line-height: 1.5;
+    color: #2c3e50;
+    line-height: 1.7;
+    font-size: 15px;
 }
 
 .info-list li::before {
-    content: '→';
+    content: '✓';
     position: absolute;
     left: 0;
+    top: 12px;
     color: #e91e63;
     font-weight: bold;
+    font-size: 1.1em;
+}
+
+.info-list li strong {
+    color: #e91e63;
+    font-weight: 600;
 }
 
 /* Contact Delivery Section */
@@ -402,43 +419,6 @@
     font-style: normal;
 }
 
-/* Стилі для info-block-simple (без блоку, простий текст) */
-.info-block-simple {
-    padding: 0;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-}
-
-.info-block-simple .info-title {
-    font-size: 1.3em;
-    font-weight: 700;
-    color: #2c3e50;
-    margin-bottom: 20px;
-}
-
-.info-block-simple .info-list {
-    padding-left: 0;
-}
-
-.info-block-simple .info-list li {
-    padding: 12px 0;
-    padding-left: 30px;
-    position: relative;
-    color: #2c3e50;
-    font-size: 15px;
-    line-height: 1.6;
-}
-
-.info-block-simple .info-list li::before {
-    content: '→';
-    position: absolute;
-    left: 0;
-    top: 12px;
-    color: #FF1493;
-    font-weight: bold;
-    font-size: 1.2em;
-}
 
 /* Адаптивність */
 @media (max-width: 768px) {
@@ -477,54 +457,38 @@
         font-size: 1.2em;
     }
     
-    /* info-block тепер не має фону та рамок на мобільній */
-    .info-block {
-        background: transparent;
-        padding: 0;
-        box-shadow: none;
-        border-left: none;
+    /* Адаптивність для об'єднаного блоку */
+    .info-combined-block {
+        grid-template-columns: 1fr;
+        gap: 35px;
+        padding: 30px 25px;
     }
     
-    .info-block:hover {
-        transform: none;
-        box-shadow: none;
+    .info-section:first-child::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -17px;
+        top: auto;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #e91e63 50%, transparent 100%);
     }
     
-    /* Стилі для info-block-simple на мобільній - центруємо та оформлюємо */
-    .info-block-simple {
-        margin-bottom: 40px;
-        text-align: center;
-        padding: 0 20px;
-        background: linear-gradient(135deg, rgba(255, 20, 147, 0.03) 0%, rgba(255, 105, 180, 0.03) 100%);
-        border-radius: 15px;
-        padding: 25px 20px;
-    }
-    
-    .info-block-simple .info-title {
-        font-size: 1.3em;
+    .info-title {
+        font-size: 1.2em;
         margin-bottom: 20px;
-        text-align: center;
-        color: #e91e63;
     }
     
-    .info-block-simple .info-list {
-        text-align: left;
-        display: inline-block;
-        max-width: 100%;
-        padding-left: 0;
-    }
-    
-    .info-block-simple .info-list li {
+    .info-list li {
         padding: 10px 0;
-        padding-left: 0;
-        position: relative;
-        font-size: 15px;
-        line-height: 1.7;
+        padding-left: 28px;
+        font-size: 14px;
     }
     
-    /* Прибираємо маркери зі списку */
-    .info-block-simple .info-list li::before {
-        content: none;
+    .info-list li::before {
+        top: 10px;
     }
     
     /* Відділяємо блок "Маєте питання" від footer */
@@ -580,26 +544,28 @@
         position: relative;
     }
     
-    /* Стилі для info-block-simple на маленьких екранах */
-    .info-block-simple {
-        margin-bottom: 35px;
-        padding: 20px 15px;
-        border-radius: 12px;
+    /* Стилі для об'єднаного блоку на маленьких екранах */
+    .info-combined-block {
+        padding: 25px 20px;
+        gap: 30px;
+        border-radius: 15px;
     }
     
-    .info-block-simple .info-title {
-        font-size: 1.2em;
+    .info-title {
+        font-size: 1.1em;
         margin-bottom: 18px;
+        gap: 10px;
     }
     
-    .info-block-simple .info-list li {
-        font-size: 14px;
+    .info-list li {
+        font-size: 13px;
         padding: 8px 0;
-        padding-left: 0;
+        padding-left: 25px;
     }
     
-    .info-block-simple .info-list li::before {
-        content: none;
+    .info-list li::before {
+        top: 8px;
+        font-size: 1em;
     }
     
     /* Відділяємо блок "Маєте питання" від footer на маленьких екранах */
