@@ -6,6 +6,15 @@
     padding: 50px 0 30px;
 }
 
+/* Забезпечуємо 4-колонкове розташування для desktop */
+@media (min-width: 992px) {
+    .footer-main .row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+    }
+}
+
 .footer-section {
     margin-bottom: 30px;
 }
@@ -200,6 +209,23 @@
     background: #1a1a1a;
     padding: 20px 0;
     border-top: 1px solid #3a3a3a;
+}
+
+/* Забезпечуємо два стовпчики для desktop */
+@media (min-width: 768px) {
+    .footer-bottom .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .footer-bottom .col-md-6:first-child {
+        text-align: left;
+    }
+    
+    .footer-bottom .col-md-6:last-child {
+        text-align: right;
+    }
 }
 
 .footer-bottom .copyright {
