@@ -264,35 +264,4 @@
         </div>
     </div>
 </section>
-
-<!-- Newsletter Subscription -->
-<section class="newsletter-section section-padding">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-6 text-center">
-                <h3 class="newsletter-title">Не пропустіть нові статті!</h3>
-                <p class="newsletter-description">
-                    Підпишіться на розсилку і отримуйте корисні поради для вашого салону краси
-                </p>
-                
-                <form class="newsletter-form" method="post" action="#" novalidate>
-                    {% csrf_token %}
-                    <div class="input-group mb-3">
-                        <input type="email" 
-                               class="form-control" 
-                               placeholder="Ваша електронна пошта"
-                               aria-label="Email для підписки"
-                               required>
-                        <button class="btn btn-primary" type="submit">
-                            Підписатися
-                        </button>
-                    </div>
-                    <small class="newsletter-privacy">
-                        Ми поважаємо вашу конфіденційність і не передаємо дані третім особам
-                    </small>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
 {% endblock %}
