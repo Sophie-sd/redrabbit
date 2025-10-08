@@ -270,36 +270,27 @@
     background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
 }
 
-/* Об'єднаний блок */
-.info-combined-block {
-    background: white;
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-    border: 2px solid rgba(233, 30, 99, 0.1);
+/* Grid для блоків на десктопі */
+.info-blocks-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 50px;
+    gap: 30px;
+}
+
+/* Окремі блоки */
+.info-block {
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    border: 2px solid rgba(233, 30, 99, 0.1);
     transition: all 0.3s ease;
 }
 
-.info-combined-block:hover {
+.info-block:hover {
+    transform: translateY(-5px);
     box-shadow: 0 12px 40px rgba(233, 30, 99, 0.15);
     border-color: rgba(233, 30, 99, 0.2);
-}
-
-.info-section {
-    position: relative;
-}
-
-.info-section:first-child::after {
-    content: '';
-    position: absolute;
-    right: -25px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: linear-gradient(180deg, transparent 0%, #e91e63 50%, transparent 100%);
 }
 
 .info-title {
@@ -457,38 +448,46 @@
         font-size: 1.2em;
     }
     
-    /* Адаптивність для об'єднаного блоку */
-    .info-combined-block {
+    /* Адаптивність для блоків - один під одним на мобільній */
+    .info-blocks-grid {
         grid-template-columns: 1fr;
-        gap: 35px;
-        padding: 30px 25px;
+        gap: 0;
     }
     
-    .info-section:first-child::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: -17px;
-        top: auto;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(90deg, transparent 0%, #e91e63 50%, transparent 100%);
+    .info-block {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0 20px;
+        margin-bottom: 35px;
+        text-align: center;
+    }
+    
+    .info-block:hover {
+        transform: none;
+        box-shadow: none;
     }
     
     .info-title {
         font-size: 1.2em;
         margin-bottom: 20px;
+        justify-content: center;
+    }
+    
+    .info-list {
+        text-align: left;
+        display: inline-block;
+        max-width: 100%;
     }
     
     .info-list li {
         padding: 10px 0;
-        padding-left: 28px;
+        padding-left: 0;
         font-size: 14px;
     }
     
     .info-list li::before {
-        top: 10px;
+        content: none;
     }
     
     /* Відділяємо блок "Маєте питання" від footer */
@@ -544,11 +543,10 @@
         position: relative;
     }
     
-    /* Стилі для об'єднаного блоку на маленьких екранах */
-    .info-combined-block {
-        padding: 25px 20px;
-        gap: 30px;
-        border-radius: 15px;
+    /* Стилі для блоків на маленьких екранах */
+    .info-block {
+        padding: 0 15px;
+        margin-bottom: 30px;
     }
     
     .info-title {
@@ -560,12 +558,11 @@
     .info-list li {
         font-size: 13px;
         padding: 8px 0;
-        padding-left: 25px;
+        padding-left: 0;
     }
     
     .info-list li::before {
-        top: 8px;
-        font-size: 1em;
+        content: none;
     }
     
     /* Відділяємо блок "Маєте питання" від footer на маленьких екранах */
