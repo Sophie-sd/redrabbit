@@ -392,6 +392,11 @@
     border-color: var(--white);
 }
 
+.newsletter-privacy {
+    color: rgba(255, 255, 255, 0.9);
+    display: block;
+}
+
 /* Empty State */
 .empty-state {
     padding: var(--spacing-xxl) var(--spacing-lg);

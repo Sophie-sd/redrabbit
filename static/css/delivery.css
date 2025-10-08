@@ -402,6 +402,40 @@
     font-style: normal;
 }
 
+/* Стилі для info-block-simple (без блоку, простий текст) */
+.info-block-simple {
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.info-block-simple .info-title {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.info-block-simple .info-list {
+    padding-left: 0;
+}
+
+.info-block-simple .info-list li {
+    padding: 12px 0;
+    padding-left: 30px;
+    color: #2c3e50;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.info-block-simple .info-list li::before {
+    content: '→';
+    color: #FF1493;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
 /* Адаптивність */
 @media (max-width: 768px) {
     .delivery-grid,
@@ -417,6 +451,18 @@
         border-radius: 15px;
     }
     
+    /* Виправлення відступів від галочок у мобільній версії */
+    .delivery-features li,
+    .payment-features li {
+        padding-left: 30px;
+        padding-right: 10px;
+    }
+    
+    .delivery-features li::before,
+    .payment-features li::before {
+        left: 5px;
+    }
+    
     .delivery-image img,
     .payment-image img {
         max-width: 100px;
@@ -427,12 +473,48 @@
         font-size: 1.2em;
     }
     
+    /* info-block тепер не має фону та рамок на мобільній */
     .info-block {
-        padding: 20px;
+        background: transparent;
+        padding: 0;
+        box-shadow: none;
+        border-left: none;
+    }
+    
+    .info-block:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    /* Стилі для info-block-simple на мобільній */
+    .info-block-simple {
+        margin-bottom: 30px;
+    }
+    
+    .info-block-simple .info-title {
+        font-size: 1.2em;
+        margin-bottom: 15px;
+    }
+    
+    .info-block-simple .info-list li {
+        padding: 10px 0;
+        padding-left: 28px;
+        font-size: 14px;
+    }
+    
+    /* Зменшуємо блок "Маєте питання" на мобільній */
+    .contact-delivery-section {
+        padding: 40px 20px;
+        border-radius: 20px;
+        margin: 0 15px;
     }
     
     .contact-title {
-        font-size: 1.6em;
+        font-size: 1.4em;
+    }
+    
+    .contact-description {
+        font-size: 0.95em;
     }
     
     .contact-buttons .btn {
@@ -458,11 +540,35 @@
     .payment-features li {
         font-size: 0.85em;
         padding: 6px 0;
+        padding-left: 28px;
     }
     
-    .info-list li {
-        font-size: 0.9em;
+    .delivery-features li::before,
+    .payment-features li::before {
+        left: 3px;
+    }
+    
+    .info-list li,
+    .info-block-simple .info-list li {
+        font-size: 0.85em;
         padding: 8px 0;
+        padding-left: 25px;
+    }
+    
+    /* Ще більше зменшуємо блок "Маєте питання" на маленьких екранах */
+    .contact-delivery-section {
+        padding: 30px 15px;
+        border-radius: 15px;
+        margin: 0 10px;
+    }
+    
+    .contact-title {
+        font-size: 1.2em;
+    }
+    
+    .contact-description {
+        font-size: 0.9em;
+        margin-bottom: 20px;
     }
 }
 
