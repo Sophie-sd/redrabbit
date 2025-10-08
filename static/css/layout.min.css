@@ -47,8 +47,6 @@
 
 /* Grid System */
 .row {
-    display: flex;
-    flex-wrap: wrap;
     margin-right: calc(var(--spacing-md) * -0.5);
     margin-left: calc(var(--spacing-md) * -0.5);
 }
