@@ -148,7 +148,7 @@ class CustomLoginForm(AuthenticationForm):
 
 
 class CustomPasswordResetForm(PasswordResetForm):
-    """Покращена форма відновлення паролю з перевіркою email"""
+    """Покращена форма відновлення паролю"""
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -158,13 +158,13 @@ class CustomPasswordResetForm(PasswordResetForm):
             'autocomplete': 'email'
         })
     
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        
-        # Перевіряємо чи існує користувач з таким email
-        if not CustomUser.objects.filter(email=email).exists():
-            raise ValidationError(
-                'Користувача з таким email не зареєстровано. Будь ласка, перевірте правильність введення або зареєструйтеся.'
-            )
-        
-        return email
+    def get_users(self, email):
+        """Повертає користувачів з вказаним email"""
+        active_users = CustomUser._default_manager.filter(
+            email__iexact=email,
+            is_active=True
+        )
+        return (
+            user for user in active_users
+            if user.has_usable_password()
+        )
