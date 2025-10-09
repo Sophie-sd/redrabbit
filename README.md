@@ -105,16 +105,100 @@ beautyshop/
 
 ## 🛠 Налаштування для продакшену
 
-### Render деплой
+### 📧 Налаштування Email
 
-1. **Створіть сервіс на Render**
-2. **Підключіть GitHub репозиторій**
-3. **Налаштуйте змінні середовища:**
-   - `DJANGO_SETTINGS_MODULE=beautyshop.settings.production`
-   - `SECRET_KEY=your-secret-key`
-   - `DATABASE_URL=your-database-url`
+#### Крок 1: Отримання App Password від Gmail
+1. Відкрийте Google Account: https://myaccount.google.com/
+2. Перейдіть в Security (Безпека)
+3. Увімкніть 2-Step Verification (Двоетапна перевірка)
+4. Створіть App Password:
+   - Перейдіть на https://myaccount.google.com/apppasswords
+   - Оберіть "Mail" та "Other (Custom name)"
+   - Введіть назву: "Beauty Shop Django"
+   - Збережіть згенерований 16-символьний пароль (без пробілів)
 
-### Змінні середовища
+#### Крок 2: Створення файлу .env
+```bash
+cat > .env << 'EOF'
+# Development Environment Variables
+DEBUG=True
+SECRET_KEY=django-insecure-development-key-change-in-production
+DJANGO_SETTINGS_MODULE=beautyshop.settings.development
+
+# Email Settings для Gmail
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_USE_SSL=False
+EMAIL_HOST_USER=your-email@gmail.com
+EMAIL_HOST_PASSWORD=ВСТАВТЕ_ТУТ_ВАШ_APP_PASSWORD
+DEFAULT_FROM_EMAIL=Beauty Shop <your-email@gmail.com>
+
+# Site URL
+SITE_URL=http://127.0.0.1:8000
+EOF
+```
+
+### 🚀 Render деплой
+
+#### Швидка інструкція деплою
+
+1. **Підготовка Git репозиторію:**
+```bash
+git add .
+git commit -m "готово для Рендер"
+git push origin main
+```
+
+2. **Створення аккаунту на Render.com:**
+   - Перейдіть на [render.com](https://render.com)
+   - Зареєструйтеся або увійдіть
+   - Підключіть ваш GitHub/GitLab аккаунт
+
+3. **Деплой через Blueprint (РЕКОМЕНДУЄТЬСЯ!):**
+   - На dashboard натисніть "New" → "Blueprint"
+   - Підключіть ваш Git репозиторій
+   - Render автоматично знайде render.yaml та створить:
+     - ✅ PostgreSQL базу даних beautyshop-db
+     - ✅ Web Service beautyshop-django
+     - ✅ Всі необхідні змінні середовища
+     - ✅ Автоматичний деплоймент
+   - Натисніть "Create Blueprint Instance"
+   - Дочекайтеся завершення деплойменту (5-10 хвилин)
+
+4. **Перевірка деплойменту:**
+   - Відкрийте ваш сайт: https://beautyshop-django.onrender.com
+   - Перевірте адмінку: https://beautyshop-django.onrender.com/admin/
+
+### 🔐 Адміністративна панель
+
+#### Дані для входу в адмінку:
+- **URL:** `/admin/`
+- **Username:** `admin`
+- **Password:** `admin123`
+
+#### Що доступно в адмінці:
+1. **Товари та категорії** (`/admin/products/`)
+   - Категорії товарів (ієрархічна структура)
+   - Товари (роздрібні та оптові ціни, акції, складські залишки)
+   - Множинні зображення товарів
+
+2. **Замовлення** (`/admin/orders/`)
+   - Замовлення з повною інформацією
+   - Акції та промокоди
+   - Підписка на розсилку
+
+3. **Блог** (`/admin/blog/`)
+   - Статті з Rich Text редактором (CKEditor)
+   - SEO поля та зображення
+
+4. **Користувачі** (`/admin/users/`)
+   - Розширений профіль користувача
+   - Оптовий/роздрібний статус
+   - Місячний оборот (автоматичний розрахунок)
+
+### Змінні середовища для продакшену
 
 Створіть файл `.env` з наступними змінними:
 
@@ -123,6 +207,15 @@ DEBUG=False
 SECRET_KEY=your-secret-key-here
 DATABASE_URL=your-database-url
 ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
+
+# Email для продакшену
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=your-email@gmail.com
+EMAIL_HOST_PASSWORD=your-app-password-here
+DEFAULT_FROM_EMAIL=Beauty Shop <your-email@gmail.com>
 ```
 
 ## 🎨 Кастомізація
