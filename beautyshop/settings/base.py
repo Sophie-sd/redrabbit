@@ -153,9 +153,8 @@ CKEDITOR_CONFIGS = {
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-# Email settings
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@beautyshop.com')
+# Email settings - налаштовуються в development.py або production.py
+# DEFAULT_FROM_EMAIL буде налаштовано в specific settings
 
 # Session settings
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # 30 днів
