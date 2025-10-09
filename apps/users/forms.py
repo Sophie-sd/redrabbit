@@ -2,7 +2,7 @@
 Форми для користувачів
 """
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm
 from django.core.exceptions import ValidationError
 from .models import CustomUser, UserProfile
 import re
@@ -66,9 +66,14 @@ class WholesaleRegistrationForm(UserCreationForm):
         
         # Додаємо CSS класи для стилізації
         for field_name, field in self.fields.items():
-            field.widget.attrs.update({
-                'class': 'form-control',
-            })
+            if field_name in ['password1', 'password2']:
+                field.widget.attrs.update({
+                    'class': 'form-control password-field',
+                })
+            else:
+                field.widget.attrs.update({
+                    'class': 'form-control',
+                })
     
     def clean_phone(self):
         """Валідація телефону"""
@@ -119,3 +124,75 @@ class WholesaleRegistrationForm(UserCreationForm):
             UserProfile.objects.get_or_create(user=user)
         
         return user
+
+
+class CustomLoginForm(AuthenticationForm):
+    """Покращена форма входу з валідацією"""
+    
+    username = forms.CharField(
+        label='Email або ім\'я користувача',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'example@email.com',
+            'autocomplete': 'username'
+        })
+    )
+    password = forms.CharField(
+        label='Пароль',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control password-field',
+            'placeholder': '••••••••',
+            'autocomplete': 'current-password'
+        })
+    )
+    
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        
+        if username and password:
+            # Дозволяємо вхід через email
+            try:
+                user = CustomUser.objects.get(email=username)
+                username = user.username
+            except CustomUser.DoesNotExist:
+                pass
+            
+            self.user_cache = authenticate(
+                self.request,
+                username=username,
+                password=password
+            )
+            
+            if self.user_cache is None:
+                raise ValidationError(
+                    'Невірні дані для входу',
+                    code='invalid_login'
+                )
+        
+        return self.cleaned_data
+
+
+class CustomPasswordResetForm(PasswordResetForm):
+    """Покращена форма відновлення паролю з перевіркою email"""
+    
+    email = forms.EmailField(
+        label='Email',
+        max_length=254,
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'example@email.com',
+            'autocomplete': 'email'
+        })
+    )
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        
+        # Перевіряємо чи існує користувач з таким email
+        if not CustomUser.objects.filter(email=email).exists():
+            raise ValidationError(
+                'Користувача з таким email не зареєстровано. Будь ласка, перевірте правильність введення або зареєструйтеся.'
+            )
+        
+        return email

@@ -4,6 +4,7 @@ URLs для користувачів
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
+from .forms import CustomPasswordResetForm
 
 app_name = 'users'
 
@@ -14,7 +15,7 @@ urlpatterns = [
     path('verify-email/<str:token>/', views.EmailVerificationView.as_view(), name='verify_email'),
     
     # Вхід/вихід
-    path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
+    path('login/', views.CustomLoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='core:home'), name='logout'),
     
     # Особистий кабінет
@@ -23,7 +24,10 @@ urlpatterns = [
     
     # Відновлення паролю
     path('password/reset/', 
-         auth_views.PasswordResetView.as_view(template_name='users/password_reset.html'),
+         auth_views.PasswordResetView.as_view(
+             template_name='users/password_reset.html',
+             form_class=CustomPasswordResetForm
+         ),
          name='password_reset'),
     path('password/reset/done/', 
          auth_views.PasswordResetDoneView.as_view(template_name='users/password_reset_done.html'),

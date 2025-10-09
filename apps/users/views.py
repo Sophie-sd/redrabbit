@@ -2,12 +2,13 @@
 Views для користувачів
 """
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import CreateView, TemplateView, View
-from django.contrib.auth import login
+from django.views.generic import CreateView, TemplateView, View, FormView
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.contrib import messages
 from .models import CustomUser
-from .forms import WholesaleRegistrationForm
+from .forms import WholesaleRegistrationForm, CustomLoginForm
 from .utils import send_verification_email
 
 
@@ -107,3 +108,32 @@ class UserOrdersView(LoginRequiredMixin, TemplateView):
             user=self.request.user
         ).order_by('-created_at')
         return context
+
+
+class CustomLoginView(DjangoLoginView):
+    """Custom login view з покращеною валідацією"""
+    
+    form_class = CustomLoginForm
+    template_name = 'users/login.html'
+    
+    def form_invalid(self, form):
+        # Додаємо кастомні повідомлення про помилки
+        username = form.data.get('username', '')
+        
+        if username:
+            # Перевіряємо чи існує користувач з таким email
+            user_exists = CustomUser.objects.filter(email=username).exists() or \
+                         CustomUser.objects.filter(username=username).exists()
+            
+            if not user_exists:
+                messages.error(
+                    self.request,
+                    'Користувача з такими даними не зареєстровано. Будь ласка, зареєструйтеся.'
+                )
+            else:
+                messages.error(
+                    self.request,
+                    'Невірний пароль. Перевірте правильність введення паролю.'
+                )
+        
+        return super().form_invalid(form)
