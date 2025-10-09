@@ -18,7 +18,7 @@ python manage.py shell -c "
 from django.contrib.auth import get_user_model
 import os
 User = get_user_model()
-admin_email = os.getenv('ADMIN_EMAIL', 'admin@beautyshop.ua')
+admin_email = os.getenv('ADMIN_EMAIL', 'beautyshop.supp@gmail.com')
 admin_password = os.getenv('ADMIN_PASSWORD', 'ChangeMe123!')
 if not User.objects.filter(email=admin_email).exists():
     user = User.objects.create_superuser(
