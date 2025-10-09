@@ -20,22 +20,30 @@ class WholesaleRegisterView(CreateView):
     template_name = 'users/register.html'
     
     def form_valid(self, form):
-        # Зберігаємо користувача (is_active=False)
-        user = form.save()
-        
-        # Надсилаємо лист з підтвердженням
-        if send_verification_email(user, self.request):
-            messages.success(
-                self.request, 
-                'Ви успішно зареєструвалися! Перевірте вашу пошту для підтвердження email.'
-            )
-        else:
-            messages.warning(
+        try:
+            # Зберігаємо користувача (is_active=False)
+            user = form.save()
+            
+            # Надсилаємо лист з підтвердженням
+            if send_verification_email(user, self.request):
+                messages.success(
+                    self.request, 
+                    'Ви успішно зареєструвалися! Перевірте вашу пошту для підтвердження email.'
+                )
+            else:
+                messages.warning(
+                    self.request,
+                    'Реєстрація успішна, але виникла помилка при надсиланні листа. Зверніться до підтримки.'
+                )
+            
+            return redirect('users:registration_pending')
+            
+        except Exception as e:
+            messages.error(
                 self.request,
-                'Реєстрація успішна, але виникла помилка при надсиланні листа. Зверніться до підтримки.'
+                f'Виникла помилка при реєстрації: {str(e)}. Спробуйте ще раз або зверніться до підтримки.'
             )
-        
-        return redirect('users:registration_pending')
+            return super().form_invalid(form)
     
     def form_invalid(self, form):
         messages.error(self.request, 'Будь ласка, виправте помилки у формі.')

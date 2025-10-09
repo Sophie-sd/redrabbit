@@ -109,9 +109,18 @@ class WholesaleRegistrationForm(UserCreationForm):
         user.last_name = self.cleaned_data['last_name']
         user.date_of_birth = self.cleaned_data['date_of_birth']
         
-        # Генеруємо username з email якщо не вказано
+        # Генеруємо унікальний username з email
         if not user.username:
-            user.username = self.cleaned_data['email'].split('@')[0]
+            base_username = self.cleaned_data['email'].split('@')[0]
+            username = base_username
+            counter = 1
+            
+            # Перевіряємо унікальність username
+            while CustomUser.objects.filter(username=username).exists():
+                username = f"{base_username}{counter}"
+                counter += 1
+            
+            user.username = username
         
         # Користувач неактивний до підтвердження email
         user.is_active = False
