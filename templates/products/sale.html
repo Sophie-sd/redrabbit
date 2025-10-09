@@ -193,22 +193,4 @@
         {% endif %}
     </div>
 </section>
-
-<!-- Newsletter Subscription -->
-<section class="newsletter-section section-padding bg-light">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 text-center">
-                <h3 class="newsletter-title">Підпишіться на розсилку та першими дізнавайтеся про нові знижки та спеціальні пропозиції.</h3>
-                <form class="newsletter-form" action="#" method="post">
-                    {% csrf_token %}
-                    <div class="input-group">
-                        <input type="email" class="form-control" placeholder="Ваш email" required>
-                        <button class="btn btn-primary btn-lg" type="submit">Підписатися</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
 {% endblock %}
