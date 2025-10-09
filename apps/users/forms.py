@@ -145,46 +145,18 @@ class CustomLoginForm(AuthenticationForm):
             'autocomplete': 'current-password'
         })
     )
-    
-    def clean(self):
-        username = self.cleaned_data.get('username')
-        password = self.cleaned_data.get('password')
-        
-        if username and password:
-            # Дозволяємо вхід через email
-            try:
-                user = CustomUser.objects.get(email=username)
-                username = user.username
-            except CustomUser.DoesNotExist:
-                pass
-            
-            self.user_cache = authenticate(
-                self.request,
-                username=username,
-                password=password
-            )
-            
-            if self.user_cache is None:
-                raise ValidationError(
-                    'Невірні дані для входу',
-                    code='invalid_login'
-                )
-        
-        return self.cleaned_data
 
 
 class CustomPasswordResetForm(PasswordResetForm):
     """Покращена форма відновлення паролю з перевіркою email"""
     
-    email = forms.EmailField(
-        label='Email',
-        max_length=254,
-        widget=forms.EmailInput(attrs={
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs.update({
             'class': 'form-control',
             'placeholder': 'example@email.com',
             'autocomplete': 'email'
         })
-    )
     
     def clean_email(self):
         email = self.cleaned_data.get('email')

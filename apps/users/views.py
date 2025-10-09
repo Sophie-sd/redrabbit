@@ -113,7 +113,7 @@ class UserOrdersView(LoginRequiredMixin, TemplateView):
 class CustomLoginView(DjangoLoginView):
     """Custom login view з покращеною валідацією"""
     
-    form_class = CustomLoginForm
+    authentication_form = CustomLoginForm
     template_name = 'users/login.html'
     
     def form_invalid(self, form):
@@ -135,5 +135,7 @@ class CustomLoginView(DjangoLoginView):
                     self.request,
                     'Невірний пароль. Перевірте правильність введення паролю.'
                 )
+        else:
+            messages.error(self.request, 'Будь ласка, введіть дані для входу.')
         
         return super().form_invalid(form)
