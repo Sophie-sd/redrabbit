@@ -22,7 +22,7 @@
                 <h2>🏢 Інформація про продавця</h2>
                 <ul class="info-list">
                     <li><strong>Назва:</strong> Beauty Shop</li>
-                    <li><strong>Телефон:</strong> (068) 175-26-54</li>
+                    <li><strong>Телефон:</strong> +38 (068) 175-26-54</li>
                     <li><strong>Email:</strong> beauty_shop_monte@ukr.net</li>
                     <li><strong>Час роботи:</strong> Пн-Пт 09:00-18:00, Сб 10:00-16:00, Нд 10:00-15:00</li>
                 </ul>
@@ -133,7 +133,7 @@
                 <p>З питаннями щодо цих Умов звертайтеся:</p>
                 <div class="contact-info">
                     <div class="contact-item">
-                        <strong>📞 Телефон:</strong> (068) 175-26-54
+                        <strong>📞 Телефон:</strong> +38 (068) 175-26-54
                     </div>
                     <div class="contact-item">
                         <strong>📧 Email:</strong> beauty_shop_monte@ukr.net
@@ -142,7 +142,7 @@
             </div>
 
             <div class="date-block">
-                <p><small>Остання редакція: січень 2024 року</small></p>
+                <p><small>Остання редакція: жовтень 2025 року</small></p>
             </div>
             
         </div>
@@ -203,7 +203,18 @@
 
 .info-list li, .conditions-list li {
     padding: 8px 0;
+    padding-left: 25px;
+    position: relative;
     border-bottom: 1px solid #eee;
+}
+
+.info-list li::before, .conditions-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    color: #e91e63;
+    font-weight: bold;
 }
 
 .info-list li:last-child, .conditions-list li:last-child {
@@ -324,7 +335,7 @@
     }
     
     .contact-item {
-        color: #2c3e50;
+        color: #e91e63;
     }
     
     .info-list li strong {
