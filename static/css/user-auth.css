@@ -452,6 +452,51 @@
     }
 }
 
+/* Password Toggle */
+.password-input-wrapper {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+    color: #FF1493;
+}
+
+.password-input-wrapper input {
+    padding-right: 45px;
+}
+
+.eye-icon {
+    display: block;
+}
+
+.eye-off-icon {
+    display: none;
+}
+
+.password-toggle.active .eye-icon {
+    display: none;
+}
+
+.password-toggle.active .eye-off-icon {
+    display: block;
+}
+
 /* iOS Safari fixes */
 @media (max-width: 576px) {
     .form-group input,
