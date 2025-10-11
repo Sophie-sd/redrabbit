@@ -3,6 +3,8 @@
 
 {% block title %}Вхід - BeautyShop{% endblock %}
 
+{% block body_class %}auth-page{% endblock %}
+
 {% block content %}
 <div class="auth-container">
     <div class="auth-wrapper">
@@ -66,8 +68,8 @@
             </form>
 
             <div class="auth-footer">
-                <p>Ще не зареєстровані? <a href="{% url 'users:register' %}">Зареєструватися для оптових цін</a></p>
-                <p class="footer-note">Особистий кабінет тільки для оптових клієнтів</p>
+                <p>Ще не зареєстровані? <a href="{% url 'users:register' %}">Зареєструватися</a></p>
+                <p class="footer-note">Особистий кабінет для оптових клієнтів</p>
             </div>
         </div>
     </div>

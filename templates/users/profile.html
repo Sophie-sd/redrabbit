@@ -3,6 +3,8 @@
 
 {% block title %}Особистий кабінет - BeautyShop{% endblock %}
 
+{% block body_class %}profile-page{% endblock %}
+
 {% block content %}
 <div class="profile-container">
     <div class="profile-wrapper">
@@ -16,7 +18,7 @@
             <div class="profile-card">
                 <div class="card-header">
                     <h2>Мої дані</h2>
-                    <a href="#" class="btn btn-sm btn-outline">Редагувати</a>
+                    <a href="{% url 'users:profile_edit' %}" class="btn btn-sm btn-outline">Редагувати</a>
                 </div>
                 <div class="card-body">
                     <div class="info-row">

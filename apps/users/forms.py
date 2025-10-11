@@ -159,3 +159,65 @@ class CustomPasswordResetForm(PasswordResetForm):
             user for user in active_users
             if user.has_usable_password()
         )
+
+
+class ProfileEditForm(forms.ModelForm):
+    """Форма редагування профілю користувача"""
+    
+    first_name = forms.CharField(
+        max_length=100,
+        required=True,
+        label="Повне ім'я",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': "Ваше повне ім'я",
+            'autocomplete': 'name'
+        })
+    )
+    
+    phone = forms.CharField(
+        max_length=13,
+        required=True,
+        label='Телефон',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': '+380991234567',
+            'pattern': r'\+380\d{9}',
+            'autocomplete': 'tel'
+        }),
+        help_text='Формат: +380XXXXXXXXX'
+    )
+    
+    email = forms.EmailField(
+        required=True,
+        label='Email',
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'example@email.com',
+            'autocomplete': 'email',
+            'readonly': 'readonly'
+        })
+    )
+    
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'phone', 'email']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs['readonly'] = True
+    
+    def clean_phone(self):
+        """Валідація телефону"""
+        phone = self.cleaned_data.get('phone')
+        
+        if not re.match(r'^\+380\d{9}$', phone):
+            raise ValidationError(
+                'Невірний формат телефону. Використовуйте формат +380XXXXXXXXX'
+            )
+        
+        # Перевірка унікальності (виключаючи поточного користувача)
+        if CustomUser.objects.filter(phone=phone).exclude(pk=self.instance.pk).exists():
+            raise ValidationError('Цей номер телефону вже зареєстрований')
+        
+        return phone

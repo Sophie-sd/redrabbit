@@ -463,22 +463,27 @@
 /* Password Toggle */
 .password-input-wrapper {
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .password-toggle {
     position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 48px;
+    height: 100%;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 4px;
+    padding: 0;
     color: #666;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: color 0.3s ease;
+    z-index: 10;
 }
 
 .password-toggle:hover {
@@ -486,7 +491,14 @@
 }
 
 .password-input-wrapper input {
-    padding-right: 45px;
+    width: 100%;
+    padding-right: 48px;
+}
+
+.password-toggle svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
 }
 
 .eye-icon {
@@ -518,6 +530,43 @@
     .form-group input[type="date"] {
         -webkit-appearance: none;
         appearance: none;
+    }
+    
+    .password-toggle {
+        width: 44px;
+    }
+    
+    .password-toggle svg {
+        width: 22px;
+        height: 22px;
+    }
+    
+    .password-input-wrapper input {
+        padding-right: 44px;
+    }
+}
+
+/* Фіксація меню знизу для сторінок авторизації */
+@media (max-width: 768px) {
+    .auth-page .mobile-menu,
+    .profile-page .mobile-menu {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: auto;
+        transform: none;
+        z-index: 1000;
+    }
+    
+    .auth-page .mobile-menu.open,
+    .profile-page .mobile-menu.open {
+        transform: translateY(0);
+    }
+    
+    .auth-page .main-content,
+    .profile-page .main-content {
+        padding-bottom: 80px;
     }
 }
 

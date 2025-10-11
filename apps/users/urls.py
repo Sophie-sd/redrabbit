@@ -20,6 +20,7 @@ urlpatterns = [
     
     # Особистий кабінет
     path('profile/', views.ProfileView.as_view(), name='profile'),
+    path('profile/edit/', views.ProfileEditView.as_view(), name='profile_edit'),
     path('orders/', views.UserOrdersView.as_view(), name='orders'),
     
     # Відновлення паролю

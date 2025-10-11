@@ -2,13 +2,14 @@
 Views для користувачів
 """
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import CreateView, TemplateView, View, FormView
+from django.views.generic import CreateView, TemplateView, View, FormView, UpdateView
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView as DjangoLoginView, PasswordResetView
 from django.contrib import messages
+from django.urls import reverse_lazy
 from .models import CustomUser
-from .forms import WholesaleRegistrationForm, CustomLoginForm, CustomPasswordResetForm
+from .forms import WholesaleRegistrationForm, CustomLoginForm, CustomPasswordResetForm, ProfileEditForm
 from .utils import send_verification_email
 import logging
 
@@ -123,6 +124,26 @@ class UserOrdersView(LoginRequiredMixin, TemplateView):
             user=self.request.user
         ).order_by('-created_at')
         return context
+
+
+class ProfileEditView(LoginRequiredMixin, UpdateView):
+    """Редагування профілю користувача"""
+    
+    model = CustomUser
+    form_class = ProfileEditForm
+    template_name = 'users/profile_edit.html'
+    success_url = reverse_lazy('users:profile')
+    
+    def get_object(self, queryset=None):
+        return self.request.user
+    
+    def form_valid(self, form):
+        messages.success(self.request, 'Дані успішно оновлено!')
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Будь ласка, виправте помилки у формі.')
+        return super().form_invalid(form)
 
 
 class CustomLoginView(DjangoLoginView):
