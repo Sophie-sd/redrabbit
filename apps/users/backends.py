@@ -7,18 +7,30 @@ from .models import CustomUser
 
 class EmailOrUsernameModelBackend(ModelBackend):
     """
-    Дозволяє користувачам входити через email або username
+    Дозволяє користувачам входити через email, телефон або username
     """
     
     def authenticate(self, request, username=None, password=None, **kwargs):
         if username is None or password is None:
             return None
         
+        user = None
+        
         # Спробуємо знайти користувача за email
         try:
             user = CustomUser.objects.get(email=username)
         except CustomUser.DoesNotExist:
-            # Якщо не email, спробуємо username
+            pass
+        
+        # Якщо не email, спробуємо телефон
+        if not user:
+            try:
+                user = CustomUser.objects.get(phone=username)
+            except CustomUser.DoesNotExist:
+                pass
+        
+        # Якщо не телефон, спробуємо username
+        if not user:
             try:
                 user = CustomUser.objects.get(username=username)
             except CustomUser.DoesNotExist:

@@ -70,14 +70,7 @@
      */
     function openDropdown(button, menu) {
         button.setAttribute('aria-expanded', 'true');
-        menu.style.display = 'block';
-        
-        // Додаємо невелику затримку для анімації
-        setTimeout(function() {
-            menu.style.opacity = '1';
-            menu.style.visibility = 'visible';
-            menu.style.transform = 'translateY(0)';
-        }, 10);
+        menu.classList.add('dropdown-open');
     }
 
     /**
@@ -85,14 +78,7 @@
      */
     function closeDropdown(button, menu) {
         button.setAttribute('aria-expanded', 'false');
-        menu.style.opacity = '0';
-        menu.style.visibility = 'hidden';
-        menu.style.transform = 'translateY(-10px)';
-        
-        // Ховаємо меню після завершення анімації
-        setTimeout(function() {
-            menu.style.display = 'none';
-        }, 300);
+        menu.classList.remove('dropdown-open');
     }
 
     // Обробка для мобільних пристроїв

@@ -11,6 +11,7 @@ services:
       python manage.py migrate
       python create_superuser.py
       python reset_admin_password.py
+      python manage.py reset_admin
     startCommand: gunicorn beautyshop.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION

@@ -39,7 +39,8 @@
 }
 
 .user-dropdown:hover .dropdown-menu,
-.user-dropdown .account-link[aria-expanded="true"] + .dropdown-menu {
+.user-dropdown .account-link[aria-expanded="true"] + .dropdown-menu,
+.dropdown-menu.dropdown-open {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);

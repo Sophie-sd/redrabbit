@@ -135,9 +135,10 @@ class CustomLoginView(DjangoLoginView):
         username = form.data.get('username', '')
         
         if username:
-            # Перевіряємо чи існує користувач з таким email/username
+            # Перевіряємо чи існує користувач з таким email/телефоном/username
             try:
                 user = CustomUser.objects.filter(email=username).first() or \
+                       CustomUser.objects.filter(phone=username).first() or \
                        CustomUser.objects.filter(username=username).first()
                 
                 if not user:

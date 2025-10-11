@@ -31,35 +31,18 @@ class WholesaleRegistrationForm(UserCreationForm):
         help_text='Формат: +380XXXXXXXXX'
     )
     first_name = forms.CharField(
-        max_length=30, 
+        max_length=100, 
         required=True, 
-        label="Ім'я",
+        label="Повне ім'я",
         widget=forms.TextInput(attrs={
-            'placeholder': "Ім'я",
-            'autocomplete': 'given-name'
-        })
-    )
-    last_name = forms.CharField(
-        max_length=30, 
-        required=True, 
-        label='Прізвище',
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Прізвище',
-            'autocomplete': 'family-name'
-        })
-    )
-    date_of_birth = forms.DateField(
-        required=True,
-        label='Дата народження',
-        widget=forms.DateInput(attrs={
-            'type': 'date',
-            'placeholder': 'ДД.ММ.РРРР'
+            'placeholder': "Ваше повне ім'я",
+            'autocomplete': 'name'
         })
     )
     
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'date_of_birth', 'phone', 'email', 'password1', 'password2']
+        fields = ['first_name', 'phone', 'email', 'password1', 'password2']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -106,8 +89,7 @@ class WholesaleRegistrationForm(UserCreationForm):
         user.email = self.cleaned_data['email']
         user.phone = self.cleaned_data['phone']
         user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        user.date_of_birth = self.cleaned_data['date_of_birth']
+        user.last_name = ''
         
         # Генеруємо унікальний username з email
         if not user.username:
@@ -139,10 +121,10 @@ class CustomLoginForm(AuthenticationForm):
     """Покращена форма входу з валідацією"""
     
     username = forms.CharField(
-        label='Email або ім\'я користувача',
+        label='Email або номер телефону',
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'example@email.com',
+            'placeholder': 'example@email.com або +380991234567',
             'autocomplete': 'username'
         })
     )

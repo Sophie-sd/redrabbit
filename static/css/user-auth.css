@@ -259,6 +259,14 @@
     box-shadow: 0 4px 12px rgba(255, 20, 147, 0.3);
 }
 
+.btn-loader--hidden {
+    display: none;
+}
+
+.btn-text--hidden {
+    display: none;
+}
+
 .btn-outline {
     background: transparent;
     color: #FF1493;
