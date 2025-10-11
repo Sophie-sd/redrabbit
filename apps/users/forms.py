@@ -21,8 +21,8 @@ class WholesaleRegistrationForm(UserCreationForm):
     )
     phone = forms.CharField(
         max_length=13, 
-        required=True, 
-        label='Телефон',
+        required=False, 
+        label='Телефон (необов\'язково)',
         widget=forms.TextInput(attrs={
             'placeholder': '+380991234567',
             'pattern': r'\+380\d{9}',
@@ -62,6 +62,10 @@ class WholesaleRegistrationForm(UserCreationForm):
         """Валідація телефону"""
         phone = self.cleaned_data.get('phone')
         
+        # Якщо телефон не вказано, повертаємо порожнє значення
+        if not phone:
+            return ''
+        
         # Перевірка формату
         if not re.match(r'^\+380\d{9}$', phone):
             raise ValidationError(
@@ -87,7 +91,7 @@ class WholesaleRegistrationForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
-        user.phone = self.cleaned_data['phone']
+        user.phone = self.cleaned_data.get('phone', '')
         user.first_name = self.cleaned_data['first_name']
         user.last_name = ''
         

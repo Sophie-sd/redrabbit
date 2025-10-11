@@ -20,6 +20,8 @@ class CustomUser(AbstractUser):
     phone = models.CharField(
         'Телефон', 
         max_length=20, 
+        blank=True,
+        null=True,
         unique=True,
         validators=[phone_validator],
         help_text='Формат: +380XXXXXXXXX'

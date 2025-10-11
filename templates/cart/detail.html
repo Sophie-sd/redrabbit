@@ -3,6 +3,10 @@
 
 {% block title %}Кошик - Beauty Shop{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{% endblock %}
+
 {% block content %}
 <section class="cart-section section-padding">
     <div class="container">
@@ -59,6 +63,22 @@
                         <span>Загальна сума:</span>
                         <span class="cart-grand-total">{{ cart.get_total_price }} ₴</span>
                     </div>
+                    
+                    {% if user.is_authenticated %}
+                        {% if cart.get_total_price < 5000 %}
+                            <div class="cart-warning">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                                <div>
+                                    <strong>Мінімальна сума замовлення для оптових клієнтів — 5000 грн.</strong>
+                                    <p>Поточна сума: {{ cart.get_total_price }} ₴. Будь ласка, додайте ще товарів або <a href="{% url 'users:logout' %}">вийдіть з кабінету</a> для замовлення без обмежень.</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
                     
                     <div class="cart-actions">
                         <a href="{% url 'core:catalog' %}" class="btn btn-outline">Продовжити покупки</a>

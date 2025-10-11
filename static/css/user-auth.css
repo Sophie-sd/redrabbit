@@ -69,11 +69,19 @@
     margin-top: 2px;
 }
 
+.wholesale-notice div {
+    flex: 1;
+}
+
 .wholesale-notice p {
-    margin: 0;
+    margin: 0 0 8px 0;
     font-size: 14px;
     line-height: 1.6;
     color: #2c3e50;
+}
+
+.wholesale-notice p:last-child {
+    margin-bottom: 0;
 }
 
 .info-icon {
