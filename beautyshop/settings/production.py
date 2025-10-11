@@ -85,6 +85,20 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = f"Beauty Shop <{os.getenv('EMAIL_HOST_USER', 'noreply@beautyshop.com')}>"
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
+# Додаткові налаштування для Gmail
+EMAIL_TIMEOUT = 30  # 30 секунд таймаут
+
+# Виводимо налаштування email для діагностики (без паролю!)
+import logging
+email_logger = logging.getLogger('django.core.mail')
+email_logger.info(f"📧 Email settings loaded:")
+email_logger.info(f"   EMAIL_HOST: {EMAIL_HOST}")
+email_logger.info(f"   EMAIL_PORT: {EMAIL_PORT}")
+email_logger.info(f"   EMAIL_USE_TLS: {EMAIL_USE_TLS}")
+email_logger.info(f"   EMAIL_HOST_USER: {EMAIL_HOST_USER}")
+email_logger.info(f"   DEFAULT_FROM_EMAIL: {DEFAULT_FROM_EMAIL}")
+email_logger.info(f"   EMAIL_HOST_PASSWORD: {'SET' if EMAIL_HOST_PASSWORD else 'NOT SET'}")
+
 # Логування для продакшну - з детальною діагностикою
 LOGGING = {
     'version': 1,
@@ -128,6 +142,17 @@ LOGGING = {
         'django.db.backends': {
             'handlers': ['console'],
             'level': 'WARNING',
+            'propagate': False,
+        },
+        # ДЕТАЛЬНЕ ЛОГУВАННЯ EMAIL
+        'django.core.mail': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'apps.users': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
             'propagate': False,
         },
     },

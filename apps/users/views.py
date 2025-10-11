@@ -5,11 +5,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import CreateView, TemplateView, View, FormView
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView as DjangoLoginView
+from django.contrib.auth.views import LoginView as DjangoLoginView, PasswordResetView
 from django.contrib import messages
 from .models import CustomUser
-from .forms import WholesaleRegistrationForm, CustomLoginForm
+from .forms import WholesaleRegistrationForm, CustomLoginForm, CustomPasswordResetForm
 from .utils import send_verification_email
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class WholesaleRegisterView(CreateView):
@@ -23,14 +26,17 @@ class WholesaleRegisterView(CreateView):
         try:
             # Зберігаємо користувача (is_active=False)
             user = form.save()
+            logger.info(f"📝 New user registered: {user.email} (username: {user.username})")
             
             # Надсилаємо лист з підтвердженням
             if send_verification_email(user, self.request):
+                logger.info(f"✅ Verification email sent successfully to: {user.email}")
                 messages.success(
                     self.request, 
                     'Ви успішно зареєструвалися! Перевірте вашу пошту для підтвердження email.'
                 )
             else:
+                logger.error(f"❌ Failed to send verification email to: {user.email}")
                 messages.warning(
                     self.request,
                     'Реєстрація успішна, але виникла помилка при надсиланні листа. Зверніться до підтримки.'
@@ -39,6 +45,7 @@ class WholesaleRegisterView(CreateView):
             return redirect('users:registration_pending')
             
         except Exception as e:
+            logger.error(f"❌ Registration error: {str(e)}", exc_info=True)
             messages.error(
                 self.request,
                 f'Виникла помилка при реєстрації: {str(e)}. Спробуйте ще раз або зверніться до підтримки.'
@@ -154,3 +161,36 @@ class CustomLoginView(DjangoLoginView):
             messages.error(self.request, 'Будь ласка, введіть дані для входу.')
         
         return super().form_invalid(form)
+
+
+class CustomPasswordResetView(PasswordResetView):
+    """Кастомний view для відновлення паролю з детальним логуванням"""
+    
+    form_class = CustomPasswordResetForm
+    template_name = 'users/password_reset.html'
+    email_template_name = 'registration/password_reset_email.html'
+    subject_template_name = 'registration/password_reset_subject.txt'
+    success_url = '/users/password/reset/done/'
+    
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        logger.info(f"🔐 Password reset requested for email: {email}")
+        
+        # Перевіряємо чи існує користувач
+        users = CustomUser.objects.filter(email__iexact=email, is_active=True)
+        if users.exists():
+            logger.info(f"✅ User found: {users.first().username}")
+        else:
+            logger.warning(f"⚠️ No active user found with email: {email}")
+        
+        try:
+            response = super().form_valid(form)
+            logger.info(f"📧 Password reset email should be sent to: {email}")
+            return response
+        except Exception as e:
+            logger.error(f"❌ Error in password reset: {str(e)}", exc_info=True)
+            messages.error(
+                self.request,
+                f'Виникла помилка при відправці email: {str(e)}'
+            )
+            return self.form_invalid(form)
