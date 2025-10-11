@@ -406,6 +406,33 @@
     color: #ffffff;
 }
 
+/* Wholesale Benefits */
+.wholesale-benefits {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #ecf0f1;
+}
+
+.wholesale-benefits h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 12px;
+}
+
+.wholesale-benefits ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.wholesale-benefits li {
+    padding: 8px 0;
+    color: #34495e;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
 /* Empty State */
 .empty-state {
     text-align: center;

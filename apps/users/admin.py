@@ -46,8 +46,7 @@ class CustomUserAdmin(UserAdmin):
     ]
     
     readonly_fields = [
-        'monthly_turnover',
-        'last_turnover_update',
+        'is_wholesale',
         'email_verified',
         'created_at',
         'date_joined',
@@ -63,7 +62,8 @@ class CustomUserAdmin(UserAdmin):
             'classes': ('collapse',)
         }),
         ('Оптовий статус', {
-            'fields': ('is_wholesale', 'monthly_turnover', 'last_turnover_update')
+            'fields': ('is_wholesale',),
+            'description': 'Всі зареєстровані користувачі автоматично отримують оптовий статус'
         }),
         ('Дати', {
             'fields': ('created_at',),
@@ -86,44 +86,23 @@ class CustomUserAdmin(UserAdmin):
             ),
         }),
         ('Статус', {
-            'fields': ('is_wholesale', 'is_active'),
+            'fields': ('is_active',),
         }),
     )
     
-    actions = ['make_wholesale', 'remove_wholesale', 'verify_email_action', 'activate_users_action', 'update_wholesale_status']
-    
-    def make_wholesale(self, request, queryset):
-        """Надати оптовий статус"""
-        updated = queryset.update(is_wholesale=True)
-        self.message_user(request, f'{updated} користувачів отримали оптовий статус.')
-    make_wholesale.short_description = 'Надати оптовий статус'
-    
-    def remove_wholesale(self, request, queryset):
-        """Забрати оптовий статус"""
-        updated = queryset.update(is_wholesale=False)
-        self.message_user(request, f'{updated} користувачів втратили оптовий статус.')
-    remove_wholesale.short_description = 'Забрати оптовий статус'
+    actions = ['verify_email_action', 'activate_users_action']
     
     def verify_email_action(self, request, queryset):
         """Підтвердити email вручну"""
-        updated = queryset.update(email_verified=True, is_active=True, email_verification_token='')
-        self.message_user(request, f'{updated} email адрес підтверджено.')
-    verify_email_action.short_description = 'Підтвердити email'
+        updated = queryset.update(email_verified=True, is_active=True, is_wholesale=True, email_verification_token='')
+        self.message_user(request, f'{updated} email адрес підтверджено та надано оптовий статус.')
+    verify_email_action.short_description = 'Підтвердити email та активувати'
     
     def activate_users_action(self, request, queryset):
-        """Активувати користувачів (без підтвердження email)"""
-        updated = queryset.update(is_active=True)
-        self.message_user(request, f'{updated} користувачів активовано.')
+        """Активувати користувачів"""
+        updated = queryset.update(is_active=True, is_wholesale=True)
+        self.message_user(request, f'{updated} користувачів активовано з оптовим статусом.')
     activate_users_action.short_description = 'Активувати користувачів'
-    
-    def update_wholesale_status(self, request, queryset):
-        """Оновити статус оптових клієнтів"""
-        count = 0
-        for user in queryset:
-            user.update_wholesale_status()
-            count += 1
-        self.message_user(request, f"Оновлено статус для {count} користувачів")
-    update_wholesale_status.short_description = "Оновити статус оптових клієнтів"
 
 
 @admin.register(UserProfile)

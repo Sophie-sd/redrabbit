@@ -46,39 +46,29 @@
             <!-- Блок статусу -->
             <div class="profile-card">
                 <div class="card-header">
-                    <h2>Статус</h2>
+                    <h2>Ваш статус</h2>
                 </div>
                 <div class="card-body">
-                    {% if user.is_wholesale %}
-                        <div class="status-badge status-wholesale">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                            </svg>
-                            <div>
-                                <h3>Оптовий клієнт</h3>
-                                <p>Вам доступні спеціальні оптові ціни на всі товари</p>
-                            </div>
+                    <div class="status-badge status-wholesale">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        <div>
+                            <h3>Оптовий клієнт</h3>
+                            <p>Вам доступні спеціальні оптові ціни на всі товари у каталозі</p>
                         </div>
-                    {% else %}
-                        <div class="status-badge status-retail">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <path d="M12 6v6l4 2"></path>
-                            </svg>
-                            <div>
-                                <h3>Роздрібний клієнт</h3>
-                                <p>Щоб отримати оптовий статус, зверніться до адміністратора</p>
-                            </div>
-                        </div>
-                    {% endif %}
-
-                    {% if monthly_turnover %}
-                        <div class="info-row">
-                            <span class="info-label">Оборот за місяць:</span>
-                            <span class="info-value">{{ monthly_turnover }} ₴</span>
-                        </div>
-                    {% endif %}
+                    </div>
+                    
+                    <div class="wholesale-benefits">
+                        <h4>Ваші переваги:</h4>
+                        <ul>
+                            <li>✓ Доступ до оптових цін на всі товари</li>
+                            <li>✓ Додаткові знижки від кількості (від 3 шт, від 5 шт)</li>
+                            <li>✓ Персональні акції та пропозиції</li>
+                            <li>✓ Пріоритетна обробка замовлень</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

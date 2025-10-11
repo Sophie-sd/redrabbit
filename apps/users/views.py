@@ -99,14 +99,9 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         
-        # Оновлюємо статус користувача
-        user.update_wholesale_status()
-        
         context.update({
             'user': user,
-            'monthly_turnover': user.monthly_turnover,
             'is_wholesale': user.is_wholesale,
-            'turnover_to_wholesale': max(0, 5000 - float(user.monthly_turnover)),
         })
         return context
 

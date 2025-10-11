@@ -30,16 +30,10 @@ class CustomUser(AbstractUser):
     email_verified = models.BooleanField('Email підтверджено', default=False)
     email_verification_token = models.CharField('Токен верифікації', max_length=100, blank=True)
     
-    is_wholesale = models.BooleanField('Оптовий клієнт', default=False)
-    monthly_turnover = models.DecimalField(
-        'Місячний оборот', 
-        max_digits=10, 
-        decimal_places=2, 
-        default=Decimal('0.00')
-    )
-    last_turnover_update = models.DateTimeField(
-        'Останнє оновлення обороту', 
-        default=timezone.now
+    is_wholesale = models.BooleanField(
+        'Оптовий клієнт', 
+        default=True,
+        help_text='Всі зареєстровані користувачі мають доступ до оптових цін'
     )
     created_at = models.DateTimeField('Дата реєстрації', auto_now_add=True)
     
@@ -58,46 +52,23 @@ class CustomUser(AbstractUser):
         if self.email_verification_token and self.email_verification_token == token:
             self.email_verified = True
             self.is_active = True
+            self.is_wholesale = True  # Надаємо оптовий статус при підтвердженні email
             self.email_verification_token = ''
-            self.save(update_fields=['email_verified', 'is_active', 'email_verification_token'])
+            self.save(update_fields=['email_verified', 'is_active', 'is_wholesale', 'email_verification_token'])
             return True
         return False
     
-    def update_wholesale_status(self):
-        """
-        Оновлює статус оптового клієнта на основі місячного обороту
-        Автоматично надає статус при обороті 5000+ грн за місяць
-        """
-        from apps.orders.models import Order
-        from datetime import datetime, timedelta
-        
-        # Рахуємо оборот за останній місяць
-        last_month = timezone.now() - timedelta(days=30)
-        monthly_orders = Order.objects.filter(
-            user=self,
-            created_at__gte=last_month,
-            status__in=['completed', 'delivered']
-        )
-        
-        self.monthly_turnover = sum([order.get_total_cost() for order in monthly_orders])
-        
-        # Автоматично надаємо оптовий статус при обороті 5000+ грн
-        if self.monthly_turnover >= Decimal('5000.00'):
-            self.is_wholesale = True
-        
-        self.last_turnover_update = timezone.now()
-        self.save()
-    
     def get_price_for_product(self, product):
         """
-        Повертає ціну товару залежно від статусу користувача
+        Повертає ціну товару залежно від статусу користувача.
+        Зареєстровані користувачі бачать оптові ціни.
         """
         if self.is_wholesale and product.wholesale_price:
             return product.wholesale_price
         return product.retail_price
     
     def __str__(self):
-        return f"{self.username} ({'Опт' if self.is_wholesale else 'Роздріб'})"
+        return f"{self.username} (Оптовий клієнт)"
 
 
 class UserProfile(models.Model):
