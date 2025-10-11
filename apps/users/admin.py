@@ -1,5 +1,5 @@
 """
-Адміністративна панель для користувачів
+Адміністративна панель для оптових клієнтів
 """
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
@@ -7,30 +7,35 @@ from .models import CustomUser, UserProfile
 
 
 class UserProfileInline(admin.StackedInline):
+    """Додаткова інформація про клієнта"""
     model = UserProfile
     can_delete = False
+    fields = ['company_name', 'tax_number', 'address', 'notes']
+    verbose_name = "Додаткова інформація"
+    verbose_name_plural = "Додаткова інформація"
 
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    """Адміністрування користувачів"""
+    """Адміністрування оптових клієнтів"""
     
     inlines = [UserProfileInline]
     
+    # Змінюємо назву в адмінці
+    verbose_name = "Оптовий клієнт"
+    verbose_name_plural = "Оптові клієнти"
+    
     list_display = [
         'username', 
+        'first_name',
         'email', 
         'phone',
-        'first_name', 
-        'last_name', 
-        'is_wholesale',
         'email_verified',
         'is_active',
         'date_joined'
     ]
     
     list_filter = [
-        'is_wholesale',
         'email_verified',
         'is_active',
         'is_staff',
@@ -46,7 +51,6 @@ class CustomUserAdmin(UserAdmin):
     ]
     
     readonly_fields = [
-        'is_wholesale',
         'email_verified',
         'created_at',
         'date_joined',
@@ -54,18 +58,16 @@ class CustomUserAdmin(UserAdmin):
     ]
     
     fieldsets = UserAdmin.fieldsets + (
-        ('Персональні дані', {
-            'fields': ('phone', 'date_of_birth')
+        ('Контактні дані', {
+            'fields': ('phone', 'date_of_birth'),
+            'description': 'Телефон та інша контактна інформація'
         }),
         ('Email верифікація', {
             'fields': ('email_verified', 'email_verification_token'),
-            'classes': ('collapse',)
+            'classes': ('collapse',),
+            'description': 'Статус підтвердження email'
         }),
-        ('Оптовий статус', {
-            'fields': ('is_wholesale',),
-            'description': 'Всі зареєстровані користувачі автоматично отримують оптовий статус'
-        }),
-        ('Дати', {
+        ('Системні дати', {
             'fields': ('created_at',),
             'classes': ('collapse',)
         }),
@@ -94,21 +96,16 @@ class CustomUserAdmin(UserAdmin):
     
     def verify_email_action(self, request, queryset):
         """Підтвердити email вручну"""
-        updated = queryset.update(email_verified=True, is_active=True, is_wholesale=True, email_verification_token='')
-        self.message_user(request, f'{updated} email адрес підтверджено та надано оптовий статус.')
+        updated = queryset.update(email_verified=True, is_active=True, email_verification_token='')
+        self.message_user(request, f'{updated} клієнтів підтверджено та активовано.')
     verify_email_action.short_description = 'Підтвердити email та активувати'
     
     def activate_users_action(self, request, queryset):
-        """Активувати користувачів"""
-        updated = queryset.update(is_active=True, is_wholesale=True)
-        self.message_user(request, f'{updated} користувачів активовано з оптовим статусом.')
-    activate_users_action.short_description = 'Активувати користувачів'
+        """Активувати клієнтів"""
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f'{updated} клієнтів активовано.')
+    activate_users_action.short_description = 'Активувати клієнтів'
 
 
-@admin.register(UserProfile)
-class UserProfileAdmin(admin.ModelAdmin):
-    """Адміністрування профілів користувачів"""
-    
-    list_display = ['user', 'company_name', 'tax_number']
-    search_fields = ['user__username', 'company_name', 'tax_number']
-    list_filter = ['user__is_wholesale']
+# Видаляємо окрему реєстрацію UserProfile - тепер він тільки inline
+admin.site.unregister(UserProfile) if admin.site.is_registered(UserProfile) else None

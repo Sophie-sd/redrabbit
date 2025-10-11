@@ -5,21 +5,20 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.db.models import Q
 from datetime import datetime, timedelta
-from .models import Order, OrderItem, Newsletter, Promotion, PromotionBanner
+from .models import Order, OrderItem, Promotion, PromotionBanner
 
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
-    extra = 0
-    readonly_fields = ['get_cost']
-    fields = ['product', 'quantity', 'price', 'get_cost']
+    extra = 1
+    can_delete = True
+    fields = ['product', 'quantity', 'price']
     
-    def get_cost(self, obj):
-        if obj.id:
-            return f"{obj.get_cost():.2f} грн"
-        return "0.00 грн"
-    
-    get_cost.short_description = "Вартість"
+    def has_add_permission(self, request, obj=None):
+        """Дозволити додавання тільки при редагуванні існуючого замовлення"""
+        if obj and obj.pk:
+            return True
+        return False
 
 
 @admin.register(Order)
@@ -36,7 +35,6 @@ class OrderAdmin(admin.ModelAdmin):
         'delivery_method', 
         'is_paid', 
         ('created_at', admin.DateFieldListFilter),
-        'user__is_wholesale',
     ]
     search_fields = [
         'order_number', 'first_name', 'last_name', 
@@ -88,16 +86,14 @@ class OrderAdmin(admin.ModelAdmin):
     def get_customer_info(self, obj):
         """Інформація про клієнта"""
         if obj.user:
-            wholesale_status = "🔥 Опт" if hasattr(obj.user, 'is_wholesale') and obj.user.is_wholesale else "👤 Роздріб"
             return format_html(
-                '<strong>{}</strong><br>📧 {}<br>📞 {}<br>💼 {}',
+                '<strong>{}</strong><br>📧 {}<br>📞 {}<br>🔥 Оптовий клієнт',
                 obj.get_customer_name(),
                 obj.email,
-                obj.phone,
-                wholesale_status
+                obj.phone
             )
         return format_html(
-            '<strong>{}</strong><br>📧 {}<br>📞 {}',
+            '<strong>{}</strong><br>📧 {}<br>📞 {}<br>👤 Гість',
             obj.get_customer_name(),
             obj.email,
             obj.phone
@@ -134,32 +130,6 @@ class OrderAdmin(admin.ModelAdmin):
         self.message_user(request, f"Доставлено {updated} замовлень")
     
     mark_as_delivered.short_description = "Доставлено замовлення"
-
-
-@admin.register(Newsletter)
-class NewsletterAdmin(admin.ModelAdmin):
-    """Адміністрування розсилки"""
-    
-    list_display = ['email', 'is_active', 'created_at']
-    list_filter = ['is_active', 'created_at']
-    search_fields = ['email']
-    list_editable = ['is_active']
-    
-    actions = ['activate_subscriptions', 'deactivate_subscriptions']
-    
-    def activate_subscriptions(self, request, queryset):
-        """Активувати підписки"""
-        updated = queryset.update(is_active=True)
-        self.message_user(request, f"Активовано {updated} підписок")
-    
-    activate_subscriptions.short_description = "Активувати підписки"
-    
-    def deactivate_subscriptions(self, request, queryset):
-        """Деактивувати підписки"""
-        updated = queryset.update(is_active=False)
-        self.message_user(request, f"Деактивовано {updated} підписок")
-    
-    deactivate_subscriptions.short_description = "Деактивувати підписки"
 
 
 @admin.register(Promotion)
