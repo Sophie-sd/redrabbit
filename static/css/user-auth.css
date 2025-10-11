@@ -53,24 +53,11 @@
 
 /* Wholesale Notice */
 .wholesale-notice {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
     background: #fff0f7;
     border-left: 4px solid #FF1493;
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 24px;
-}
-
-.wholesale-notice svg {
-    flex-shrink: 0;
-    color: #FF1493;
-    margin-top: 2px;
-}
-
-.wholesale-notice div {
-    flex: 1;
 }
 
 .wholesale-notice p {
