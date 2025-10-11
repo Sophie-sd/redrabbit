@@ -90,7 +90,7 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
     
-    actions = ['make_wholesale', 'remove_wholesale', 'verify_email_action', 'update_wholesale_status']
+    actions = ['make_wholesale', 'remove_wholesale', 'verify_email_action', 'activate_users_action', 'update_wholesale_status']
     
     def make_wholesale(self, request, queryset):
         """Надати оптовий статус"""
@@ -109,6 +109,12 @@ class CustomUserAdmin(UserAdmin):
         updated = queryset.update(email_verified=True, is_active=True, email_verification_token='')
         self.message_user(request, f'{updated} email адрес підтверджено.')
     verify_email_action.short_description = 'Підтвердити email'
+    
+    def activate_users_action(self, request, queryset):
+        """Активувати користувачів (без підтвердження email)"""
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f'{updated} користувачів активовано.')
+    activate_users_action.short_description = 'Активувати користувачів'
     
     def update_wholesale_status(self, request, queryset):
         """Оновити статус оптових клієнтів"""
