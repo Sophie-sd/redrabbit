@@ -125,24 +125,31 @@ class CustomLoginView(DjangoLoginView):
     template_name = 'users/login.html'
     
     def form_invalid(self, form):
-        # Додаємо кастомні повідомлення про помилки
         username = form.data.get('username', '')
         
         if username:
-            # Перевіряємо чи існує користувач з таким email
-            user_exists = CustomUser.objects.filter(email=username).exists() or \
-                         CustomUser.objects.filter(username=username).exists()
-            
-            if not user_exists:
-                messages.error(
-                    self.request,
-                    'Користувача з такими даними не зареєстровано. Будь ласка, зареєструйтеся.'
-                )
-            else:
-                messages.error(
-                    self.request,
-                    'Невірний пароль. Перевірте правильність введення паролю.'
-                )
+            # Перевіряємо чи існує користувач з таким email/username
+            try:
+                user = CustomUser.objects.filter(email=username).first() or \
+                       CustomUser.objects.filter(username=username).first()
+                
+                if not user:
+                    messages.error(
+                        self.request,
+                        'Користувача з такими даними не зареєстровано. Будь ласка, зареєструйтеся.'
+                    )
+                elif not user.is_active:
+                    messages.error(
+                        self.request,
+                        'Ваш акаунт ще не активовано. Будь ласка, перевірте вашу пошту та підтвердіть email.'
+                    )
+                else:
+                    messages.error(
+                        self.request,
+                        'Невірний пароль. Перевірте правильність введення паролю.'
+                    )
+            except Exception:
+                messages.error(self.request, 'Невірні дані для входу.')
         else:
             messages.error(self.request, 'Будь ласка, введіть дані для входу.')
         
