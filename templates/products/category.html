@@ -19,10 +19,68 @@
             {% endif %}
         </div>
         
+        <!-- Панель фільтрів і сортування -->
+        <div class="filters-panel">
+            <div class="filters-container">
+                <div class="filters-left">
+                    <!-- Фільтр за ціною -->
+                    <div class="filter-group">
+                        <label class="filter-label">Ціна (₴)</label>
+                        <div class="price-range-inputs">
+                            <input type="number" class="price-input" id="priceFrom" placeholder="Від" min="0">
+                            <span>—</span>
+                            <input type="number" class="price-input" id="priceTo" placeholder="До" min="0">
+                        </div>
+                    </div>
+                    
+                    <!-- Фільтр за наявністю -->
+                    <div class="filter-group">
+                        <label class="filter-label">Наявність</label>
+                        <select class="filter-select" id="availability">
+                            <option value="">Всі товари</option>
+                            <option value="in_stock">В наявності</option>
+                            <option value="out_of_stock">Під замовлення</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Фільтр за типом -->
+                    <div class="filter-group">
+                        <label class="filter-label">Тип товару</label>
+                        <select class="filter-select" id="productType">
+                            <option value="">Всі типи</option>
+                            <option value="sale">Акційні</option>
+                            <option value="new">Новинки</option>
+                            <option value="top">Хіти продажу</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Сортування -->
+                <div class="sort-group">
+                    <label class="sort-label">Сортування:</label>
+                    <select class="filter-select" id="sortBy">
+                        <option value="default">За замовчуванням</option>
+                        <option value="price_asc">За ціною: від дешевих</option>
+                        <option value="price_desc">За ціною: від дорогих</option>
+                        <option value="name">За назвою</option>
+                        <option value="popular">За популярністю</option>
+                        <option value="new">За новизною</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
         {% if products %}
-            <div class="products-grid">
+            <div class="products-grid" id="productsGrid">
                 {% for product in products %}
-                    <div class="product-card">
+                    <div class="product-card" 
+                         data-price="{{ product.retail_price }}" 
+                         data-sale-price="{{ product.sale_price|default:product.retail_price }}"
+                         data-in-stock="{{ product.is_in_stock }}"
+                         data-is-sale="{{ product.is_sale }}"
+                         data-is-new="{{ product.is_new }}"
+                         data-is-top="{{ product.is_top }}"
+                         data-name="{{ product.name }}">
                         <a href="{{ product.get_absolute_url }}" class="product-link">
                             <div class="product-image">
                                 {% if product.images.first %}
@@ -33,16 +91,22 @@
                                     </div>
                                 {% endif %}
                                 
+                                <!-- Іконка обраного -->
+                                <div class="wishlist-icon" data-product-id="{{ product.id }}" title="Додати в обране">
+                                    <span class="heart-icon">♡</span>
+                                </div>
+                                
+                                <!-- Бейджі -->
                                 {% if product.is_sale or product.is_new or product.is_top %}
                                     <div class="product-badges">
                                         {% if product.is_sale %}
-                                            <span class="badge badge-sale">SALE</span>
+                                            <span class="badge badge-sale">-{{ product.get_discount_percentage }}%</span>
                                         {% endif %}
                                         {% if product.is_new %}
                                             <span class="badge badge-new">NEW</span>
                                         {% endif %}
                                         {% if product.is_top %}
-                                            <span class="badge badge-top">TOP</span>
+                                            <span class="badge badge-top">ХІТ</span>
                                         {% endif %}
                                     </div>
                                 {% endif %}
@@ -53,8 +117,8 @@
                                 
                                 <div class="product-price">
                                     {% if product.is_sale and product.sale_price %}
-                                        <span class="price-old">{{ product.retail_price }} ₴</span>
                                         <span class="price-new">{{ product.sale_price }} ₴</span>
+                                        <span class="price-old">{{ product.retail_price }} ₴</span>
                                     {% else %}
                                         <span class="price-current">{{ product.retail_price }} ₴</span>
                                     {% endif %}
@@ -63,7 +127,7 @@
                         </a>
                         
                         <div class="product-actions">
-                            <button class="btn btn-primary btn-add-cart" data-product-id="{{ product.id }}">
+                            <button class="btn-add-cart" data-product-id="{{ product.id }}">
                                 До кошика
                             </button>
                         </div>
@@ -89,8 +153,14 @@
                 </div>
             {% endif %}
         {% else %}
-            <div class="text-center">
-                <p class="text-muted">В цій категорії поки немає товарів</p>
+            <!-- Порожній стан -->
+            <div class="empty-state">
+                <div class="empty-state-icon">🛍️</div>
+                <h2>В цій категорії поки немає товарів</h2>
+                <p>Спробуйте переглянути інші категорії або поверніться до каталогу</p>
+                <a href="{% url 'core:catalog' %}" class="btn-back-catalog">
+                    ← Повернутися до каталогу
+                </a>
             </div>
         {% endif %}
         
@@ -101,12 +171,144 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Ініціалізація
+    const productsGrid = document.getElementById('productsGrid');
+    const productCards = Array.from(document.querySelectorAll('.product-card'));
+    
+    // Фільтри
+    const priceFrom = document.getElementById('priceFrom');
+    const priceTo = document.getElementById('priceTo');
+    const availability = document.getElementById('availability');
+    const productType = document.getElementById('productType');
+    const sortBy = document.getElementById('sortBy');
+    
+    // Функція фільтрації та сортування
+    function filterAndSortProducts() {
+        let filteredCards = [...productCards];
+        
+        // Фільтр за ціною
+        const minPrice = parseFloat(priceFrom.value) || 0;
+        const maxPrice = parseFloat(priceTo.value) || Infinity;
+        
+        filteredCards = filteredCards.filter(card => {
+            const price = parseFloat(card.dataset.salePrice);
+            return price >= minPrice && price <= maxPrice;
+        });
+        
+        // Фільтр за наявністю
+        if (availability.value) {
+            filteredCards = filteredCards.filter(card => {
+                const inStock = card.dataset.inStock === 'True';
+                return availability.value === 'in_stock' ? inStock : !inStock;
+            });
+        }
+        
+        // Фільтр за типом
+        if (productType.value) {
+            filteredCards = filteredCards.filter(card => {
+                return card.dataset[`is${productType.value.charAt(0).toUpperCase()}${productType.value.slice(1)}`] === 'True';
+            });
+        }
+        
+        // Сортування
+        switch(sortBy.value) {
+            case 'price_asc':
+                filteredCards.sort((a, b) => parseFloat(a.dataset.salePrice) - parseFloat(b.dataset.salePrice));
+                break;
+            case 'price_desc':
+                filteredCards.sort((a, b) => parseFloat(b.dataset.salePrice) - parseFloat(a.dataset.salePrice));
+                break;
+            case 'name':
+                filteredCards.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
+                break;
+            case 'new':
+                filteredCards.sort((a, b) => (b.dataset.isNew === 'True') - (a.dataset.isNew === 'True'));
+                break;
+        }
+        
+        // Приховати всі картки
+        productCards.forEach(card => card.style.display = 'none');
+        
+        // Показати відфільтровані та відсортовані
+        filteredCards.forEach(card => {
+            card.style.display = 'flex';
+            productsGrid.appendChild(card);
+        });
+    }
+    
+    // Події для фільтрів
+    [priceFrom, priceTo, availability, productType, sortBy].forEach(element => {
+        element.addEventListener('change', filterAndSortProducts);
+    });
+    
+    priceFrom.addEventListener('input', filterAndSortProducts);
+    priceTo.addEventListener('input', filterAndSortProducts);
+    
+    // Іконки обраного
+    const wishlistIcons = document.querySelectorAll('.wishlist-icon');
+    
+    wishlistIcons.forEach(icon => {
+        icon.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const productId = this.dataset.productId;
+            const isActive = this.classList.contains('active');
+            
+            // Анімація
+            this.style.transform = 'scale(1.3)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+            
+            if (isActive) {
+                // Видалити з обраного
+                fetch('/wishlist/remove/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: `product_id=${productId}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.classList.remove('active');
+                        this.querySelector('.heart-icon').textContent = '♡';
+                    }
+                });
+            } else {
+                // Додати в обране
+                fetch('/wishlist/add/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: `product_id=${productId}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.classList.add('active');
+                        this.querySelector('.heart-icon').textContent = '♥';
+                    }
+                });
+            }
+        });
+    });
+    
+    // Кнопки "До кошика"
     const addToCartBtns = document.querySelectorAll('.btn-add-cart');
     
     addToCartBtns.forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             const productId = this.dataset.productId;
+            
+            // Анімація кнопки
+            this.classList.add('animating');
             
             fetch('/cart/add/', {
                 method: 'POST',
@@ -120,18 +322,25 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.success) {
                     this.textContent = '✓ Додано';
-                    this.disabled = true;
+                    this.classList.remove('animating');
+                    this.classList.add('added');
+                    
                     setTimeout(() => {
                         this.textContent = 'До кошика';
-                        this.disabled = false;
+                        this.classList.remove('added');
                     }, 2000);
+                    
                     updateCartCount(data.cart_count);
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                this.classList.remove('animating');
+            });
         });
     });
     
+    // Допоміжні функції
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
