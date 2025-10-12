@@ -185,10 +185,6 @@
                                     <img src="{% static 'images/dezynfectsia_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
                                 {% elif category.name == 'Меблі для салонів' %}
                                     <img src="{% static 'images/mebly_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
-                                {% else %}
-                                    <div class="category-placeholder">
-                                        <span class="category-emoji">📦</span>
-                                    </div>
                                 {% endif %}
                             {% endif %}
                             
@@ -198,9 +194,6 @@
                         </div>
                         <div class="category-content">
                             <h3 class="category-name">{{ category.name }}</h3>
-                            {% if category.description %}
-                                <p class="category-description">{{ category.description|truncatewords:8 }}</p>
-                            {% endif %}
                         </div>
                     </a>
                 </div>

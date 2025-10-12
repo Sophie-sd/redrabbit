@@ -1,4 +1,4 @@
-/* Стилі для категорій товарів - КОМПАКТНА СІТКА 2x5 */
+/* Стилі для категорій товарів - КВАДРАТНІ КАРТКИ З КАРТИНКОЮ */
 
 .categories-grid {
     display: grid;
@@ -13,14 +13,11 @@
 .category-card {
     position: relative;
     background: white;
-    border: 1px solid #eee;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 3px 12px rgba(0,0,0,0.08);
     transition: all 0.3s ease;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+    aspect-ratio: 1;
 }
 
 .category-card:hover {
@@ -32,18 +29,17 @@
     display: block;
     text-decoration: none;
     color: inherit;
+    width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
+    position: relative;
 }
 
 .category-image {
-    position: relative;
-    aspect-ratio: 1/1;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
 }
 
@@ -58,83 +54,45 @@
     transform: scale(1.05);
 }
 
-.category-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-}
-
-.category-emoji {
-    font-size: 2.5rem;
-    opacity: 0.8;
-    transition: all 0.3s ease;
-}
-
-.category-card:hover .category-emoji {
-    transform: scale(1.05);
-    opacity: 1;
-}
-
 .category-content {
-    padding: 12px;
-    background: white;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+    z-index: 1;
 }
 
 .category-name {
-    font-size: 0.95em;
+    font-size: 1em;
     font-weight: 600;
-    margin: 0 0 4px 0;
-    color: #333;
-    transition: color 0.3s ease;
+    margin: 0;
+    color: white;
     text-align: center;
     line-height: 1.2;
-}
-
-.category-description {
-    font-size: 0.8em;
-    color: #666;
-    margin: 0;
-    line-height: 1.3;
-    text-align: center;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .category-card:hover .category-name {
-    color: #e91e63;
+    color: #ffd700;
 }
 
 /* Виділення для акційних товарів */
 .category-featured {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-    color: white;
     border: 3px solid #ff9800;
     box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
     animation: featuredPulse 2s ease-in-out infinite;
 }
 
-.category-featured .category-image {
-    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.2) 100%);
-}
-
 .category-featured .category-content {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-    color: white;
+    background: linear-gradient(to top, rgba(255, 107, 107, 0.9) 0%, rgba(238, 90, 82, 0.7) 100%);
 }
 
 .category-featured .category-name {
     color: white;
     font-weight: 700;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.category-featured .category-description {
-    color: rgba(255,255,255,0.9);
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
 
 .category-featured:hover {
@@ -186,21 +144,12 @@
         margin-top: 25px;
     }
     
-    .category-emoji {
-        font-size: 2.2rem;
-    }
-    
     .category-content {
-        padding: 10px;
+        padding: 12px;
     }
     
     .category-name {
         font-size: 0.9em;
-        margin-bottom: 3px;
-    }
-    
-    .category-description {
-        font-size: 0.75em;
     }
 }
 
@@ -211,20 +160,12 @@
         margin-top: 20px;
     }
     
-    .category-emoji {
-        font-size: 2rem;
-    }
-    
     .category-content {
-        padding: 8px;
+        padding: 10px;
     }
     
     .category-name {
         font-size: 0.85em;
-    }
-    
-    .category-description {
-        font-size: 0.7em;
     }
     
     .category-badge {
@@ -242,22 +183,12 @@
         margin-top: 15px;
     }
     
-    .category-emoji {
-        font-size: 1.8rem;
-    }
-    
     .category-content {
-        padding: 6px;
+        padding: 8px;
     }
     
     .category-name {
         font-size: 0.8em;
-        margin-bottom: 2px;
-    }
-    
-    .category-description {
-        font-size: 0.65em;
-        display: none;
     }
 }
 
@@ -266,8 +197,8 @@
         gap: 6px;
     }
     
-    .category-emoji {
-        font-size: 1.5rem;
+    .category-content {
+        padding: 6px;
     }
     
     .category-name {

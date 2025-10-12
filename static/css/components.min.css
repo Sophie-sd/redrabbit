@@ -539,12 +539,7 @@
     transform: translateY(-5px);
 }
 
-.category-image {
-    position: relative;
-    aspect-ratio: 1/1;
-    overflow: hidden;
-}
-
+.category-image,
 .product-image {
     position: relative;
     aspect-ratio: 4/3;
