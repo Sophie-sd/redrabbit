@@ -172,33 +172,43 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
 
 
 class CustomLoginView(DjangoLoginView):
-    """Custom login view з покращеною валідацією"""
+    """Custom login view з покращеною валідацією - ТІЛЬКИ для оптових клієнтів"""
     
     authentication_form = CustomLoginForm
     template_name = 'users/login.html'
     
-    def form_invalid(self, form):
-        username = form.data.get('username', '')
+    def form_valid(self, form):
+        """
+        БЕЗПЕКА: Використовуємо ТІЛЬКИ WholesaleClientBackend
+        Забороняємо вхід адміністраторам
+        """
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
         
-        if username:
-            # Перевіряємо чи існує користувач з таким email/телефоном/username
+        # Імпортуємо наш backend
+        from apps.users.backends import WholesaleClientBackend
+        
+        # Аутентифікуємо ТІЛЬКИ через WholesaleClientBackend
+        backend = WholesaleClientBackend()
+        user = backend.authenticate(self.request, username=username, password=password)
+        
+        if user is None:
+            # Перевіряємо чому не вдалося ввійти
             try:
-                user = CustomUser.objects.filter(email=username).first() or \
-                       CustomUser.objects.filter(phone=username).first() or \
-                       CustomUser.objects.filter(username=username).first()
+                found_user = CustomUser.objects.filter(email=username).first() or \
+                             CustomUser.objects.filter(phone=username).first()
                 
-                if not user:
+                if not found_user:
                     messages.error(
                         self.request,
-                        'Користувача з такими даними не зареєстровано. Будь ласка, зареєструйтеся.'
+                        'Користувача з таким email або телефоном не зареєстровано. Будь ласка, зареєструйтеся.'
                     )
-                elif user.is_staff or user.is_superuser:
-                    # БЕЗПЕКА: Адміністратори НЕ можуть заходити в особистий кабінет
+                elif found_user.is_staff or found_user.is_superuser:
                     messages.error(
                         self.request,
                         '🔒 Доступ заборонено. Адміністратори можуть входити тільки через /admin/'
                     )
-                elif not user.is_active:
+                elif not found_user.is_active:
                     messages.error(
                         self.request,
                         'Ваш акаунт ще не активовано. Будь ласка, перевірте вашу пошту та підтвердіть email.'
@@ -209,9 +219,23 @@ class CustomLoginView(DjangoLoginView):
                         'Невірний пароль. Перевірте правильність введення паролю.'
                     )
             except Exception:
-                messages.error(self.request, 'Невірні дані для входу.')
-        else:
-            messages.error(self.request, 'Будь ласка, введіть дані для входу.')
+                messages.error(
+                    self.request,
+                    'Користувача не знайдено. Особистий кабінет доступний тільки зареєстрованим оптовим клієнтам.'
+                )
+            
+            return self.form_invalid(form)
+        
+        # Якщо аутентифікація успішна - логінимо користувача
+        login(self.request, user, backend='apps.users.backends.WholesaleClientBackend')
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        # Якщо форма невалідна (не заповнені поля)
+        if not form.data.get('username'):
+            messages.error(self.request, 'Будь ласка, введіть email або номер телефону.')
+        elif not form.data.get('password'):
+            messages.error(self.request, 'Будь ласка, введіть пароль.')
         
         return super().form_invalid(form)
 
