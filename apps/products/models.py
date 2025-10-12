@@ -267,14 +267,45 @@ class ProductImage(models.Model):
         ordering = ['sort_order']
     
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+        # Оптимізуємо зображення перед збереженням
+        if self.image and hasattr(self.image, 'file'):
+            try:
+                from io import BytesIO
+                from django.core.files.uploadedfile import InMemoryUploadedFile
+                
+                # Відкриваємо зображення з файлу
+                img = Image.open(self.image)
+                
+                # Перевіряємо чи потрібна оптимізація
+                if img.height > 800 or img.width > 800:
+                    # Конвертуємо RGBA в RGB якщо потрібно
+                    if img.mode in ('RGBA', 'LA', 'P'):
+                        background = Image.new('RGB', img.size, (255, 255, 255))
+                        background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
+                        img = background
+                    
+                    # Зменшуємо розмір
+                    img.thumbnail((800, 800), Image.Resampling.LANCZOS)
+                    
+                    # Зберігаємо в BytesIO
+                    output = BytesIO()
+                    img.save(output, format='JPEG', optimize=True, quality=85)
+                    output.seek(0)
+                    
+                    # Оновлюємо файл
+                    self.image = InMemoryUploadedFile(
+                        output,
+                        'ImageField',
+                        f"{self.image.name.split('.')[0]}.jpg",
+                        'image/jpeg',
+                        output.getbuffer().nbytes,
+                        None
+                    )
+            except Exception as e:
+                # Якщо оптимізація не вдалась, просто зберігаємо оригінал
+                pass
         
-        # Оптимізуємо зображення
-        if self.image:
-            img = Image.open(self.image.path)
-            if img.height > 800 or img.width > 800:
-                img.thumbnail((800, 800), Image.Resampling.LANCZOS)
-                img.save(self.image.path, optimize=True, quality=85)
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return f"Зображення для {self.product.name}"
