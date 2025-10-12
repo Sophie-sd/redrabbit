@@ -4,19 +4,19 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
+    background-color: #f5f5f5;
 }
 
 .sale-banners-section .banner-slider-container {
     position: relative;
     width: 100%;
-    height: 400px;
-    overflow: hidden;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
 .sale-banners-section .banner-slides {
     position: relative;
     width: 100%;
-    height: 100%;
 }
 
 .sale-banners-section .banner-slide {
@@ -24,10 +24,13 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
     pointer-events: none;
+}
+
+.sale-banners-section .banner-slide:first-child {
+    position: relative;
 }
 
 .sale-banners-section .banner-slide.active {
@@ -38,7 +41,6 @@
 
 .sale-banners-section .banner-image-wrapper {
     width: 100%;
-    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -47,8 +49,10 @@
 
 .sale-banners-section .banner-image {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    display: block;
+    max-height: 500px;
+    object-fit: contain;
     object-position: center;
 }
 
@@ -124,8 +128,8 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-    .sale-banners-section .banner-slider-container {
-        height: 250px;
+    .sale-banners-section .banner-image {
+        max-height: 350px;
     }
     
     .sale-banners-section .banner-nav {
@@ -158,8 +162,8 @@
 }
 
 @media (max-width: 480px) {
-    .sale-banners-section .banner-slider-container {
-        height: 200px;
+    .sale-banners-section .banner-image {
+        max-height: 250px;
     }
 }
 
