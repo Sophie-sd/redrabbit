@@ -95,6 +95,16 @@ class ProfileView(LoginRequiredMixin, TemplateView):
     
     template_name = 'users/profile.html'
     
+    def dispatch(self, request, *args, **kwargs):
+        # БЕЗПЕКА: Адміністратори НЕ можуть заходити в особистий кабінет
+        if request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser):
+            messages.error(
+                request,
+                '🔒 Доступ заборонено. Адміністратори не мають доступу до особистого кабінету оптових клієнтів.'
+            )
+            return redirect('/admin/')
+        return super().dispatch(request, *args, **kwargs)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
@@ -110,6 +120,16 @@ class UserOrdersView(LoginRequiredMixin, TemplateView):
     """Замовлення користувача"""
     
     template_name = 'users/orders.html'
+    
+    def dispatch(self, request, *args, **kwargs):
+        # БЕЗПЕКА: Адміністратори НЕ можуть заходити в особистий кабінет
+        if request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser):
+            messages.error(
+                request,
+                '🔒 Доступ заборонено. Адміністратори не мають доступу до особистого кабінету оптових клієнтів.'
+            )
+            return redirect('/admin/')
+        return super().dispatch(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -128,6 +148,16 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
     form_class = ProfileEditForm
     template_name = 'users/profile_edit.html'
     success_url = reverse_lazy('users:profile')
+    
+    def dispatch(self, request, *args, **kwargs):
+        # БЕЗПЕКА: Адміністратори НЕ можуть заходити в особистий кабінет
+        if request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser):
+            messages.error(
+                request,
+                '🔒 Доступ заборонено. Адміністратори не мають доступу до особистого кабінету оптових клієнтів.'
+            )
+            return redirect('/admin/')
+        return super().dispatch(request, *args, **kwargs)
     
     def get_object(self, queryset=None):
         return self.request.user
@@ -161,6 +191,12 @@ class CustomLoginView(DjangoLoginView):
                     messages.error(
                         self.request,
                         'Користувача з такими даними не зареєстровано. Будь ласка, зареєструйтеся.'
+                    )
+                elif user.is_staff or user.is_superuser:
+                    # БЕЗПЕКА: Адміністратори НЕ можуть заходити в особистий кабінет
+                    messages.error(
+                        self.request,
+                        '🔒 Доступ заборонено. Адміністратори можуть входити тільки через /admin/'
                     )
                 elif not user.is_active:
                     messages.error(

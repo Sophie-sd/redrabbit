@@ -127,9 +127,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 # Authentication Backends
+# Порядок важливий! Перший backend використовується для особистого кабінету
 AUTHENTICATION_BACKENDS = [
-    'apps.users.backends.EmailOrUsernameModelBackend',
-    'django.contrib.auth.backends.ModelBackend',
+    'apps.users.backends.WholesaleClientBackend',  # Для особистого кабінету (ТІЛЬКИ email/phone, БЕЗ адмінів)
+    'apps.users.backends.AdminOnlyBackend',  # Для адмінки (ТІЛЬКИ адміністратори)
+    'django.contrib.auth.backends.ModelBackend',  # Fallback (стандартний Django)
 ]
 
 # Login/Logout URLs
@@ -157,8 +159,16 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # DEFAULT_FROM_EMAIL буде налаштовано в specific settings
 
 # Session settings
-SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # 30 днів
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # 7 днів (замість 30 для безпеки)
 SESSION_SAVE_EVERY_REQUEST = True
+SESSION_COOKIE_SECURE = not DEBUG  # HTTPS only в production
+SESSION_COOKIE_HTTPONLY = True  # Захист від XSS
+SESSION_COOKIE_SAMESITE = 'Lax'  # Захист від CSRF
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Сесія зберігається після закриття браузера
+
+# Окремі налаштування для адмінки
+# Адмін сесія коротша для безпеки
+ADMIN_SESSION_COOKIE_AGE = 60 * 60 * 8  # 8 годин
 
 # Cart settings
 CART_SESSION_ID = 'cart'
