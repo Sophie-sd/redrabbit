@@ -121,8 +121,8 @@ class Product(models.Model):
     )
     
     # Стікери
-    is_top = models.BooleanField('Топ', default=False, help_text='Топ товар')
-    is_new = models.BooleanField('Новинка', default=False, help_text='Новий товар')
+    is_top = models.BooleanField('Топ', default=False)
+    is_new = models.BooleanField('Новинка', default=False)
     # is_sale вже є вище для акційних товарів
     
     # Додаткові поля
@@ -156,8 +156,17 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
+        
+        # Генерація SKU тільки якщо не вказано
         if not self.sku:
-            self.sku = f"BS{self.id or '000'}"
+            # Спочатку зберігаємо без SKU, щоб отримати ID
+            super().save(*args, **kwargs)
+            # Тепер генеруємо SKU на основі реального ID
+            self.sku = f"BS{self.id:05d}"  # BS00001, BS00002 тощо
+            # Зберігаємо ще раз з SKU
+            super().save(update_fields=['sku'])
+            return
+        
         super().save(*args, **kwargs)
     
     def get_absolute_url(self):
