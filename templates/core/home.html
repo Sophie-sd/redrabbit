@@ -7,11 +7,11 @@
 {% block content %}
 <!-- 1. Banner Slider Section -->
 <section class="banner-slider-section" aria-label="Рекламні банери">
-    <div class="banner-slider-container">
+    <div class="banner-slider-container" id="bannerSlider">
         {% if banners %}
             <div class="banner-slider">
                 {% for banner in banners %}
-                    <div class="banner-slide">
+                    <div class="banner-slide {% if forloop.first %}active{% endif %}">
                         {% if banner.link_url %}
                             <a href="{{ banner.link_url }}" target="_blank" rel="noopener">
                                 <picture>
@@ -31,11 +31,7 @@
             
             {% if banners.count > 1 %}
                 <!-- Navigation Dots -->
-                <div class="banner-dots">
-                    {% for banner in banners %}
-                        <button class="banner-dot {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}" aria-label="Перейти до банера {{ forloop.counter }}"></button>
-                    {% endfor %}
-                </div>
+                <div class="banner-dots"></div>
             {% endif %}
         {% else %}
             <div class="banner-placeholder">

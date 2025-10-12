@@ -54,15 +54,13 @@ class BannerAdmin(admin.ModelAdmin):
                 ('mobile_image', 'mobile_preview_large'),
             ),
             'description': mark_safe("""
-                <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 10px 0;">
-                    <h4 style="color: #0066cc; margin-top: 0;">📐 Розміри зображень:</h4>
-                    <ul style="margin: 10px 0; padding-left: 20px;">
+                <div class="banner-image-info">
+                    <h4>📐 Розміри зображень:</h4>
+                    <ul>
                         <li><strong>Десктоп:</strong> 1200×400 пікселів (співвідношення 3:1)</li>
                         <li><strong>Мобільний:</strong> 375×280 пікселів (співвідношення 1.34:1)</li>
                     </ul>
-                    <p style="color: #666; margin: 0; font-style: italic;">
-                        Підтримувані формати: JPG, PNG, WebP
-                    </p>
+                    <p class="image-formats-note">Підтримувані формати: JPG, PNG, WebP</p>
                 </div>
             """)
         }),
@@ -80,7 +78,7 @@ class BannerAdmin(admin.ModelAdmin):
         """Превью десктопного зображення в списку"""
         if obj.desktop_image:
             return format_html(
-                '<img src="{}" alt="{}" style="width: 60px; height: 20px; object-fit: cover; border-radius: 4px;" />',
+                '<img src="{}" alt="{}" class="admin-preview-desktop" />',
                 obj.desktop_image.url,
                 obj.alt_text
             )
@@ -91,7 +89,7 @@ class BannerAdmin(admin.ModelAdmin):
         """Превью мобільного зображення в списку"""
         if obj.mobile_image:
             return format_html(
-                '<img src="{}" alt="{}" style="width: 40px; height: 21px; object-fit: cover; border-radius: 4px;" />',
+                '<img src="{}" alt="{}" class="admin-preview-mobile" />',
                 obj.mobile_image.url,
                 obj.alt_text
             )
@@ -103,9 +101,9 @@ class BannerAdmin(admin.ModelAdmin):
         if obj.desktop_image:
             return format_html(
                 '''
-                <div style="margin: 10px 0;">
-                    <img src="{}" alt="{}" style="max-width: 300px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
-                    <p style="margin: 5px 0; font-size: 12px; color: #666;">Десктоп версія</p>
+                <div class="admin-preview-large">
+                    <img src="{}" alt="{}" class="admin-preview-large-desktop" />
+                    <p class="admin-preview-caption">Десктоп версія</p>
                 </div>
                 ''',
                 obj.desktop_image.url,
@@ -119,9 +117,9 @@ class BannerAdmin(admin.ModelAdmin):
         if obj.mobile_image:
             return format_html(
                 '''
-                <div style="margin: 10px 0;">
-                    <img src="{}" alt="{}" style="max-width: 187px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
-                    <p style="margin: 5px 0; font-size: 12px; color: #666;">Мобільна версія</p>
+                <div class="admin-preview-large">
+                    <img src="{}" alt="{}" class="admin-preview-large-mobile" />
+                    <p class="admin-preview-caption">Мобільна версія</p>
                 </div>
                 ''',
                 obj.mobile_image.url,
@@ -134,10 +132,10 @@ class BannerAdmin(admin.ModelAdmin):
         """Чи є посилання"""
         if obj.link_url:
             return format_html(
-                '<span style="color: green;">✓ Є</span>'
+                '<span class="admin-has-link">✓ Є</span>'
             )
         return format_html(
-            '<span style="color: #999;">Немає</span>'
+            '<span class="admin-no-link">Немає</span>'
         )
     has_link.short_description = "Посилання"
     
