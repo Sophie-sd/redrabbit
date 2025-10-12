@@ -7,6 +7,7 @@ from django.utils.text import slugify
 from decimal import Decimal
 from PIL import Image
 import os
+import time
 
 
 class Category(models.Model):
@@ -154,20 +155,25 @@ class Product(models.Model):
         ordering = ['-created_at']
     
     def save(self, *args, **kwargs):
+        # Генерація slug з назви
         if not self.slug:
             self.slug = slugify(self.name)
         
         # Генерація SKU тільки якщо не вказано
-        if not self.sku:
-            # Спочатку зберігаємо без SKU, щоб отримати ID
-            super().save(*args, **kwargs)
-            # Тепер генеруємо SKU на основі реального ID
-            self.sku = f"BS{self.id:05d}"  # BS00001, BS00002 тощо
-            # Зберігаємо ще раз з SKU
-            super().save(update_fields=['sku'])
-            return
+        generate_sku = not self.sku
         
+        if generate_sku:
+            # Тимчасово встановлюємо унікальний тимчасовий SKU
+            self.sku = f"TEMP{int(time.time() * 1000000)}"
+        
+        # Зберігаємо товар
         super().save(*args, **kwargs)
+        
+        # Після збереження генеруємо правильний SKU
+        if generate_sku:
+            self.sku = f"BS{self.id:05d}"
+            # Оновлюємо тільки поле SKU
+            Product.objects.filter(pk=self.pk).update(sku=self.sku)
     
     def get_absolute_url(self):
         return reverse('products:detail', kwargs={'slug': self.slug})

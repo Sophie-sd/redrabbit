@@ -81,5 +81,14 @@ class ProductAdminForm(forms.ModelForm):
         sku = self.cleaned_data.get('sku')
         if sku:
             sku = sku.strip().upper()
+            # Перевірка унікальності SKU
+            if self.instance.pk:
+                # Редагування існуючого товару
+                if Product.objects.exclude(pk=self.instance.pk).filter(sku=sku).exists():
+                    raise ValidationError(f'Товар з артикулом "{sku}" вже існує')
+            else:
+                # Додавання нового товару
+                if Product.objects.filter(sku=sku).exists():
+                    raise ValidationError(f'Товар з артикулом "{sku}" вже існує')
         return sku
 
