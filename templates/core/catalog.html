@@ -25,7 +25,9 @@
                             {% if category.image %}
                                 <img src="{{ category.image.url }}" alt="{{ category.name }}" loading="lazy">
                             {% else %}
-                                {% if category.name == 'Нігті' %}
+                                {% if category.name == 'Акційні товари' %}
+                                    <img src="{% static 'images/sale_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
+                                {% elif category.name == 'Нігті' %}
                                     <img src="{% static 'images/nails_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
                                 {% elif category.name == 'Волосся' %}
                                     <img src="{% static 'images/hair_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
