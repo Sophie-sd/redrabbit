@@ -4,13 +4,63 @@
 {% block title %}Акції - Beauty Shop{% endblock %}
 {% block description %}Акції Beauty Shop зі знижками до 50%. Професійна косметика та інструменти за вигідними цінами.{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/sale-banners.css' %}">
+{% endblock %}
+
 {% block content %}
-<!-- Page Header -->
-<section class="page-header section-padding-sm bg-primary">
-    <div class="container">
-        <div class="page-header-content text-center text-white">
-            <p class="page-title-text">Встигніть придбати за вигідними цінами!</p>
+<!-- Sale Banners Slider -->
+<section class="sale-banners-section">
+    <div class="banner-slider-container" id="saleBannerSlider">
+        <div class="banner-slides">
+            <!-- Banner 1 -->
+            <div class="banner-slide active">
+                <div class="banner-image-wrapper">
+                    <img 
+                        src="{% static 'images/baner_sale1.jpg' %}" 
+                        alt="Акційна пропозиція 1" 
+                        class="banner-image"
+                    >
+                </div>
+            </div>
+            
+            <!-- Banner 2 -->
+            <div class="banner-slide">
+                <div class="banner-image-wrapper">
+                    <img 
+                        src="{% static 'images/baner_sale2.jpg' %}" 
+                        alt="Акційна пропозиція 2" 
+                        class="banner-image"
+                    >
+                </div>
+            </div>
+            
+            <!-- Banner 3 -->
+            <div class="banner-slide">
+                <div class="banner-image-wrapper">
+                    <img 
+                        src="{% static 'images/baner_sale3.jpg' %}" 
+                        alt="Акційна пропозиція 3" 
+                        class="banner-image"
+                    >
+                </div>
+            </div>
         </div>
+        
+        <!-- Navigation Arrows -->
+        <button class="banner-nav banner-nav-prev" aria-label="Попередній банер">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+        <button class="banner-nav banner-nav-next" aria-label="Наступний банер">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+        
+        <!-- Navigation Dots -->
+        <div class="banner-dots"></div>
     </div>
 </section>
 
@@ -193,4 +243,8 @@
         {% endif %}
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/sale-banners.js' %}"></script>
 {% endblock %}
