@@ -1,88 +1,264 @@
 from django.contrib import admin
-from .models import Category, Product, ProductImage, ProductAttribute, RecommendedProduct, PromotionProduct
+from django.utils.html import format_html
+from .models import Category, Product, ProductImage, ProductAttribute, RecommendedProduct, PromotionProduct, ProductTag
+from .forms import ProductAdminForm
 
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
-    fields = ['image', 'alt_text', 'is_main', 'sort_order']
+    fields = ['get_image_preview', 'image', 'alt_text', 'is_main', 'sort_order']
+    readonly_fields = ['get_image_preview']
+    classes = ['collapse']
+    verbose_name = 'Зображення товару'
+    verbose_name_plural = '📷 Зображення товару (перше буде головним)'
+    
+    def get_image_preview(self, obj):
+        """Попередній перегляд зображення"""
+        if obj.image:
+            return format_html(
+                '<img src="{}" width="100" height="100" style="object-fit: cover; border-radius: 4px; border: 1px solid #ddd;" />',
+                obj.image.url
+            )
+        return "Немає зображення"
+    get_image_preview.short_description = 'Попередній перегляд'
 
 
 class ProductAttributeInline(admin.TabularInline):
     model = ProductAttribute
     extra = 1
     fields = ['name', 'value', 'sort_order']
+    classes = ['collapse']
+    verbose_name = 'Характеристика'
+    verbose_name_plural = '📝 Характеристики товару (об\'єм, бренд, тип тощо)'
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     """Адміністрування категорій"""
     
-    list_display = ['name', 'parent', 'is_active', 'sort_order']
+    list_display = ['get_category_image', 'name', 'parent', 'get_products_count', 'is_active', 'sort_order']
+    list_display_links = ['get_category_image', 'name']
     list_filter = ['is_active', 'parent']
-    search_fields = ['name']
+    search_fields = ['name', 'description']
     prepopulated_fields = {'slug': ('name',)}
     list_editable = ['is_active', 'sort_order']
     ordering = ['sort_order', 'name']
+    save_on_top = True
+    
+    fieldsets = (
+        ('📂 Основна інформація', {
+            'fields': ('name', 'slug', 'parent', 'image', 'description')
+        }),
+        ('⚙️ Налаштування', {
+            'fields': (('is_active', 'sort_order'),)
+        }),
+        ('🔍 SEO (необов\'язково)', {
+            'fields': ('meta_title', 'meta_description'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def get_category_image(self, obj):
+        """Мініатюра зображення категорії"""
+        if obj.image:
+            return format_html(
+                '<img src="{}" width="50" height="50" style="object-fit: cover; border-radius: 4px;" />',
+                obj.image.url
+            )
+        return format_html('<div style="width: 50px; height: 50px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 4px;">📂</div>')
+    get_category_image.short_description = 'Фото'
+    
+    def get_products_count(self, obj):
+        """Кількість товарів у категорії"""
+        count = obj.product_set.filter(is_active=True).count()
+        return format_html('<span style="font-weight: bold;">{}</span>', count)
+    get_products_count.short_description = 'Товарів'
     
     def get_queryset(self, request):
-        """Виключаємо видалені категорії"""
+        """Оптимізація запитів"""
         qs = super().get_queryset(request)
-        # Можемо додати фільтрацію тут, якщо потрібно
-        return qs
+        return qs.select_related('parent')
+
+
+@admin.register(ProductTag)
+class ProductTagAdmin(admin.ModelAdmin):
+    """Адміністрування тегів товарів"""
+    
+    list_display = ['name', 'slug', 'is_active']
+    list_editable = ['is_active']
+    search_fields = ['name']
+    prepopulated_fields = {'slug': ('name',)}
+    ordering = ['name']
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     """Адміністрування товарів"""
     
+    form = ProductAdminForm
+    
     list_display = [
-        'name', 'category', 'sku', 'retail_price', 'wholesale_price', 
-        'stock', 'is_active', 'is_sale', 'is_top', 'is_new', 'sort_order'
+        'get_product_image', 'name', 'category', 'sku', 
+        'get_retail_price_display', 'get_wholesale_price_display',
+        'stock', 'get_status_display', 'is_sale', 'is_top', 'is_new'
     ]
+    list_display_links = ['get_product_image', 'name']
     list_filter = [
         'is_active',
         'category',
         'is_sale',
         'is_top',
         'is_new',
-        'created_at'
+        'is_featured',
+        'created_at',
+        'updated_at'
     ]
     search_fields = ['name', 'sku', 'description']
     prepopulated_fields = {'slug': ('name',)}
-    list_editable = ['is_active', 'is_sale', 'is_top', 'is_new', 'sort_order']
+    list_editable = ['is_sale', 'is_top', 'is_new']
     ordering = ['sort_order', '-created_at']
     date_hierarchy = 'created_at'
+    list_per_page = 50
+    save_on_top = True
     
     inlines = [ProductImageInline, ProductAttributeInline]
     
     fieldsets = (
-        ('Основна інформація', {
-            'fields': ('name', 'slug', 'category', 'sku', 'description')
+        ('📋 Основна інформація', {
+            'fields': (
+                'name',
+                'slug',
+                'category',
+                'sku',
+                'description'
+            ),
+            'description': 'Назва, категорія та опис товару'
         }),
-        ('Ціни', {
+        ('💰 Ціноутворення', {
             'fields': (
                 ('retail_price', 'wholesale_price'),
                 ('is_sale', 'sale_price'),
-                ('price_3_qty', 'price_5_qty')
+                ('price_3_qty', 'price_5_qty'),
             ),
-            'description': 'Роздрібна ціна — для незареєстрованих. Оптова ціна — для зареєстрованих клієнтів.'
+            'description': '<strong>Роздрібна ціна</strong> — для незареєстрованих користувачів<br>'
+                          '<strong>Оптова ціна</strong> — для зареєстрованих оптових клієнтів<br>'
+                          '<strong>Акційна ціна</strong> — спеціальна ціна при встановленні "Акційний товар"<br>'
+                          '<strong>Ціна від 3/5 шт</strong> — знижка при покупці від 3 або 5 штук'
         }),
-        ('Стікери', {
+        ('📦 Склад та наявність', {
+            'fields': (
+                ('stock', 'is_active'),
+                'is_featured'
+            ),
+            'description': 'Кількість товару на складі та статус активності'
+        }),
+        ('🏷️ Позначки товару', {
             'fields': (
                 ('is_top', 'is_new'),
                 'sort_order'
             ),
-            'description': 'Позначки товару на сайті'
+            'description': '<strong>ТОП</strong> — топовий/популярний товар<br>'
+                          '<strong>Новинка</strong> — новий товар<br>'
+                          '<strong>Порядок сортування</strong> — чим менше число, тим вище у списку'
         }),
-        ('Наявність', {
-            'fields': (('stock', 'is_active'),)
-        }),
-        ('SEO (необов\'язково)', {
+        ('🔍 SEO налаштування (необов\'язково)', {
             'fields': ('meta_title', 'meta_description'),
-            'classes': ('collapse',)
+            'classes': ('collapse',),
+            'description': 'Налаштування для пошукових систем. Якщо не заповнено — використовується назва товару'
+        }),
+        ('📅 Системна інформація', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',),
         }),
     )
+    
+    readonly_fields = ['created_at', 'updated_at']
+    
+    actions = [
+        'activate_products', 
+        'deactivate_products',
+        'mark_as_sale',
+        'unmark_as_sale',
+        'mark_as_top',
+        'mark_as_new'
+    ]
+    
+    def get_product_image(self, obj):
+        """Мініатюра головного зображення товару"""
+        main_image = obj.images.filter(is_main=True).first() or obj.images.first()
+        if main_image:
+            return format_html(
+                '<img src="{}" width="50" height="50" style="object-fit: cover; border-radius: 4px;" />',
+                main_image.image.url
+            )
+        return format_html('<div style="width: 50px; height: 50px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 4px;">📦</div>')
+    get_product_image.short_description = 'Фото'
+    
+    def get_retail_price_display(self, obj):
+        """Відображення роздрібної ціни"""
+        if obj.is_sale and obj.sale_price:
+            return format_html(
+                '<span style="text-decoration: line-through; color: #999;">{} ₴</span><br>'
+                '<strong style="color: #e91e63;">{} ₴</strong>',
+                obj.retail_price, obj.sale_price
+            )
+        return f"{obj.retail_price} ₴"
+    get_retail_price_display.short_description = 'Роздріб'
+    
+    def get_wholesale_price_display(self, obj):
+        """Відображення оптової ціни"""
+        if obj.wholesale_price:
+            return f"{obj.wholesale_price} ₴"
+        return "—"
+    get_wholesale_price_display.short_description = 'Опт'
+    
+    def get_status_display(self, obj):
+        """Відображення статусу товару"""
+        if obj.is_active:
+            if obj.stock > 0:
+                return format_html('<span style="color: green;">● В наявності</span>')
+            else:
+                return format_html('<span style="color: orange;">⚠ Немає на складі</span>')
+        return format_html('<span style="color: red;">✕ Неактивний</span>')
+    get_status_display.short_description = 'Статус'
+    
+    # Дії (Actions)
+    def activate_products(self, request, queryset):
+        """Активувати товари"""
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f"Активовано {updated} товарів")
+    activate_products.short_description = "✓ Активувати обрані товари"
+    
+    def deactivate_products(self, request, queryset):
+        """Деактивувати товари"""
+        updated = queryset.update(is_active=False)
+        self.message_user(request, f"Деактивовано {updated} товарів")
+    deactivate_products.short_description = "✕ Деактивувати обрані товари"
+    
+    def mark_as_sale(self, request, queryset):
+        """Позначити як акційні"""
+        updated = queryset.update(is_sale=True)
+        self.message_user(request, f"Позначено як акційні: {updated} товарів")
+    mark_as_sale.short_description = "🔥 Позначити як АКЦІЙНІ"
+    
+    def unmark_as_sale(self, request, queryset):
+        """Зняти позначку акційний"""
+        updated = queryset.update(is_sale=False)
+        self.message_user(request, f"Знято позначку акційний: {updated} товарів")
+    unmark_as_sale.short_description = "Зняти позначку АКЦІЙНИЙ"
+    
+    def mark_as_top(self, request, queryset):
+        """Позначити як ТОП"""
+        updated = queryset.update(is_top=True)
+        self.message_user(request, f"Позначено як ТОП: {updated} товарів")
+    mark_as_top.short_description = "⭐ Позначити як ТОП"
+    
+    def mark_as_new(self, request, queryset):
+        """Позначити як новинки"""
+        updated = queryset.update(is_new=True)
+        self.message_user(request, f"Позначено як новинки: {updated} товарів")
+    mark_as_new.short_description = "✨ Позначити як НОВИНКИ"
     
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         """Налаштування падаючого списку для категорій"""
