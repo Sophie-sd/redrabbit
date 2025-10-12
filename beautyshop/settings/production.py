@@ -39,14 +39,22 @@ else:
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Media files (зображення користувачів) для продакшну
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+# Cloudinary configuration для зберігання media файлів
+# Render.com має ephemeral filesystem - файли втрачаються при редеплої
+# Cloudinary забезпечує постійне зберігання + CDN
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME', 'demo'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY', ''),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET', ''),
+}
 
-# Django 4.2+ STORAGES система (замість STATICFILES_STORAGE)
+# Media files через Cloudinary для production
+MEDIA_URL = '/media/'  # Cloudinary автоматично перевизначить
+
+# Django 4.2+ STORAGES система
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",

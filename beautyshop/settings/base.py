@@ -29,6 +29,8 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
+    'cloudinary_storage',  # ПЕРЕД staticfiles для media через Cloudinary
+    'cloudinary',  # Cloudinary для зберігання зображень
     'ckeditor',
     'ckeditor_uploader',
     'crispy_forms',
