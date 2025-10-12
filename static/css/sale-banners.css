@@ -132,47 +132,40 @@
         max-height: 350px;
     }
     
-    .sale-banners-section .banner-slider-container {
-        padding-bottom: 60px;
-    }
-    
     .sale-banners-section .banner-nav {
-        width: 35px;
-        height: 35px;
-        top: auto;
-        bottom: 10px;
-        transform: none;
-        background-color: rgba(255, 255, 255, 0.95);
+        width: 32px;
+        height: 32px;
+        background-color: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     }
     
     .sale-banners-section .banner-nav:hover {
-        transform: scale(1.05);
+        background-color: rgba(255, 255, 255, 0.7);
+        transform: translateY(-50%) scale(1.05);
     }
     
     .sale-banners-section .banner-nav svg {
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
+        color: #555;
     }
     
     .sale-banners-section .banner-nav-prev {
-        left: 30%;
-        transform: translateX(-50%);
+        left: 8px;
     }
     
     .sale-banners-section .banner-nav-next {
-        right: 30%;
-        transform: translateX(50%);
+        right: 8px;
     }
     
     .sale-banners-section .banner-dots {
-        bottom: 45px;
+        bottom: 10px;
         gap: 8px;
     }
     
     .sale-banners-section .banner-dot {
-        width: 8px;
-        height: 8px;
-        border-width: 1px;
+        width: 10px;
+        height: 10px;
     }
 }
 
@@ -181,37 +174,27 @@
         max-height: 250px;
     }
     
-    .sale-banners-section .banner-slider-container {
-        padding-bottom: 55px;
+    .sale-banners-section .banner-nav {
+        width: 28px;
+        height: 28px;
+        background-color: rgba(255, 255, 255, 0.4);
     }
     
-    .sale-banners-section .banner-nav {
-        width: 32px;
-        height: 32px;
-        bottom: 8px;
+    .sale-banners-section .banner-nav:hover {
+        background-color: rgba(255, 255, 255, 0.6);
     }
     
     .sale-banners-section .banner-nav svg {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
     }
     
     .sale-banners-section .banner-nav-prev {
-        left: 25%;
+        left: 6px;
     }
     
     .sale-banners-section .banner-nav-next {
-        right: 25%;
-    }
-    
-    .sale-banners-section .banner-dots {
-        bottom: 40px;
-        gap: 6px;
-    }
-    
-    .sale-banners-section .banner-dot {
-        width: 7px;
-        height: 7px;
+        right: 6px;
     }
 }
 
