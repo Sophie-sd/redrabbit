@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category.meta_title|default:category.name }} - Beauty Shop{% endblock %}
+{% block description %}{{ category.meta_description|default:category.description }}{% endblock %}
+
+{% block content %}
+<section class="products-section section-padding">
+    <div class="container">
+        <div class="section-header text-center">
+            <nav aria-label="Хлібні крихти" class="breadcrumb-nav mb-3">
+                <ol class="breadcrumb justify-content-center">
+                    <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Головна</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'core:catalog' %}">Каталог</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+                </ol>
+            </nav>
+            
+            <h1 class="section-title">{{ category.name }}</h1>
+            {% if category.description %}
+                <p class="section-subtitle">{{ category.description }}</p>
+            {% endif %}
+        </div>
+        
+        {% if products %}
+            <div class="filters-section mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="results-count">
+                            Знайдено <strong>{{ products|length }}</strong> товарів
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="sort-options">
+                            <select class="form-select" id="sortSelect">
+                                <option value="name">За назвою</option>
+                                <option value="price_low">Спочатку дешевші</option>
+                                <option value="price_high">Спочатку дорожчі</option>
+                                <option value="newest">Новинки</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="products-grid">
+                {% for product in products %}
+                    <div class="product-card card fade-in">
+                        <div class="product-image">
+                            <a href="{{ product.get_absolute_url }}">
+                                {% if product.images.first %}
+                                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" loading="lazy">
+                                {% else %}
+                                    <div class="product-placeholder">
+                                        <i class="icon-product" aria-hidden="true">📦</i>
+                                    </div>
+                                {% endif %}
+                                
+                                {% if product.is_sale %}
+                                    <span class="product-badge sale-badge">
+                                        -{{ product.get_discount_percentage }}%
+                                    </span>
+                                {% endif %}
+                                
+                                {% if product.is_new %}
+                                    <span class="product-badge new-badge">
+                                        Новинка
+                                    </span>
+                                {% endif %}
+                                
+                                {% if product.is_top %}
+                                    <span class="product-badge top-badge">
+                                        ТОП
+                                    </span>
+                                {% endif %}
+                            </a>
+                            
+                            <div class="product-actions-overlay">
+                                <button class="btn btn-outline btn-sm wishlist-btn" 
+                                        data-product-id="{{ product.id }}"
+                                        aria-label="Додати в список бажань">
+                                    <i class="icon-heart" aria-hidden="true">♡</i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-content">
+                            <h3 class="product-name">
+                                <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                            </h3>
+                            
+                            <div class="product-price">
+                                {% if product.is_sale and product.sale_price %}
+                                    <span class="price-old">{{ product.retail_price }} ₴</span>
+                                    <span class="price-current">{{ product.sale_price }} ₴</span>
+                                {% else %}
+                                    <span class="price-current">{{ product.retail_price }} ₴</span>
+                                {% endif %}
+                                
+                                {% if user.is_authenticated and product.wholesale_price %}
+                                    <div class="additional-prices">
+                                        <div class="price-row wholesale">
+                                            <span class="price-wholesale">{{ product.wholesale_price }} ₴</span>
+                                            <small class="price-type">опт</small>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                {% if product.price_3_qty or product.price_5_qty %}
+                                    <div class="quantity-prices">
+                                        {% if product.price_3_qty %}
+                                            <div class="qty-price">
+                                                <span>від 3 шт: <strong>{{ product.price_3_qty }} ₴</strong></span>
+                                            </div>
+                                        {% endif %}
+                                        {% if product.price_5_qty %}
+                                            <div class="qty-price">
+                                                <span>від 5 шт: <strong>{{ product.price_5_qty }} ₴</strong></span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="product-actions">
+                                <button class="btn btn-primary btn-sm add-to-cart" 
+                                        data-product-id="{{ product.id }}"
+                                        data-product-name="{{ product.name }}"
+                                        {% if not product.is_in_stock %}disabled{% endif %}>
+                                    {% if product.is_in_stock %}
+                                        Додати до кошика
+                                    {% else %}
+                                        Немає в наявності
+                                    {% endif %}
+                                </button>
+                            </div>
+                            
+                            {% if product.stock <= 5 and product.stock > 0 %}
+                                <div class="stock-warning">
+                                    <small class="text-warning">
+                                        <i class="icon-warning" aria-hidden="true">⚠️</i>
+                                        Залишилось {{ product.stock }} шт.
+                                    </small>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            {% if is_paginated %}
+                <nav aria-label="Пагінація товарів" class="mt-5">
+                    <div class="pagination-wrapper d-flex justify-content-center gap-1">
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1" class="btn btn-outline btn-sm" aria-label="Перша сторінка">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                            </a>
+                            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline btn-sm" aria-label="Попередня">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <span class="btn btn-primary btn-sm active" aria-current="page">{{ num }}</span>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <a href="?page={{ num }}" class="btn btn-outline btn-sm">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline btn-sm" aria-label="Наступна">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline btn-sm" aria-label="Остання сторінка">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </a>
+                        {% endif %}
+                    </div>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="empty-state text-center">
+                <div class="empty-state-icon">
+                    <i class="icon-category" aria-hidden="true">📦</i>
+                </div>
+                <h3 class="empty-state-title">У цій категорії поки що немає товарів</h3>
+                <p class="empty-state-text">
+                    Перегляньте інші категорії або зверніться до нас за консультацією.
+                </p>
+                <a href="{% url 'core:catalog' %}" class="btn btn-primary btn-lg">
+                    Повернутись до каталогу
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+

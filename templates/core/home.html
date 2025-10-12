@@ -167,31 +167,29 @@
                             {% if category.image %}
                                 <img src="{{ category.image.url }}" alt="{{ category.name }}" loading="lazy">
                             {% else %}
-                                <div class="category-placeholder">
-                                    {% if category.name == 'Акційні товари' %}
-                                        <span class="category-emoji">🔥</span>
-                                    {% elif category.name == 'Нігті' %}
-                                        <span class="category-emoji">💅</span>
-                                    {% elif category.name == 'Волосся' %}
-                                        <span class="category-emoji">💇</span>
-                                    {% elif category.name == 'Брови та вії' %}
-                                        <span class="category-emoji">👁️</span>
-                                    {% elif category.name == 'Депіляція' %}
-                                        <span class="category-emoji">✨</span>
-                                    {% elif category.name == 'Косметика' %}
-                                        <span class="category-emoji">💄</span>
-                                    {% elif category.name == 'Макіяж' %}
-                                        <span class="category-emoji">💋</span>
-                                    {% elif category.name == 'Одноразова продукція' %}
-                                        <span class="category-emoji">🧼</span>
-                                    {% elif category.name == 'Дезінфекція та стерилізація' %}
-                                        <span class="category-emoji">🧴</span>
-                                    {% elif category.name == 'Меблі для салонів' %}
-                                        <span class="category-emoji">🪑</span>
-                                    {% else %}
+                                {% if category.name == 'Нігті' %}
+                                    <img src="{% static 'images/nails_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
+                                {% elif category.name == 'Волосся' %}
+                                    <img src="{% static 'images/hair_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
+                                {% elif category.name == 'Брови та вії' %}
+                                    <img src="{% static 'images/brovy_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
+                                {% elif category.name == 'Депіляція' %}
+                                    <img src="{% static 'images/depilacia_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
+                                {% elif category.name == 'Косметика' %}
+                                    <img src="{% static 'images/cosmetyka_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
+                                {% elif category.name == 'Макіяж' %}
+                                    <img src="{% static 'images/makeup_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
+                                {% elif category.name == 'Одноразова продукція' %}
+                                    <img src="{% static 'images/odnorazova_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
+                                {% elif category.name == 'Дезінфекція та стерилізація' %}
+                                    <img src="{% static 'images/dezynfectsia_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
+                                {% elif category.name == 'Меблі для салонів' %}
+                                    <img src="{% static 'images/mebly_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
+                                {% else %}
+                                    <div class="category-placeholder">
                                         <span class="category-emoji">📦</span>
-                                    {% endif %}
-                                </div>
+                                    </div>
+                                {% endif %}
                             {% endif %}
                             
                             {% if category.name == 'Акційні товари' %}

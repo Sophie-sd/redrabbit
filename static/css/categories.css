@@ -39,12 +39,23 @@
 
 .category-image {
     position: relative;
-    height: 120px;
+    aspect-ratio: 1/1;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+}
+
+.category-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.category-card:hover .category-image img {
+    transform: scale(1.05);
 }
 
 .category-placeholder {
@@ -175,10 +186,6 @@
         margin-top: 25px;
     }
     
-    .category-image {
-        height: 100px;
-    }
-    
     .category-emoji {
         font-size: 2.2rem;
     }
@@ -202,10 +209,6 @@
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
         margin-top: 20px;
-    }
-    
-    .category-image {
-        height: 90px;
     }
     
     .category-emoji {
@@ -239,10 +242,6 @@
         margin-top: 15px;
     }
     
-    .category-image {
-        height: 80px;
-    }
-    
     .category-emoji {
         font-size: 1.8rem;
     }
@@ -258,17 +257,13 @@
     
     .category-description {
         font-size: 0.65em;
-        display: none; /* Приховуємо опис на дуже малих екранах */
+        display: none;
     }
 }
 
 @media (max-width: 360px) {
     .categories-grid {
         gap: 6px;
-    }
-    
-    .category-image {
-        height: 70px;
     }
     
     .category-emoji {

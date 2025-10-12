@@ -187,7 +187,10 @@
         margin-bottom: var(--spacing-lg);
     }
     
-    .category-image,
+    .category-image {
+        aspect-ratio: 1/1;
+    }
+    
     .product-image {
         aspect-ratio: 3/2;
     }
