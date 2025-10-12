@@ -15,7 +15,7 @@
 /* Кастомні кнопки */
 .button.default,
 input[type="submit"].default {
-    background: #ff1493;
+    background: #4299e1;
     color: white;
     border: none;
     border-radius: 5px;
@@ -26,9 +26,9 @@ input[type="submit"].default {
 
 .button.default:hover,
 input[type="submit"].default:hover {
-    background: #e6127a;
+    background: #3182ce;
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(255, 20, 147, 0.3);
+    box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
 }
 
 /* Покращуємо відображення зображень */
@@ -50,7 +50,7 @@ input[type="submit"].default:hover {
 }
 
 #result_list thead th {
-    background: linear-gradient(135deg, #ff1493, #ffd700);
+    background: linear-gradient(135deg, #4a5568, #718096);
     color: white;
     font-weight: 600;
     text-transform: uppercase;
@@ -72,25 +72,25 @@ input[type="submit"].default:hover {
 }
 
 .paginator a {
-    color: #ff1493;
+    color: #4299e1;
     text-decoration: none;
     font-weight: 500;
 }
 
 .paginator a:hover {
-    color: #e6127a;
+    color: #3182ce;
     text-decoration: underline;
 }
 
 /* Покращуємо фільтри */
 #changelist-filter {
     background: #f8f9fa;
-    border-left: 3px solid #ff1493;
+    border-left: 3px solid #4299e1;
     border-radius: 5px;
 }
 
 #changelist-filter h2 {
-    background: #ff1493;
+    background: #4299e1;
     color: white;
     padding: 8px 10px;
     margin: 0;
@@ -99,7 +99,7 @@ input[type="submit"].default:hover {
 }
 
 #changelist-filter li.selected a {
-    background: #ff1493;
+    background: #4299e1;
     color: white;
     border-radius: 3px;
 }
@@ -125,8 +125,8 @@ input[type="password"]:focus,
 input[type="number"]:focus,
 textarea:focus,
 select:focus {
-    border-color: #ff1493;
-    box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.1);
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
     outline: none;
 }
 

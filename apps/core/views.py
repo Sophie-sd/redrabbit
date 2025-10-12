@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from django.db.models import Q
 from apps.products.models import Product, Category, RecommendedProduct, PromotionProduct
 from apps.blog.models import Article
+from .models import Banner
 
 
 class HomeView(TemplateView):
@@ -14,6 +15,9 @@ class HomeView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
+        # Отримуємо активні банери
+        banners = Banner.objects.filter(is_active=True).order_by('order', '-created_at')
         
         # Отримуємо рекомендовані товари
         recommended_products = RecommendedProduct.objects.filter(
@@ -28,6 +32,7 @@ class HomeView(TemplateView):
         ).select_related('product__category')[:20]
         
         context.update({
+            'banners': banners,
             'recommended_products': [rp.product for rp in recommended_products],
             'promotion_products': promotion_products,
             'categories': Category.objects.filter(parent=None, is_active=True).order_by('sort_order', 'name'),

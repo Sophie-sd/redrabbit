@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.db.models import Q
 from datetime import datetime, timedelta
-from .models import Order, OrderItem, Promotion, PromotionBanner
+from .models import Order, OrderItem, Promotion
 
 
 class OrderItemInline(admin.TabularInline):
@@ -180,64 +180,3 @@ class PromotionAdmin(admin.ModelAdmin):
         updated = queryset.update(is_active=False)
         self.message_user(request, f"Деактивовано {updated} акцій")
     
-@admin.register(PromotionBanner)
-class PromotionBannerAdmin(admin.ModelAdmin):
-    """Адміністрування банерів акцій"""
-    
-    list_display = [
-        'title', 'get_banner_preview', 'link_type', 'is_active', 
-        'sort_order', 'created_at'
-    ]
-    list_filter = ['is_active', 'link_type', 'created_at']
-    search_fields = ['title']
-    list_editable = ['is_active', 'sort_order']
-    
-    fieldsets = (
-        ('Основна інформація', {
-            'fields': ('title', 'image', 'sort_order', 'is_active')
-        }),
-        ('Посилання', {
-            'fields': (
-                'link_type', 
-                'category', 'product', 'promotion', 'custom_url'
-            ),
-            'description': 'Оберіть тип посилання та заповніть відповідне поле'
-        }),
-    )
-    
-    def get_banner_preview(self, obj):
-        """Попередній перегляд банера"""
-        if obj.image:
-            return format_html(
-                '<img src="{}" style="width: 100px; height: 50px; object-fit: cover; border-radius: 5px;" />',
-                obj.image.url
-            )
-        return "🖼️ Немає"
-    
-    get_banner_preview.short_description = "Прев'ю"
-    
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        """Налаштування падаючих списків"""
-        if db_field.name == "category":
-            from apps.products.models import Category
-            kwargs["queryset"] = Category.objects.filter(is_active=True).order_by('sort_order', 'name')
-        elif db_field.name == "product":
-            from apps.products.models import Product
-            kwargs["queryset"] = Product.objects.filter(is_active=True).order_by('name')
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-    
-    actions = ['activate_banners', 'deactivate_banners']
-    
-    def activate_banners(self, request, queryset):
-        """Активувати банери"""
-        updated = queryset.update(is_active=True)
-        self.message_user(request, f"Активовано {updated} банерів")
-    
-    activate_banners.short_description = "Активувати банери"
-    
-    def deactivate_banners(self, request, queryset):
-        """Деактивувати банери"""
-        updated = queryset.update(is_active=False)
-        self.message_user(request, f"Деактивовано {updated} банерів")
-    
-    deactivate_banners.short_description = "Деактивувати банери"
