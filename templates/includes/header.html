@@ -79,9 +79,7 @@
                         <div class="dropdown-menu">
                             <div class="dropdown-header">
                                 <strong>{{ user.first_name }} {{ user.last_name }}</strong>
-                                {% if user.is_wholesale %}
-                                    <span class="badge-small">Опт</span>
-                                {% endif %}
+                                <span class="badge-small">Опт</span>
                             </div>
                             <a href="{% url 'users:profile' %}" class="dropdown-item">Особистий кабінет</a>
                             <a href="{% url 'users:orders' %}" class="dropdown-item">Мої замовлення</a>

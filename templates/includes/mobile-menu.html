@@ -15,11 +15,7 @@
             </div>
             <div class="user-details">
                 <span class="user-name">{{ user.first_name|default:user.username }}</span>
-                {% if user.is_wholesale %}
-                    <span class="wholesale-badge">Оптовий клієнт</span>
-                {% else %}
-                    <span class="retail-badge">Роздрібний клієнт</span>
-                {% endif %}
+                <span class="wholesale-badge">Оптовий клієнт</span>
             </div>
         </div>
     {% else %}
