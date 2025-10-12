@@ -12,16 +12,6 @@
 <!-- Article Header -->
 <section class="article-header section-padding-sm bg-light">
     <div class="container">
-        <nav aria-label="breadcrumb" class="breadcrumb-nav desktop-only">
-            <div class="breadcrumb-links">
-                <a href="{% url 'core:home' %}" class="breadcrumb-link">Головна</a>
-                <span class="breadcrumb-separator">→</span>
-                <a href="{% url 'blog:list' %}" class="breadcrumb-link">Блог</a>
-                <span class="breadcrumb-separator">→</span>
-                <span class="breadcrumb-current">{{ article.title }}</span>
-            </div>
-        </nav>
-        
         <div class="article-header-content">
             <h1 class="article-title">{{ article.title }}</h1>
             

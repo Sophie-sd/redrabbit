@@ -1,48 +1,5 @@
 /* Blog Styles */
 
-/* Breadcrumb Navigation - тільки Desktop */
-.breadcrumb-nav.desktop-only {
-    margin-bottom: var(--spacing-lg);
-}
-
-@media (max-width: 991px) {
-    .breadcrumb-nav.desktop-only {
-        display: none;
-    }
-}
-
-.breadcrumb-links {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    flex-wrap: wrap;
-}
-
-.breadcrumb-link {
-    color: var(--neutral-medium);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.3s ease;
-}
-
-.breadcrumb-link:hover {
-    color: var(--primary-pink);
-    text-decoration: underline;
-}
-
-.breadcrumb-separator {
-    color: var(--neutral-light);
-    font-weight: 300;
-}
-
-.breadcrumb-current {
-    color: var(--neutral-dark);
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-/* Blog Styles */
-
 /* Article Cards */
 .article-card {
     transition: var(--transition-smooth);
