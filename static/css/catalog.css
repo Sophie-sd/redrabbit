@@ -1293,12 +1293,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-lg);
+  padding: var(--space-md); /* Зменшено з var(--space-lg) */
   border-bottom: 1px solid var(--color-gray-200);
 }
 
 .modal-filters__title {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg); /* Зменшено з var(--font-size-xl) */
   font-weight: var(--font-weight-semibold);
   color: var(--color-gray-900);
   margin: 0;
@@ -1308,13 +1308,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px; /* Збільшено з 32px */
-  height: 44px; /* Збільшено з 32px */
+  width: 36px; /* Зменшено з 44px */
+  height: 36px; /* Зменшено з 44px */
   background: transparent;
   border: none;
   border-radius: var(--radius-round);
   color: var(--color-gray-500);
-  font-size: var(--font-size-xl); /* Збільшено розмір символу */
+  font-size: var(--font-size-lg); /* Зменшено з var(--font-size-xl) */
   cursor: pointer;
   transition: all var(--transition-fast);
 }
@@ -1326,14 +1326,14 @@
 
 .modal-filters__body {
   flex: 1;
-  padding: var(--space-lg);
+  padding: var(--space-md); /* Зменшено з var(--space-lg) */
   overflow-y: auto;
 }
 
 /* Стилі фільтрів всередині модального вікна */
 .modal-filters__body .filter-section {
-  margin-bottom: var(--space-lg);
-  padding-bottom: var(--space-lg);
+  margin-bottom: var(--space-md); /* Зменшено з var(--space-lg) */
+  padding-bottom: var(--space-md); /* Зменшено з var(--space-lg) */
   border-bottom: 1px solid var(--color-gray-200);
 }
 
@@ -1344,10 +1344,10 @@
 }
 
 .modal-filters__body .filter-title {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base); /* Зменшено з var(--font-size-lg) */
   font-weight: var(--font-weight-semibold);
   color: var(--color-gray-900);
-  margin: 0 0 var(--space-md) 0;
+  margin: 0 0 var(--space-sm) 0; /* Зменшено з var(--space-md) */
   padding: 0;
   border-bottom: none;
 }
@@ -1359,7 +1359,7 @@
 }
 
 .modal-filters__body .filter-checkbox {
-  padding: var(--space-sm) 0;
+  padding: var(--space-xs) 0; /* Зменшено з var(--space-sm) */
   margin: var(--space-xs) 0;
 }
 
@@ -1368,11 +1368,11 @@
 }
 
 .modal-filters__body .price-input {
-  padding: var(--space-lg); /* Збільшено з var(--space-md) */
-  font-size: var(--font-size-lg); /* Збільшено з var(--font-size-base) */
-  min-height: 52px; /* Збільшено з 44px */
+  padding: var(--space-md); /* Повернуто до нормального розміру */
+  font-size: var(--font-size-base); /* Повернуто до нормального розміру */
+  min-height: 44px; /* Повернуто до нормального розміру */
   border-radius: var(--radius-md);
-  border: 2px solid var(--color-gray-300);
+  border: 1px solid var(--color-gray-300); /* Зменшено border з 2px */
   width: 100%;
   box-sizing: border-box;
 }
@@ -1380,9 +1380,9 @@
 .modal-filters__body .filter-group {
   flex-direction: column;
   align-items: stretch;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-lg);
-  padding-bottom: var(--space-lg);
+  gap: var(--space-xs); /* Зменшено з var(--space-sm) */
+  margin-bottom: var(--space-md); /* Зменшено з var(--space-lg) */
+  padding-bottom: var(--space-md); /* Зменшено з var(--space-lg) */
   border-bottom: 1px solid var(--color-gray-200);
 }
 
@@ -1400,14 +1400,17 @@
 
 .modal-filters__body .filter-select,
 .modal-filters__body .price-range__input {
-  padding: var(--space-md);
+  padding: var(--space-sm); /* Зменшено з var(--space-md) */
   font-size: var(--font-size-base);
+  min-height: 44px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
 }
 
 .modal-filters__footer {
   display: flex;
-  gap: var(--space-md);
-  padding: var(--space-lg);
+  gap: var(--space-sm); /* Зменшено з var(--space-md) */
+  padding: var(--space-md); /* Зменшено з var(--space-lg) */
   border-top: 1px solid var(--color-gray-200);
   background: var(--color-white);
   position: sticky; /* Закріплюємо внизу */
@@ -1417,13 +1420,13 @@
 
 .modal-filters__clear {
   flex: 1;
-  padding: var(--space-lg); /* Збільшено з var(--space-md) */
-  min-height: 52px; /* Додано мінімальну висоту */
+  padding: var(--space-md); /* Повернуто до нормального розміру */
+  min-height: 44px; /* Повернуто до нормального розміру */
   background: transparent;
-  border: 2px solid var(--color-gray-300);
+  border: 1px solid var(--color-gray-300); /* Зменшено border з 2px */
   border-radius: var(--radius-md);
   color: var(--color-gray-700);
-  font-size: var(--font-size-lg); /* Збільшено з var(--font-size-base) */
+  font-size: var(--font-size-base); /* Повернуто до нормального розміру */
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -1436,13 +1439,13 @@
 
 .modal-filters__apply {
   flex: 2;
-  padding: var(--space-lg); /* Збільшено з var(--space-md) */
-  min-height: 52px; /* Додано мінімальну висоту */
+  padding: var(--space-md); /* Повернуто до нормального розміру */
+  min-height: 44px; /* Повернуто до нормального розміру */
   background: var(--color-primary);
-  border: 2px solid var(--color-primary);
+  border: 1px solid var(--color-primary); /* Зменшено border з 2px */
   border-radius: var(--radius-md);
   color: var(--color-white);
-  font-size: var(--font-size-lg); /* Збільшено з var(--font-size-base) */
+  font-size: var(--font-size-base); /* Повернуто до нормального розміру */
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: all var(--transition-fast);
