@@ -43,6 +43,7 @@ class CatalogManager {
         this.resultsCount = document.getElementById('resultsCount');
         this.mobileFiltersBtn = document.getElementById('mobileFiltersBtn');
         this.sortSelectBtn = document.getElementById('sortSelectBtn');
+        this.sortDropdown = document.getElementById('sortDropdown');
         this.mobileFiltersClose = document.getElementById('mobileFiltersClose');
         
         // Кеш товарів
@@ -77,21 +78,30 @@ class CatalogManager {
         }
         
         // Кнопка сортування
-        if (this.sortSelectBtn) {
+        if (this.sortSelectBtn && this.sortDropdown) {
             this.sortSelectBtn.addEventListener('click', () => this.toggleSortDropdown());
-        }
-        
-        // Обробка вибору сортування
-        if (this.filters.sortBy) {
-            this.filters.sortBy.addEventListener('change', () => {
-                this.updateSortButtonText();
-                this.applyFilters();
-                this.closeSortDropdown();
+            
+            // Обробка вибору опції
+            this.sortDropdown.addEventListener('click', (e) => {
+                if (e.target.classList.contains('sort-option')) {
+                    const value = e.target.dataset.value;
+                    const text = e.target.textContent;
+                    this.selectSortOption(value, text);
+                }
             });
         }
         
         // Глобальні події
         window.addEventListener('resize', this.debounce(() => this.handleResize(), 250));
+        
+        // Закриття dropdown при кліку поза ним
+        document.addEventListener('click', (e) => {
+            if (this.sortSelectBtn && this.sortDropdown) {
+                if (!this.sortSelectBtn.contains(e.target) && !this.sortDropdown.contains(e.target)) {
+                    this.closeSortDropdown();
+                }
+            }
+        });
     }
     
     loadInitialData() {
@@ -359,35 +369,54 @@ class CatalogManager {
     
     // Методи для роботи з сортуванням
     toggleSortDropdown() {
-        if (!this.filters.sortBy || !this.sortSelectBtn) return;
+        if (!this.sortDropdown || !this.sortSelectBtn) return;
         
-        const isHidden = this.filters.sortBy.classList.contains('hidden');
+        const isHidden = this.sortDropdown.classList.contains('hidden');
         
         if (isHidden) {
-            this.filters.sortBy.classList.remove('hidden');
+            this.sortDropdown.classList.remove('hidden');
             this.sortSelectBtn.classList.add('active');
-            this.filters.sortBy.focus();
         } else {
             this.closeSortDropdown();
         }
     }
     
     closeSortDropdown() {
-        if (!this.filters.sortBy || !this.sortSelectBtn) return;
+        if (!this.sortDropdown || !this.sortSelectBtn) return;
         
-        this.filters.sortBy.classList.add('hidden');
+        this.sortDropdown.classList.add('hidden');
         this.sortSelectBtn.classList.remove('active');
     }
     
-    updateSortButtonText() {
-        if (!this.filters.sortBy || !this.sortSelectBtn) return;
-        
-        const selectedOption = this.filters.sortBy.options[this.filters.sortBy.selectedIndex];
+    selectSortOption(value, text) {
+        // Оновлюємо текст кнопки
         const textSpan = this.sortSelectBtn.querySelector('.sort-select-text');
-        
-        if (selectedOption && textSpan) {
-            textSpan.textContent = selectedOption.text;
+        if (textSpan) {
+            textSpan.textContent = text;
         }
+        
+        // Оновлюємо активну опцію
+        this.sortDropdown.querySelectorAll('.sort-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+        
+        const selectedOption = this.sortDropdown.querySelector(`[data-value="${value}"]`);
+        if (selectedOption) {
+            selectedOption.classList.add('selected');
+        }
+        
+        // Зберігаємо поточне сортування
+        this.currentSort = value;
+        
+        // Застосовуємо фільтри
+        this.applyFilters();
+        
+        // Закриваємо dropdown
+        this.closeSortDropdown();
+    }
+    
+    updateSortButtonText() {
+        // Цей метод тепер не потрібен, але залишаємо для сумісності
     }
     
     // Мобільні фільтри
