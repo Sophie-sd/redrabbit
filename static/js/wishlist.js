@@ -11,12 +11,88 @@ class WishlistManager {
     init() {
         this.setupEventListeners();
         this.updateWishlistBadges();
+        this.initializeWishlistState();
+    }
+
+    async initializeWishlistState() {
+        // Отримуємо поточний стан wishlist з сервера
+        try {
+            const response = await fetch('/wishlist/', {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            });
+            
+            if (response.ok) {
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                const wishlistItems = doc.querySelectorAll('.wishlist-item');
+                
+                // Створюємо Set з ID товарів у wishlist
+                const wishlistProductIds = new Set();
+                wishlistItems.forEach(item => {
+                    const productId = item.dataset.productId;
+                    if (productId) {
+                        wishlistProductIds.add(productId);
+                    }
+                });
+                
+                // Оновлюємо стан всіх кнопок wishlist на сторінці
+                this.updateButtonStates(wishlistProductIds);
+            }
+        } catch (error) {
+            console.error('Failed to initialize wishlist state:', error);
+        }
+    }
+
+    updateButtonStates(wishlistProductIds) {
+        const wishlistButtons = document.querySelectorAll(
+            '.btn-toggle-wishlist, .wishlist-toggle, .btn-wishlist, .wishlist-btn, .product-card__wishlist'
+        );
+        
+        wishlistButtons.forEach(button => {
+            const productId = button.dataset.productId;
+            if (productId && wishlistProductIds.has(productId)) {
+                button.classList.add('active');
+                this.updateButtonIcon(button, true);
+            } else {
+                button.classList.remove('active');
+                this.updateButtonIcon(button, false);
+            }
+        });
+    }
+
+    updateButtonIcon(button, isActive) {
+        // Для різних типів кнопок різна логіка оновлення іконки
+        const iconElement = button.querySelector('svg, .icon-heart, .product-card__wishlist-icon');
+        
+        if (button.classList.contains('product-card__wishlist')) {
+            // Для кнопок в product-card використовуємо text content
+            const iconSpan = button.querySelector('.product-card__wishlist-icon');
+            if (iconSpan) {
+                iconSpan.textContent = isActive ? '♥' : '♡';
+            }
+        } else if (iconElement && iconElement.tagName === 'svg') {
+            // Для SVG іконок
+            if (isActive) {
+                iconElement.innerHTML = '<path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6054C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39464C21.7564 5.72718 21.351 5.12084 20.84 4.61Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+            } else {
+                iconElement.innerHTML = '<path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6054C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39464C21.7564 5.72718 21.351 5.12084 20.84 4.61Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+            }
+        } else if (iconElement && iconElement.classList.contains('icon-heart')) {
+            // Для text-based іконок
+            iconElement.textContent = isActive ? '♥' : '♡';
+        }
     }
 
     setupEventListeners() {
-        // Додавання/видалення з wishlist (toggle)
+        // Додавання/видалення з wishlist (toggle) - підтримка всіх варіантів селекторів
         document.addEventListener('click', (e) => {
-            const wishlistBtn = e.target.closest('.btn-toggle-wishlist, .wishlist-toggle');
+            const wishlistBtn = e.target.closest(
+                '.btn-toggle-wishlist, .wishlist-toggle, .btn-wishlist, .wishlist-btn, .product-card__wishlist'
+            );
             if (wishlistBtn) {
                 e.preventDefault();
                 this.toggleWishlist(wishlistBtn);
@@ -65,15 +141,8 @@ class WishlistManager {
                 // Оновлюємо стан кнопки
                 button.classList.toggle('active');
                 
-                // Оновлюємо іконку
-                const icon = button.querySelector('svg');
-                if (icon) {
-                    if (button.classList.contains('active')) {
-                        icon.innerHTML = '<path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6054C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39464C21.7564 5.72718 21.351 5.12084 20.84 4.61Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
-                    } else {
-                        icon.innerHTML = '<path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6054C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39464C21.7564 5.72718 21.351 5.12084 20.84 4.61Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
-                    }
-                }
+                // Оновлюємо іконку за допомогою нового методу
+                this.updateButtonIcon(button, button.classList.contains('active'));
 
                 // Оновлюємо лічильники
                 this.updateWishlistBadges(data.count);
