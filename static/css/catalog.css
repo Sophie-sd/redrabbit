@@ -218,8 +218,6 @@
 
 .filter-options {
   padding: var(--space-md) var(--space-lg);
-  max-height: 200px;
-  overflow-y: auto;
 }
 
 /* Чекбокси фільтрів */
@@ -303,8 +301,8 @@
   border: 1px solid var(--color-gray-300);
   border-radius: var(--radius-md);
   color: var(--color-gray-700);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-size: 0.9375rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
   min-height: 40px; /* Додано мінімальну висоту */
@@ -322,8 +320,8 @@
   border: none;
   border-radius: var(--radius-md);
   color: var(--color-white);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  font-size: 0.9375rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
   min-height: 40px; /* Додано мінімальну висоту */
@@ -1422,13 +1420,14 @@
 
 .modal-filters__clear {
   flex: 1;
-  padding: var(--space-md); /* Повернуто до нормального розміру */
-  min-height: 44px; /* Повернуто до нормального розміру */
+  padding: var(--space-md);
+  min-height: 44px;
   background: transparent;
-  border: 1px solid var(--color-gray-300); /* Зменшено border з 2px */
+  border: 1px solid var(--color-gray-300);
   border-radius: var(--radius-md);
   color: var(--color-gray-700);
-  font-weight: var(--font-weight-semibold);
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
@@ -1440,13 +1439,14 @@
 
 .modal-filters__apply {
   flex: 2;
-  padding: var(--space-md); /* Повернуто до нормального розміру */
-  min-height: 44px; /* Повернуто до нормального розміру */
+  padding: var(--space-md);
+  min-height: 44px;
   background: var(--color-primary);
-  border: 1px solid var(--color-primary); /* Зменшено border з 2px */
+  border: 1px solid var(--color-primary);
   border-radius: var(--radius-md);
   color: var(--color-white);
-  font-weight: var(--font-weight-semibold);
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
