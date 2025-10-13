@@ -5,38 +5,53 @@
 {% block description %}{{ category.meta_description|default:category.description|truncatewords:20 }}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/products.css' %}">
+<link rel="stylesheet" href="{% static 'css/catalog.css' %}">
 {% endblock %}
 
 {% block content %}
-<section class="category-section section-padding">
-    <div class="container">
-        
-        <div class="section-header text-center">
-            <h1 class="section-title">{{ category.name }}</h1>
-            {% if category.description %}
-                <p class="section-subtitle">{{ category.description }}</p>
-            {% endif %}
-        </div>
-        
-        <!-- Панель фільтрів і сортування -->
-        <div class="filters-panel">
-            <div class="filters-container">
-                <div class="filters-left">
+<div class="catalog-layout">
+    <!-- Заголовок каталогу -->
+    <header class="catalog-layout__header">
+        <h1 class="section-title">{{ category.name }}</h1>
+        {% if category.description %}
+            <p class="section-subtitle">{{ category.description }}</p>
+        {% endif %}
+    </header>
+    
+    <!-- Основний контент -->
+    <main class="catalog-layout__main">
+        <!-- Панель фільтрів -->
+        <section class="filters-bar" id="filtersBar" aria-label="Фільтри товарів">
+            <div class="filters-bar__container catalog-layout">
+                <div class="filters-bar__left">
                     <!-- Фільтр за ціною -->
                     <div class="filter-group">
-                        <label class="filter-label">Ціна (₴)</label>
-                        <div class="price-range-inputs">
-                            <input type="number" class="price-input" id="priceFrom" placeholder="Від" min="0">
-                            <span>—</span>
-                            <input type="number" class="price-input" id="priceTo" placeholder="До" min="0">
+                        <label class="filter-group__label" for="priceFrom">Ціна (₴)</label>
+                        <div class="price-range filter-group__control">
+                            <input 
+                                type="number" 
+                                class="price-range__input" 
+                                id="priceFrom" 
+                                placeholder="Від" 
+                                min="0"
+                                aria-label="Ціна від"
+                            >
+                            <span class="price-range__separator" aria-hidden="true">—</span>
+                            <input 
+                                type="number" 
+                                class="price-range__input" 
+                                id="priceTo" 
+                                placeholder="До" 
+                                min="0"
+                                aria-label="Ціна до"
+                            >
                         </div>
                     </div>
                     
                     <!-- Фільтр за наявністю -->
                     <div class="filter-group">
-                        <label class="filter-label">Наявність</label>
-                        <select class="filter-select" id="availability">
+                        <label class="filter-group__label" for="availability">Наявність</label>
+                        <select class="filter-select filter-group__control" id="availability" aria-label="Фільтр за наявністю">
                             <option value="">Всі товари</option>
                             <option value="in_stock">В наявності</option>
                             <option value="out_of_stock">Під замовлення</option>
@@ -45,8 +60,8 @@
                     
                     <!-- Фільтр за типом -->
                     <div class="filter-group">
-                        <label class="filter-label">Тип товару</label>
-                        <select class="filter-select" id="productType">
+                        <label class="filter-group__label" for="productType">Тип</label>
+                        <select class="filter-select filter-group__control" id="productType" aria-label="Фільтр за типом товару">
                             <option value="">Всі типи</option>
                             <option value="sale">Акційні</option>
                             <option value="new">Новинки</option>
@@ -55,25 +70,73 @@
                     </div>
                 </div>
                 
-                <!-- Сортування -->
-                <div class="sort-group">
-                    <label class="sort-label">Сортування:</label>
-                    <select class="filter-select" id="sortBy">
-                        <option value="default">За замовчуванням</option>
-                        <option value="price_asc">За ціною: від дешевих</option>
-                        <option value="price_desc">За ціною: від дорогих</option>
-                        <option value="name">За назвою</option>
-                        <option value="popular">За популярністю</option>
-                        <option value="new">За новизною</option>
-                    </select>
+                <div class="filters-bar__right">
+                    <!-- Сортування -->
+                    <div class="sort-group">
+                        <label class="sort-group__label" for="sortBy">Сортування:</label>
+                        <select class="filter-select sort-group__select" id="sortBy" aria-label="Сортування товарів">
+                            <option value="default">За замовчуванням</option>
+                            <option value="price_asc">За ціною: дешевші спочатку</option>
+                            <option value="price_desc">За ціною: дорожчі спочатку</option>
+                            <option value="name">За назвою</option>
+                            <option value="popular">За популярністю</option>
+                            <option value="new">За новизною</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Дії фільтрів -->
+                    <div class="filters-actions">
+                        <button type="button" class="filters-actions__clear" id="clearFilters">
+                            Очистити
+                        </button>
+                    </div>
                 </div>
+            </div>
+            
+            <!-- Активні фільтри -->
+            <div class="active-filters catalog-layout" id="activeFilters" style="display: none;">
+                <!-- Динамічно додаються JS -->
+            </div>
+        </section>
+        
+        <!-- Мобільна кнопка фільтрів -->
+        <button class="mobile-filters-btn" id="mobileFiltersBtn" aria-label="Відкрити фільтри">
+            <span class="mobile-filters-btn__icon">⚙️</span>
+            <span class="mobile-filters-btn__text">Фільтри</span>
+        </button>
+        
+        <!-- Статистика та перемикач видів -->
+        <div class="catalog-stats">
+            <div class="catalog-stats__info">
+                <span id="resultsCount">Показано {{ products|length }} з {{ products|length }} товарів</span>
+            </div>
+            <div class="catalog-stats__view-toggle">
+                <button 
+                    type="button" 
+                    class="view-toggle__btn view-toggle__btn--active" 
+                    data-view="grid"
+                    aria-label="Сітка товарів"
+                    title="Сітка"
+                >
+                    ⊞
+                </button>
+                <button 
+                    type="button" 
+                    class="view-toggle__btn" 
+                    data-view="list"
+                    aria-label="Список товарів"
+                    title="Список"
+                >
+                    ☰
+                </button>
             </div>
         </div>
         
+        <!-- Сітка товарів або порожній стан -->
         {% if products %}
-            <div class="products-grid" id="productsGrid">
+            <div class="products-grid" id="productsGrid" role="main" aria-live="polite">
                 {% for product in products %}
-                    <div class="product-card" 
+                    <article class="product-card" 
                          data-price="{{ product.retail_price }}" 
                          data-sale-price="{{ product.sale_price|default:product.retail_price }}"
                          data-in-stock="{{ product.is_in_stock }}"
@@ -81,288 +144,225 @@
                          data-is-new="{{ product.is_new }}"
                          data-is-top="{{ product.is_top }}"
                          data-name="{{ product.name }}">
-                        <a href="{{ product.get_absolute_url }}" class="product-link">
-                            <div class="product-image">
-                                {% if product.images.first %}
-                                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" loading="lazy">
-                                {% else %}
-                                    <div class="product-placeholder">
-                                        <span>📦</span>
-                                    </div>
-                                {% endif %}
-                                
-                                <!-- Іконка обраного -->
-                                <div class="wishlist-icon" data-product-id="{{ product.id }}" title="Додати в обране">
-                                    <span class="heart-icon">♡</span>
+                         
+                        <!-- Медіаблок -->
+                        <div class="product-card__media">
+                            {% if product.images.first %}
+                                <img 
+                                    src="{{ product.images.first.image.url }}" 
+                                    alt="{{ product.name }}" 
+                                    class="product-card__image"
+                                    loading="lazy"
+                                    width="300"
+                                    height="300"
+                                >
+                            {% else %}
+                                <div class="product-card__placeholder" aria-label="Зображення товару відсутнє">
+                                    📦
                                 </div>
-                                
-                                <!-- Бейджі -->
-                                {% if product.is_sale or product.is_new or product.is_top %}
-                                    <div class="product-badges">
-                                        {% if product.is_sale %}
-                                            <span class="badge badge-sale">-{{ product.get_discount_percentage }}%</span>
-                                        {% endif %}
-                                        {% if product.is_new %}
-                                            <span class="badge badge-new">NEW</span>
-                                        {% endif %}
-                                        {% if product.is_top %}
-                                            <span class="badge badge-top">ХІТ</span>
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                            </div>
+                            {% endif %}
                             
-                            <div class="product-content">
-                                <h3 class="product-name">{{ product.name }}</h3>
-                                
-                                <div class="product-price">
-                                    {% if product.is_sale and product.sale_price %}
-                                        <span class="price-new">{{ product.sale_price }} ₴</span>
-                                        <span class="price-old">{{ product.retail_price }} ₴</span>
-                                    {% else %}
-                                        <span class="price-current">{{ product.retail_price }} ₴</span>
+                            <!-- Кнопка обраного -->
+                            <button 
+                                type="button"
+                                class="product-card__wishlist" 
+                                data-product-id="{{ product.id }}" 
+                                aria-label="Додати в обране"
+                                title="Додати в обране"
+                            >
+                                <span class="product-card__wishlist-icon" aria-hidden="true">♡</span>
+                            </button>
+                            
+                            <!-- Бейджі -->
+                            {% if product.is_sale or product.is_new or product.is_top %}
+                                <div class="product-card__badges">
+                                    {% if product.is_sale %}
+                                        <span class="product-badge product-badge--sale" aria-label="Знижка">
+                                            -{{ product.get_discount_percentage }}%
+                                        </span>
+                                    {% endif %}
+                                    {% if product.is_new %}
+                                        <span class="product-badge product-badge--new" aria-label="Новинка">
+                                            NEW
+                                        </span>
+                                    {% endif %}
+                                    {% if product.is_top %}
+                                        <span class="product-badge product-badge--hit" aria-label="Хіт продажу">
+                                            ХІТ
+                                        </span>
                                     {% endif %}
                                 </div>
-                            </div>
-                        </a>
-                        
-                        <div class="product-actions">
-                            <button class="btn-add-cart" data-product-id="{{ product.id }}">
-                                До кошика
-                            </button>
+                            {% endif %}
                         </div>
-                    </div>
+                        
+                        <!-- Контент картки -->
+                        <div class="product-card__content">
+                            <h3 class="product-card__name" title="{{ product.name }}">
+                                <a href="{{ product.get_absolute_url }}" class="product-card__link">
+                                    {{ product.name }}
+                                </a>
+                            </h3>
+                            
+                            <div class="product-card__price">
+                                {% if product.is_sale and product.sale_price %}
+                                    <span class="product-card__price-current" aria-label="Акційна ціна">
+                                        {{ product.sale_price }} ₴
+                                    </span>
+                                    <span class="product-card__price-old" aria-label="Стара ціна">
+                                        {{ product.retail_price }} ₴
+                                    </span>
+                                    <span class="product-card__price-save" aria-label="Економія">
+                                        -{{ product.get_discount_amount }} ₴
+                                    </span>
+                                {% else %}
+                                    <span class="product-card__price-current" aria-label="Ціна">
+                                        {{ product.retail_price }} ₴
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Дії картки -->
+                        <div class="product-card__actions">
+                            {% if product.is_in_stock %}
+                                <button 
+                                    type="button"
+                                    class="product-card__add-cart" 
+                                    data-product-id="{{ product.id }}"
+                                    aria-label="Додати {{ product.name }} до кошика"
+                                >
+                                    До кошика
+                                </button>
+                            {% else %}
+                                <button 
+                                    type="button"
+                                    class="product-card__add-cart product-card__add-cart--disabled" 
+                                    disabled
+                                    aria-label="Товар тимчасово відсутній"
+                                >
+                                    Немає в наявності
+                                </button>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Оверлей для товарів не в наявності -->
+                        {% if not product.is_in_stock %}
+                            <div class="product-card__out-of-stock-label" aria-hidden="true">
+                                Немає в наявності
+                            </div>
+                        {% endif %}
+                    </article>
                 {% endfor %}
             </div>
-            
-            {% if is_paginated %}
-                <div class="pagination">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1" class="pagination-link">Перша</a>
-                        <a href="?page={{ page_obj.previous_page_number }}" class="pagination-link">Попередня</a>
-                    {% endif %}
-                    
-                    <span class="pagination-current">
-                        Сторінка {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}
-                    </span>
-                    
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}" class="pagination-link">Наступна</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}" class="pagination-link">Остання</a>
-                    {% endif %}
-                </div>
-            {% endif %}
         {% else %}
             <!-- Порожній стан -->
-            <div class="empty-state">
-                <div class="empty-state-icon">🛍️</div>
-                <h2>В цій категорії поки немає товарів</h2>
-                <p>Спробуйте переглянути інші категорії або поверніться до каталогу</p>
-                <a href="{% url 'core:catalog' %}" class="btn-back-catalog">
-                    ← Повернутися до каталогу
-                </a>
+            <div class="empty-state" role="status" aria-live="polite">
+                <div class="empty-state__icon" aria-hidden="true">🛍️</div>
+                <h2 class="empty-state__title">В цій категорії поки немає товарів</h2>
+                <p class="empty-state__description">
+                    Спробуйте переглянути інші категорії або змінити фільтри пошуку
+                </p>
+                <div class="empty-state__actions">
+                    <a href="{% url 'core:catalog' %}" class="empty-state__button empty-state__button--primary">
+                        ← Повернутися до каталогу
+                    </a>
+                    <button type="button" class="empty-state__button empty-state__button--secondary" id="clearAllFilters">
+                        Скинути фільтри
+                    </button>
+                </div>
             </div>
         {% endif %}
         
+        <!-- Skeleton loader для завантаження -->
+        <div class="products-grid" id="skeletonGrid" style="display: none;" aria-hidden="true">
+            {% for i in "123456789012" %}
+                <div class="product-card-skeleton">
+                    <div class="product-card-skeleton__media skeleton"></div>
+                    <div class="product-card-skeleton__content">
+                        <div class="product-card-skeleton__name skeleton"></div>
+                        <div class="product-card-skeleton__price skeleton"></div>
+                        <div class="product-card-skeleton__button skeleton"></div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Пагінація -->
+        {% if is_paginated %}
+            <nav class="pagination" role="navigation" aria-label="Навігація по сторінках">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" class="pagination__link" aria-label="Перша сторінка">
+                        ⟨⟨
+                    </a>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination__link" aria-label="Попередня сторінка">
+                        ⟨ Попередня
+                    </a>
+                {% else %}
+                    <span class="pagination__link pagination__link--disabled" aria-disabled="true">
+                        ⟨⟨
+                    </span>
+                    <span class="pagination__link pagination__link--disabled" aria-disabled="true">
+                        ⟨ Попередня
+                    </span>
+                {% endif %}
+                
+                <span class="pagination__info" aria-live="polite">
+                    Сторінка {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}
+                </span>
+                
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="pagination__link" aria-label="Наступна сторінка">
+                        Наступна ⟩
+                    </a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="pagination__link" aria-label="Остання сторінка">
+                        ⟩⟩
+                    </a>
+                {% else %}
+                    <span class="pagination__link pagination__link--disabled" aria-disabled="true">
+                        Наступна ⟩
+                    </span>
+                    <span class="pagination__link pagination__link--disabled" aria-disabled="true">
+                        ⟩⟩
+                    </span>
+                {% endif %}
+            </nav>
+            
+            <!-- Альтернативна пагінація для мобільних -->
+            <div class="pagination-mobile" style="display: none;">
+                {% if page_obj.has_next %}
+                    <button type="button" class="pagination__load-more" id="loadMoreBtn" data-next-page="{{ page_obj.next_page_number }}">
+                        Показати ще товари
+                    </button>
+                {% endif %}
+            </div>
+        {% endif %}
+    </main>
+</div>
+
+<!-- Модальне вікно фільтрів для мобільних -->
+<div class="modal-filters" id="mobileFiltersModal" role="dialog" aria-modal="true" aria-labelledby="mobileFiltersTitle" style="display: none;">
+    <div class="modal-filters__backdrop"></div>
+    <div class="modal-filters__content">
+        <header class="modal-filters__header">
+            <h2 class="modal-filters__title" id="mobileFiltersTitle">Фільтри</h2>
+            <button type="button" class="modal-filters__close" aria-label="Закрити фільтри">
+                ✕
+            </button>
+        </header>
+        
+        <div class="modal-filters__body">
+            <!-- Контент фільтрів буде скопійований сюди JS -->
+        </div>
+        
+        <footer class="modal-filters__footer">
+            <button type="button" class="modal-filters__clear">Очистити все</button>
+            <button type="button" class="modal-filters__apply">Застосувати</button>
+        </footer>
     </div>
-</section>
+</div>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Ініціалізація
-    const productsGrid = document.getElementById('productsGrid');
-    const productCards = Array.from(document.querySelectorAll('.product-card'));
-    
-    // Фільтри
-    const priceFrom = document.getElementById('priceFrom');
-    const priceTo = document.getElementById('priceTo');
-    const availability = document.getElementById('availability');
-    const productType = document.getElementById('productType');
-    const sortBy = document.getElementById('sortBy');
-    
-    // Функція фільтрації та сортування
-    function filterAndSortProducts() {
-        let filteredCards = [...productCards];
-        
-        // Фільтр за ціною
-        const minPrice = parseFloat(priceFrom.value) || 0;
-        const maxPrice = parseFloat(priceTo.value) || Infinity;
-        
-        filteredCards = filteredCards.filter(card => {
-            const price = parseFloat(card.dataset.salePrice);
-            return price >= minPrice && price <= maxPrice;
-        });
-        
-        // Фільтр за наявністю
-        if (availability.value) {
-            filteredCards = filteredCards.filter(card => {
-                const inStock = card.dataset.inStock === 'True';
-                return availability.value === 'in_stock' ? inStock : !inStock;
-            });
-        }
-        
-        // Фільтр за типом
-        if (productType.value) {
-            filteredCards = filteredCards.filter(card => {
-                return card.dataset[`is${productType.value.charAt(0).toUpperCase()}${productType.value.slice(1)}`] === 'True';
-            });
-        }
-        
-        // Сортування
-        switch(sortBy.value) {
-            case 'price_asc':
-                filteredCards.sort((a, b) => parseFloat(a.dataset.salePrice) - parseFloat(b.dataset.salePrice));
-                break;
-            case 'price_desc':
-                filteredCards.sort((a, b) => parseFloat(b.dataset.salePrice) - parseFloat(a.dataset.salePrice));
-                break;
-            case 'name':
-                filteredCards.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
-                break;
-            case 'new':
-                filteredCards.sort((a, b) => (b.dataset.isNew === 'True') - (a.dataset.isNew === 'True'));
-                break;
-        }
-        
-        // Приховати всі картки
-        productCards.forEach(card => card.style.display = 'none');
-        
-        // Показати відфільтровані та відсортовані
-        filteredCards.forEach(card => {
-            card.style.display = 'flex';
-            productsGrid.appendChild(card);
-        });
-    }
-    
-    // Події для фільтрів
-    [priceFrom, priceTo, availability, productType, sortBy].forEach(element => {
-        element.addEventListener('change', filterAndSortProducts);
-    });
-    
-    priceFrom.addEventListener('input', filterAndSortProducts);
-    priceTo.addEventListener('input', filterAndSortProducts);
-    
-    // Іконки обраного
-    const wishlistIcons = document.querySelectorAll('.wishlist-icon');
-    
-    wishlistIcons.forEach(icon => {
-        icon.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const productId = this.dataset.productId;
-            const isActive = this.classList.contains('active');
-            
-            // Анімація
-            this.style.transform = 'scale(1.3)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 200);
-            
-            if (isActive) {
-                // Видалити з обраного
-                fetch('/wishlist/remove/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-CSRFToken': getCookie('csrftoken')
-                    },
-                    body: `product_id=${productId}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        this.classList.remove('active');
-                        this.querySelector('.heart-icon').textContent = '♡';
-                    }
-                });
-            } else {
-                // Додати в обране
-                fetch('/wishlist/add/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-CSRFToken': getCookie('csrftoken')
-                    },
-                    body: `product_id=${productId}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        this.classList.add('active');
-                        this.querySelector('.heart-icon').textContent = '♥';
-                    }
-                });
-            }
-        });
-    });
-    
-    // Кнопки "До кошика"
-    const addToCartBtns = document.querySelectorAll('.btn-add-cart');
-    
-    addToCartBtns.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const productId = this.dataset.productId;
-            
-            // Анімація кнопки
-            this.classList.add('animating');
-            
-            fetch('/cart/add/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: `product_id=${productId}&quantity=1`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    this.textContent = '✓ Додано';
-                    this.classList.remove('animating');
-                    this.classList.add('added');
-                    
-                    setTimeout(() => {
-                        this.textContent = 'До кошика';
-                        this.classList.remove('added');
-                    }, 2000);
-                    
-                    updateCartCount(data.cart_count);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                this.classList.remove('animating');
-            });
-        });
-    });
-    
-    // Допоміжні функції
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-    
-    function updateCartCount(count) {
-        const cartCount = document.querySelector('.cart-count');
-        if (cartCount) {
-            cartCount.textContent = count;
-        }
-    }
-});
-</script>
+<script src="{% static 'js/catalog.js' %}"></script>
 {% endblock %}
 
