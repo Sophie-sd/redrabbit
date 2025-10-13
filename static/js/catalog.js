@@ -42,6 +42,7 @@ class CatalogManager {
         this.activeFiltersContainer = document.getElementById('activeFilters');
         this.resultsCount = document.getElementById('resultsCount');
         this.mobileFiltersBtn = document.getElementById('mobileFiltersBtn');
+        this.mobileFiltersModal = document.getElementById('mobileFiltersModal');
         this.sortSelectBtn = document.getElementById('sortSelectBtn');
         this.sortDropdown = document.getElementById('sortDropdown');
         this.mobileFiltersClose = document.getElementById('mobileFiltersClose');
@@ -421,52 +422,97 @@ class CatalogManager {
     
     // Мобільні фільтри
     initMobileFilters() {
-        if (!this.mobileFiltersBtn) return;
+        if (!this.mobileFiltersBtn || !this.mobileFiltersModal) return;
         
-        // Простий обробник для відкриття sidebar фільтрів
+        const modalContent = this.mobileFiltersModal.querySelector('.modal-filters__content');
+        const modalBody = this.mobileFiltersModal.querySelector('.modal-filters__body');
+        const closeBtn = this.mobileFiltersModal.querySelector('.modal-filters__close');
+        const backdrop = this.mobileFiltersModal.querySelector('.modal-filters__backdrop');
+        const applyBtn = this.mobileFiltersModal.querySelector('.modal-filters__apply');
+        const clearBtn = this.mobileFiltersModal.querySelector('.modal-filters__clear');
+        
+        // Відкриття модального вікна
         this.mobileFiltersBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            this.copyFiltersToModal();
+            this.mobileFiltersModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
             
-            const catalogSidebar = document.getElementById('catalogSidebar');
-            if (catalogSidebar) {
-                catalogSidebar.classList.add('active');
-                document.body.style.overflow = 'hidden';
+            // Фокус на першому елементі
+            const firstInput = modalBody.querySelector('input, select');
+            if (firstInput) {
+                setTimeout(() => firstInput.focus(), 100);
             }
         });
         
-        // Закриття sidebar при кліку на backdrop
-        document.addEventListener('click', (e) => {
-            const catalogSidebar = document.getElementById('catalogSidebar');
-            if (catalogSidebar && catalogSidebar.classList.contains('active')) {
-                // Якщо клік поза sidebar або на backdrop
-                if (!catalogSidebar.querySelector('.filters-panel').contains(e.target)) {
-                    catalogSidebar.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-            }
-        });
+        // Закриття модального вікна
+        const closeModal = () => {
+            this.mobileFiltersModal.classList.add('hidden');
+            document.body.style.overflow = '';
+        };
         
-        // Закриття на Escape
+        closeBtn?.addEventListener('click', closeModal);
+        backdrop?.addEventListener('click', closeModal);
+        
+        // Обробка Escape
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                const catalogSidebar = document.getElementById('catalogSidebar');
-                if (catalogSidebar && catalogSidebar.classList.contains('active')) {
-                    catalogSidebar.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
+            if (e.key === 'Escape' && !this.mobileFiltersModal.classList.contains('hidden')) {
+                closeModal();
             }
         });
         
-        // Кнопка закриття мобільних фільтрів
-        if (this.mobileFiltersClose) {
-            this.mobileFiltersClose.addEventListener('click', () => {
-                const catalogSidebar = document.getElementById('catalogSidebar');
-                if (catalogSidebar) {
-                    catalogSidebar.classList.remove('active');
-                    document.body.style.overflow = '';
+        // Застосування фільтрів
+        applyBtn?.addEventListener('click', () => {
+            this.copyFiltersFromModal();
+            this.applyFilters();
+            closeModal();
+        });
+        
+        // Очищення фільтрів
+        clearBtn?.addEventListener('click', () => {
+            modalBody.querySelectorAll('input, select').forEach(element => {
+                element.value = '';
+                if (element.type === 'checkbox') {
+                    element.checked = false;
+                }
+            });
+        });
+    }
+    
+    copyFiltersToModal() {
+        const modalBody = this.mobileFiltersModal.querySelector('.modal-filters__body');
+        const filtersContent = document.querySelector('.filters-content');
+        
+        if (filtersContent && modalBody) {
+            modalBody.innerHTML = filtersContent.innerHTML;
+            
+            // Копіюємо значення фільтрів
+            modalBody.querySelectorAll('input, select').forEach(element => {
+                const originalElement = document.getElementById(element.id);
+                if (originalElement) {
+                    if (element.type === 'checkbox') {
+                        element.checked = originalElement.checked;
+                    } else {
+                        element.value = originalElement.value;
+                    }
                 }
             });
         }
+    }
+    
+    copyFiltersFromModal() {
+        const modalBody = this.mobileFiltersModal.querySelector('.modal-filters__body');
+        
+        modalBody.querySelectorAll('input, select').forEach(element => {
+            const originalElement = document.getElementById(element.id);
+            if (originalElement) {
+                if (element.type === 'checkbox') {
+                    originalElement.checked = element.checked;
+                } else {
+                    originalElement.value = element.value;
+                }
+            }
+        });
     }
     
     // Список бажань
