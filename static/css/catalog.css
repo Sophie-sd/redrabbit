@@ -284,6 +284,36 @@
   margin: 0 2px; /* Мінімальний відступ */
 }
 
+/* Дії фільтрів */
+.filters-actions {
+  padding: var(--space-lg);
+  border-top: 1px solid var(--color-gray-200);
+  background: var(--color-gray-50);
+}
+
+.filters-apply-btn {
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--color-white);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.filters-apply-btn:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.filters-apply-btn:active {
+  transform: translateY(0);
+}
+
 /* ============================================ */
 /*              ОСНОВНИЙ КОНТЕНТ               */
 /* ============================================ */
@@ -295,8 +325,6 @@
 /* Мобільні контроли */
 .mobile-controls {
   display: none; /* Приховано на desktop */
-  justify-content: space-between;
-  align-items: center;
   gap: var(--space-md);
   margin-bottom: var(--space-lg);
   padding: var(--space-md);
@@ -308,8 +336,10 @@
 .mobile-filters-btn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-sm);
-  padding: var(--space-md) var(--space-lg); /* Збільшено для кращої видимості */
+  flex: 1; /* Займає половину простору */
+  padding: var(--space-md) var(--space-lg);
   background: var(--color-primary);
   border: none;
   border-radius: var(--radius-md);
@@ -318,8 +348,8 @@
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: all var(--transition-fast);
-  min-height: 44px; /* Мінімальна висота для зручності */
-  white-space: nowrap; /* Запобігаємо перенесенню тексту */
+  min-height: 48px;
+  white-space: nowrap;
 }
 
 .mobile-filters-btn:hover {
@@ -328,9 +358,9 @@
 }
 
 .btn-icon {
-  width: 18px; /* Збільшено іконку */
+  width: 18px;
   height: 18px;
-  flex-shrink: 0; /* Не дозволяємо іконці стискатися */
+  flex-shrink: 0;
 }
 
 .filters-count {
@@ -342,34 +372,69 @@
 
 .sort-control {
   display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  flex: 1; /* Займає решту простору */
-  justify-content: flex-end; /* Вирівнювання праворуч */
+  flex: 1; /* Займає половину простору */
 }
 
-.sort-label {
+.sort-select-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  color: var(--color-gray-700);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  color: var(--color-gray-700);
-  white-space: nowrap;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-height: 48px;
+}
+
+.sort-select-btn:hover {
+  border-color: var(--color-primary);
+  background: var(--color-gray-50);
+}
+
+.sort-select-text {
+  flex: 1;
+  text-align: left;
+}
+
+.sort-select-arrow {
+  width: 16px;
+  height: 16px;
+  margin-left: var(--space-sm);
+  transition: transform var(--transition-fast);
+}
+
+.sort-select-btn.active .sort-select-arrow {
+  transform: rotate(180deg);
 }
 
 .sort-select {
-  padding: var(--space-md) var(--space-lg); /* Збільшено для симетрії з кнопкою */
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-sm);
+  display: none; /* Приховуємо оригінальний select */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
   background: var(--color-white);
-  cursor: pointer;
-  min-width: 180px;
-  min-height: 44px; /* Однакова висота з кнопкою */
+  border: 1px solid var(--color-gray-300);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
-.sort-select:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+.sort-select:not(.hidden) {
+  display: block;
+}
+
+.sort-control {
+  position: relative; /* Для absolute позиціонування dropdown */
 }
 
 /* ============================================ */
@@ -686,12 +751,15 @@
   aspect-ratio: var(--product-card-aspect-ratio);
   overflow: hidden;
   background: var(--color-gray-100);
+  border-radius: var(--radius-md);
+  margin: var(--space-sm); /* Відступ від країв картки */
 }
 
 .product-card__image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: var(--radius-md);
   transition: transform var(--transition-normal);
 }
 
@@ -707,6 +775,7 @@
   height: 100%;
   font-size: var(--font-size-3xl);
   color: var(--color-gray-400);
+  border-radius: var(--radius-md);
 }
 
 /* Іконка обраного */
@@ -795,7 +864,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: var(--space-sm) var(--space-sm) var(--space-xs);
+  padding: var(--space-sm) var(--space-md) var(--space-md); /* Збільшено бічні відступи */
   gap: var(--space-xs);
 }
 
@@ -1388,27 +1457,14 @@
     display: flex !important; /* Форсуємо показ на мобільному */
   }
   
-  /* Стилізуємо кнопки в одну лінію */
-  .mobile-filters-btn {
-    flex: 0 0 auto;
-    padding: var(--space-md) var(--space-lg); /* Збільшено для кращої видимості */
-    font-size: var(--font-size-base); /* Збільшено для кращої читабельності */
-  }
-  
+  /* Кнопки займають рівний простір */
+  .mobile-filters-btn,
   .sort-control {
     flex: 1;
-    justify-content: flex-end;
   }
   
-  .sort-label {
-    display: none; /* Приховуємо label на мобільному */
-  }
-  
-  .sort-select {
-    min-width: auto;
-    flex: 1;
-    max-width: 180px;
-    font-size: var(--font-size-base); /* Збільшено для кращої читабельності */
+  .mobile-filters-btn {
+    margin-right: var(--space-md); /* Відстань між кнопками */
   }
   
   .products-grid {

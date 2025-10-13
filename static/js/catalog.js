@@ -28,19 +28,21 @@ class CatalogManager {
     cacheElements() {
         // Фільтри
         this.filters = {
-            priceFrom: document.getElementById('priceFrom'),
-            priceTo: document.getElementById('priceTo'),
+            priceFrom: document.getElementById('priceMin'),
+            priceTo: document.getElementById('priceMax'),
             availability: document.getElementById('availability'),
             productType: document.getElementById('productType'),
-            sortBy: document.getElementById('sortBy')
+            sortBy: document.getElementById('sortSelect')
         };
         
         // Кнопки та елементи управління
         this.clearFiltersBtn = document.getElementById('clearFilters');
         this.clearAllFiltersBtn = document.getElementById('clearAllFilters');
+        this.applyFiltersBtn = document.getElementById('applyFiltersBtn');
         this.activeFiltersContainer = document.getElementById('activeFilters');
         this.resultsCount = document.getElementById('resultsCount');
         this.mobileFiltersBtn = document.getElementById('mobileFiltersBtn');
+        this.sortSelectBtn = document.getElementById('sortSelectBtn');
         
         // Кеш товарів
         this.productCards = Array.from(document.querySelectorAll('.product-card'));
@@ -66,6 +68,25 @@ class CatalogManager {
         
         if (this.clearAllFiltersBtn) {
             this.clearAllFiltersBtn.addEventListener('click', () => this.clearFilters());
+        }
+        
+        // Кнопка застосування фільтрів
+        if (this.applyFiltersBtn) {
+            this.applyFiltersBtn.addEventListener('click', () => this.applyFilters());
+        }
+        
+        // Кнопка сортування
+        if (this.sortSelectBtn) {
+            this.sortSelectBtn.addEventListener('click', () => this.toggleSortDropdown());
+        }
+        
+        // Обробка вибору сортування
+        if (this.filters.sortBy) {
+            this.filters.sortBy.addEventListener('change', () => {
+                this.updateSortButtonText();
+                this.applyFilters();
+                this.closeSortDropdown();
+            });
         }
         
         // Глобальні події
@@ -332,6 +353,39 @@ class CatalogManager {
         
         if (this.productsGrid) {
             this.productsGrid.style.display = show ? 'none' : 'grid';
+        }
+    }
+    
+    // Методи для роботи з сортуванням
+    toggleSortDropdown() {
+        if (!this.filters.sortBy || !this.sortSelectBtn) return;
+        
+        const isHidden = this.filters.sortBy.classList.contains('hidden');
+        
+        if (isHidden) {
+            this.filters.sortBy.classList.remove('hidden');
+            this.sortSelectBtn.classList.add('active');
+            this.filters.sortBy.focus();
+        } else {
+            this.closeSortDropdown();
+        }
+    }
+    
+    closeSortDropdown() {
+        if (!this.filters.sortBy || !this.sortSelectBtn) return;
+        
+        this.filters.sortBy.classList.add('hidden');
+        this.sortSelectBtn.classList.remove('active');
+    }
+    
+    updateSortButtonText() {
+        if (!this.filters.sortBy || !this.sortSelectBtn) return;
+        
+        const selectedOption = this.filters.sortBy.options[this.filters.sortBy.selectedIndex];
+        const textSpan = this.sortSelectBtn.querySelector('.sort-select-text');
+        
+        if (selectedOption && textSpan) {
+            textSpan.textContent = selectedOption.text;
         }
     }
     
