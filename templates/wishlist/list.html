@@ -27,72 +27,107 @@
         {% if products %}
         <!-- Wishlist Items -->
         <div class="wishlist-content">
-            <div class="wishlist-items">
+            <div class="products-grid">
                 {% for product in products %}
-                <div class="wishlist-item" data-product-id="{{ product.id }}">
-                    <div class="item-image">
-                        {% if product.main_image %}
-                        <img src="{{ product.main_image.url }}" alt="{{ product.name }}" loading="lazy">
-                        {% else %}
-                        <div class="no-image">
-                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19Z" stroke="currentColor" stroke-width="2"/>
-                                <path d="M8.5 10C9.32843 10 10 9.32843 10 8.5C10 7.67157 9.32843 7 8.5 7C7.67157 7 7 7.67157 7 8.5C7 9.32843 7.67157 10 8.5 10Z" stroke="currentColor" stroke-width="2"/>
-                                <path d="M21 15L16 10L5 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="item-info">
-                        <h3 class="item-name">
-                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
-                        </h3>
-                        
-                        {% if product.category %}
-                        <p class="item-category">{{ product.category.name }}</p>
-                        {% endif %}
-
-                        {% if product.short_description %}
-                        <p class="item-description">{{ product.short_description|truncatewords:15 }}</p>
-                        {% endif %}
-
-                        <div class="item-footer">
-                            <div class="item-price">
-                                {% if product.discount_price %}
-                                <span class="price-old">{{ product.price|floatformat:0 }} ₴</span>
-                                <span class="price-current">{{ product.discount_price|floatformat:0 }} ₴</span>
-                                {% else %}
-                                <span class="price-current">{{ product.price|floatformat:0 }} ₴</span>
-                                {% endif %}
-                            </div>
-
-                            {% if product.is_available %}
-                            <span class="stock-status in-stock">В наявності</span>
+                <article class="product-card" data-product-id="{{ product.id }}">
+                    <!-- Медіаблок -->
+                    <div class="product-card__media">
+                        <a href="{{ product.get_absolute_url }}">
+                            {% if product.images.first %}
+                            <img 
+                                src="{{ product.images.first.image.url }}" 
+                                alt="{{ product.name }}" 
+                                class="product-card__image"
+                                loading="lazy"
+                                width="300"
+                                height="300"
+                            >
                             {% else %}
-                            <span class="stock-status out-of-stock">Немає в наявності</span>
+                            <div class="product-card__placeholder" aria-label="Зображення товару відсутнє">
+                                📦
+                            </div>
                             {% endif %}
-                        </div>
-                    </div>
-
-                    <div class="item-actions">
-                        <button type="button" class="btn-remove-wishlist" data-product-id="{{ product.id }}" aria-label="Видалити з обраного">
+                        </a>
+                        
+                        <!-- Кнопка видалення з обраного -->
+                        <button 
+                            type="button"
+                            class="product-card__remove-wishlist" 
+                            data-product-id="{{ product.id }}" 
+                            aria-label="Видалити з обраного"
+                            title="Видалити з обраного"
+                        >
                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </button>
+                        
+                        <!-- Бейджі -->
+                        {% if product.is_sale or product.is_new or product.is_top %}
+                        <div class="product-card__badges">
+                            {% if product.is_sale %}
+                            <span class="product-badge product-badge--sale" aria-label="Знижка">
+                                -{{ product.get_discount_percentage }}%
+                            </span>
+                            {% endif %}
+                            {% if product.is_new %}
+                            <span class="product-badge product-badge--new" aria-label="Новинка">
+                                NEW
+                            </span>
+                            {% endif %}
+                            {% if product.is_top %}
+                            <span class="product-badge product-badge--top" aria-label="Топ продажів">
+                                ТОП
+                            </span>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
 
-                        {% if product.is_available %}
-                        <button type="button" class="btn-add-to-cart" data-product-id="{{ product.id }}">
+                    <!-- Інформація про товар -->
+                    <div class="product-card__content">
+                        <h3 class="product-card__title">
+                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                        </h3>
+                        
+                        {% if product.category %}
+                        <p class="product-card__category">{{ product.category.name }}</p>
+                        {% endif %}
+
+                        <!-- Ціна -->
+                        <div class="product-card__price">
+                            {% if product.is_sale and product.sale_price %}
+                            <span class="product-card__price-old">{{ product.retail_price|floatformat:0 }} ₴</span>
+                            <span class="product-card__price-current">{{ product.sale_price|floatformat:0 }} ₴</span>
+                            {% else %}
+                            <span class="product-card__price-current">{{ product.retail_price|floatformat:0 }} ₴</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Статус наявності -->
+                        <div class="product-card__stock">
+                            {% if product.is_in_stock %}
+                            <span class="stock-status stock-status--in">В наявності</span>
+                            {% else %}
+                            <span class="stock-status stock-status--out">Немає в наявності</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Кнопка в кошик -->
+                        {% if product.is_in_stock %}
+                        <button type="button" class="btn btn-primary btn-add-to-cart" data-product-id="{{ product.id }}">
                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 2L6 6H3L3 22H21L21 6H18L15 2H9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M9 11V6M15 11V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16.5 5.1 16.5H17M17 13V17C17 18.1 17.9 19 19 19S21 17.9 21 17V13M9 19.5C9.8 19.5 10.5 20.2 10.5 21S9.8 22.5 9 22.5 7.5 21.8 7.5 21 8.2 19.5 9 19.5ZM20 19.5C20.8 19.5 21.5 20.2 21.5 21S20.8 22.5 20 22.5 18.5 21.8 18.5 21 19.2 19.5 20 19.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                             В кошик
                         </button>
+                        {% else %}
+                        <button type="button" class="btn btn-secondary" disabled>
+                            Немає в наявності
+                        </button>
                         {% endif %}
                     </div>
-                </div>
+                </article>
                 {% endfor %}
             </div>
 
