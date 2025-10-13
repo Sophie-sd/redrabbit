@@ -1559,6 +1559,8 @@
   /* Показуємо мобільні контроли */
   .mobile-controls {
     display: flex !important; /* Форсуємо показ на мобільному */
+    gap: 12px;
+    padding: 12px;
   }
   
   /* Кнопки займають рівний простір */
@@ -1567,8 +1569,26 @@
     flex: 1;
   }
   
+  /* Зменшуємо розмір кнопки фільтрів на мобільному */
   .mobile-filters-btn {
-    margin-right: var(--space-md); /* Відстань між кнопками */
+    padding: 8px 12px;
+    font-size: 14px;
+    min-height: 40px;
+    gap: 6px;
+  }
+  
+  /* Зменшуємо розмір кнопки сортування на мобільному */
+  .sort-select-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+    min-height: 40px;
+  }
+  
+  /* Зменшуємо іконки в кнопках */
+  .mobile-filters-btn .btn-icon,
+  .sort-select-btn .sort-select-arrow {
+    width: 16px;
+    height: 16px;
   }
   
   .products-grid {
@@ -1593,6 +1613,33 @@
     text-align: left;
     margin-left: 0;
     margin-right: 0;
+  }
+}
+
+/* Дуже маленькі екрани <480px */
+@media (max-width: 480px) {
+  .mobile-controls {
+    gap: 8px;
+    padding: 8px;
+  }
+  
+  .mobile-filters-btn {
+    padding: 6px 10px;
+    font-size: 13px;
+    min-height: 36px;
+    gap: 4px;
+  }
+  
+  .sort-select-btn {
+    padding: 6px 10px;
+    font-size: 13px;
+    min-height: 36px;
+  }
+  
+  .mobile-filters-btn .btn-icon,
+  .sort-select-btn .sort-select-arrow {
+    width: 14px;
+    height: 14px;
   }
 }
 
