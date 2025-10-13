@@ -61,7 +61,7 @@
     <div class="mobile-accordions">
         <!-- Сервіси -->
         <div class="accordion-item">
-            <button class="accordion-header" onclick="toggleAccordion(this)">
+            <button class="accordion-header" data-accordion-toggle>
                 <span>Сервіси</span>
                 <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <polyline points="6 9 12 15 18 9"></polyline>
@@ -78,7 +78,7 @@
         
         <!-- Про нас -->
         <div class="accordion-item">
-            <button class="accordion-header" onclick="toggleAccordion(this)">
+            <button class="accordion-header" data-accordion-toggle>
                 <span>Про нас</span>
                 <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <polyline points="6 9 12 15 18 9"></polyline>
@@ -95,7 +95,7 @@
         
         <!-- Контакти -->
         <div class="accordion-item">
-            <button class="accordion-header" onclick="toggleAccordion(this)">
+            <button class="accordion-header" data-accordion-toggle>
                 <span>Контакти</span>
                 <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <polyline points="6 9 12 15 18 9"></polyline>
@@ -124,28 +124,4 @@
     </div>
 </div>
 
-<script>
-function toggleAccordion(button) {
-    const item = button.parentElement;
-    const content = item.querySelector('.accordion-content');
-    const icon = button.querySelector('.accordion-icon');
-    
-    // Закриваємо всі інші акордеони
-    document.querySelectorAll('.accordion-item').forEach(otherItem => {
-        if (otherItem !== item) {
-            otherItem.classList.remove('active');
-            otherItem.querySelector('.accordion-content').style.maxHeight = null;
-        }
-    });
-    
-    // Перемикаємо поточний акордеон
-    item.classList.toggle('active');
-    
-    if (item.classList.contains('active')) {
-        content.style.maxHeight = content.scrollHeight + 'px';
-    } else {
-        content.style.maxHeight = null;
-    }
-}
-</script>
 

@@ -94,7 +94,7 @@
             </div>
             
             <!-- Активні фільтри -->
-            <div class="active-filters catalog-layout" id="activeFilters" style="display: none;">
+            <div class="active-filters catalog-layout hidden" id="activeFilters">
                 <!-- Динамічно додаються JS -->
             </div>
         </section>
@@ -274,7 +274,7 @@
         {% endif %}
         
         <!-- Skeleton loader для завантаження -->
-        <div class="products-grid" id="skeletonGrid" style="display: none;" aria-hidden="true">
+        <div class="products-grid hidden" id="skeletonGrid" aria-hidden="true">
             {% for i in "123456789012" %}
                 <div class="product-card-skeleton">
                     <div class="product-card-skeleton__media skeleton"></div>
@@ -328,7 +328,7 @@
             </nav>
             
             <!-- Альтернативна пагінація для мобільних -->
-            <div class="pagination-mobile" style="display: none;">
+            <div class="pagination-mobile hidden">
                 {% if page_obj.has_next %}
                     <button type="button" class="pagination__load-more" id="loadMoreBtn" data-next-page="{{ page_obj.next_page_number }}">
                         Показати ще товари
@@ -340,7 +340,7 @@
 </div>
 
 <!-- Модальне вікно фільтрів для мобільних -->
-<div class="modal-filters" id="mobileFiltersModal" role="dialog" aria-modal="true" aria-labelledby="mobileFiltersTitle" style="display: none;">
+<div class="modal-filters hidden" id="mobileFiltersModal" role="dialog" aria-modal="true" aria-labelledby="mobileFiltersTitle">
     <div class="modal-filters__backdrop"></div>
     <div class="modal-filters__content">
         <header class="modal-filters__header">

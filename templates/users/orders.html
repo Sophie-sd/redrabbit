@@ -81,7 +81,7 @@
                             </div>
                             <div class="order-actions">
                                 {% if order.can_be_cancelled %}
-                                    <button class="btn btn-sm btn-outline btn-danger" onclick="cancelOrder('{{ order.id }}')">
+                                    <button class="btn btn-sm btn-outline btn-danger" data-cancel-order="{{ order.id }}">
                                         Скасувати
                                     </button>
                                 {% endif %}
