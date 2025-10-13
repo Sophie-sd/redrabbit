@@ -9,38 +9,144 @@
 {% endblock %}
 
 {% block content %}
-<div class="catalog-layout">
-    <!-- Заголовок каталогу -->
-    <header class="catalog-layout__header">
-        <h1 class="section-title">{{ category.name }}</h1>
+<div class="catalog-container">
+    <!-- Заголовок каталогу з відступом -->
+    <header class="catalog-header">
+        <h1 class="catalog-title">{{ category.name }}</h1>
         {% if category.description %}
-            <p class="section-subtitle">{{ category.description }}</p>
+            <p class="catalog-subtitle">{{ category.description }}</p>
         {% endif %}
     </header>
     
-    <!-- Основний контент -->
-    <main class="catalog-layout__main">
-        <!-- Компактна панель фільтрів -->
-        <section class="filters-bar" id="filtersBar" aria-label="Фільтри товарів">
-            <div class="filters-bar__container catalog-layout">
-                <!-- Кнопка фільтрів для десктопу -->
-                <div class="filters-toggle">
-                    <button type="button" class="filters-toggle__btn" id="filtersToggleBtn" aria-expanded="false">
-                        <svg class="filters-toggle__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 4H21V6H3V4ZM6 10H18V12H6V10ZM9 16H15V18H9V16Z" fill="currentColor"/>
-                        </svg>
-                        <span class="filters-toggle__text">Фільтри</span>
-                        <span class="filters-toggle__count hidden" id="filtersCount">(0)</span>
-                        <svg class="filters-toggle__arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7 10L12 15L17 10H7Z" fill="currentColor"/>
-                        </svg>
+    <!-- Основний layout каталогу -->
+    <div class="catalog-layout">
+        <!-- Бокова панель фільтрів (desktop) -->
+        <aside class="catalog-sidebar" id="catalogSidebar">
+            <div class="filters-panel">
+                <div class="filters-header">
+                    <h3 class="filters-title">Фільтри</h3>
+                    <button type="button" class="filters-clear" id="clearAllFilters">
+                        Очистити всі
                     </button>
                 </div>
                 
-                <!-- Сортування (завжди видиме) -->
-                <div class="sort-group">
-                    <label class="sort-group__label" for="sortBy">Сортування:</label>
-                    <select class="filter-select sort-group__select" id="sortBy" aria-label="Сортування товарів">
+                <div class="filters-content">
+                    <!-- Фільтр за ціною -->
+                    <div class="filter-section">
+                        <h4 class="filter-title">Ціна (₴)</h4>
+                        <div class="price-range-filter">
+                            <input 
+                                type="number" 
+                                class="price-input" 
+                                id="priceMin" 
+                                placeholder="Від" 
+                                min="0"
+                            >
+                            <span class="price-separator">—</span>
+                            <input 
+                                type="number" 
+                                class="price-input" 
+                                id="priceMax" 
+                                placeholder="До" 
+                                min="0"
+                            >
+                        </div>
+                    </div>
+                    
+                    <!-- Фільтр за брендом -->
+                    <div class="filter-section">
+                        <h4 class="filter-title">Бренд</h4>
+                        <div class="filter-options" id="brandFilters">
+                            {% for brand in brands %}
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="{{ brand.slug }}" name="brand">
+                                    <span class="filter-label">{{ brand.name }}</span>
+                                    <span class="filter-count">({{ brand.products_count }})</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Фільтр за групою товарів -->
+                    <div class="filter-section">
+                        <h4 class="filter-title">Група товарів</h4>
+                        <div class="filter-options" id="groupFilters">
+                            {% for group in product_groups %}
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="{{ group.slug }}" name="group">
+                                    <span class="filter-label">{{ group.name }}</span>
+                                    <span class="filter-count">({{ group.products_count }})</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Фільтр за призначенням -->
+                    <div class="filter-section">
+                        <h4 class="filter-title">Призначення</h4>
+                        <div class="filter-options" id="purposeFilters">
+                            {% for purpose in purposes %}
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="{{ purpose.slug }}" name="purpose">
+                                    <span class="filter-label">{{ purpose.name }}</span>
+                                    <span class="filter-count">({{ purpose.products_count }})</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Фільтр за наявністю -->
+                    <div class="filter-section">
+                        <h4 class="filter-title">Наявність</h4>
+                        <div class="filter-options">
+                            <label class="filter-checkbox">
+                                <input type="checkbox" value="in_stock" name="availability">
+                                <span class="filter-label">В наявності</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" value="out_of_stock" name="availability">
+                                <span class="filter-label">Під замовлення</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Фільтр за типом -->
+                    <div class="filter-section">
+                        <h4 class="filter-title">Тип товару</h4>
+                        <div class="filter-options">
+                            <label class="filter-checkbox">
+                                <input type="checkbox" value="new" name="type">
+                                <span class="filter-label">Новинки</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" value="sale" name="type">
+                                <span class="filter-label">Акційні</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" value="top" name="type">
+                                <span class="filter-label">Хіти продажу</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Основний контент -->
+        <main class="catalog-main">
+            <!-- Мобільна панель управління -->
+            <div class="mobile-controls">
+                <button type="button" class="mobile-filters-btn" id="mobileFiltersBtn">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 4H21V6H3V4ZM6 10H18V12H6V10ZM9 16H15V18H9V16Z" fill="currentColor"/>
+                    </svg>
+                    <span>Фільтри</span>
+                    <span class="filters-count hidden" id="mobileFiltersCount">(0)</span>
+                </button>
+                
+                <div class="sort-control">
+                    <label class="sort-label" for="sortSelect">Сортування:</label>
+                    <select class="sort-select" id="sortSelect">
                         <option value="default">За замовчуванням</option>
                         <option value="price_asc">За ціною: дешевші спочатку</option>
                         <option value="price_desc">За ціною: дорожчі спочатку</option>
@@ -50,74 +156,6 @@
                     </select>
                 </div>
             </div>
-            
-            <!-- Розкривна панель фільтрів -->
-            <div class="filters-dropdown hidden" id="filtersDropdown">
-                <div class="filters-dropdown__content catalog-layout">
-                    <div class="filters-grid">
-                        <!-- Фільтр за ціною -->
-                        <div class="filter-group">
-                            <label class="filter-group__label" for="priceFrom">Ціна (₴)</label>
-                            <div class="price-range filter-group__control">
-                                <input 
-                                    type="number" 
-                                    class="price-range__input" 
-                                    id="priceFrom" 
-                                    placeholder="Від" 
-                                    min="0"
-                                    aria-label="Ціна від"
-                                >
-                                <span class="price-range__separator" aria-hidden="true">—</span>
-                                <input 
-                                    type="number" 
-                                    class="price-range__input" 
-                                    id="priceTo" 
-                                    placeholder="До" 
-                                    min="0"
-                                    aria-label="Ціна до"
-                                >
-                            </div>
-                        </div>
-                        
-                        <!-- Фільтр за наявністю -->
-                        <div class="filter-group">
-                            <label class="filter-group__label" for="availability">Наявність</label>
-                            <select class="filter-select filter-group__control" id="availability" aria-label="Фільтр за наявністю">
-                                <option value="">Всі товари</option>
-                                <option value="in_stock">В наявності</option>
-                                <option value="out_of_stock">Під замовлення</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Фільтр за типом -->
-                        <div class="filter-group">
-                            <label class="filter-group__label" for="productType">Тип товару</label>
-                            <select class="filter-select filter-group__control" id="productType" aria-label="Фільтр за типом товару">
-                                <option value="">Всі типи</option>
-                                <option value="sale">Акційні</option>
-                                <option value="new">Новинки</option>
-                                <option value="top">Хіти продажу</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <!-- Дії фільтрів -->
-                    <div class="filters-actions">
-                        <button type="button" class="filters-actions__clear" id="clearFilters">
-                            Очистити всі
-                        </button>
-                        <button type="button" class="filters-actions__apply" id="applyFilters">
-                            Застосувати
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Активні фільтри -->
-            <div class="active-filters catalog-layout hidden" id="activeFilters">
-                <!-- Динамічно додаються JS -->
-            </div>
-        </section>
         
         <!-- Мобільна кнопка фільтрів -->
         <button class="mobile-filters-btn" id="mobileFiltersBtn" aria-label="Відкрити фільтри">

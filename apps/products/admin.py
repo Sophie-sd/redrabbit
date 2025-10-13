@@ -1,6 +1,10 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Category, Product, ProductImage, ProductAttribute, RecommendedProduct, PromotionProduct, ProductTag
+from .models import (
+    Category, Product, ProductImage, ProductAttribute, 
+    RecommendedProduct, PromotionProduct, ProductTag,
+    Brand, ProductGroup, ProductPurpose
+)
 from .forms import ProductAdminForm
 
 
@@ -344,6 +348,97 @@ class PromotionProductAdmin(admin.ModelAdmin):
         percentage = obj.get_discount_percentage()
         return f"-{percentage}%"
     get_discount_display.short_description = 'Знижка'
+
+
+# ============================================
+#              НОВІ МОДЕЛІ ФІЛЬТРІВ          
+# ============================================
+
+# Адміністрування брендів
+@admin.register(Brand)
+class BrandAdmin(admin.ModelAdmin):
+    list_display = ('name', 'is_active', 'products_count', 'sort_order', 'created_at')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('name', 'description')
+    prepopulated_fields = {'slug': ('name',)}
+    readonly_fields = ('created_at',)
+    list_editable = ('is_active', 'sort_order')
+    ordering = ('sort_order', 'name')
+    
+    fieldsets = (
+        ('Основна інформація', {
+            'fields': ('name', 'slug', 'logo', 'description')
+        }),
+        ('Налаштування', {
+            'fields': ('is_active', 'sort_order')
+        }),
+        ('Системна інформація', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def products_count(self, obj):
+        return obj.product_set.count()
+    products_count.short_description = 'Кількість товарів'
+
+
+# Адміністрування груп товарів
+@admin.register(ProductGroup)
+class ProductGroupAdmin(admin.ModelAdmin):
+    list_display = ('name', 'is_active', 'products_count', 'sort_order', 'created_at')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('name', 'description')
+    prepopulated_fields = {'slug': ('name',)}
+    readonly_fields = ('created_at',)
+    list_editable = ('is_active', 'sort_order')
+    ordering = ('sort_order', 'name')
+    
+    fieldsets = (
+        ('Основна інформація', {
+            'fields': ('name', 'slug', 'description')
+        }),
+        ('Налаштування', {
+            'fields': ('is_active', 'sort_order')
+        }),
+        ('Системна інформація', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def products_count(self, obj):
+        return obj.product_set.count()
+    products_count.short_description = 'Кількість товарів'
+
+
+# Адміністрування призначень
+@admin.register(ProductPurpose)
+class ProductPurposeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'is_active', 'products_count', 'sort_order', 'created_at')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('name', 'description')
+    prepopulated_fields = {'slug': ('name',)}
+    readonly_fields = ('created_at',)
+    list_editable = ('is_active', 'sort_order')
+    ordering = ('sort_order', 'name')
+    
+    fieldsets = (
+        ('Основна інформація', {
+            'fields': ('name', 'slug', 'description')
+        }),
+        ('Налаштування', {
+            'fields': ('is_active', 'sort_order')
+        }),
+        ('Системна інформація', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def products_count(self, obj):
+        return obj.product_set.count()
+    products_count.short_description = 'Кількість товарів'
     
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         """Налаштування падаючого списку для товарів"""

@@ -10,6 +10,79 @@ import os
 import time
 
 
+class Brand(models.Model):
+    """Бренди товарів"""
+    
+    name = models.CharField('Назва бренду', max_length=100, unique=True)
+    slug = models.SlugField('URL', max_length=100, unique=True, blank=True)
+    logo = models.ImageField('Логотип', upload_to='brands/', blank=True)
+    description = models.TextField('Опис', blank=True)
+    is_active = models.BooleanField('Активний', default=True)
+    sort_order = models.PositiveIntegerField('Порядок сортування', default=0)
+    created_at = models.DateTimeField('Створено', auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'Бренд'
+        verbose_name_plural = 'Бренди'
+        ordering = ['sort_order', 'name']
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.name
+
+
+class ProductGroup(models.Model):
+    """Групи товарів для фільтрації"""
+    
+    name = models.CharField('Назва групи', max_length=100, unique=True)
+    slug = models.SlugField('URL', max_length=100, unique=True, blank=True)
+    description = models.TextField('Опис', blank=True)
+    is_active = models.BooleanField('Активна', default=True)
+    sort_order = models.PositiveIntegerField('Порядок сортування', default=0)
+    created_at = models.DateTimeField('Створено', auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'Група товарів'
+        verbose_name_plural = 'Групи товарів'
+        ordering = ['sort_order', 'name']
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.name
+
+
+class ProductPurpose(models.Model):
+    """Призначення товарів"""
+    
+    name = models.CharField('Призначення', max_length=100, unique=True)
+    slug = models.SlugField('URL', max_length=100, unique=True, blank=True)
+    description = models.TextField('Опис', blank=True)
+    is_active = models.BooleanField('Активне', default=True)
+    sort_order = models.PositiveIntegerField('Порядок сортування', default=0)
+    created_at = models.DateTimeField('Створено', auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'Призначення товару'
+        verbose_name_plural = 'Призначення товарів'
+        ordering = ['sort_order', 'name']
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.name
+
+
 class Category(models.Model):
     """Категорії товарів з підтримкою ієрархії"""
     
@@ -67,6 +140,29 @@ class Product(models.Model):
     slug = models.SlugField('URL', max_length=200, unique=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категорія')
     description = models.TextField('Опис', blank=True)
+    
+    # Нові поля для фільтрації
+    brand = models.ForeignKey(
+        Brand, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        verbose_name='Бренд'
+    )
+    product_group = models.ForeignKey(
+        ProductGroup, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        verbose_name='Група товару'
+    )
+    purpose = models.ForeignKey(
+        ProductPurpose, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        verbose_name='Призначення'
+    )
     
     # Ціни
     retail_price = models.DecimalField('Роздрібна ціна', max_digits=10, decimal_places=2)
