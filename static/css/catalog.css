@@ -1124,31 +1124,8 @@
 }
 
 /* ============================================ */
-/*         МОБІЛЬНІ ФІЛЬТРИ                    */
+/*         МОДАЛЬНЕ ВІКНО ФІЛЬТРІВ             */
 /* ============================================ */
-
-.mobile-filters-btn {
-  display: none;
-  width: 100%;
-  padding: var(--space-md);
-  background: var(--color-primary);
-  border: none;
-  border-radius: var(--radius-md);
-  color: var(--color-white);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  cursor: pointer;
-  transition: background-color var(--transition-fast);
-  margin-bottom: var(--space-lg);
-}
-
-.mobile-filters-btn:hover {
-  background: var(--color-primary-dark);
-}
-
-.mobile-filters-btn__icon {
-  margin-right: var(--space-sm);
-}
 
 /* Модальне вікно фільтрів */
 .modal-filters {

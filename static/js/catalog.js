@@ -41,7 +41,6 @@ class CatalogManager {
         this.activeFiltersContainer = document.getElementById('activeFilters');
         this.resultsCount = document.getElementById('resultsCount');
         this.mobileFiltersBtn = document.getElementById('mobileFiltersBtn');
-        this.mobileFiltersModal = document.getElementById('mobileFiltersModal');
         
         // Кеш товарів
         this.productCards = Array.from(document.querySelectorAll('.product-card'));
@@ -338,83 +337,37 @@ class CatalogManager {
     
     // Мобільні фільтри
     initMobileFilters() {
-        if (!this.mobileFiltersBtn || !this.mobileFiltersModal) return;
+        if (!this.mobileFiltersBtn) return;
         
-        const modalContent = this.mobileFiltersModal.querySelector('.modal-filters__content');
-        const modalBody = this.mobileFiltersModal.querySelector('.modal-filters__body');
-        const closeBtn = this.mobileFiltersModal.querySelector('.modal-filters__close');
-        const backdrop = this.mobileFiltersModal.querySelector('.modal-filters__backdrop');
-        const applyBtn = this.mobileFiltersModal.querySelector('.modal-filters__apply');
-        const clearBtn = this.mobileFiltersModal.querySelector('.modal-filters__clear');
-        
-        // Відкриття модального вікна
+        // Простий обробник для відкриття sidebar фільтрів
         this.mobileFiltersBtn.addEventListener('click', () => {
-            this.copyFiltersToModal();
-            this.mobileFiltersModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            
-            // Фокус на першому елементі
-            const firstInput = modalBody.querySelector('input, select');
-            if (firstInput) {
-                setTimeout(() => firstInput.focus(), 100);
+            const catalogSidebar = document.getElementById('catalogSidebar');
+            if (catalogSidebar) {
+                catalogSidebar.classList.add('active');
+                document.body.style.overflow = 'hidden';
             }
         });
         
-        // Закриття модального вікна
-        const closeModal = () => {
-            this.mobileFiltersModal.style.display = 'none';
-            document.body.style.overflow = '';
-        };
-        
-        closeBtn?.addEventListener('click', closeModal);
-        backdrop?.addEventListener('click', closeModal);
-        
-        // Обробка Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.mobileFiltersModal.style.display === 'flex') {
-                closeModal();
-            }
-        });
-        
-        // Застосування фільтрів
-        applyBtn?.addEventListener('click', () => {
-            this.copyFiltersFromModal();
-            this.applyFilters();
-            closeModal();
-        });
-        
-        // Очищення фільтрів
-        clearBtn?.addEventListener('click', () => {
-            modalBody.querySelectorAll('input, select').forEach(element => {
-                element.value = '';
-            });
-        });
-    }
-    
-    copyFiltersToModal() {
-        const modalBody = this.mobileFiltersModal.querySelector('.modal-filters__body');
-        const filtersLeft = document.querySelector('.filters-bar__left');
-        
-        if (filtersLeft && modalBody) {
-            modalBody.innerHTML = filtersLeft.innerHTML;
-            
-            // Копіюємо значення фільтрів
-            modalBody.querySelectorAll('input, select').forEach(element => {
-                const originalElement = document.getElementById(element.id);
-                if (originalElement) {
-                    element.value = originalElement.value;
+        // Закриття sidebar при кліку на backdrop
+        document.addEventListener('click', (e) => {
+            const catalogSidebar = document.getElementById('catalogSidebar');
+            if (catalogSidebar && catalogSidebar.classList.contains('active')) {
+                // Якщо клік поза sidebar або на backdrop
+                if (!catalogSidebar.querySelector('.filters-panel').contains(e.target)) {
+                    catalogSidebar.classList.remove('active');
+                    document.body.style.overflow = '';
                 }
-            });
-        }
-    }
-    
-    copyFiltersFromModal() {
-        const modalBody = this.mobileFiltersModal.querySelector('.modal-filters__body');
+            }
+        });
         
-        modalBody.querySelectorAll('input, select').forEach(element => {
-            const originalElement = document.getElementById(element.id);
-            if (originalElement) {
-                originalElement.value = element.value;
+        // Закриття на Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const catalogSidebar = document.getElementById('catalogSidebar');
+                if (catalogSidebar && catalogSidebar.classList.contains('active')) {
+                    catalogSidebar.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
             }
         });
     }
@@ -644,10 +597,11 @@ class CatalogManager {
     
     handleResize() {
         // Обробка зміни розміру вікна
-        if (window.innerWidth >= 600) {
-            // Закриваємо мобільну модалку на більших екранах
-            if (this.mobileFiltersModal.style.display === 'flex') {
-                this.mobileFiltersModal.style.display = 'none';
+        if (window.innerWidth >= 768) {
+            // Закриваємо мобільні фільтри на більших екранах
+            const catalogSidebar = document.getElementById('catalogSidebar');
+            if (catalogSidebar && catalogSidebar.classList.contains('active')) {
+                catalogSidebar.classList.remove('active');
                 document.body.style.overflow = '';
             }
         }
