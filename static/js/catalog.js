@@ -43,6 +43,7 @@ class CatalogManager {
         this.resultsCount = document.getElementById('resultsCount');
         this.mobileFiltersBtn = document.getElementById('mobileFiltersBtn');
         this.sortSelectBtn = document.getElementById('sortSelectBtn');
+        this.mobileFiltersClose = document.getElementById('mobileFiltersClose');
         
         // Кеш товарів
         this.productCards = Array.from(document.querySelectorAll('.product-card'));
@@ -394,7 +395,9 @@ class CatalogManager {
         if (!this.mobileFiltersBtn) return;
         
         // Простий обробник для відкриття sidebar фільтрів
-        this.mobileFiltersBtn.addEventListener('click', () => {
+        this.mobileFiltersBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
             const catalogSidebar = document.getElementById('catalogSidebar');
             if (catalogSidebar) {
                 catalogSidebar.classList.add('active');
@@ -424,6 +427,17 @@ class CatalogManager {
                 }
             }
         });
+        
+        // Кнопка закриття мобільних фільтрів
+        if (this.mobileFiltersClose) {
+            this.mobileFiltersClose.addEventListener('click', () => {
+                const catalogSidebar = document.getElementById('catalogSidebar');
+                if (catalogSidebar) {
+                    catalogSidebar.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        }
     }
     
     // Список бажань
