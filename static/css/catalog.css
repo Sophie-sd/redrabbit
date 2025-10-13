@@ -1368,7 +1368,6 @@
 }
 
 .modal-filters__body .price-input {
-  padding: var(--space-md); /* Повернуто до нормального розміру */
   font-size: var(--font-size-base); /* Повернуто до нормального розміру */
   min-height: 44px; /* Повернуто до нормального розміру */
   border-radius: var(--radius-md);
@@ -1426,7 +1425,6 @@
   border: 1px solid var(--color-gray-300); /* Зменшено border з 2px */
   border-radius: var(--radius-md);
   color: var(--color-gray-700);
-  font-size: var(--font-size-base); /* Повернуто до нормального розміру */
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -1445,7 +1443,6 @@
   border: 1px solid var(--color-primary); /* Зменшено border з 2px */
   border-radius: var(--radius-md);
   color: var(--color-white);
-  font-size: var(--font-size-base); /* Повернуто до нормального розміру */
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: all var(--transition-fast);
