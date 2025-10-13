@@ -315,6 +315,14 @@
     max-width: 500px;
 }
 
+/* Компактна кнопка для empty wishlist на десктопі */
+.wishlist-empty .btn {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    max-width: 280px;
+}
+
 /* ==================== 
    Wishlist Toggle Button
 ==================== */
@@ -492,6 +500,12 @@
         width: 40px;
         height: 40px;
     }
+
+    /* Планшетна адаптація кнопки wishlist empty */
+    .wishlist-empty .btn {
+        max-width: 320px;
+        font-size: 0.9375rem;
+    }
 }
 
 /* ==================== 
@@ -573,6 +587,14 @@
     }
 
     .empty-text {
+        font-size: 1rem;
+    }
+
+    /* Мобільна версія кнопки wishlist empty повертається до повної ширини */
+    .wishlist-empty .btn {
+        max-width: none;
+        width: 100%;
+        padding: var(--spacing-md) var(--spacing-lg);
         font-size: 1rem;
     }
 

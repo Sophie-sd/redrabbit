@@ -517,7 +517,9 @@ class CatalogManager {
     
     // Список бажань
     initWishlist() {
-        const wishlistBtns = document.querySelectorAll('.product-card__wishlist');
+        const wishlistBtns = document.querySelectorAll(
+            '.product-card__wishlist, .btn-wishlist, .wishlist-btn, .btn-toggle-wishlist, .wishlist-toggle'
+        );
         
         wishlistBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -525,7 +527,8 @@ class CatalogManager {
                 e.stopPropagation();
                 
                 const productId = btn.dataset.productId;
-                const isActive = btn.classList.contains('product-card__wishlist--active');
+                const isActive = btn.classList.contains('product-card__wishlist--active') || 
+                               btn.classList.contains('active');
                 
                 this.toggleWishlist(btn, productId, isActive);
             });
@@ -540,23 +543,37 @@ class CatalogManager {
                 btn.style.transform = 'scale(1)';
             }, 200);
             
-            const url = isActive ? '/wishlist/remove/' : '/wishlist/add/';
+            const url = isActive ? `/wishlist/remove/${productId}/` : `/wishlist/add/${productId}/`;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json',
                     'X-CSRFToken': this.getCookie('csrftoken')
-                },
-                body: `product_id=${productId}`
+                }
             });
             
             const data = await response.json();
             
             if (data.success) {
-                btn.classList.toggle('product-card__wishlist--active');
-                const icon = btn.querySelector('.product-card__wishlist-icon');
-                if (icon) {
-                    icon.textContent = isActive ? '♡' : '♥';
+                // Оновлюємо стан кнопки для різних типів
+                if (btn.classList.contains('product-card__wishlist')) {
+                    btn.classList.toggle('product-card__wishlist--active');
+                    const icon = btn.querySelector('.product-card__wishlist-icon');
+                    if (icon) {
+                        icon.textContent = isActive ? '♡' : '♥';
+                    }
+                } else {
+                    btn.classList.toggle('active');
+                    // Оновлення іконки для інших типів кнопок
+                    const icon = btn.querySelector('.icon-heart');
+                    if (icon) {
+                        icon.textContent = isActive ? '♡' : '♥';
+                    }
+                }
+                
+                // Оновлюємо лічильники wishlist через глобальний wishlistManager
+                if (window.wishlistManager && window.wishlistManager.updateWishlistBadges) {
+                    window.wishlistManager.updateWishlistBadges(data.count);
                 }
                 
                 this.showToast(isActive ? 'Видалено з обраного' : 'Додано до обраного');
