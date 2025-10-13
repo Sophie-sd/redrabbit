@@ -6,6 +6,60 @@
 (function() {
     'use strict';
 
+    // Filters toggle functionality
+    function initFiltersToggle() {
+        const toggleBtn = document.getElementById('filtersToggleBtn');
+        const dropdown = document.getElementById('filtersDropdown');
+        const countSpan = document.getElementById('filtersCount');
+        
+        if (!toggleBtn || !dropdown) return;
+        
+        toggleBtn.addEventListener('click', function() {
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            
+            if (isExpanded) {
+                // Закриваємо
+                dropdown.classList.add('hidden');
+                this.setAttribute('aria-expanded', 'false');
+            } else {
+                // Відкриваємо
+                dropdown.classList.remove('hidden');
+                this.setAttribute('aria-expanded', 'true');
+            }
+        });
+        
+        // Закриття при кліку поза фільтрами
+        document.addEventListener('click', function(e) {
+            if (!toggleBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+                toggleBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+        
+        // Оновлення лічильника активних фільтрів
+        function updateFiltersCount() {
+            const activeFilters = dropdown.querySelectorAll('.filter-select, .price-range__input');
+            let count = 0;
+            
+            activeFilters.forEach(filter => {
+                if (filter.value && filter.value.trim() !== '') {
+                    count++;
+                }
+            });
+            
+            if (count > 0) {
+                countSpan.textContent = `(${count})`;
+                countSpan.classList.remove('hidden');
+            } else {
+                countSpan.classList.add('hidden');
+            }
+        }
+        
+        // Слухаємо зміни у фільтрах
+        dropdown.addEventListener('change', updateFiltersCount);
+        dropdown.addEventListener('input', updateFiltersCount);
+    }
+
     // Accordion toggles (для мобільного футера)
     function initAccordions() {
         const accordionToggles = document.querySelectorAll('[data-accordion-toggle]');
@@ -36,6 +90,51 @@
                 }
             });
         });
+    }
+
+    // Filter actions
+    function initFilterActions() {
+        const clearBtn = document.getElementById('clearFilters');
+        const applyBtn = document.getElementById('applyFilters');
+        
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function() {
+                // Очистити всі фільтри
+                const filters = document.querySelectorAll('.filter-select, .price-range__input');
+                filters.forEach(filter => {
+                    filter.value = '';
+                });
+                
+                // Очистити активні чіпи
+                const activeFiltersContainer = document.getElementById('activeFilters');
+                if (activeFiltersContainer) {
+                    activeFiltersContainer.innerHTML = '';
+                    activeFiltersContainer.classList.add('hidden');
+                }
+                
+                // Оновити лічильник
+                const countSpan = document.getElementById('filtersCount');
+                if (countSpan) {
+                    countSpan.classList.add('hidden');
+                }
+            });
+        }
+        
+        if (applyBtn) {
+            applyBtn.addEventListener('click', function() {
+                // Застосувати фільтри - тут можна додати логіку фільтрації
+                console.log('Applying filters...');
+                
+                // Закрити dropdown після застосування
+                const dropdown = document.getElementById('filtersDropdown');
+                const toggleBtn = document.getElementById('filtersToggleBtn');
+                
+                if (dropdown && toggleBtn) {
+                    dropdown.classList.add('hidden');
+                    toggleBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
     }
 
     // Cancel order handler
@@ -101,12 +200,16 @@
     // Ініціалізація при завантаженні DOM
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
+            initFiltersToggle();
+            initFilterActions();
             initAccordions();
             initCancelOrderButtons();
             initConfirmLinks();
             initAlertCloseButtons();
         });
     } else {
+        initFiltersToggle();
+        initFilterActions();
         initAccordions();
         initCancelOrderButtons();
         initConfirmLinks();

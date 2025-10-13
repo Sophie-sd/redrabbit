@@ -120,17 +120,14 @@
 }
 
 /* ============================================ */
-/*              ПАНЕЛЬ ФІЛЬТРІВ                */
+/*              КОМПАКТНІ ФІЛЬТРИ              */
 /* ============================================ */
 
 .filters-bar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
   background: var(--filters-bg);
   border-bottom: 1px solid var(--filters-border);
   box-shadow: var(--shadow-sm);
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-lg);
 }
 
 .filters-bar__container {
@@ -139,85 +136,157 @@
   justify-content: space-between;
   gap: var(--space-lg);
   padding: var(--space-md) 0;
-  min-height: var(--filters-height);
+  min-height: 60px;
 }
 
-.filters-bar__left {
-  display: flex;
-  align-items: center;
-  gap: var(--space-lg);
-  flex: 1;
-}
-
-.filters-bar__right {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-}
-
-/* Група фільтрів */
-.filter-group {
+/* Кнопка розкриття фільтрів */
+.filters-toggle__btn {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-}
-
-.filter-group__label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-gray-700);
-  white-space: nowrap;
-}
-
-.filter-group__control {
-  min-width: 140px;
-}
-
-/* Поля цін */
-.price-range {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
-.price-range__input {
-  width: 80px;
-  padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
-  transition: border-color var(--transition-fast);
-}
-
-.price-range__input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
-}
-
-.price-range__separator {
-  font-size: var(--font-size-sm);
-  color: var(--color-gray-500);
-}
-
-/* Селекти */
-.filter-select {
-  padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
+  padding: var(--space-sm) var(--space-lg);
   background: var(--color-white);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-lg);
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: border-color var(--transition-fast);
+  transition: all var(--transition-fast);
 }
 
-.filter-select:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+.filters-toggle__btn:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
 }
 
-/* Сортування */
+.filters-toggle__btn[aria-expanded="true"] {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.filters-toggle__btn[aria-expanded="true"] .filters-toggle__arrow {
+  transform: rotate(180deg);
+}
+
+.filters-toggle__icon,
+.filters-toggle__arrow {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--transition-fast);
+}
+
+.filters-toggle__count {
+  background: var(--color-white);
+  color: var(--color-primary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+}
+
+.filters-toggle__btn:hover .filters-toggle__count {
+  background: var(--color-primary-light);
+}
+
+/* Розкривна панель */
+.filters-dropdown {
+  background: var(--color-gray-50);
+  border-top: 1px solid var(--filters-border);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.filters-dropdown.hidden {
+  display: none;
+}
+
+.filters-dropdown__content {
+  padding: var(--space-lg) 0;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+/* Група фільтрів в dropdown */
+.filters-dropdown .filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.filters-dropdown .filter-group__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+}
+
+.filters-dropdown .filter-group__control {
+  min-width: auto;
+}
+
+/* Поля цін в dropdown */
+.filters-dropdown .price-range {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.filters-dropdown .price-range__input {
+  flex: 1;
+  width: auto;
+}
+
+/* Селекти в dropdown */
+.filters-dropdown .filter-select {
+  width: 100%;
+}
+
+/* Дії фільтрів в dropdown */
+.filters-dropdown .filters-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+}
+
+.filters-dropdown .filters-actions__clear {
+  padding: var(--space-sm) var(--space-xl);
+  background: transparent;
+  border: 2px solid var(--color-gray-400);
+  border-radius: var(--radius-md);
+  color: var(--color-gray-700);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.filters-dropdown .filters-actions__clear:hover {
+  border-color: var(--color-gray-600);
+  background: var(--color-gray-100);
+}
+
+.filters-dropdown .filters-actions__apply {
+  padding: var(--space-sm) var(--space-xl);
+  background: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  color: var(--color-white);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.filters-dropdown .filters-actions__apply:hover {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+/* Сортування (завжди видиме) */
 .sort-group {
   display: flex;
   align-items: center;
@@ -232,15 +301,16 @@
 }
 
 .sort-group__select {
-  min-width: 180px;
+  min-width: 200px;
 }
 
-/* Активні фільтри (чіпи) */
+/* Активні фільтри */
 .active-filters {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
-  margin-top: var(--space-md);
+  padding: var(--space-md) 0;
+  border-top: 1px solid var(--color-gray-200);
 }
 
 .filter-chip {
@@ -272,42 +342,40 @@
   background: rgba(173, 20, 87, 0.1);
 }
 
-/* Кнопки управління фільтрами */
-.filters-actions {
-  display: flex;
-  gap: var(--space-sm);
-}
-
-.filters-actions__clear {
+/* Загальні стилі для контролів */
+.filter-select {
   padding: var(--space-sm) var(--space-md);
-  background: transparent;
   border: 1px solid var(--color-gray-300);
   border-radius: var(--radius-sm);
-  color: var(--color-gray-700);
   font-size: var(--font-size-sm);
+  background: var(--color-white);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: border-color var(--transition-fast);
 }
 
-.filters-actions__clear:hover {
-  border-color: var(--color-gray-400);
-  background: var(--color-gray-50);
+.filter-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
 }
 
-.filters-actions__apply {
+.price-range__input {
   padding: var(--space-sm) var(--space-md);
-  background: var(--color-primary);
-  border: 1px solid var(--color-primary);
+  border: 1px solid var(--color-gray-300);
   border-radius: var(--radius-sm);
-  color: var(--color-white);
   font-size: var(--font-size-sm);
-  cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: border-color var(--transition-fast);
 }
 
-.filters-actions__apply:hover {
-  background: var(--color-primary-dark);
-  border-color: var(--color-primary-dark);
+.price-range__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+}
+
+.price-range__separator {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-500);
 }
 
 /* ============================================ */
@@ -1092,49 +1160,85 @@
 @media (max-width: 599px) {
   :root {
     --catalog-padding: var(--space-md);
-    --catalog-gap: var(--space-md);
+    --catalog-gap: 12px;
+    --product-card-max-width: 160px;
   }
   
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: var(--catalog-gap);
+    padding: 0 var(--space-sm);
   }
   
+  /* Мобільні фільтри */
   .filters-bar {
-    position: relative;
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-md);
   }
   
   .filters-bar__container {
     flex-direction: column;
     gap: var(--space-sm);
+    padding: var(--space-sm) 0;
+    min-height: auto;
+  }
+  
+  .filters-toggle__btn {
+    width: 100%;
+    justify-content: center;
     padding: var(--space-md);
   }
   
-  .filters-bar__left {
-    display: none; /* Приховуємо на мобільному, показуємо в модалці */
-  }
-  
-  .filters-bar__right {
+  .sort-group {
     width: 100%;
     justify-content: space-between;
   }
   
-  .sort-group {
-    flex: 1;
-  }
-  
   .sort-group__select {
-    width: 100%;
+    min-width: auto;
+    flex: 1;
+    margin-left: var(--space-sm);
   }
   
-  /* Показуємо мобільну кнопку фільтрів */
-  .mobile-filters-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  /* Мобільна панель фільтрів */
+  .filters-dropdown {
+    background: var(--color-white);
+    border: none;
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    max-height: 70vh;
+    overflow-y: auto;
   }
   
-  /* Мобільні розміри */
+  .filters-dropdown__content {
+    padding: var(--space-lg) var(--space-md);
+  }
+  
+  .filters-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+  
+  .filters-dropdown .filters-actions {
+    position: sticky;
+    bottom: 0;
+    background: var(--color-white);
+    padding: var(--space-md) 0 0;
+    margin: var(--space-md) calc(-1 * var(--space-md)) calc(-1 * var(--space-lg));
+    border-top: 1px solid var(--color-gray-200);
+  }
+  
+  .filters-dropdown .filters-actions__clear,
+  .filters-dropdown .filters-actions__apply {
+    flex: 1;
+    padding: var(--space-md);
+  }
+  
+  /* Мобільні розміри карток */
   .product-card__content {
     padding: var(--space-xs);
     gap: 2px;
