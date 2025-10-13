@@ -270,6 +270,11 @@
     border-top: 2px solid var(--gray-light);
 }
 
+.wishlist-actions .btn {
+    flex: 1;
+    text-align: center;
+}
+
 /* ==================== 
    Empty Wishlist
 ==================== */
