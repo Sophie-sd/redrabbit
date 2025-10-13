@@ -99,7 +99,7 @@ class WishlistManager {
             }
 
             // Видалення з wishlist (на сторінці wishlist)
-            const removeBtn = e.target.closest('.btn-remove-wishlist');
+            const removeBtn = e.target.closest('.product-card__remove-wishlist, .btn-remove-wishlist');
             if (removeBtn) {
                 e.preventDefault();
                 this.removeFromWishlist(removeBtn);
@@ -107,7 +107,7 @@ class WishlistManager {
 
             // Додавання в кошик зі списку бажань
             const addToCartBtn = e.target.closest('.btn-add-to-cart');
-            if (addToCartBtn && addToCartBtn.closest('.wishlist-item')) {
+            if (addToCartBtn && addToCartBtn.closest('.wishlist-item, .product-card')) {
                 e.preventDefault();
                 this.addToCartFromWishlist(addToCartBtn);
             }
@@ -164,7 +164,7 @@ class WishlistManager {
 
     async removeFromWishlist(button) {
         const productId = button.dataset.productId;
-        const wishlistItem = button.closest('.wishlist-item');
+        const wishlistItem = button.closest('.product-card');
 
         button.disabled = true;
 
@@ -184,13 +184,13 @@ class WishlistManager {
             if (data.success) {
                 // Анімація видалення
                 wishlistItem.style.opacity = '0';
-                wishlistItem.style.transform = 'translateX(-20px)';
+                wishlistItem.style.transform = 'translateY(-20px)';
                 
                 setTimeout(() => {
                     wishlistItem.remove();
                     
                     // Перевірка чи список порожній
-                    const remainingItems = document.querySelectorAll('.wishlist-item');
+                    const remainingItems = document.querySelectorAll('.wishlist-content .product-card');
                     if (remainingItems.length === 0) {
                         location.reload(); // Перезавантажуємо сторінку щоб показати "порожній" стан
                     }
