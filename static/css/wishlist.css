@@ -53,7 +53,10 @@
     gap: var(--spacing-xl);
 }
 
-/* Використовуємо ту ж сітку що й в каталозі */
+/* ==================== 
+   Wishlist Products Grid
+==================== */
+
 .wishlist-content .products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -94,29 +97,6 @@
     width: 16px;
     height: 16px;
     stroke: currentColor;
-}
-
-/* Статус наявності в стилі каталогу */
-.product-card__stock {
-    margin-top: var(--spacing-xs);
-}
-
-.stock-status {
-    padding: 0.25rem 0.75rem;
-    border-radius: var(--border-radius);
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-.stock-status--in {
-    background: rgba(34, 197, 94, 0.1);
-    color: #059669;
-}
-
-.stock-status--out {
-    background: rgba(239, 68, 68, 0.1);
-    color: #dc2626;
 }
 
 /* ==================== 
@@ -429,7 +409,7 @@
 ==================== */
 
 @supports (-webkit-touch-callout: none) {
-    .wishlist-item {
+    .product-card {
         -webkit-tap-highlight-color: transparent;
     }
 
@@ -438,7 +418,7 @@
     .btn-wishlist,
     .wishlist-btn,
     .product-card__wishlist,
-    .btn-remove-wishlist,
+    .product-card__remove-wishlist,
     .btn-add-to-cart {
         -webkit-tap-highlight-color: transparent;
         -webkit-touch-callout: none;
@@ -446,12 +426,13 @@
     }
 
     @media (hover: none) and (pointer: coarse) {
-        .wishlist-item:hover {
-            box-shadow: none;
-            border-color: var(--gray-light);
+        .product-card:hover {
+            box-shadow: var(--card-shadow);
+            transform: none;
+            border-color: var(--card-border);
         }
         
-        .wishlist-item:active {
+        .product-card:active {
             transform: scale(0.98);
         }
     }
@@ -462,7 +443,7 @@
 ==================== */
 
 @media (prefers-contrast: high) {
-    .wishlist-item {
+    .product-card {
         border-width: 2px;
     }
 
@@ -470,7 +451,8 @@
     .wishlist-toggle,
     .btn-wishlist,
     .wishlist-btn,
-    .product-card__wishlist {
+    .product-card__wishlist,
+    .product-card__remove-wishlist {
         border-width: 3px;
     }
 }
@@ -480,12 +462,13 @@
 ==================== */
 
 @media (prefers-reduced-motion: reduce) {
-    .wishlist-item,
+    .product-card,
     .btn-toggle-wishlist,
     .wishlist-toggle,
     .btn-wishlist,
     .wishlist-btn,
     .product-card__wishlist,
+    .product-card__remove-wishlist,
     .btn-add-to-cart,
     .notification {
         transition: none;
