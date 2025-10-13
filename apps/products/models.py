@@ -141,28 +141,28 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категорія')
     description = models.TextField('Опис', blank=True)
     
-    # Нові поля для фільтрації
-    brand = models.ForeignKey(
-        Brand, 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True, 
-        verbose_name='Бренд'
-    )
-    product_group = models.ForeignKey(
-        ProductGroup, 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True, 
-        verbose_name='Група товару'
-    )
-    purpose = models.ForeignKey(
-        ProductPurpose, 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True, 
-        verbose_name='Призначення'
-    )
+    # ТИМЧАСОВО ЗАКОМЕНТОВАНО - додамо після міграції
+    # brand = models.ForeignKey(
+    #     Brand, 
+    #     on_delete=models.SET_NULL, 
+    #     null=True, 
+    #     blank=True, 
+    #     verbose_name='Бренд'
+    # )
+    # product_group = models.ForeignKey(
+    #     ProductGroup, 
+    #     on_delete=models.SET_NULL, 
+    #     null=True, 
+    #     blank=True, 
+    #     verbose_name='Група товару'
+    # )
+    # purpose = models.ForeignKey(
+    #     ProductPurpose, 
+    #     on_delete=models.SET_NULL, 
+    #     null=True, 
+    #     blank=True, 
+    #     verbose_name='Призначення'
+    # )
     
     # Ціни
     retail_price = models.DecimalField('Роздрібна ціна', max_digits=10, decimal_places=2)
