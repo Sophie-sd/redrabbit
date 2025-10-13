@@ -151,6 +151,7 @@
   height: fit-content;
   max-height: calc(100vh - var(--space-xl));
   overflow-y: auto;
+  margin-bottom: var(--space-xxxl); /* Додаємо відступ від футера */
 }
 
 .filters-panel {
@@ -256,28 +257,31 @@
 .price-range-filter {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--space-xs); /* Зменшено відстань */
   padding: var(--space-md) var(--space-lg);
 }
 
 .price-input {
   flex: 1;
-  padding: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm); /* Зменшено padding */
   border: 1px solid var(--color-gray-300);
   border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs); /* Зменшено шрифт */
   text-align: center;
+  width: 60px; /* Фіксована ширина */
+  max-width: 60px;
 }
 
 .price-input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+  box-shadow: 0 0 0 2px rgba(233, 30, 99, 0.1); /* Зменшено тінь */
 }
 
 .price-separator {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--color-gray-500);
+  margin: 0 2px; /* Мінімальний відступ */
 }
 
 /* ============================================ */
@@ -305,7 +309,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--space-md) var(--space-lg); /* Збільшено для кращої видимості */
   background: var(--color-primary);
   border: none;
   border-radius: var(--radius-md);
@@ -314,6 +318,8 @@
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: all var(--transition-fast);
+  min-height: 44px; /* Мінімальна висота для зручності */
+  white-space: nowrap; /* Запобігаємо перенесенню тексту */
 }
 
 .mobile-filters-btn:hover {
@@ -322,8 +328,9 @@
 }
 
 .btn-icon {
-  width: 16px;
-  height: 16px;
+  width: 18px; /* Збільшено іконку */
+  height: 18px;
+  flex-shrink: 0; /* Не дозволяємо іконці стискатися */
 }
 
 .filters-count {
@@ -337,6 +344,8 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
+  flex: 1; /* Займає решту простору */
+  justify-content: flex-end; /* Вирівнювання праворуч */
 }
 
 .sort-label {
@@ -347,13 +356,14 @@
 }
 
 .sort-select {
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--space-md) var(--space-lg); /* Збільшено для симетрії з кнопкою */
   border: 1px solid var(--color-gray-300);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
   background: var(--color-white);
   cursor: pointer;
-  min-width: 200px;
+  min-width: 180px;
+  min-height: 44px; /* Однакова висота з кнопкою */
 }
 
 .sort-select:focus {
@@ -620,49 +630,6 @@
 .price-range__separator {
   font-size: var(--font-size-sm);
   color: var(--color-gray-500);
-}
-
-/* ============================================ */
-/*              СТАТИСТИКА                     */
-/* ============================================ */
-
-.catalog-stats {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-lg);
-  padding: var(--space-md) 0;
-  border-bottom: 1px solid var(--color-gray-200);
-}
-
-.catalog-stats__info {
-  font-size: var(--font-size-sm);
-  color: var(--color-gray-600);
-}
-
-.catalog-stats__view-toggle {
-  display: flex;
-  gap: var(--space-sm);
-}
-
-.view-toggle__btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: transparent;
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.view-toggle__btn:hover,
-.view-toggle__btn--active {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: var(--color-white);
 }
 
 /* ============================================ */
@@ -1404,6 +1371,10 @@
     --product-card-max-width: 160px;
   }
   
+  .catalog-container {
+    padding: 0 var(--space-sm); /* Зменшено відступи на мобільному */
+  }
+  
   /* Змінюємо layout на мобільному */
   .catalog-layout {
     display: block; /* Відміняємо grid */
@@ -1437,13 +1408,14 @@
   
   /* Показуємо мобільні контроли */
   .mobile-controls {
-    display: flex;
+    display: flex !important; /* Форсуємо показ на мобільному */
   }
   
   /* Стилізуємо кнопки в одну лінію */
   .mobile-filters-btn {
     flex: 0 0 auto;
-    padding: var(--space-sm) var(--space-md);
+    padding: var(--space-md) var(--space-lg); /* Збільшено для кращої видимості */
+    font-size: var(--font-size-base); /* Збільшено для кращої читабельності */
   }
   
   .sort-control {
@@ -1459,6 +1431,7 @@
     min-width: auto;
     flex: 1;
     max-width: 180px;
+    font-size: var(--font-size-base); /* Збільшено для кращої читабельності */
   }
   
   .products-grid {
@@ -1469,7 +1442,7 @@
   
   /* Заголовок каталогу */
   .catalog-header {
-    margin: var(--space-md) 0;
+    margin: var(--space-lg) 0; /* Збільшено відступ */
     text-align: left;
     padding: 0 var(--space-sm);
   }

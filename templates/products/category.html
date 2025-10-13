@@ -157,39 +157,11 @@
                     </select>
                 </div>
             </div>
-        
-        <!-- Мобільна кнопка фільтрів -->
-        <button class="mobile-filters-btn" id="mobileFiltersBtn" aria-label="Відкрити фільтри">
-            <span class="mobile-filters-btn__icon">⚙️</span>
-            <span class="mobile-filters-btn__text">Фільтри</span>
-        </button>
-        
-        <!-- Статистика та перемикач видів -->
-        <div class="catalog-stats">
-            <div class="catalog-stats__info">
-                <span id="resultsCount">Показано {{ products|length }} з {{ products|length }} товарів</span>
+            
+            <!-- Активні фільтри -->
+            <div class="active-filters hidden" id="activeFilters">
+                <!-- Динамічно додаються JS -->
             </div>
-            <div class="catalog-stats__view-toggle">
-                <button 
-                    type="button" 
-                    class="view-toggle__btn view-toggle__btn--active" 
-                    data-view="grid"
-                    aria-label="Сітка товарів"
-                    title="Сітка"
-                >
-                    ⊞
-                </button>
-                <button 
-                    type="button" 
-                    class="view-toggle__btn" 
-                    data-view="list"
-                    aria-label="Список товарів"
-                    title="Список"
-                >
-                    ☰
-                </button>
-            </div>
-        </div>
         
         <!-- Сітка товарів або порожній стан -->
         {% if products %}

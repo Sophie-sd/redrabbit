@@ -22,7 +22,6 @@ class CatalogManager {
         this.initMobileFilters();
         this.initWishlist();
         this.initCartActions();
-        this.initViewToggle();
         this.initPagination();
     }
     
@@ -527,29 +526,6 @@ class CatalogManager {
             this.showToast('Помилка додавання до кошика', 'error');
         } finally {
             btn.classList.remove('product-card__add-cart--loading');
-        }
-    }
-    
-    // Перемикач видів
-    initViewToggle() {
-        const viewToggleBtns = document.querySelectorAll('.view-toggle__btn');
-        
-        viewToggleBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const view = btn.dataset.view;
-                
-                viewToggleBtns.forEach(b => b.classList.remove('view-toggle__btn--active'));
-                btn.classList.add('view-toggle__btn--active');
-                
-                this.switchView(view);
-            });
-        });
-    }
-    
-    switchView(view) {
-        if (this.productsGrid) {
-            this.productsGrid.classList.remove('products-grid--list', 'products-grid--grid');
-            this.productsGrid.classList.add(`products-grid--${view}`);
         }
     }
     
