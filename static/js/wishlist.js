@@ -247,15 +247,25 @@ class WishlistManager {
 
         // Оновлюємо всі badge елементи
         document.querySelectorAll('.wishlist-link .badge').forEach(badge => {
-            badge.textContent = count || 0;
-            badge.style.display = count > 0 ? 'flex' : 'none';
+            if (count > 0) {
+                badge.textContent = count;
+                badge.classList.remove('badge-hidden');
+            } else {
+                badge.textContent = '';
+                badge.classList.add('badge-hidden');
+            }
         });
 
         // Оновлюємо mobile navigation badge
         document.querySelectorAll('.nav-item .nav-badge').forEach(badge => {
             if (badge.closest('.nav-item')?.href?.includes('wishlist')) {
-                badge.textContent = count || 0;
-                badge.style.display = count > 0 ? 'flex' : 'none';
+                if (count > 0) {
+                    badge.textContent = count;
+                    badge.classList.remove('nav-badge-hidden');
+                } else {
+                    badge.textContent = '';
+                    badge.classList.add('nav-badge-hidden');
+                }
             }
         });
     }

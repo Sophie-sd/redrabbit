@@ -55,6 +55,10 @@
     text-align: center;
 }
 
+.mobile-bottom-nav .nav-badge-hidden {
+    display: none;
+}
+
 /* Мобільний футер */
 .mobile-footer {
     display: none;
