@@ -193,9 +193,15 @@
         </div>
         
         <!-- Кнопка "Переглянути всі" -->
-        <a href="{% url 'products:sale' %}" class="view-all-promo-btn">
-            Переглянути всі
-        </a>
+        <div class="promotions-actions">
+            <a href="{% url 'products:sale' %}" class="promo-view-all">
+                Переглянути всі
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+        </div>
         {% else %}
             <p class="text-center text-muted">Наразі немає акційних пропозицій</p>
         {% endif %}
@@ -268,9 +274,15 @@
         </div>
         
         <!-- Кнопка "Переглянути всі" -->
-        <a href="{% url 'products:sale' %}" class="view-all-promo-btn">
-            Переглянути всі
-        </a>
+        <div class="promotions-actions">
+            <a href="{% url 'products:sale' %}" class="promo-view-all">
+                Переглянути всі
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+        </div>
         {% else %}
             <p class="text-center text-muted">Наразі немає акційних пропозицій</p>
         {% endif %}
