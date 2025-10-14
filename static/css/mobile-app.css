@@ -419,13 +419,12 @@
     
     /* Ховаємо елементи header на мобільних */
     .top-bar,
-    .desktop-actions,
     .main-nav,
     .desktop-nav {
         display: none;
     }
     
-    /* Спрощений header для мобільних - тільки логотип і пошук */
+    /* Спрощений header для мобільних - тільки логотип та кнопка пошуку */
     .main-header {
         padding: 8px 0;
     }
@@ -444,67 +443,6 @@
     .logo-img {
         max-width: 70px;
         height: auto;
-    }
-    
-    /* Мобільний пошук */
-    .search-container {
-        display: block;
-        flex: 1;
-    }
-    
-    .search-form {
-        width: 100%;
-    }
-    
-    .search-input-group {
-        display: flex;
-        width: 100%;
-    }
-    
-    .search-input {
-        flex: 1;
-        padding: 8px 12px;
-        font-size: 13px;
-        border: 1px solid #ddd;
-        border-radius: 6px 0 0 6px;
-        outline: none;
-        transition: border-color 0.3s ease;
-    }
-    
-    .search-input:focus {
-        border-color: #e91e63;
-    }
-    
-    .search-input::placeholder {
-        color: #999;
-        font-size: 13px;
-    }
-    
-    .search-btn {
-        padding: 8px 12px;
-        background: #e91e63;
-        border: none;
-        border-radius: 0 6px 6px 0;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background 0.3s ease;
-        flex-shrink: 0;
-    }
-    
-    .search-btn:hover {
-        background: #c2185b;
-    }
-    
-    .search-btn:active {
-        background: #a1174e;
-    }
-    
-    .search-icon {
-        width: 18px;
-        height: 18px;
-        color: white;
     }
     
     /* Ховаємо мобільне меню overlay */

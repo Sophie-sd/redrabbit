@@ -1,7 +1,11 @@
 /* Мобільний пошук - стилі для функціоналу пошуку в хедері */
 
-/* Приховати десктопні дії на мобільних */
-@media (max-width: 768px) {
+/* Десктопні дії - показувати тільки на великих екранах */
+.desktop-actions {
+    display: flex;
+}
+
+@media (max-width: 767.98px) {
     .desktop-actions {
         display: none;
     }
@@ -11,12 +15,12 @@
     }
 }
 
-/* Мобільні дії в хедері */
+/* Мобільні дії - показувати тільки на мобільних */
 .mobile-actions {
     display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
     .mobile-actions {
         display: flex;
         align-items: center;
