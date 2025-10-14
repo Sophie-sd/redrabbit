@@ -428,7 +428,7 @@
     .btn {
         font-size: 1rem;
         padding: var(--spacing-md) var(--spacing-lg);
-        min-height: 48px;
+        min-height: 25px;
     }
     
     .card-body {
