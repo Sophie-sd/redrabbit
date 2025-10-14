@@ -50,7 +50,7 @@
 
 /* Картка акційного товару */
 .promo-card {
-    flex: 0 0 280px;
+    flex: 0 0 270px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
@@ -67,7 +67,7 @@
 .promo-image {
     position: relative;
     width: 100%;
-    height: 280px;
+    height: 270px;
     overflow: hidden;
     background: #f8f9fa;
 }
@@ -223,7 +223,43 @@
     height: 24px;
 }
 
+/* Кнопка "Переглянути всі" */
+.view-all-promo-btn {
+    display: block;
+    margin: 30px auto 0;
+    padding: 12px 30px;
+    background: transparent;
+    border: 2px solid #e91e63;
+    color: #e91e63;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+    max-width: 250px;
+}
+
+.view-all-promo-btn:hover {
+    background: #e91e63;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+}
+
 /* Адаптивність */
+@media (min-width: 769px) {
+    /* Десктоп: показуємо 4 картки одночасно */
+    .promotions-slider-container {
+        max-width: 1200px;
+    }
+    
+    .promo-card {
+        flex: 0 0 calc(25% - 15px); /* 4 картки */
+    }
+}
+
 @media (max-width: 768px) {
     /* Показуємо мобільний блок, ховаємо десктопний */
     .promotions-section.mobile-only {
@@ -257,63 +293,13 @@
         padding: 5px 0 15px;
     }
     
+    /* Мобільна: 2 картки на екрані */
     .promo-card {
-        flex: 0 0 240px;
+        flex: 0 0 calc(50% - 7.5px);
     }
     
     .promo-image {
-        height: 240px;
-    }
-    
-    .promo-content {
-        padding: 15px;
-    }
-    
-    .promo-name {
-        font-size: 1rem;
-        margin-bottom: 12px;
-    }
-    
-    .promo-price {
-        gap: 10px;
-        margin-bottom: 15px;
-    }
-    
-    .promo-price .price-old {
-        font-size: 0.9rem;
-    }
-    
-    .promo-price .price-new {
-        font-size: 1.3rem;
-    }
-    
-    .promo-badge {
-        padding: 6px 12px;
-        font-size: 0.9rem;
-    }
-    
-    .promo-nav-btn {
-        width: 35px;
-        height: 35px;
-    }
-    
-    .promo-nav-btn svg {
-        width: 20px;
-        height: 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    .promotions-slider-container {
-        padding: 0 40px;
-    }
-    
-    .promo-card {
-        flex: 0 0 200px;
-    }
-    
-    .promo-image {
-        height: 200px;
+        height: 180px;
     }
     
     .promo-content {
@@ -325,17 +311,67 @@
         margin-bottom: 10px;
     }
     
+    .promo-price {
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+    
     .promo-price .price-old {
         font-size: 0.85rem;
     }
     
     .promo-price .price-new {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
+    }
+    
+    .promo-badge {
+        padding: 5px 10px;
+        font-size: 0.85rem;
+    }
+    
+    .promo-nav-btn {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .promo-nav-btn svg {
+        width: 20px;
+        height: 20px;
     }
     
     .promo-content .btn {
         padding: 10px;
+        font-size: 0.85rem;
+    }
+    
+    .view-all-promo-btn {
+        padding: 10px 25px;
         font-size: 0.9rem;
+        max-width: 200px;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .promotions-slider-container {
+        padding: 0 40px;
+    }
+    
+    /* Мобільна: 2 картки на екрані */
+    .promo-card {
+        flex: 0 0 calc(50% - 7.5px);
+    }
+    
+    .promo-image {
+        height: 160px;
+    }
+    
+    .promo-name {
+        font-size: 0.85rem;
+    }
+    
+    .promo-price .price-new {
+        font-size: 1rem;
     }
 }
 

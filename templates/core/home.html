@@ -191,6 +191,11 @@
                 </svg>
             </button>
         </div>
+        
+        <!-- Кнопка "Переглянути всі" -->
+        <a href="{% url 'products:sale' %}" class="view-all-promo-btn">
+            Переглянути всі
+        </a>
         {% else %}
             <p class="text-center text-muted">Наразі немає акційних пропозицій</p>
         {% endif %}
@@ -261,6 +266,11 @@
                 </svg>
             </button>
         </div>
+        
+        <!-- Кнопка "Переглянути всі" -->
+        <a href="{% url 'products:sale' %}" class="view-all-promo-btn">
+            Переглянути всі
+        </a>
         {% else %}
             <p class="text-center text-muted">Наразі немає акційних пропозицій</p>
         {% endif %}
