@@ -33,22 +33,20 @@
                 <article class="product-card{% if not product.is_in_stock %} product-card--out-of-stock{% endif %}" data-product-id="{{ product.id }}">
                     <!-- Медіаблок -->
                     <div class="product-card__media">
-                        <a href="{{ product.get_absolute_url }}" aria-label="Переглянути {{ product.name }}">
-                            {% if product.main_image %}
-                                <img 
-                                    src="{{ product.main_image.url }}" 
-                                    alt="{{ product.name }}" 
-                                    class="product-card__image"
-                                    loading="lazy"
-                                    width="300"
-                                    height="300"
-                                >
-                            {% else %}
-                                <div class="product-card__placeholder" aria-label="Зображення товару відсутнє">
-                                    📦
-                                </div>
-                            {% endif %}
-                        </a>
+                        {% if product.main_image %}
+                            <img 
+                                src="{{ product.main_image.image.url }}" 
+                                alt="{{ product.name }}" 
+                                class="product-card__image"
+                                loading="lazy"
+                                width="300"
+                                height="300"
+                            >
+                        {% else %}
+                            <div class="product-card__placeholder" aria-label="Зображення товару відсутнє">
+                                📦
+                            </div>
+                        {% endif %}
                         
                         <!-- Кнопка видалення з обраного -->
                         <button 
