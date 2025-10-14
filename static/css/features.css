@@ -57,6 +57,7 @@
 .feature-content {
     flex: 1;
     min-width: 0;
+    text-align: center;
 }
 
 .feature-title {
@@ -68,6 +69,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: center;
 }
 
 .feature-item:hover .feature-title {
@@ -140,11 +142,13 @@
     .feature-title {
         font-size: 0.95em;
         white-space: normal;
+        text-align: center;
     }
     
     .feature-description {
         font-size: 0.8em;
         white-space: normal;
+        text-align: center;
     }
 }
 
@@ -167,10 +171,12 @@
     .feature-title {
         font-size: 0.9em;
         margin-bottom: 2px;
+        text-align: center;
     }
     
     .feature-description {
         font-size: 0.75em;
+        text-align: center;
     }
 }
 

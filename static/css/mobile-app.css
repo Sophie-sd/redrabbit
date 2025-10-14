@@ -456,12 +456,6 @@
         display: none;
     }
     
-    /* Центруємо текст у features */
-    .feature-description {
-        text-align: center;
-    }
-    
-    
     /* Додаємо відступ знизу для контенту */
     body {
         padding-bottom: calc(60px + env(safe-area-inset-bottom));
