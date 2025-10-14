@@ -20,6 +20,8 @@
     --info: #17A2B8;
     --font-primary: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-heading: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-special-heading: 'Rubik Doodle Shadow', 'Montserrat', sans-serif;
+    --font-subtitle: 'Lobster', Georgia, serif;
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;
     --spacing-md: 1rem;
