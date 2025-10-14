@@ -2,14 +2,18 @@
 .banner-slider-section {
     position: relative;
     width: 100%;
-    height: 500px;
+    height: 400px;
     overflow: hidden;
+    padding: 0 20px;
 }
 
 .banner-slider-container {
     position: relative;
-    width: 100%;
+    max-width: 1200px;
     height: 100%;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 .banner-slider {
@@ -148,15 +152,9 @@
 }
 
 /* Slider Responsive */
-@media (min-width: 1025px) {
+@media (max-width: 1024px) {
     .banner-slider-section {
-        height: 500px;
-    }
-}
-
-@media (max-width: 1024px) and (min-width: 769px) {
-    .banner-slider-section {
-        height: 400px;
+        height: 300px;
     }
     
     .banner-nav {
