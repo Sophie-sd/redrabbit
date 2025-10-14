@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import (
     Category, Product, ProductImage, ProductAttribute, 
-    RecommendedProduct, PromotionProduct, ProductTag,
+    NewProduct, PromotionProduct, ProductTag,
     Brand, ProductGroup, ProductPurpose
 )
 from .forms import ProductAdminForm
@@ -125,6 +125,9 @@ class ProductAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_at'
     list_per_page = 50
     save_on_top = True
+    
+    # Додаємо autocomplete для швидкого пошуку товарів в інших адмінках
+    autocomplete_fields = []
     
     inlines = [ProductImageInline, ProductAttributeInline]
     
@@ -271,32 +274,56 @@ class ProductAdmin(admin.ModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
-@admin.register(RecommendedProduct)
-class RecommendedProductAdmin(admin.ModelAdmin):
-    """Адміністрування рекомендованих товарів на головній сторінці"""
+@admin.register(NewProduct)
+class NewProductAdmin(admin.ModelAdmin):
+    """Адміністрування новинок на головній сторінці"""
     
-    list_display = ['product', 'sort_order', 'is_active', 'created_at']
+    list_display = ['product', 'get_is_new_status', 'sort_order', 'is_active', 'created_at']
     list_filter = ['is_active', 'created_at']
-    search_fields = ['product__name']
+    search_fields = ['product__name', 'product__sku']
     list_editable = ['sort_order', 'is_active']
     ordering = ['sort_order', '-created_at']
+    autocomplete_fields = ['product']
     
-    def get_queryset(self, request):
-        """Обмежуємо список 10 товарами"""
-        qs = super().get_queryset(request)
-        return qs[:10]
+    fieldsets = (
+        (None, {
+            'fields': ('product', 'sort_order', 'is_active'),
+            'description': '✨ Додайте товар в блок "Новинки" на головній сторінці. Товар автоматично отримає статус "Новинка".'
+        }),
+    )
     
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        """Налаштування падаючого списку для товарів"""
-        if db_field.name == "product":
-            kwargs["queryset"] = Product.objects.filter(is_active=True).order_by('name')
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    def get_is_new_status(self, obj):
+        """Відображення статусу is_new товару"""
+        if obj.product.is_new:
+            return format_html('<span style="color: green;">✅ Новинка</span>')
+        return format_html('<span style="color: red;">❌ Не новинка</span>')
+    get_is_new_status.short_description = 'Статус NEW'
     
-    def has_add_permission(self, request):
-        """Обмежуємо кількість рекомендованих товарів до 10"""
-        if RecommendedProduct.objects.count() >= 10:
-            return False
-        return super().has_add_permission(request)
+    def save_model(self, request, obj, form, change):
+        """При збереженні встановлюємо is_new=True для товару"""
+        super().save_model(request, obj, form, change)
+        if not obj.product.is_new:
+            obj.product.is_new = True
+            obj.product.save(update_fields=['is_new'])
+        self.message_user(request, f'✅ Товар "{obj.product.name}" додано в новинки і позначено статусом NEW')
+    
+    def delete_model(self, request, obj):
+        """При видаленні знімаємо is_new з товару"""
+        product_name = obj.product.name
+        obj.product.is_new = False
+        obj.product.save(update_fields=['is_new'])
+        super().delete_model(request, obj)
+        self.message_user(request, f'❌ Товар "{product_name}" видалено з новинок і знято статус NEW')
+    
+    def delete_queryset(self, request, queryset):
+        """При масовому видаленні знімаємо is_new з товарів"""
+        products = [obj.product for obj in queryset]
+        for product in products:
+            product.is_new = False
+            product.save(update_fields=['is_new'])
+        count = len(products)
+        super().delete_queryset(request, queryset)
+        self.message_user(request, f'❌ З {count} товарів знято статус NEW')
 
 
 @admin.register(PromotionProduct)

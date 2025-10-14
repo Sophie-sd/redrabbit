@@ -456,26 +456,39 @@ class ProductAttribute(models.Model):
         return f"{self.name}: {self.value}"
 
 
-class RecommendedProduct(models.Model):
-    """Рекомендовані товари на головній сторінці"""
+class NewProduct(models.Model):
+    """Новинки на головній сторінці"""
     
-    product = models.ForeignKey(
+    product = models.OneToOneField(
         Product, 
         on_delete=models.CASCADE, 
         verbose_name='Товар',
-        limit_choices_to={'is_active': True}
+        limit_choices_to={'is_active': True},
+        related_name='new_product_entry'
     )
     sort_order = models.PositiveIntegerField('Порядок відображення', default=0)
     is_active = models.BooleanField('Активний', default=True)
     created_at = models.DateTimeField('Додано', auto_now_add=True)
     
     class Meta:
-        verbose_name = 'Рекомендований товар'
-        verbose_name_plural = 'Рекомендовані товари'
+        verbose_name = 'Новинка'
+        verbose_name_plural = 'Новинки'
         ordering = ['sort_order', '-created_at']
     
     def __str__(self):
         return f"{self.product.name} (позиція {self.sort_order})"
+    
+    def save(self, *args, **kwargs):
+        """При збереженні автоматично встановлюємо is_new=True для товару"""
+        super().save(*args, **kwargs)
+        if not self.product.is_new:
+            Product.objects.filter(pk=self.product.pk).update(is_new=True)
+    
+    def delete(self, *args, **kwargs):
+        """При видаленні знімаємо is_new з товару"""
+        product_id = self.product.pk
+        super().delete(*args, **kwargs)
+        Product.objects.filter(pk=product_id).update(is_new=False)
 
 
 class PromotionProduct(models.Model):

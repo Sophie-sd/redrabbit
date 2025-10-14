@@ -326,13 +326,13 @@
     </div>
 </section>
 
-<!-- 4. Recommended Products Section -->
-<section class="recommended-section section-padding bg-light" aria-label="Рекомендовані товари">
+<!-- 4. New Products Section (Новинки) -->
+<section class="new-products-section section-padding bg-light" aria-label="Новинки">
     <div class="container">
         <div class="section-header text-center">
-            <h2 class="section-title">Рекомендовані товари</h2>
+            <h2 class="section-title">Новинки</h2>
             <p class="section-subtitle">
-                Найкращі товари для професійного використання
+                Найсвіжіші надходження косметики та інструментів
             </p>
         </div>
         
@@ -344,7 +344,7 @@
             </button>
             
             <div class="recommended-slider" id="recommendedSlider">
-                {% for product in recommended_products %}
+                {% for product in new_products %}
                     <div class="product-card card fade-in">
                         <div class="product-image">
                             <a href="{{ product.get_absolute_url }}">
@@ -427,7 +427,7 @@
                     </div>
                 {% empty %}
                     <div class="text-center">
-                        <p class="text-muted">Рекомендовані товари завантажуються...</p>
+                        <p class="text-muted">Новинки завантажуються...</p>
                     </div>
                 {% endfor %}
             </div>

@@ -4,7 +4,7 @@ Core Views - основні представлення сайту
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.db.models import Q
-from apps.products.models import Product, Category, RecommendedProduct, PromotionProduct
+from apps.products.models import Product, Category, NewProduct, PromotionProduct
 from apps.blog.models import Article
 from .models import Banner
 
@@ -19,21 +19,24 @@ class HomeView(TemplateView):
         # Отримуємо активні банери
         banners = Banner.objects.filter(is_active=True).order_by('order', '-created_at')
         
-        # Отримуємо рекомендовані товари
-        recommended_products = RecommendedProduct.objects.filter(
+        # Отримуємо новинки
+        # 1. Товари з is_new=True (автоматично)
+        # 2. Товари додані вручну через NewProduct
+        new_products = NewProduct.objects.filter(
             is_active=True,
-            product__is_active=True
-        ).select_related('product')[:10]
+            product__is_active=True,
+            product__is_new=True
+        ).select_related('product').prefetch_related('product__images')[:12]
         
         # Отримуємо акційні пропозиції
         promotion_products = PromotionProduct.objects.filter(
             is_active=True,
             product__is_active=True
-        ).select_related('product__category')[:20]
+        ).select_related('product__category').prefetch_related('product__images')[:20]
         
         context.update({
             'banners': banners,
-            'recommended_products': [rp.product for rp in recommended_products],
+            'new_products': [np.product for np in new_products],
             'promotion_products': promotion_products,
             'categories': Category.objects.filter(parent=None, is_active=True).order_by('sort_order', 'name'),
         })
