@@ -51,3 +51,17 @@ class SaleProductsView(ListView):
             Q(is_sale=True) | Q(id__in=promo_product_ids),
             is_active=True
         ).prefetch_related('images').distinct().order_by('-created_at')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        from .models import PromotionProduct
+        
+        # Створюємо словник з PromotionProduct для швидкого доступу
+        promo_products = PromotionProduct.objects.filter(
+            is_active=True
+        ).select_related('product')
+        
+        promo_dict = {pp.product_id: pp for pp in promo_products}
+        context['promo_dict'] = promo_dict
+        
+        return context
