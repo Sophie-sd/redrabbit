@@ -253,18 +253,7 @@
         flex-shrink: 0;
     }
     
-    .header-actions {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-sm);
-        flex-shrink: 0;
-    }
-    
     .search-container {
-        display: none;
-    }
-    
-    .wishlist-link {
         display: none;
     }
     
