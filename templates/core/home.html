@@ -70,9 +70,48 @@
     </div>
 </div>
 
-<!-- Mobile Catalog Button -->
-<div class="mobile-catalog-btn">
-    <a href="{% url 'core:catalog' %}" class="btn">Переглянути каталог</a>
+<!-- Mobile Categories Section -->
+<div class="mobile-categories-container">
+    <div class="categories-circular-container">
+        <div class="categories-circular-grid">
+            {% for category in categories %}
+                {% if category.name != 'Акційні товари' %}
+                    <a href="{{ category.get_absolute_url }}" class="category-circular-item">
+                        <div class="category-circular-image-container">
+                            {% if category.image %}
+                                <img src="{{ category.image.url }}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                            {% else %}
+                                {% if category.name == 'Нігті' %}
+                                    <img src="{% static 'images/nails_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                {% elif category.name == 'Волосся' %}
+                                    <img src="{% static 'images/hair_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                {% elif category.name == 'Брови та вії' %}
+                                    <img src="{% static 'images/brovy_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                {% elif category.name == 'Депіляція' %}
+                                    <img src="{% static 'images/depilacia_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                {% elif category.name == 'Косметика' %}
+                                    <img src="{% static 'images/cosmetyka_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                {% elif category.name == 'Макіяж' %}
+                                    <img src="{% static 'images/makeup_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                {% elif category.name == 'Одноразова продукція' %}
+                                    <img src="{% static 'images/odnorazova_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                {% elif category.name == 'Дезінфекція та стерилізація' %}
+                                    <img src="{% static 'images/dezynfectsia_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                {% elif category.name == 'Меблі для салонів' %}
+                                    <img src="{% static 'images/mebly_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        <h3 class="category-circular-name">{{ category.name }}</h3>
+                    </a>
+                {% endif %}
+            {% empty %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">Категорії завантажуються...</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 
 <!-- Mobile Promotions Section (показується тільки на мобільних) -->
@@ -155,55 +194,45 @@
             </p>
         </div>
         
-        <div class="categories-grid">
-            {% for category in categories %}
-                <div class="category-card card fade-in{% if category.name == 'Акційні товари' %} category-featured{% endif %}">
-                    {% if category.name == 'Акційні товари' %}
-                        <a href="{% url 'products:sale' %}" class="category-link">
-                    {% else %}
-                        <a href="{{ category.get_absolute_url }}" class="category-link">
-                    {% endif %}
-                        <div class="category-image">
-                            {% if category.image %}
-                                <img src="{{ category.image.url }}" alt="{{ category.name }}" loading="lazy">
-                            {% else %}
-                                {% if category.name == 'Акційні товари' %}
-                                    <img src="{% static 'images/sale_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
-                                {% elif category.name == 'Нігті' %}
-                                    <img src="{% static 'images/nails_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
-                                {% elif category.name == 'Волосся' %}
-                                    <img src="{% static 'images/hair_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
-                                {% elif category.name == 'Брови та вії' %}
-                                    <img src="{% static 'images/brovy_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
-                                {% elif category.name == 'Депіляція' %}
-                                    <img src="{% static 'images/depilacia_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
-                                {% elif category.name == 'Косметика' %}
-                                    <img src="{% static 'images/cosmetyka_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
-                                {% elif category.name == 'Макіяж' %}
-                                    <img src="{% static 'images/makeup_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
-                                {% elif category.name == 'Одноразова продукція' %}
-                                    <img src="{% static 'images/odnorazova_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
-                                {% elif category.name == 'Дезінфекція та стерилізація' %}
-                                    <img src="{% static 'images/dezynfectsia_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
-                                {% elif category.name == 'Меблі для салонів' %}
-                                    <img src="{% static 'images/mebly_category.jpg' %}" alt="{{ category.name }}" loading="lazy">
+        <div class="categories-circular-container">
+            <div class="categories-circular-grid">
+                {% for category in categories %}
+                    {% if category.name != 'Акційні товари' %}
+                        <a href="{{ category.get_absolute_url }}" class="category-circular-item">
+                            <div class="category-circular-image-container">
+                                {% if category.image %}
+                                    <img src="{{ category.image.url }}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                {% else %}
+                                    {% if category.name == 'Нігті' %}
+                                        <img src="{% static 'images/nails_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                    {% elif category.name == 'Волосся' %}
+                                        <img src="{% static 'images/hair_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                    {% elif category.name == 'Брови та вії' %}
+                                        <img src="{% static 'images/brovy_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                    {% elif category.name == 'Депіляція' %}
+                                        <img src="{% static 'images/depilacia_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                    {% elif category.name == 'Косметика' %}
+                                        <img src="{% static 'images/cosmetyka_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                    {% elif category.name == 'Макіяж' %}
+                                        <img src="{% static 'images/makeup_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                    {% elif category.name == 'Одноразова продукція' %}
+                                        <img src="{% static 'images/odnorazova_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                    {% elif category.name == 'Дезінфекція та стерилізація' %}
+                                        <img src="{% static 'images/dezynfectsia_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                    {% elif category.name == 'Меблі для салонів' %}
+                                        <img src="{% static 'images/mebly_category.jpg' %}" alt="{{ category.name }}" loading="lazy" class="category-circular-image">
+                                    {% endif %}
                                 {% endif %}
-                            {% endif %}
-                            
-                            {% if category.name == 'Акційні товари' %}
-                                <div class="category-badge">ГАРЯЧІ ПРОПОЗИЦІЇ</div>
-                            {% endif %}
-                        </div>
-                        <div class="category-content">
-                            <h3 class="category-name">{{ category.name }}</h3>
-                        </div>
-                    </a>
-                </div>
-            {% empty %}
-                <div class="col-12 text-center">
-                    <p class="text-muted">Категорії завантажуються...</p>
-                </div>
-            {% endfor %}
+                            </div>
+                            <h3 class="category-circular-name">{{ category.name }}</h3>
+                        </a>
+                    {% endif %}
+                {% empty %}
+                    <div class="col-12 text-center">
+                        <p class="text-muted">Категорії завантажуються...</p>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </section>
