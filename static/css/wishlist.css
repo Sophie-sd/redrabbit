@@ -53,6 +53,11 @@
     gap: var(--spacing-xl);
 }
 
+/* Сітка товарів для wishlist */
+.wishlist-content .products-grid {
+    margin-bottom: var(--spacing-xl);
+}
+
 .wishlist-items {
     display: flex;
     flex-direction: column;
@@ -364,7 +369,8 @@
 .wishlist-toggle.active,
 .btn-wishlist.active,
 .wishlist-btn.active,
-.product-card__wishlist.active {
+.product-card__wishlist.active,
+.product-card__wishlist--active {
     background: var(--primary-pink);
     border-color: var(--primary-pink);
     color: var(--white);
@@ -399,7 +405,8 @@
 
 .btn-wishlist.active .icon-heart,
 .wishlist-btn.active .icon-heart,
-.product-card__wishlist.active .product-card__wishlist-icon {
+.product-card__wishlist.active .product-card__wishlist-icon,
+.product-card__wishlist--active .product-card__wishlist-icon {
     color: var(--white);
 }
 
