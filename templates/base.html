@@ -44,34 +44,52 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap"></noscript>
     
-    <!-- CSS - Optimized -->
+    <!-- CSS - Optimized with Design System -->
     {% load static %}
+    <!-- 1. Design System Variables (завжди першим) -->
+    <link rel="stylesheet" href="{% static 'css/variables.css' %}">
+    
+    <!-- 2. Core Styles (базові стилі, reset, типографіка) -->
     <link rel="stylesheet" href="{% static 'css/base.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/custom-fonts.css' %}">
+    
+    <!-- 3. Layout System (сітка, container) -->
     <link rel="stylesheet" href="{% static 'css/layout.min.css' %}">
+    
+    <!-- 4. Global Components (header, footer, navigation, cards) -->
     <link rel="stylesheet" href="{% static 'css/components.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/product-cards.css' %}">
-    <link rel="stylesheet" href="{% static 'css/blog.css' %}">
-    <link rel="stylesheet" href="{% static 'css/pricing.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icons-badges.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header-auth.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer-desktop.css' %}">
+    
+    <!-- 5. Common Sections (використовуються на багатьох сторінках) -->
     <link rel="stylesheet" href="{% static 'css/categories.css' %}">
     <link rel="stylesheet" href="{% static 'css/categories-circular.css' %}">
     <link rel="stylesheet" href="{% static 'css/features.css' %}">
-    <link rel="stylesheet" href="{% static 'css/products.css' %}">
-    <link rel="stylesheet" href="{% static 'css/delivery.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sliders.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/recommended-slider.css' %}">
     <link rel="stylesheet" href="{% static 'css/promotions-slider.css' %}">
-    <link rel="stylesheet" href="{% static 'css/sliders.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+    <link rel="stylesheet" href="{% static 'css/delivery.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pricing.css' %}">
+    
+    <!-- 6. User Auth & Profile -->
     <link rel="stylesheet" href="{% static 'css/user-auth.css' %}">
     <link rel="stylesheet" href="{% static 'css/user-profile.css' %}">
-    <link rel="stylesheet" href="{% static 'css/header-auth.css' %}">
-    <link rel="stylesheet" href="{% static 'css/scroll-to-top.css' %}">
-    <link rel="stylesheet" href="{% static 'css/footer-desktop.css' %}">
+    
+    <!-- 7. Mobile Styles -->
     <link rel="stylesheet" href="{% static 'css/mobile.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/mobile-app.css' %}">
-    <link rel="stylesheet" href="{% static 'css/ios-safari.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/mobile-search.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ios-safari.min.css' %}">
+    
+    <!-- 8. Utilities & Effects -->
     <link rel="stylesheet" href="{% static 'css/marquee.css' %}">
+    <link rel="stylesheet" href="{% static 'css/scroll-to-top.css' %}">
     <link rel="stylesheet" href="{% static 'css/wishlist.css' %}">
+    
+    <!-- 9. Page-Specific Styles (завантажуються через extra_css блок) -->
     {% block extra_css %}{% endblock %}
     
     <!-- Structured Data -->
