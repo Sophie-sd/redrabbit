@@ -274,6 +274,11 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('products:detail', kwargs={'slug': self.slug})
     
+    @property
+    def main_image(self):
+        """Повертає головне зображення товару"""
+        return self.images.filter(is_main=True).first() or self.images.first()
+    
     def get_price_for_user(self, user=None, quantity=1):
         """
         Повертає ціну для конкретного користувача з урахуванням:
