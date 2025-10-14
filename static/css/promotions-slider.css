@@ -225,6 +225,19 @@
     height: 24px;
 }
 
+/* Сторінка акцій - сітка карток */
+.products-grid--sale {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.products-grid--sale .promo-card {
+    flex: none;
+    width: 100%;
+}
+
 /* Кнопка "Переглянути всі" */
 .promotions-actions {
     text-align: center;
@@ -264,6 +277,19 @@
     transform: translateX(4px);
 }
 
+/* Адаптивність сторінки акцій */
+@media (max-width: 1200px) {
+    .products-grid--sale {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .products-grid--sale {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
 /* Адаптивність - МОБІЛЬНА ВЕРСІЯ (3 картки на екрані) */
 @media (max-width: 768px) {
     .promotions-section.mobile-only {
@@ -272,6 +298,11 @@
     
     .promotions-section.desktop-only {
         display: none;
+    }
+    
+    .products-grid--sale {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
     }
     
     .promotions-section {
@@ -374,6 +405,11 @@
     .promo-card {
         flex: 0 0 calc((100% - 16px) / 3);
         min-width: 90px;
+    }
+    
+    .products-grid--sale {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
     }
     
     .promo-image {

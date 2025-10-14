@@ -6,6 +6,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/sale-banners.css' %}">
+<link rel="stylesheet" href="{% static 'css/promotions-slider.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -89,106 +90,51 @@
                 </div>
             </div>
             
-            <!-- Products Grid -->
-            <div class="products-grid">
+            <!-- Products Grid - використовуємо структуру promo-card як на головній -->
+            <div class="products-grid products-grid--sale">
                 {% for product in products %}
-                    <div class="product-card card fade-in">
-                        <div class="product-image">
+                    <div class="promo-card">
+                        <div class="promo-image">
                             <a href="{{ product.get_absolute_url }}">
                                 {% if product.images.first %}
                                     <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" loading="lazy">
                                 {% else %}
                                     <div class="product-placeholder">
-                                        <i class="icon-product" aria-hidden="true">📦</i>
+                                        <span class="placeholder-icon">📦</span>
                                     </div>
                                 {% endif %}
                                 
-                                <!-- Sale Badge -->
-                                <span class="product-badge sale-badge">
-                                    -{{ product.get_discount_percentage }}%
-                                </span>
-                                
-                                {% if product.is_featured %}
-                                    <span class="product-badge featured-badge">
-                                        ТОП
-                                    </span>
-                                {% endif %}
+                                <div class="promo-badge">-{{ product.get_discount_percentage }}%</div>
                             </a>
-                            
-                            <!-- Quick Actions -->
-                            <div class="product-actions-overlay">
-                                <button class="btn btn-outline btn-sm wishlist-btn" 
-                                        data-product-id="{{ product.id }}"
-                                        aria-label="Додати в список бажань">
-                                    <i class="icon-heart" aria-hidden="true">♡</i>
-                                </button>
-                            </div>
                         </div>
                         
-                        <div class="product-content">
-                            <h3 class="product-name">
+                        <div class="promo-content">
+                            <h3 class="promo-name">
                                 <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
                             </h3>
                             
-                            {% if product.category %}
-                                <p class="product-category">{{ product.category.name }}</p>
-                            {% endif %}
-                            
-                            <div class="product-price">
+                            <div class="promo-price">
                                 <span class="price-old">{{ product.retail_price }} ₴</span>
-                                <span class="price-current">{{ product.sale_price }} ₴</span>
-                                <div class="price-save">
-                                    Економія: {{ product.get_discount_amount|default:"0" }} ₴
-                                </div>
-                                
-                                <!-- Додаткові ціни -->
-                                {% if user.is_authenticated and product.wholesale_price %}
-                                    <div class="additional-prices">
-                                        <div class="price-row wholesale">
-                                            <span class="price-wholesale">{{ product.wholesale_price }} ₴</span>
-                                            <small class="price-type">опт</small>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                                
-                                <!-- Градація цін -->
-                                {% if product.price_3_qty or product.price_5_qty %}
-                                    <div class="quantity-prices">
-                                        {% if product.price_3_qty %}
-                                            <div class="qty-price">
-                                                <span>від 3 шт: <strong>{{ product.price_3_qty }} ₴</strong></span>
-                                            </div>
-                                        {% endif %}
-                                        {% if product.price_5_qty %}
-                                            <div class="qty-price">
-                                                <span>від 5 шт: <strong>{{ product.price_5_qty }} ₴</strong></span>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="product-actions">
-                                <button class="btn btn-primary btn-sm add-to-cart" 
-                                        data-product-id="{{ product.id }}"
-                                        data-product-name="{{ product.name }}"
-                                        {% if not product.is_in_stock %}disabled{% endif %}>
-                                    {% if product.is_in_stock %}
-                                        Купити зі знижкою
+                                <span class="price-new">
+                                    {% if product.sale_price %}
+                                        {{ product.sale_price }}
                                     {% else %}
-                                        Немає в наявності
+                                        {{ product.retail_price }}
                                     {% endif %}
-                                </button>
+                                    ₴
+                                </span>
                             </div>
                             
-                            {% if product.stock_quantity and product.stock_quantity <= 5 %}
-                                <div class="stock-warning">
-                                    <small class="text-warning">
-                                        <i class="icon-warning" aria-hidden="true">⚠️</i>
-                                        Залишилось {{ product.stock_quantity }} шт.
-                                    </small>
-                                </div>
-                            {% endif %}
+                            <button class="btn btn-primary btn-sm add-to-cart" 
+                                    data-product-id="{{ product.id }}"
+                                    data-product-name="{{ product.name }}"
+                                    {% if not product.is_in_stock %}disabled{% endif %}>
+                                {% if product.is_in_stock %}
+                                    Купити
+                                {% else %}
+                                    Немає в наявності
+                                {% endif %}
+                            </button>
                         </div>
                     </div>
                 {% endfor %}
