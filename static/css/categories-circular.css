@@ -95,22 +95,22 @@
 @media (max-width: 768px) {
     .categories-circular {
         grid-template-columns: repeat(5, 1fr);
-        gap: 25px 15px;
+        gap: 20px 12px;
         max-width: none;
         margin: 35px auto 0;
         padding: 0 15px;
     }
     
     .category-circle-wrapper {
-        width: 60px;
-        height: 60px;
-        margin-bottom: 15px;
+        width: 68px;
+        height: 68px;
+        margin-bottom: 8px;
     }
     
     .category-circle-name {
         font-size: 11px;
-        max-width: 70px;
-        margin-top: 5px;
+        max-width: 72px;
+        margin-top: 0;
     }
     
     /* Більший відступ від біжучої стрічки на мобільній */
@@ -131,21 +131,21 @@
 
 @media (max-width: 480px) {
     .categories-circular {
-        gap: 20px 10px;
+        gap: 18px 8px;
         padding: 0 10px;
         margin-top: 30px;
     }
     
     .category-circle-wrapper {
-        width: 55px;
-        height: 55px;
-        margin-bottom: 12px;
+        width: 60px;
+        height: 60px;
+        margin-bottom: 7px;
     }
     
     .category-circle-name {
         font-size: 10px;
         max-width: 65px;
-        margin-top: 8px;
+        margin-top: 0;
     }
 }
 
