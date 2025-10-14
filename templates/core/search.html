@@ -60,8 +60,8 @@
                         {% for product in products %}
                             <div class="product-card">
                                 <div class="product-image">
-                                    {% if product.image %}
-                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+                                    {% if product.images.first %}
+                                        <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" loading="lazy">
                                     {% else %}
                                         <div class="product-no-image">
                                             <span class="no-image-text">Фото відсутнє</span>
@@ -70,14 +70,14 @@
                                     
                                     <!-- Product Labels -->
                                     <div class="product-labels">
+                                        {% if product.is_sale and product.sale_price %}
+                                            <span class="product-label sale">АКЦІЯ -{{ product.get_discount_percentage }}%</span>
+                                        {% endif %}
                                         {% if product.is_new %}
                                             <span class="product-label new">Новинка</span>
                                         {% endif %}
                                         {% if product.is_top %}
                                             <span class="product-label top">ХІТ</span>
-                                        {% endif %}
-                                        {% if product.discount_price %}
-                                            <span class="product-label sale">АКЦІЯ</span>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -90,20 +90,23 @@
                                     {% endif %}
                                     
                                     <div class="product-pricing">
-                                        {% if product.discount_price %}
+                                        {% if product.is_sale and product.sale_price %}
                                             <div class="price-row">
-                                                <span class="price-current">{{ product.discount_price }} грн</span>
-                                                <span class="price-old">{{ product.price }} грн</span>
+                                                <span class="price-current">{{ product.sale_price }} ₴</span>
+                                                <span class="price-old">{{ product.retail_price }} ₴</span>
+                                            </div>
+                                            <div class="price-save">
+                                                <span>Економія: {{ product.get_discount_amount }} ₴</span>
                                             </div>
                                         {% else %}
                                             <div class="price-row">
-                                                <span class="price-current">{{ product.price }} грн</span>
+                                                <span class="price-current">{{ product.retail_price }} ₴</span>
                                             </div>
                                         {% endif %}
                                         
                                         {% if user.is_authenticated and product.wholesale_price %}
                                             <div class="price-row">
-                                                <span class="price-wholesale">Опт: {{ product.wholesale_price }} грн</span>
+                                                <span class="price-wholesale">Опт: {{ product.wholesale_price }} ₴</span>
                                             </div>
                                         {% endif %}
                                     </div>

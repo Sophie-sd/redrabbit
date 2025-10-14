@@ -345,6 +345,12 @@ class Product(models.Model):
             return round(discount)
         return 0
     
+    def get_discount_amount(self):
+        """Повертає суму знижки"""
+        if self.is_sale and self.sale_price:
+            return self.retail_price - self.sale_price
+        return 0
+    
     def is_in_stock(self):
         """Перевіряє чи є товар в наявності"""
         return self.stock > 0

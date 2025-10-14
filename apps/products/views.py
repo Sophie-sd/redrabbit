@@ -31,11 +31,23 @@ class ProductDetailView(DetailView):
 
 
 class SaleProductsView(ListView):
-    """Акції"""
+    """Акції - показує товари з is_sale=True АБО товари з PromotionProduct"""
     model = Product
     template_name = 'products/sale.html'
     context_object_name = 'products'
     paginate_by = 12
     
     def get_queryset(self):
-        return Product.objects.filter(is_sale=True, is_active=True)
+        from .models import PromotionProduct
+        from django.db.models import Q
+        
+        # Отримуємо ID товарів з PromotionProduct
+        promo_product_ids = PromotionProduct.objects.filter(
+            is_active=True
+        ).values_list('product_id', flat=True)
+        
+        # Показуємо товари де is_sale=True АБО товар є в PromotionProduct
+        return Product.objects.filter(
+            Q(is_sale=True) | Q(id__in=promo_product_ids),
+            is_active=True
+        ).prefetch_related('images').distinct().order_by('-created_at')
