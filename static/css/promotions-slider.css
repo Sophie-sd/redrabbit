@@ -311,34 +311,39 @@
     }
     
     .promo-name {
-        font-size: 0.8rem;
-        margin-bottom: 8px;
-        min-height: 2.4rem;
+        font-size: 0.75rem;
+        margin-bottom: 6px;
+        min-height: 2.25rem;
+        line-height: 1.2;
     }
     
     .promo-price {
-        gap: 6px;
-        margin-bottom: 10px;
+        gap: 4px;
+        margin-bottom: 6px;
+        flex-wrap: nowrap;
     }
     
     .promo-price .price-old {
-        font-size: 0.75rem;
+        font-size: 0.65rem;
+        white-space: nowrap;
     }
     
     .promo-price .price-new {
-        font-size: 1rem;
+        font-size: 0.85rem;
+        white-space: nowrap;
     }
     
     .promo-badge {
-        padding: 5px 10px;
-        font-size: 0.75rem;
+        padding: 4px 8px;
+        font-size: 0.7rem;
         top: 8px;
         right: 8px;
     }
     
     .promo-content .btn {
-        padding: 6px;
-        font-size: 0.75rem;
+        padding: 5px 4px;
+        font-size: 0.65rem;
+        white-space: nowrap;
     }
     
     .promo-nav-btn {
@@ -380,32 +385,37 @@
     }
     
     .promo-name {
-        font-size: 0.7rem;
-        margin-bottom: 6px;
-        min-height: 2.1rem;
+        font-size: 0.65rem;
+        margin-bottom: 5px;
+        min-height: 1.95rem;
+        line-height: 1.15;
     }
     
     .promo-price {
-        gap: 4px;
-        margin-bottom: 8px;
+        gap: 3px;
+        margin-bottom: 5px;
+        flex-wrap: nowrap;
     }
     
     .promo-price .price-old {
-        font-size: 0.7rem;
+        font-size: 0.6rem;
+        white-space: nowrap;
     }
     
     .promo-price .price-new {
-        font-size: 0.9rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
     }
     
     .promo-content .btn {
-        padding: 5px;
-        font-size: 0.7rem;
+        padding: 4px 3px;
+        font-size: 0.6rem;
+        white-space: nowrap;
     }
     
     .promo-badge {
-        padding: 4px 8px;
-        font-size: 0.65rem;
+        padding: 3px 6px;
+        font-size: 0.6rem;
     }
 }
 
