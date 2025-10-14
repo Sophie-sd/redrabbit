@@ -28,7 +28,7 @@ class WishlistManager {
                 const text = await response.text();
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(text, 'text/html');
-                const wishlistItems = doc.querySelectorAll('.wishlist-item');
+                const wishlistItems = doc.querySelectorAll('.wishlist-item, .product-card[data-product-id]');
                 
                 // Створюємо Set з ID товарів у wishlist
                 const wishlistProductIds = new Set();
@@ -106,8 +106,8 @@ class WishlistManager {
             }
 
             // Додавання в кошик зі списку бажань
-            const addToCartBtn = e.target.closest('.btn-add-to-cart');
-            if (addToCartBtn && addToCartBtn.closest('.wishlist-item')) {
+            const addToCartBtn = e.target.closest('.btn-add-to-cart, .product-card__add-cart');
+            if (addToCartBtn && addToCartBtn.closest('.wishlist-page')) {
                 e.preventDefault();
                 this.addToCartFromWishlist(addToCartBtn);
             }
@@ -164,7 +164,7 @@ class WishlistManager {
 
     async removeFromWishlist(button) {
         const productId = button.dataset.productId;
-        const wishlistItem = button.closest('.wishlist-item');
+        const wishlistItem = button.closest('.wishlist-item, .product-card');
 
         button.disabled = true;
 
@@ -190,7 +190,7 @@ class WishlistManager {
                     wishlistItem.remove();
                     
                     // Перевірка чи список порожній
-                    const remainingItems = document.querySelectorAll('.wishlist-item');
+                    const remainingItems = document.querySelectorAll('.wishlist-item, .product-card[data-product-id]');
                     if (remainingItems.length === 0) {
                         location.reload(); // Перезавантажуємо сторінку щоб показати "порожній" стан
                     }

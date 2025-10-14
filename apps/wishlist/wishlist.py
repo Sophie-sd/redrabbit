@@ -46,7 +46,7 @@ class Wishlist:
     def __iter__(self):
         """Ітерація по товарах в списку бажань"""
         product_ids = self.wishlist
-        products = Product.objects.filter(id__in=product_ids, is_active=True)
+        products = Product.objects.filter(id__in=product_ids, is_active=True).prefetch_related('images')
         
         for product in products:
             yield product
@@ -62,5 +62,5 @@ class Wishlist:
     def get_products(self):
         """Повертає всі товари зі списку бажань"""
         product_ids = self.wishlist
-        return Product.objects.filter(id__in=product_ids, is_active=True)
+        return Product.objects.filter(id__in=product_ids, is_active=True).prefetch_related('images')
 
