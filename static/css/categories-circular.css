@@ -65,22 +65,29 @@
     color: #ee5a52;
 }
 
-/* Десктопна версія - додаткові стилі */
+/* Десктопна версія - ЗБІЛЬШЕНІ РОЗМІРИ */
 @media (min-width: 769px) {
     .categories-circular {
-        max-width: 700px;
-        gap: 35px 25px;
+        max-width: 800px;
+        gap: 40px 30px;
+        margin: 50px auto 0;
     }
     
     .category-circle-wrapper {
-        width: 90px;
-        height: 90px;
-        margin-bottom: 15px;
+        width: 120px;
+        height: 120px;
+        margin-bottom: 20px;
     }
     
     .category-circle-name {
-        font-size: 13px;
-        max-width: 100px;
+        font-size: 14px;
+        max-width: 130px;
+        font-weight: 600;
+    }
+    
+    /* Відступ від біжучої стрічки для десктопу */
+    .categories-section-circular {
+        padding-top: 40px;
     }
 }
 
@@ -90,19 +97,25 @@
         grid-template-columns: repeat(5, 1fr);
         gap: 25px 15px;
         max-width: none;
-        margin: 20px auto 0;
+        margin: 35px auto 0;
         padding: 0 15px;
     }
     
     .category-circle-wrapper {
         width: 60px;
         height: 60px;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
     }
     
     .category-circle-name {
         font-size: 11px;
         max-width: 70px;
+        margin-top: 5px;
+    }
+    
+    /* Більший відступ від біжучої стрічки на мобільній */
+    .categories-section-circular {
+        padding-top: 25px;
     }
     
     /* Приховуємо десктопну секцію на мобільних */
@@ -120,17 +133,19 @@
     .categories-circular {
         gap: 20px 10px;
         padding: 0 10px;
+        margin-top: 30px;
     }
     
     .category-circle-wrapper {
         width: 55px;
         height: 55px;
-        margin-bottom: 8px;
+        margin-bottom: 12px;
     }
     
     .category-circle-name {
         font-size: 10px;
         max-width: 65px;
+        margin-top: 8px;
     }
 }
 
@@ -139,5 +154,21 @@
     /* Приховуємо мобільні заголовки на десктопі */
     .categories-section-circular .section-header.mobile-only {
         display: none;
+    }
+    
+    /* Показуємо десктопні заголовки */
+    .categories-section-circular .section-header.desktop-only {
+        display: block;
+    }
+}
+
+/* Відступи заголовків */
+.categories-section-circular .section-header {
+    margin-bottom: 20px;
+}
+
+@media (min-width: 769px) {
+    .categories-section-circular .section-header {
+        margin-bottom: 30px;
     }
 }

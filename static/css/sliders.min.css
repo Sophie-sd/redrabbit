@@ -4,16 +4,41 @@
     width: 100%;
     height: 400px;
     overflow: hidden;
-    padding: 0 20px;
+    margin-top: 20px;
 }
 
 .banner-slider-container {
     position: relative;
-    max-width: 1200px;
+    width: 100%;
     height: 100%;
     margin: 0 auto;
     border-radius: 12px;
     overflow: hidden;
+}
+
+/* Десктопна версія - відступи та центрування */
+@media (min-width: 769px) {
+    .banner-slider-section {
+        padding: 0 20px;
+        margin-top: 30px;
+    }
+    
+    .banner-slider-container {
+        max-width: 1200px;
+    }
+}
+
+/* Мобільна версія - по всій ширині */
+@media (max-width: 768px) {
+    .banner-slider-section {
+        padding: 0;
+        margin-top: 0;
+    }
+    
+    .banner-slider-container {
+        border-radius: 0;
+        max-width: none;
+    }
 }
 
 .banner-slider {
