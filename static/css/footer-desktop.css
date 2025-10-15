@@ -9,9 +9,8 @@
 /* Забезпечуємо 4-колонкове розташування для desktop */
 @media (min-width: 992px) {
     .footer-main .row {
-        display: grid;
+        display: flex;
         grid-template-columns: repeat(4, 1fr);
-        gap: 30px;
     }
 }
 
