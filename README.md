@@ -123,7 +123,7 @@ cat > .env << 'EOF'
 # Development Environment Variables
 DEBUG=True
 SECRET_KEY=django-insecure-development-key-change-in-production
-DJANGO_SETTINGS_MODULE=beautyshop.settings.development
+DJANGO_SETTINGS_MODULE=shop.settings.development
 
 # Email Settings для Gmail
 EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend

@@ -12,7 +12,7 @@ services:
       python create_superuser.py
       python reset_admin_password.py
       python manage.py reset_admin
-    startCommand: gunicorn beautyshop.wsgi:application --bind 0.0.0.0:$PORT
+    startCommand: gunicorn shop.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.18
@@ -25,7 +25,7 @@ services:
       - key: DEBUG
         value: False
       - key: DJANGO_SETTINGS_MODULE
-        value: beautyshop.settings.production
+        value: shop.settings.production
       - key: ALLOWED_HOSTS
         value: django-shop.onrender.com,django-shop-*.onrender.com
       - key: CSRF_TRUSTED_ORIGINS
