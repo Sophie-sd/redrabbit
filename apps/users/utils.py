@@ -36,7 +36,7 @@ def send_verification_email(user, request):
     # Надсилаємо лист
     try:
         send_mail(
-            subject='Підтвердження email - BeautyShop',
+            subject='Підтвердження email',
             message=plain_message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[user.email],
@@ -75,7 +75,7 @@ def send_password_reset_email(user, request, token, uidb64):
     # Надсилаємо лист
     try:
         send_mail(
-            subject='Відновлення паролю - BeautyShop',
+            subject='Відновлення паролю',
             message=plain_message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[user.email],

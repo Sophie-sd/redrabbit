@@ -6,10 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
     <!-- SEO Meta Tags -->
-    <title>{% block title %}Beauty Shop - Професійна косметика для салонів краси{% endblock %}</title>
-    <meta name="description" content="{% block description %}Інтернет-магазин Beauty Shop пропонує професійну косметику, інструменти та обладнання для салонів краси. Якісні товари, швидка доставка по Україні.{% endblock %}">
-    <meta name="keywords" content="{% block keywords %}професійна косметика, салон краси, манікюр, педикюр, гель-лаки, косметологія{% endblock %}">
-    <meta name="author" content="Beauty Shop">
+    <title>{% block title %}Інтернет-магазин інтимних товарів - Головна{% endblock %}</title>
+    <meta name="description" content="{% block description %}Інтернет-магазин товарів для дорослих. Широкий асортимент інтимних товарів, дискретна доставка по Україні, конфіденційність гарантована.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}інтимний магазин, товари для дорослих, інтим шоп, секс шоп, дискретна доставка{% endblock %}">
+    <meta name="author" content="Adult Shop">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -33,11 +33,11 @@
     <!-- iOS Safari specific -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Beauty Shop">
+    <meta name="apple-mobile-web-app-title" content="Shop">
     
     <!-- Android Chrome specific -->
-    <meta name="theme-color" content="#FF1493">
-    <meta name="msapplication-TileColor" content="#FF1493">
+    <meta name="theme-color" content="#3B82F6">
+    <meta name="msapplication-TileColor" content="#3B82F6">
     
     <!-- Preload critical resources -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" as="style">
@@ -97,28 +97,23 @@
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Beauty Shop",
+        "@type": "Store",
+        "name": "Інтим-шоп",
         "url": "{{ request.scheme }}://{{ request.get_host }}",
-        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo_beautyshop.png' %}",
+        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}",
+        "description": "Інтернет-магазин товарів для дорослих з дискретною доставкою",
         "contactPoint": {
             "@type": "ContactPoint",
-            "telephone": "+380681752654",
+            "telephone": "+380000000000",
             "contactType": "Customer Service",
             "availableLanguage": "Ukrainian"
         },
         "address": {
             "@type": "PostalAddress",
-            "streetAddress": "вул. Соборна, 126д",
-            "addressLocality": "Монастирище",
-            "postalCode": "19101",
+            "addressLocality": "Україна",
             "addressCountry": "UA"
         },
-        "sameAs": [
-            "https://www.facebook.com/share/14JbjQNvsVw/?mibextid=wwXIfr",
-            "https://www.instagram.com/beauty_shop_monte?igsh=MTJwNG53azhoejU1YQ%3D%3D&utm_source=qr",
-            "https://www.tiktok.com/@beauty_shop_monte"
-        ]
+        "priceRange": "$$"
     }
     </script>
     {% endblock %}

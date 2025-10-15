@@ -7,7 +7,7 @@ import os
 import django
 
 def create_superuser():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'beautyshop.settings.production')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'shop.settings.production')
     django.setup()
 
     from django.contrib.auth import get_user_model
@@ -16,9 +16,9 @@ def create_superuser():
 
     # Дані для суперюзера з environment variables
     username = os.getenv('ADMIN_USERNAME', 'admin')
-    email = os.getenv('ADMIN_EMAIL', 'beautyshop.supp@gmail.com')
+    email = os.getenv('ADMIN_EMAIL', 'admin@example.com')
     password = os.getenv('ADMIN_PASSWORD', 'ChangeMe123!')
-    phone = os.getenv('ADMIN_PHONE', '+380681752654')
+    phone = os.getenv('ADMIN_PHONE', '+380000000000')
 
     # Перевіряємо чи вже існує (за email або username)
     existing_user = None
@@ -50,7 +50,7 @@ def create_superuser():
                 password=password,
                 phone=phone,
                 first_name='Admin',
-                last_name='BeautyShop'
+                last_name='User'
             )
             print(f'✅ Створено нового суперюзера: {username}')
         except Exception as e:
@@ -64,7 +64,7 @@ def create_superuser():
     print(f'📧 Email: {email}')
     print(f'🔑 Password (пароль): {password}')
     print(f'📱 Phone: {phone}')
-    print(f'🌐 Admin URL: https://beautyshop-django.onrender.com/admin/')
+    print(f'🌐 Admin URL: https://your-app-name.onrender.com/admin/')
     print(f'='*70)
     print(f'⚠️  ЗБЕРЕЖІТЬ ЦІ ДАНІ!')
     print(f'='*70)

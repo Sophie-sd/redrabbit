@@ -158,7 +158,7 @@
     <div class="mobile-contact-info">
         <div class="contact-item">
             <i class="icon-phone" aria-hidden="true"></i>
-            <a href="tel:+380681752654">{{ site_phone }}</a>
+            <a href="tel:{{ site_phone|cut:' '|cut:'('|cut:')'|cut:'-' }}">{{ site_phone }}</a>
         </div>
         <div class="contact-item">
             <i class="icon-mail" aria-hidden="true"></i>

@@ -6,23 +6,23 @@ from apps.products.models import Category
 
 
 class Command(BaseCommand):
-    help = 'Створює базові категорії товарів для Beauty Shop'
+    help = 'Створює базові категорії товарів для інтим-магазину'
 
     def handle(self, *args, **options):
         self.stdout.write('Створення базових категорій товарів...')
         
-        # Категорії для створення
+        # Категорії для створення (інтим-магазин)
         categories_data = [
             ('Акційні товари', 'sale', 1),
-            ('Нігті', 'nigti', 2),
-            ('Волосся', 'volossia', 3),
-            ('Брови та вії', 'brovy-ta-vii', 4),
-            ('Депіляція', 'depilyatsiya', 5),
-            ('Косметика', 'kosmetyka', 6),
-            ('Макіяж', 'makiyazh', 7),
-            ('Одноразова продукція', 'odnorazova-produktsia', 8),
-            ('Дезінфекція та стерилізація', 'dezinfektsiya-ta-sterylizatsiya', 9),
-            ('Меблі для салонів', 'mebli-dlya-saloniv', 10),
+            ('Для чоловіків', 'for-men', 2),
+            ('Для жінок', 'for-women', 3),
+            ('Для пар', 'for-couples', 4),
+            ('Білизна', 'lingerie', 5),
+            ('Аксесуари', 'accessories', 6),
+            ('Інтимна косметика', 'intimate-cosmetics', 7),
+            ('Подарункові набори', 'gift-sets', 8),
+            ('Новинки', 'new-arrivals', 9),
+            ('Хіти продажів', 'bestsellers', 10),
         ]
         
         created_count = 0

@@ -11,10 +11,10 @@ def base_context(request):
     """
     context = {
         'main_categories': Category.objects.filter(parent=None, is_active=True)[:9],
-        'site_name': 'Beauty Shop',
-        'site_phone': '(068) 175-26-54',
-        'site_email': 'beauty_shop_monte@ukr.net',
-        'site_address': 'вул. Соборна, 126д, м. Монастирище, 19101, Україна',
+        'site_name': 'Інтим-шоп',
+        'site_phone': '(000) 000-00-00',
+        'site_email': 'info@intimshop.com',
+        'site_address': 'Дискретна доставка по всій Україні',
     }
     
     # Додаємо кошик до контексту

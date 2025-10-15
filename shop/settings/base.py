@@ -62,7 +62,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'beautyshop.urls'
+ROOT_URLCONF = 'shop.urls'
 
 TEMPLATES = [
     {
@@ -82,7 +82,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'beautyshop.wsgi.application'
+WSGI_APPLICATION = 'shop.wsgi.application'
 
 # Database
 DATABASES = {

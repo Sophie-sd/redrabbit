@@ -5,13 +5,13 @@
 import os
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'beautyshop.settings.production')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'shop.settings.production')
 django.setup()
 
 from apps.users.models import CustomUser
 
 # Новий пароль для адміна
-NEW_PASSWORD = 'BeautyShop2024!'
+NEW_PASSWORD = 'ChangeMe123!'
 
 print('\n' + '='*70)
 print('🔄 СКИДАННЯ ПАРОЛЮ АДМІНІСТРАТОРА')
@@ -36,8 +36,8 @@ else:
     print('⚠️  Суперюзери не знайдені. Створюю нового...\n')
     
     username = os.getenv('ADMIN_USERNAME', 'admin')
-    email = os.getenv('ADMIN_EMAIL', 'beautyshop.supp@gmail.com')
-    phone = os.getenv('ADMIN_PHONE', '+380681752654')
+    email = os.getenv('ADMIN_EMAIL', 'admin@example.com')
+    phone = os.getenv('ADMIN_PHONE', '+380000000000')
     
     try:
         user = CustomUser.objects.create_superuser(
@@ -46,7 +46,7 @@ else:
             password=NEW_PASSWORD,
             phone=phone,
             first_name='Admin',
-            last_name='BeautyShop'
+            last_name='User'
         )
         user.is_active = True
         user.email_verified = True
@@ -61,7 +61,7 @@ else:
 
 print('\n' + '='*70)
 print('🌐 Django Admin URL:')
-print('   https://beautyshop-django.onrender.com/admin/')
+print('   https://your-app-name.onrender.com/admin/')
 print('='*70)
 print('⚠️  ВИКОРИСТАЙТЕ ЦІ ДАНІ ДЛЯ ВХОДУ!')
 print('='*70 + '\n')

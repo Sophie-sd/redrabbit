@@ -1,1 +1,0 @@
-# Beauty Shop Django Project

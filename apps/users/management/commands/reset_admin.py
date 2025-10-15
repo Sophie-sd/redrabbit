@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Новий пароль
-        new_password = 'BeautyShop2024!'
+        new_password = 'ChangeMe123!'
         
         self.stdout.write('\n' + '='*70)
         self.stdout.write(self.style.WARNING('🔄 СКИДАННЯ ПАРОЛЮ АДМІНІСТРАТОРА'))
@@ -37,8 +37,8 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING('⚠️  Суперюзери не знайдені. Створюю нового...\n'))
             
             username = os.getenv('ADMIN_USERNAME', 'admin')
-            email = os.getenv('ADMIN_EMAIL', 'beautyshop.supp@gmail.com')
-            phone = os.getenv('ADMIN_PHONE', '+380681752654')
+            email = os.getenv('ADMIN_EMAIL', 'admin@example.com')
+            phone = os.getenv('ADMIN_PHONE', '+380000000000')
             
             try:
                 user = CustomUser.objects.create_superuser(
@@ -47,7 +47,7 @@ class Command(BaseCommand):
                     password=new_password,
                     phone=phone,
                     first_name='Admin',
-                    last_name='BeautyShop'
+                    last_name='User'
                 )
                 user.is_active = True
                 user.email_verified = True
@@ -63,7 +63,7 @@ class Command(BaseCommand):
         
         self.stdout.write('\n' + '='*70)
         self.stdout.write('🌐 Django Admin URL:')
-        self.stdout.write('   https://beautyshop-django.onrender.com/admin/')
+        self.stdout.write('   https://your-app-name.onrender.com/admin/')
         self.stdout.write('='*70)
         self.stdout.write(self.style.SUCCESS('⚠️  ВИКОРИСТАЙТЕ ЦІ ДАНІ ДЛЯ ВХОДУ!'))
         self.stdout.write('='*70 + '\n')

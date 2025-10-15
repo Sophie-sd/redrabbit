@@ -5,7 +5,7 @@
 import os
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'beautyshop.settings.production')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'shop.settings.production')
 django.setup()
 
 from apps.users.models import CustomUser
@@ -44,7 +44,7 @@ if superusers.exists():
     for su in superusers:
         print(f"   Username: {su.username}")
         print(f"   Email: {su.email}")
-        print(f"   🌐 URL: https://beautyshop-django.onrender.com/admin/")
+        print(f"   🌐 URL: https://your-app-name.onrender.com/admin/")
         print("-" * 60)
 else:
     print("❌ НЕМАЄ ЖОДНОГО СУПЕРЮЗЕРА! Створіть через:")

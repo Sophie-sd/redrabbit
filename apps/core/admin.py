@@ -151,6 +151,6 @@ class BannerAdmin(admin.ModelAdmin):
 
 
 # Додаткові налаштування адмін панелі
-admin.site.site_header = "Beauty Shop - Управління банерами"
-admin.site.site_title = "Beauty Shop Admin"
+admin.site.site_header = "Адміністрування - Управління банерами"
+admin.site.site_title = "Admin Panel"
 admin.site.index_title = "Панель управління"
