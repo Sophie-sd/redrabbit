@@ -7,26 +7,6 @@
 </div>
 
 <div class="mobile-menu-nav">
-    <!-- User Info -->
-    {% if user.is_authenticated %}
-        <div class="mobile-user-info">
-            <div class="user-avatar">
-                <i class="icon-user" aria-hidden="true"></i>
-            </div>
-            <div class="user-details">
-                <span class="user-name">{{ user.first_name|default:user.username }}</span>
-                <span class="wholesale-badge">Оптовий клієнт</span>
-            </div>
-        </div>
-    {% else %}
-        <div class="mobile-auth-link">
-            <a href="{% url 'users:login' %}" class="mobile-cabinet-btn">
-                <i class="icon-user" aria-hidden="true"></i>
-                Особистий кабінет
-            </a>
-        </div>
-    {% endif %}
-    
     <!-- Navigation Links -->
     <ul>
         <li>
@@ -103,56 +83,7 @@
                 Контакти
             </a>
         </li>
-        
-        {% if user.is_authenticated %}
-            <li class="menu-divider"></li>
-            <li>
-                <a href="{% url 'users:profile' %}">
-                    <i class="icon-user" aria-hidden="true"></i>
-                    Особистий кабінет
-                </a>
-            </li>
-            <li>
-                <a href="{% url 'users:orders' %}">
-                    <i class="icon-list" aria-hidden="true"></i>
-                    Мої замовлення
-                </a>
-            </li>
-            <li>
-                <a href="{% url 'users:logout' %}">
-                    <i class="icon-logout" aria-hidden="true"></i>
-                    Вийти
-                </a>
-            </li>
-        {% endif %}
     </ul>
-    
-    <!-- User Actions -->
-    <div class="mobile-user-actions">
-        {% if user.is_authenticated %}
-            <a href="{% url 'users:profile' %}" class="mobile-action-btn">
-                <i class="icon-user" aria-hidden="true"></i>
-                Особистий кабінет
-            </a>
-            <a href="{% url 'users:orders' %}" class="mobile-action-btn">
-                <i class="icon-list" aria-hidden="true"></i>
-                Мої замовлення
-            </a>
-            <a href="{% url 'users:logout' %}" class="mobile-action-btn logout">
-                <i class="icon-logout" aria-hidden="true"></i>
-                Вихід
-            </a>
-        {% else %}
-            <a href="{% url 'users:login' %}" class="mobile-action-btn">
-                <i class="icon-login" aria-hidden="true"></i>
-                Вхід
-            </a>
-            <a href="{% url 'users:register' %}" class="mobile-action-btn primary">
-                <i class="icon-user-plus" aria-hidden="true"></i>
-                Реєстрація (ОПТ)
-            </a>
-        {% endif %}
-    </div>
     
     <!-- Contact Info -->
     <div class="mobile-contact-info">

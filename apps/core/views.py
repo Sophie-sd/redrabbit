@@ -4,7 +4,7 @@ Core Views - основні представлення сайту
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.db.models import Q
-from apps.products.models import Product, Category, NewProduct, PromotionProduct
+from apps.products.models import Product, Category
 from apps.blog.models import Article
 from .models import Banner
 
@@ -19,25 +19,30 @@ class HomeView(TemplateView):
         # Отримуємо активні банери
         banners = Banner.objects.filter(is_active=True).order_by('order', '-created_at')
         
-        # Отримуємо новинки
-        # 1. Товари з is_new=True (автоматично)
-        # 2. Товари додані вручну через NewProduct
-        new_products = NewProduct.objects.filter(
+        # Отримуємо новинки (товари з бейджем НОВИНКА)
+        new_products = Product.objects.filter(
             is_active=True,
-            product__is_active=True,
-            product__is_new=True
-        ).select_related('product').prefetch_related('product__images')[:12]
+            is_new=True
+        ).select_related('category').prefetch_related('images').order_by('sort_order', '-created_at')[:12]
         
-        # Отримуємо акційні пропозиції
-        promotion_products = PromotionProduct.objects.filter(
+        # Отримуємо акційні товари (товари з бейджем АКЦІЯ)
+        sale_products = Product.objects.filter(
             is_active=True,
-            product__is_active=True
-        ).select_related('product__category').prefetch_related('product__images')[:20]
+            is_sale=True,
+            sale_price__isnull=False
+        ).select_related('category').prefetch_related('images').order_by('sort_order', '-created_at')[:20]
+        
+        # Отримуємо хіти (товари з бейджем ХІТ)
+        top_products = Product.objects.filter(
+            is_active=True,
+            is_top=True
+        ).select_related('category').prefetch_related('images').order_by('sort_order', '-created_at')[:12]
         
         context.update({
             'banners': banners,
-            'new_products': [np.product for np in new_products],
-            'promotion_products': promotion_products,
+            'new_products': new_products,
+            'sale_products': sale_products,
+            'top_products': top_products,
             'categories': Category.objects.filter(parent=None, is_active=True).order_by('sort_order', 'name'),
         })
         return context

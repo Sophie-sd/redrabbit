@@ -24,17 +24,15 @@ class Cart:
         if product_id not in self.cart:
             self.cart[product_id] = {
                 'quantity': 0,
-                'price': str(product.get_price_for_user(self.user))
+                'price': str(product.get_current_price())
             }
         if override_quantity:
             self.cart[product_id]['quantity'] = quantity
         else:
             self.cart[product_id]['quantity'] += quantity
         
-        # Оновлюємо ціну (може змінитися залежно від кількості)
-        self.cart[product_id]['price'] = str(
-            product.get_price_for_user(self.user, self.cart[product_id]['quantity'])
-        )
+        # Оновлюємо ціну
+        self.cart[product_id]['price'] = str(product.get_current_price())
         self.save()
     
     def save(self):
