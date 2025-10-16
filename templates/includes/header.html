@@ -132,11 +132,6 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'blog:list' %}" class="nav-link {% if request.resolver_match.url_name == 'list' %}active{% endif %}">
-                    Блог
-                </a>
-            </li>
-            <li class="nav-item">
                 <a href="{% url 'core:about' %}" class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">
                     Про нас
                 </a>

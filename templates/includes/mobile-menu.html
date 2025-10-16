@@ -66,12 +66,6 @@
             </a>
         </li>
         <li>
-            <a href="{% url 'blog:list' %}" class="{% if request.resolver_match.url_name == 'list' %}active{% endif %}">
-                <i class="icon-book" aria-hidden="true"></i>
-                Блог
-            </a>
-        </li>
-        <li>
             <a href="{% url 'core:about' %}" class="{% if request.resolver_match.url_name == 'about' %}active{% endif %}">
                 <i class="icon-info" aria-hidden="true"></i>
                 Про нас

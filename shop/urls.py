@@ -21,8 +21,6 @@ urlpatterns = [
     path('cart/', include('apps.cart.urls')),
     path('wishlist/', include('apps.wishlist.urls')),
     path('orders/', include('apps.orders.urls')),
-    path('blog/', include('apps.blog.urls')),
-    path('users/', include('apps.users.urls')),
     
     # SEO (будуть додані пізніше)
     # path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),

@@ -44,7 +44,6 @@ LOCAL_APPS = [
     'apps.cart',
     'apps.wishlist',
     'apps.orders',
-    'apps.blog',
     'apps.users',
 ]
 

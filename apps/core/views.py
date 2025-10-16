@@ -5,7 +5,6 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.db.models import Q
 from apps.products.models import Product, Category
-from apps.blog.models import Article
 from .models import Banner
 
 
