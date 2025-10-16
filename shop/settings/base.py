@@ -57,7 +57,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'apps.users.middleware.ValidateUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -130,16 +129,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 # Authentication Backends
-# Порядок важливий! Перший backend використовується для особистого кабінету
 AUTHENTICATION_BACKENDS = [
-    'apps.users.backends.WholesaleClientBackend',  # Для особистого кабінету (ТІЛЬКИ email/phone, БЕЗ адмінів)
-    'apps.users.backends.AdminOnlyBackend',  # Для адмінки (ТІЛЬКИ адміністратори)
-    'django.contrib.auth.backends.ModelBackend',  # Fallback (стандартний Django)
+    'django.contrib.auth.backends.ModelBackend',  # Стандартний Django backend
 ]
 
-# Login/Logout URLs
-LOGIN_URL = '/users/login/'
-LOGIN_REDIRECT_URL = '/users/profile/'
+# Login/Logout URLs (тільки для адмінки)
+LOGIN_URL = '/admin/login/'
+LOGIN_REDIRECT_URL = '/admin/'
 LOGOUT_REDIRECT_URL = '/'
 
 # CKEditor settings
