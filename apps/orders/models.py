@@ -71,6 +71,11 @@ class Order(models.Model):
     notes = models.TextField('Примітки до замовлення', blank=True)
     admin_notes = models.TextField('Примітки адміна', blank=True)
     
+    # Інтеграції
+    nova_poshta_ttn = models.CharField('ТТН Нової Пошти', max_length=50, blank=True)
+    payment_intent_id = models.CharField('ID платежу', max_length=100, blank=True, help_text='LiqPay або Monobank')
+    monobank_parts = models.BooleanField('Оплата частинами Monobank', default=False)
+    
     # Дати
     created_at = models.DateTimeField('Дата створення', auto_now_add=True)
     updated_at = models.DateTimeField('Останнє оновлення', auto_now=True)

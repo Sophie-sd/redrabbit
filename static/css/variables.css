@@ -4,32 +4,48 @@
 /* ============================================ */
 
 :root {
-  /* ========== КОЛЬОРИ ========== */
+  /* ========== REDRABBIT КОЛЬОРИ (60-30-10) ========== */
   
-  /* Primary Colors (Нейтральний синій) */
-  --color-primary: #3B82F6;
-  --color-primary-light: #60A5FA;
-  --color-primary-dark: #2563EB;
+  /* 60% - ФОНОВІ КОЛЬОРИ */
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: #F2E8DA;  /* Pristine - слонова кістка */
+  --color-bg-tertiary: #FAFAFA;
   
-  /* Secondary Colors (Нейтральний сірий) */
-  --color-secondary: #6B7280;
-  --color-secondary-light: #9CA3AF;
-  --color-secondary-dark: #4B5563;
+  /* 30% - БРЕНДОВІ КОЛЬОРИ */
+  --color-brand-primary: #FA9A85;    /* Peach Pink - основний брендовий */
+  --color-brand-light: #FFBE98;      /* Peach Fuzz - світліший персиковий */
+  --color-brand-accent: #E881A6;     /* Aurora Pink - яскравий рожевий */
+  --color-brand-mint: #60C8B3;       /* Bermuda - м'ятний */
+  --color-brand-purple: #B380AA;     /* Pale Pansy - ліловий */
   
-  /* Semantic Colors */
-  --color-success: #28A745;
-  --color-warning: #FFC107;
-  --color-danger: #DC3545;
-  --color-info: #17A2B8;
+  /* 10% - АКЦЕНТНІ КОЛЬОРИ (CTA) */
+  --color-cta-primary: #E53935;      /* Червоний для CTA кнопок */
+  --color-cta-coral: #F97272;        /* Georgia Peach для акцентів */
   
-  /* Neutral Colors */
-  --color-neutral-dark: #2C3E50;
-  --color-neutral-dark-light: #34495E;
-  --color-neutral-light: #ECF0F1;
-  --color-white: #FFFFFF;
-  --color-black: #000000;
+  /* ТЕКСТОВІ КОЛЬОРИ */
+  --color-text-primary: #2C2C2C;
+  --color-text-secondary: #6B6B6B;
+  --color-text-muted: #999999;
+  --color-text-white: #FFFFFF;
   
-  /* Gray Scale */
+  /* СИСТЕМНІ КОЛЬОРИ */
+  --color-success: #60C8B3;   /* Bermuda */
+  --color-warning: #FFB74D;   /* Помаранчевий */
+  --color-error: #E53935;     /* Червоний */
+  --color-info: #B380AA;      /* Ліловий */
+  
+  /* БОРДЕРИ */
+  --color-border-light: #E0E0E0;
+  --color-border-medium: #BDBDBD;
+  --color-border-dark: #757575;
+  
+  /* БЕЙДЖІ ТОВАРІВ */
+  --badge-top: #FFD700;       /* Жовтий "ТОП ПРОДАЖ" */
+  --badge-sale: #F97272;      /* Georgia Peach "-X%" */
+  --badge-video: #4285F4;     /* Синій "ВІДЕО" */
+  --badge-new: #60C8B3;       /* Bermuda "НОВИНКА" */
+  
+  /* Gray Scale (залишаємо для компонентів) */
   --color-gray-50: #FAFAFA;
   --color-gray-100: #F5F5F5;
   --color-gray-200: #EEEEEE;
@@ -40,26 +56,27 @@
   --color-gray-700: #616161;
   --color-gray-800: #424242;
   --color-gray-900: #212121;
+  --color-white: #FFFFFF;
+  --color-black: #000000;
   
-  /* Legacy support (не видаляємо для зворотної сумісності) */
-  --primary-pink: var(--color-primary);
-  --primary-pink-light: var(--color-primary-light);
-  --primary-pink-dark: var(--color-primary-dark);
-  --accent-gold: var(--color-secondary);
-  --accent-gold-light: var(--color-secondary-light);
-  --accent-gold-dark: var(--color-secondary-dark);
-  --neutral-dark: var(--color-neutral-dark);
-  --neutral-dark-light: var(--color-neutral-dark-light);
-  --neutral-light: var(--color-neutral-light);
-  --white: var(--color-white);
-  --black: var(--color-black);
+  /* Legacy support (для зворотної сумісності зі старим кодом) */
+  --color-primary: var(--color-cta-primary);
+  --color-primary-light: var(--color-cta-coral);
+  --color-primary-dark: #C62828;
+  --primary-pink: var(--color-brand-primary);
+  --primary-pink-light: var(--color-brand-light);
+  --primary-pink-dark: var(--color-brand-accent);
+  --accent-gold: var(--color-brand-accent);
+  --neutral-dark: var(--color-text-primary);
+  --neutral-light: var(--color-bg-secondary);
+  --white: var(--color-bg-primary);
+  --success: var(--color-success);
+  --warning: var(--color-warning);
+  --danger: var(--color-error);
+  --info: var(--color-info);
   --gray-light: var(--color-gray-100);
   --gray-medium: var(--color-gray-500);
   --gray-dark: var(--color-gray-700);
-  --success: var(--color-success);
-  --warning: var(--color-warning);
-  --danger: var(--color-danger);
-  --info: var(--color-info);
   
   /* ========== ТИПОГРАФІЯ ========== */
   

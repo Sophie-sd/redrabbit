@@ -10,10 +10,10 @@ def base_context(request):
     Додає базовий контекст до всіх шаблонів
     """
     context = {
-        'main_categories': Category.objects.filter(parent=None, is_active=True)[:9],
-        'site_name': 'Інтим-шоп',
-        'site_phone': '(000) 000-00-00',
-        'site_email': 'info@intimshop.com',
+        'main_categories': Category.objects.filter(parent=None, is_active=True).order_by('sort_order', 'name')[:9],
+        'site_name': 'redrabbit',
+        'site_phone': '+38 (000) 000-00-00',
+        'site_email': 'info@redrabbit.com',
         'site_address': 'Дискретна доставка по всій Україні',
     }
     

@@ -6,10 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
     <!-- SEO Meta Tags -->
-    <title>{% block title %}Інтернет-магазин інтимних товарів - Головна{% endblock %}</title>
-    <meta name="description" content="{% block description %}Інтернет-магазин товарів для дорослих. Широкий асортимент інтимних товарів, дискретна доставка по Україні, конфіденційність гарантована.{% endblock %}">
-    <meta name="keywords" content="{% block keywords %}інтимний магазин, товари для дорослих, інтим шоп, секс шоп, дискретна доставка{% endblock %}">
-    <meta name="author" content="Adult Shop">
+    <title>{% block title %}redrabbit - Інтернет-магазин інтимних товарів{% endblock %}</title>
+    <meta name="description" content="{% block description %}redrabbit - інтернет-магазин інтимних товарів для дорослих. Дискретна доставка по Україні, конфіденційність гарантована. 18+{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}інтимний магазин, товари для дорослих, інтим шоп, redrabbit, дискретна доставка{% endblock %}">
+    <meta name="author" content="redrabbit">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -80,6 +80,7 @@
     <!-- 7. Utilities & Effects -->
     <link rel="stylesheet" href="{% static 'css/scroll-to-top.css' %}">
     <link rel="stylesheet" href="{% static 'css/wishlist.css' %}">
+    <link rel="stylesheet" href="{% static 'css/age-verification.css' %}">
     
     <!-- 9. Page-Specific Styles (завантажуються через extra_css блок) -->
     {% block extra_css %}{% endblock %}
@@ -93,7 +94,7 @@
         "name": "Інтим-шоп",
         "url": "{{ request.scheme }}://{{ request.get_host }}",
         "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}",
-        "description": "Інтернет-магазин товарів для дорослих з дискретною доставкою",
+        "description": "Інтернет-магазин інтимних товарів для дорослих з дискретною доставкою по Україні",
         "contactPoint": {
             "@type": "ContactPoint",
             "telephone": "+380000000000",
@@ -159,6 +160,7 @@
     {% include 'includes/mobile-bottom-nav.html' %}
     
     <!-- JavaScript - Optimized -->
+    <script src="{% static 'js/age-verification.js' %}"></script>
     <script src="{% static 'js/utils.min.js' %}" defer></script>
     <script src="{% static 'js/common-handlers.js' %}" defer></script>
     <script src="{% static 'js/mobile-menu.min.js' %}" defer></script>

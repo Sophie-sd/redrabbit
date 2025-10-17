@@ -124,6 +124,13 @@ class Product(models.Model):
         help_text='Теги для фільтрації товарів'
     )
     
+    # Відео
+    video_url = models.URLField(
+        'Відео URL',
+        blank=True,
+        help_text='Посилання на YouTube або Vimeo відео товару'
+    )
+    
     # SEO поля
     meta_title = models.CharField('SEO заголовок', max_length=200, blank=True)
     meta_description = models.TextField('SEO опис', max_length=300, blank=True)
@@ -180,7 +187,7 @@ class Product(models.Model):
         """Повертає список активних стікерів (бейджів)"""
         stickers = []
         if self.is_top:
-            stickers.append({'type': 'top', 'text': 'Хіт', 'class': 'badge-top'})
+            stickers.append({'type': 'top', 'text': 'ТОП ПРОДАЖ', 'class': 'badge-top'})
         if self.is_new:
             stickers.append({'type': 'new', 'text': 'Новинка', 'class': 'badge-new'})
         if self.is_sale and self.sale_price:
@@ -189,6 +196,8 @@ class Product(models.Model):
                 stickers.append({'type': 'sale', 'text': f'-{discount}%', 'class': 'badge-sale'})
             else:
                 stickers.append({'type': 'sale', 'text': 'Акція', 'class': 'badge-sale'})
+        if self.video_url:
+            stickers.append({'type': 'video', 'text': 'ВІДЕО', 'class': 'badge-video'})
         return stickers
     
     def get_similar_products(self, limit=4):
@@ -293,3 +302,61 @@ class ProductAttribute(models.Model):
     
     def __str__(self):
         return f"{self.name}: {self.value}"
+
+
+class ProductReview(models.Model):
+    """Відгуки користувачів про товари"""
+    
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews', verbose_name='Товар')
+    author_name = models.CharField('Ім\'я автора', max_length=100, default='Аноним')
+    rating = models.PositiveSmallIntegerField(
+        'Рейтинг',
+        default=5,
+        help_text='Оцінка від 1 до 5'
+    )
+    text = models.TextField('Текст відгуку')
+    category_badge = models.CharField(
+        'Бейдж категорії',
+        max_length=50,
+        blank=True,
+        help_text='Наприклад: "Піхва", "Вакуумні стимулятори"'
+    )
+    is_approved = models.BooleanField('Схвалено', default=False)
+    created_at = models.DateTimeField('Дата створення', auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'Відгук про товар'
+        verbose_name_plural = 'Відгуки про товари'
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['is_approved', '-created_at']),
+            models.Index(fields=['product', 'is_approved']),
+        ]
+    
+    def __str__(self):
+        return f"Відгук від {self.author_name} на {self.product.name}"
+
+
+class Brand(models.Model):
+    """Бренди товарів"""
+    
+    name = models.CharField('Назва бренду', max_length=100, unique=True)
+    slug = models.SlugField('URL', max_length=100, unique=True, blank=True)
+    logo = models.ImageField('Логотип', upload_to='brands/', blank=True)
+    description = models.TextField('Опис', blank=True)
+    is_active = models.BooleanField('Активний', default=True)
+    sort_order = models.PositiveIntegerField('Порядок сортування', default=0)
+    created_at = models.DateTimeField('Створено', auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'Бренд'
+        verbose_name_plural = 'Бренди'
+        ordering = ['sort_order', 'name']
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.name

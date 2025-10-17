@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.contrib import messages
 
-from .models import Category, Product, ProductImage, ProductAttribute, ProductTag
+from .models import Category, Product, ProductImage, ProductAttribute, ProductTag, ProductReview, Brand
 
 
 class ProductImageInline(admin.TabularInline):
@@ -250,3 +250,70 @@ class ProductTagAdmin(admin.ModelAdmin):
     search_fields = ['name']
     prepopulated_fields = {'slug': ('name',)}
     ordering = ['name']
+
+
+@admin.register(ProductReview)
+class ProductReviewAdmin(admin.ModelAdmin):
+    list_display = ['product', 'author_name', 'rating', 'is_approved', 'created_at']
+    list_display_links = ['product', 'author_name']
+    list_filter = ['is_approved', 'rating', 'created_at']
+    list_editable = ['is_approved']
+    search_fields = ['product__name', 'author_name', 'text']
+    date_hierarchy = 'created_at'
+    list_per_page = 50
+    
+    fieldsets = (
+        ('Основна інформація', {
+            'fields': ('product', 'author_name', 'rating', 'text')
+        }),
+        ('Додатково', {
+            'fields': ('category_badge', 'is_approved')
+        }),
+        ('Системна інформація', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    readonly_fields = ['created_at']
+    
+    actions = ['approve_reviews', 'disapprove_reviews']
+    
+    def approve_reviews(self, request, queryset):
+        updated = queryset.update(is_approved=True)
+        self.message_user(request, f'Схвалено {updated} відгуків', messages.SUCCESS)
+    approve_reviews.short_description = '✓ Схвалити вибрані відгуки'
+    
+    def disapprove_reviews(self, request, queryset):
+        updated = queryset.update(is_approved=False)
+        self.message_user(request, f'Відхилено {updated} відгуків', messages.WARNING)
+    disapprove_reviews.short_description = '✗ Відхилити вибрані відгуки'
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('product')
+
+
+@admin.register(Brand)
+class BrandAdmin(admin.ModelAdmin):
+    list_display = ['get_brand_logo', 'name', 'is_active', 'sort_order', 'created_at']
+    list_display_links = ['get_brand_logo', 'name']
+    list_editable = ['is_active', 'sort_order']
+    list_filter = ['is_active', 'created_at']
+    search_fields = ['name', 'description']
+    prepopulated_fields = {'slug': ('name',)}
+    date_hierarchy = 'created_at'
+    
+    fieldsets = (
+        ('Основна інформація', {
+            'fields': ('name', 'slug', 'logo', 'description')
+        }),
+        ('Налаштування', {
+            'fields': ('is_active', 'sort_order')
+        }),
+    )
+    
+    def get_brand_logo(self, obj):
+        if obj.logo:
+            return format_html('<img src="{}" class="admin-thumbnail-small" />', obj.logo.url)
+        return format_html('<div class="admin-icon-placeholder">🏷️</div>')
+    get_brand_logo.short_description = 'Лого'
