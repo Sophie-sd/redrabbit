@@ -1,44 +1,16 @@
 # Generated manually for redrabbit rebrand
 from django.db import migrations, models
 import django.db.models.deletion
-from django.utils.text import slugify
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0010_cleanup_models'),
+        ('products', '0011_add_video_url'),
     ]
 
     operations = [
-        # Додати video_url в Product
-        migrations.AddField(
-            model_name='product',
-            name='video_url',
-            field=models.URLField(blank=True, help_text='Посилання на YouTube або Vimeo відео товару', verbose_name='Відео URL'),
-        ),
-        
-        # Створити модель ProductReview
-        migrations.CreateModel(
-            name='ProductReview',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('author_name', models.CharField(default='Аноним', max_length=100, verbose_name="Ім'я автора")),
-                ('rating', models.PositiveSmallIntegerField(default=5, help_text='Оцінка від 1 до 5', verbose_name='Рейтинг')),
-                ('text', models.TextField(verbose_name='Текст відгуку')),
-                ('category_badge', models.CharField(blank=True, help_text='Наприклад: "Піхва", "Вакуумні стимулятори"', max_length=50, verbose_name='Бейдж категорії')),
-                ('is_approved', models.BooleanField(default=False, verbose_name='Схвалено')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Дата створення')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reviews', to='products.product', verbose_name='Товар')),
-            ],
-            options={
-                'verbose_name': 'Відгук про товар',
-                'verbose_name_plural': 'Відгуки про товари',
-                'ordering': ['-created_at'],
-            },
-        ),
-        
-        # Створити модель Brand
+        # Створити модель Brand (якщо не існує)
         migrations.CreateModel(
             name='Brand',
             fields=[
@@ -55,6 +27,26 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Бренд',
                 'verbose_name_plural': 'Бренди',
                 'ordering': ['sort_order', 'name'],
+            },
+        ),
+        
+        # Створити модель ProductReview (якщо не існує)
+        migrations.CreateModel(
+            name='ProductReview',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('author_name', models.CharField(default='Аноним', max_length=100, verbose_name="Ім'я автора")),
+                ('rating', models.PositiveSmallIntegerField(default=5, help_text='Оцінка від 1 до 5', verbose_name='Рейтинг')),
+                ('text', models.TextField(verbose_name='Текст відгуку')),
+                ('category_badge', models.CharField(blank=True, help_text='Наприклад: "Піхва", "Вакуумні стимулятори"', max_length=50, verbose_name='Бейдж категорії')),
+                ('is_approved', models.BooleanField(default=False, verbose_name='Схвалено')),
+                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Дата створення')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reviews', to='products.product', verbose_name='Товар')),
+            ],
+            options={
+                'verbose_name': 'Відгук про товар',
+                'verbose_name_plural': 'Відгуки про товари',
+                'ordering': ['-created_at'],
             },
         ),
         

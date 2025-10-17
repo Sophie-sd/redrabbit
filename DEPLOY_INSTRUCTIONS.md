@@ -96,13 +96,31 @@ python manage.py migrate --no-input
 
 ### Помилка: "column products_product.video_url does not exist"
 
-**Причина:** Міграція 0011 не застосована.
+**Причина:** Міграція не застосована або застосована частково.
+
+**Рішення (ШВИДКЕ ВИПРАВЛЕННЯ):**
+```bash
+# В Render Shell виконайте:
+python fix_production_db.py
+```
+
+Цей скрипт:
+- Перевірить стан БД
+- Додасть поле `video_url` якщо відсутнє
+- Позначить міграції як виконані
+- Все зробить безпечно
+
+Після виконання - **перезапустіть сервер** через Render Dashboard (Manual Deploy → Clear build cache & deploy).
+
+### Помилка: "relation products_brand already exists"
+
+**Причина:** Міграція 0012 намагається створити таблиці що вже існують.
 
 **Рішення:**
 ```bash
-python manage.py migrate products 0011 --fake
-python manage.py migrate
+python fix_production_db.py
 ```
+Скрипт автоматично позначить міграцію як виконану (fake) якщо таблиці вже є.
 
 ### Build падає з помилкою
 
