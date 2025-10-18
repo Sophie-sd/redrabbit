@@ -10,11 +10,29 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'shop.settings.production')
 django.setup()
 
 from django.core.management import call_command
-from apps.products.models import Product
+from apps.products.models import Product, Category
 
 print('\n' + '='*70)
-print('🚀 ПОЧАТКОВИЙ ІМПОРТ ТОВАРІВ')
+print('🚀 ПОЧАТКОВИЙ ІМПОРТ КАТЕГОРІЙ ТА ТОВАРІВ')
 print('='*70 + '\n')
+
+# Перевіряємо категорії
+category_count = Category.objects.count()
+
+if category_count < 50:
+    print(f'📁 Імпорт категорій з XML постачальника...')
+    try:
+        call_command(
+            'import_categories',
+            url='https://smtm.com.ua/_prices/import-retail-ua-2.xml',
+            verbosity=1
+        )
+        new_cat_count = Category.objects.count()
+        print(f'✅ Категорії імпортовано: {new_cat_count} шт.\n')
+    except Exception as e:
+        print(f'⚠️  Помилка імпорту категорій: {e}\n')
+else:
+    print(f'✓ Категорії вже імпортовані: {category_count} шт.\n')
 
 # Перевіряємо чи вже є товари
 product_count = Product.objects.count()
