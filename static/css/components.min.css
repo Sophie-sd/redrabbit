@@ -1185,6 +1185,16 @@
     margin-bottom: var(--spacing-xxl);
 }
 
+.top-products-section {
+    background: var(--white);
+}
+
+.top-products-section .products-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
 .delivery-method,
 .payment-method {
     text-align: center;
