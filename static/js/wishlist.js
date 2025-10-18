@@ -317,5 +317,17 @@ class WishlistManager {
 // Ініціалізація
 document.addEventListener('DOMContentLoaded', () => {
     window.wishlistManager = new WishlistManager();
+    
+    // Обробка кнопок з підтвердженням
+    document.addEventListener('click', (e) => {
+        const confirmBtn = e.target.closest('[data-confirm]');
+        if (confirmBtn) {
+            const message = confirmBtn.dataset.confirm;
+            if (!confirm(message)) {
+                e.preventDefault();
+                return false;
+            }
+        }
+    });
 });
 

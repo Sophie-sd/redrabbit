@@ -557,3 +557,104 @@
     }
 }
 
+/* Кольорові блоки для різних типів повідомлень */
+.info-block--success {
+    background: #e8f5e9;
+    border-left-color: #4caf50;
+}
+
+.info-block--success h2,
+.info-block--success .text-highlight {
+    color: #2e7d32;
+}
+
+.info-block--success p {
+    color: #2e7d32;
+}
+
+.info-block--warning {
+    background: #fff3cd;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.info-block--warning h2 {
+    color: #856404;
+}
+
+.info-block--warning p {
+    color: #856404;
+}
+
+.info-block--danger {
+    background: #ffebee;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border-left: 4px solid #d32f2f;
+}
+
+.info-block--danger h2 {
+    color: #c62828;
+}
+
+.info-block--danger p,
+.info-block--danger ul {
+    color: #c62828;
+}
+
+.info-block--18plus {
+    background: #fff3cd;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.info-block--18plus p {
+    margin: 0;
+    color: #856404;
+}
+
+.text-danger {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
+.text-danger-highlight {
+    color: #d32f2f;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.text-success {
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+.text-warning {
+    color: #856404;
+    font-weight: bold;
+}
+
+.bg-highlight-warning {
+    background: #fff3cd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    color: #856404;
+}
+
+.list-success {
+    font-weight: bold;
+    color: #2e7d32;
+}
+
+.disabled-state {
+    opacity: 0.6;
+}
+
+.disabled-badge {
+    background: #999;
+}
+

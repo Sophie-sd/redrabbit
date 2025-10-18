@@ -1459,8 +1459,8 @@
   }
   
   /* Показуємо мобільні контроли */
-  .mobile-controls {
-    display: flex !important; /* Форсуємо показ на мобільному */
+  .catalog-layout .mobile-controls {
+    display: flex;
     gap: 12px;
     padding: 12px;
   }
@@ -1580,9 +1580,9 @@
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
   }
   
   .skeleton {
