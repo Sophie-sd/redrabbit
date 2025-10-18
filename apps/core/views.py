@@ -3,6 +3,7 @@ Core Views - основні представлення сайту
 """
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.http import JsonResponse
 from django.db.models import Q
 from apps.products.models import Product, Category, Brand, ProductReview
 from .models import Banner
@@ -127,3 +128,25 @@ class SearchView(TemplateView):
             })
         
         return context
+
+
+def search_autocomplete(request):
+    """API для автокомпліту пошуку"""
+    query = request.GET.get('q', '').strip()
+    
+    if len(query) < 2:
+        return JsonResponse({'results': []})
+    
+    products = Product.objects.filter(
+        Q(name__icontains=query),
+        is_active=True
+    ).select_related('category').prefetch_related('images')[:5]
+    
+    results = [{
+        'name': p.name,
+        'url': p.get_absolute_url(),
+        'price': str(p.retail_price),
+        'image': p.images.first().image.url if p.images.exists() else None
+    } for p in products]
+    
+    return JsonResponse({'results': results})
