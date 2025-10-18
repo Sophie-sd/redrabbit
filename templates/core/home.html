@@ -385,10 +385,92 @@
         </div>
     </div>
 </section>
+
+<!-- Brands Section -->
+{% if brands %}
+<section class="brands-section section-padding bg-light" aria-label="Бренди">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2 class="section-title">Бренди</h2>
+            <p class="section-subtitle">Працюємо з найкращими виробниками</p>
+        </div>
+        
+        <div class="brands-grid">
+            {% for brand in brands %}
+            <div class="brand-card">
+                <div class="brand-logo">
+                    {% if brand.logo %}
+                        <img src="{{ brand.logo.url }}" alt="{{ brand.name }}" loading="lazy">
+                    {% else %}
+                        <div class="brand-placeholder">{{ brand.name|slice:":2"|upper }}</div>
+                    {% endif %}
+                </div>
+                <div class="brand-name">{{ brand.name }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Reviews Section -->
+{% if reviews %}
+<section class="reviews-section section-padding" aria-label="Відгуки">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2 class="section-title">Відгуки користувачів</h2>
+            <p class="section-subtitle">Що кажуть наші клієнти</p>
+        </div>
+        
+        <div class="reviews-slider-container">
+            <button class="slider-nav-btn slider-prev-btn" aria-label="Попередні">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2"/>
+                </svg>
+            </button>
+            
+            <div class="reviews-slider" id="reviewsSlider">
+                {% for review in reviews %}
+                <div class="review-card">
+                    {% if review.category_badge %}
+                    <span class="review-badge">{{ review.category_badge }}</span>
+                    {% endif %}
+                    
+                    <div class="review-product">
+                        {% if review.product.images.first %}
+                        <img src="{{ review.product.images.first.image.url }}" alt="{{ review.product.name }}" loading="lazy">
+                        {% endif %}
+                        <a href="{{ review.product.get_absolute_url }}">{{ review.product.name }}</a>
+                    </div>
+                    
+                    <p class="review-text">{{ review.text|truncatewords:30 }}</p>
+                    
+                    <div class="review-footer">
+                        <span class="review-author">{{ review.author_name }}</span>
+                        <div class="review-rating">
+                            {% for i in "12345" %}
+                            <span class="star {% if forloop.counter <= review.rating %}active{% endif %}">⭐</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <button class="slider-nav-btn slider-next-btn" aria-label="Наступні">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</section>
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/banner-slider.min.js' %}"></script>
-<script src="{% static 'js/recommended-slider.js' %}"></script>
-<script src="{% static 'js/promotions-slider.js' %}"></script>
+<script src="{% static 'js/banner-slider.min.js' %}" defer></script>
+<script src="{% static 'js/recommended-slider.js' %}" defer></script>
+<script src="{% static 'js/promotions-slider.js' %}" defer></script>
+<script src="{% static 'js/reviews-slider.js' %}" defer></script>
 {% endblock %}

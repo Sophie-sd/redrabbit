@@ -1,0 +1,118 @@
+.reviews-section {
+  padding: var(--spacing-xxl, 60px) 0;
+}
+
+.reviews-slider-container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 50px;
+}
+
+.reviews-slider {
+  display: flex;
+  gap: var(--spacing-lg, 24px);
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.reviews-slider::-webkit-scrollbar {
+  display: none;
+}
+
+.review-card {
+  min-width: 300px;
+  max-width: 350px;
+  padding: var(--spacing-lg, 24px);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  position: relative;
+}
+
+.review-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 12px;
+  background: var(--color-brand-accent);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 12px;
+}
+
+.review-product {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 12px);
+  margin-bottom: var(--spacing-md, 16px);
+}
+
+.review-product img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: var(--radius-md, 8px);
+}
+
+.review-product a {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast, 0.2s);
+}
+
+.review-product a:hover {
+  color: var(--color-cta-primary);
+}
+
+.review-text {
+  margin-bottom: var(--spacing-md, 16px);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.review-footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs, 8px);
+  padding-top: var(--spacing-md, 16px);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.review-author {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.review-rating {
+  display: flex;
+  gap: 2px;
+}
+
+.star {
+  font-size: 14px;
+  opacity: 0.3;
+}
+
+.star.active {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .reviews-slider-container {
+    padding: 0 20px;
+  }
+  
+  .review-card {
+    min-width: 280px;
+  }
+}
+
