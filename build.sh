@@ -15,4 +15,7 @@ python manage.py migrate --no-input
 echo "📁 Створення категорій..."
 python manage.py create_categories
 
+echo "📦 Імпорт товарів..."
+python initial_import.py || echo "⚠️  Імпорт товарів завершено з попередженнями"
+
 echo "✅ Build completed successfully!"
