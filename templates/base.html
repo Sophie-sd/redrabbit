@@ -26,18 +26,17 @@
     <meta property="twitter:image" content="{% block twitter_image %}{{ block.super }}{% endblock %}">
     
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/bs.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/bs.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/bs.png' %}">
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicon.svg' %}">
     
     <!-- iOS Safari specific -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Shop">
+    <meta name="apple-mobile-web-app-title" content="redrabbit">
     
     <!-- Android Chrome specific -->
-    <meta name="theme-color" content="#3B82F6">
-    <meta name="msapplication-TileColor" content="#3B82F6">
+    <meta name="theme-color" content="#FA9A85">
+    <meta name="msapplication-TileColor" content="#FA9A85">
     
     <!-- Preload critical resources -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" as="style">
@@ -95,13 +94,13 @@
     {
         "@context": "https://schema.org",
         "@type": "Store",
-        "name": "Інтим-шоп",
+        "name": "redrabbit",
         "url": "{{ request.scheme }}://{{ request.get_host }}",
-        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/logo.png' %}",
+        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/favicon.svg' %}",
         "description": "Інтернет-магазин інтимних товарів для дорослих з дискретною доставкою по Україні",
         "contactPoint": {
             "@type": "ContactPoint",
-            "telephone": "+380000000000",
+            "telephone": "{{ site_phone }}",
             "contactType": "Customer Service",
             "availableLanguage": "Ukrainian"
         },
