@@ -58,6 +58,14 @@
     </div>
 </section>
 
+<div class="container">
+    <div class="home-layout">
+        <div class="home-layout__sidebar">
+            {% include 'includes/sidebar-menu.html' %}
+        </div>
+        
+        <div class="home-layout__content">
+
 <!-- Mobile Promotions Section (показується тільки на мобільних) -->
 <section class="promotions-section mobile-only" aria-label="Акційні пропозиції">
     <div class="container">
@@ -466,6 +474,10 @@
     </div>
 </section>
 {% endif %}
+
+        </div>  <!-- /.home-layout__content -->
+    </div>  <!-- /.home-layout -->
+</div>  <!-- /.container -->
 {% endblock %}
 
 {% block extra_js %}
