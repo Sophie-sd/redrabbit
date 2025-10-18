@@ -38,13 +38,19 @@ class HomeView(TemplateView):
             is_top=True
         ).select_related('category').prefetch_related('images').order_by('sort_order', '-created_at')[:12]
         
-        # Бренди (топ-8)
-        brands = Brand.objects.filter(is_active=True).order_by('sort_order', 'name')[:8]
+        # Бренди (топ-8) - безпечний запит
+        try:
+            brands = Brand.objects.filter(is_active=True).order_by('sort_order', 'name')[:8]
+        except Exception:
+            brands = []
         
-        # Відгуки (схвалені, топ-10)
-        reviews = ProductReview.objects.filter(
-            is_approved=True
-        ).select_related('product').prefetch_related('product__images').order_by('-created_at')[:10]
+        # Відгуки (схвалені, топ-10) - безпечний запит
+        try:
+            reviews = ProductReview.objects.filter(
+                is_approved=True
+            ).select_related('product').prefetch_related('product__images').order_by('-created_at')[:10]
+        except Exception:
+            reviews = []
         
         context.update({
             'banners': banners,
