@@ -5,8 +5,19 @@
 {% block description %}Інтернет-магазин інтимних товарів для дорослих. Широкий вибір якісної продукції, дискретна упаковка та доставка по Україні. Конфіденційність гарантована. 18+{% endblock %}
 
 {% block content %}
-<!-- 1. Banner Slider Section -->
-<section class="banner-slider-section" aria-label="Рекламні банери">
+<!-- Main Layout with Sidebar Catalog -->
+<div class="home-main-layout">
+    <div class="container">
+        <div class="layout-grid">
+            <!-- Left Sidebar Catalog -->
+            <aside class="home-catalog-sidebar">
+                {% include 'includes/sidebar-menu.html' %}
+            </aside>
+            
+            <!-- Right Content Area -->
+            <div class="home-content">
+                <!-- Banner Slider Section -->
+                <section class="banner-slider-section" aria-label="Рекламні банери">
     <div class="banner-slider-container" id="bannerSlider">
         {% if banners %}
             <div class="banner-slider">
@@ -535,6 +546,10 @@
     </div>
 </section>
 {% endif %}
+            </div>  <!-- /.home-content -->
+        </div>  <!-- /.layout-grid -->
+    </div>  <!-- /.container -->
+</div>  <!-- /.home-main-layout -->
 {% endblock %}
 
 {% block extra_js %}
