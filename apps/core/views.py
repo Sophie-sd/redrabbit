@@ -5,8 +5,16 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http import JsonResponse
 from django.db.models import Q
-from apps.products.models import Product, Category, Brand, ProductReview
+from django.db import connection
+from apps.products.models import Product, Category
 from .models import Banner
+
+# Безпечний імпорт Brand та ProductReview
+try:
+    from apps.products.models import Brand, ProductReview
+    BRAND_REVIEW_AVAILABLE = True
+except Exception:
+    BRAND_REVIEW_AVAILABLE = False
 
 
 class HomeView(TemplateView):
@@ -38,19 +46,29 @@ class HomeView(TemplateView):
             is_top=True
         ).select_related('category').prefetch_related('images').order_by('sort_order', '-created_at')[:12]
         
-        # Бренди (топ-8) - безпечний запит
-        try:
-            brands = Brand.objects.filter(is_active=True).order_by('sort_order', 'name')[:8]
-        except Exception:
-            brands = []
+        # Бренди (топ-8) - безпечний запит з перевіркою таблиці
+        brands = []
+        if BRAND_REVIEW_AVAILABLE:
+            try:
+                # Перевіряємо чи існує таблиця
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT 1 FROM products_brand LIMIT 1")
+                brands = Brand.objects.filter(is_active=True).order_by('sort_order', 'name')[:8]
+            except Exception:
+                brands = []
         
-        # Відгуки (схвалені, топ-10) - безпечний запит
-        try:
-            reviews = ProductReview.objects.filter(
-                is_approved=True
-            ).select_related('product').prefetch_related('product__images').order_by('-created_at')[:10]
-        except Exception:
-            reviews = []
+        # Відгуки (схвалені, топ-10) - безпечний запит з перевіркою таблиці
+        reviews = []
+        if BRAND_REVIEW_AVAILABLE:
+            try:
+                # Перевіряємо чи існує таблиця
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT 1 FROM products_productreview LIMIT 1")
+                reviews = ProductReview.objects.filter(
+                    is_approved=True
+                ).select_related('product').prefetch_related('product__images').order_by('-created_at')[:10]
+            except Exception:
+                reviews = []
         
         context.update({
             'banners': banners,
