@@ -478,6 +478,63 @@
     </div>
 </section>
 {% endif %}
+
+<!-- Top Products Section -->
+{% if top_products %}
+<section class="top-products-section section-padding" aria-label="Хіти продажу">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2 class="section-title">Хіти продажу</h2>
+            <p class="section-subtitle">Найпопулярніші товари цього місяця</p>
+        </div>
+        
+        <div class="products-grid">
+            {% for product in top_products %}
+            <div class="product-card">
+                <a href="{{ product.get_absolute_url }}" class="product-card__link">
+                    <div class="product-card__image">
+                        {% if product.images.first %}
+                            <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" loading="lazy">
+                        {% endif %}
+                        {% if product.is_top %}
+                        <span class="product-badge badge-hit">ХІТ</span>
+                        {% endif %}
+                    </div>
+                    <div class="product-card__content">
+                        <h3 class="product-card__title">{{ product.name }}</h3>
+                        <div class="product-card__price">
+                            {% if product.is_sale and product.sale_price %}
+                                <span class="price-old">{{ product.retail_price }} ₴</span>
+                                <span class="price-new">{{ product.sale_price }} ₴</span>
+                            {% else %}
+                                <span class="price">{{ product.retail_price }} ₴</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+                <div class="product-card__actions">
+                    <button class="btn btn-primary btn-sm add-to-cart" 
+                            data-product-id="{{ product.id }}"
+                            data-product-name="{{ product.name }}"
+                            {% if not product.is_in_stock %}disabled{% endif %}>
+                        {% if product.is_in_stock %}
+                            Купити
+                        {% else %}
+                            Немає в наявності
+                        {% endif %}
+                    </button>
+                    <button class="btn btn-outline btn-sm wishlist-btn" 
+                            data-product-id="{{ product.id }}"
+                            aria-label="Додати в список бажань">
+                        <span class="icon-heart">♡</span>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}
@@ -485,4 +542,5 @@
 <script src="{% static 'js/recommended-slider.js' %}"></script>
 <script src="{% static 'js/promotions-slider.js' %}"></script>
 <script src="{% static 'js/reviews-slider.js' %}"></script>
+<script src="{% static 'js/sidebar-menu.js' %}"></script>
 {% endblock %}
