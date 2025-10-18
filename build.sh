@@ -12,7 +12,7 @@ python manage.py collectstatic --no-input
 echo "🔄 Застосування міграцій..."
 python manage.py migrate --no-input
 
-echo "📦 Імпорт категорій та товарів..."
-python initial_import.py || echo "⚠️  Імпорт завершено з попередженнями"
+echo "📦 Налаштування БД та імпорт даних..."
+python production_setup.py || echo "⚠️  Імпорт завершено з попередженнями"
 
 echo "✅ Build completed successfully!"

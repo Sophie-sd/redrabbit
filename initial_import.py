@@ -19,7 +19,7 @@ print('='*70 + '\n')
 # Перевіряємо категорії
 category_count = Category.objects.count()
 
-if category_count < 50:
+if category_count < 10:
     print(f'📁 Імпорт категорій з XML постачальника...')
     try:
         call_command(
@@ -37,7 +37,7 @@ else:
 # Перевіряємо чи вже є товари
 product_count = Product.objects.count()
 
-if product_count > 100:
+if product_count > 1000:
     print(f'✓ Товари вже імпортовані: {product_count} шт.')
     print('ℹ️  Пропускаємо імпорт. Для оновлення використовуйте update_prices.')
 else:
