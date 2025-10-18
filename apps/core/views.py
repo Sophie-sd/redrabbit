@@ -4,7 +4,7 @@ Core Views - основні представлення сайту
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.db.models import Q
-from apps.products.models import Product, Category
+from apps.products.models import Product, Category, Brand, ProductReview
 from .models import Banner
 
 
@@ -37,11 +37,21 @@ class HomeView(TemplateView):
             is_top=True
         ).select_related('category').prefetch_related('images').order_by('sort_order', '-created_at')[:12]
         
+        # Бренди (топ-8)
+        brands = Brand.objects.filter(is_active=True).order_by('sort_order', 'name')[:8]
+        
+        # Відгуки (схвалені, топ-10)
+        reviews = ProductReview.objects.filter(
+            is_approved=True
+        ).select_related('product').prefetch_related('product__images').order_by('-created_at')[:10]
+        
         context.update({
             'banners': banners,
             'new_products': new_products,
             'sale_products': sale_products,
             'top_products': top_products,
+            'brands': brands,
+            'reviews': reviews,
             'categories': Category.objects.filter(parent=None, is_active=True).order_by('sort_order', 'name'),
         })
         return context
