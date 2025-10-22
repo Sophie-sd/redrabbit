@@ -1,14 +1,10 @@
-"""
-Команда для імпорту товарів з XML фіду постачальника
-"""
 import xml.etree.ElementTree as ET
 import requests
 import html
 from decimal import Decimal
 from django.core.management.base import BaseCommand
-from django.utils.text import slugify
-from django.core.files.base import ContentFile
-from apps.products.models import Category, Product, ProductImage, ProductAttribute
+from apps.products.models import Category, Product, ProductAttribute
+from apps.products.utils import download_product_images
 
 
 class Command(BaseCommand):
@@ -170,35 +166,15 @@ class Command(BaseCommand):
                         created_count += 1
                         action = '✓'
                     
-                    # Зображення товару
                     if not skip_images:
                         pictures = offer.findall('picture')
                         if pictures:
-                            # Видаляємо старі зображення
-                            product.images.all().delete()
-                            
-                            # Завантажуємо нові
-                            for pic_idx, picture in enumerate(pictures):
-                                picture_url = picture.text
-                                if picture_url:
-                                    try:
-                                        img_response = requests.get(picture_url, timeout=10)
-                                        img_response.raise_for_status()
-                                        
-                                        # Визначаємо ім'я файлу
-                                        file_name = picture_url.split('/')[-1]
-                                        
-                                        # Створюємо ProductImage
-                                        ProductImage.objects.create(
-                                            product=product,
-                                            image=ContentFile(img_response.content, name=file_name),
-                                            is_main=(pic_idx == 0),
-                                            sort_order=pic_idx,
-                                        )
-                                    except Exception as e:
-                                        self.stdout.write(f'    Помилка завантаження зображення: {e}')
+                            picture_urls = [p.text for p in pictures if p.text]
+                            success, errors = download_product_images(product, picture_urls)
+                            if errors > 0:
+                                self.stdout.write(f'    Помилки завантаження: {errors}')
                     
-                    # Характеристики (параметри)
+                    # Характеристики
                     params = offer.findall('param')
                     if params:
                         # Видаляємо старі атрибути

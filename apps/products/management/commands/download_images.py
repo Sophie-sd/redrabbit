@@ -1,15 +1,12 @@
-"""
-Команда для довантаження зображень для існуючих товарів
-"""
 import xml.etree.ElementTree as ET
 import requests
 from django.core.management.base import BaseCommand
-from django.core.files.base import ContentFile
-from apps.products.models import Product, ProductImage
+from apps.products.models import Product
+from apps.products.utils import download_product_images
 
 
 class Command(BaseCommand):
-    help = 'Завантажує зображення для товарів, що не мають зображень'
+    help = 'Завантажує зображення для товарів'
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -82,33 +79,16 @@ class Command(BaseCommand):
                         skipped += 1
                         continue
 
-                    if has_images and redownload:
-                        product.images.all().delete()
-
-                    img_count = 0
-                    for pic_idx, picture in enumerate(pictures):
-                        picture_url = picture.text
-                        if not picture_url:
-                            continue
-
-                        try:
-                            img_response = requests.get(picture_url, timeout=10)
-                            img_response.raise_for_status()
-
-                            file_name = picture_url.split('/')[-1]
-
-                            ProductImage.objects.create(
-                                product=product,
-                                image=ContentFile(img_response.content, name=file_name),
-                                is_main=(pic_idx == 0),
-                                sort_order=pic_idx,
-                            )
-                            img_count += 1
-                        except Exception as e:
-                            self.stdout.write(f'  Помилка: {picture_url[:50]}... - {e}')
-                            errors += 1
-
-                    if img_count > 0:
+                    picture_urls = [p.text for p in pictures if p.text]
+                    success, img_errors = download_product_images(
+                        product, 
+                        picture_urls, 
+                        clear_existing=has_images and redownload
+                    )
+                    
+                    errors += img_errors
+                    
+                    if success > 0:
                         downloaded += 1
                         processed += 1
 

@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-# Build script для Render.com
-
-set -o errexit  # Зупинити виконання при помилці
+set -o errexit
 
 echo "📦 Встановлення залежностей..."
 pip install -r requirements.txt
@@ -12,7 +10,7 @@ python manage.py collectstatic --no-input
 echo "🔄 Застосування міграцій..."
 python manage.py migrate --no-input
 
-echo "📦 Налаштування БД та імпорт даних..."
+echo "📦 Налаштування БД..."
 python production_setup.py || echo "⚠️  Імпорт завершено з попередженнями"
 
-echo "✅ Build completed successfully!"
+echo "✅ Build completed!"
