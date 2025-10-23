@@ -99,6 +99,13 @@
   padding-left: calc(var(--spacing-md) + 4px);
 }
 
+.submenu__item.active .submenu__link {
+  background: rgba(250, 154, 133, 0.15);
+  color: var(--color-brand-primary);
+  font-weight: var(--font-weight-semibold);
+  padding-left: calc(var(--spacing-md) + 4px);
+}
+
 @media (max-width: 992px) {
   .sidebar-menu {
     display: none;
