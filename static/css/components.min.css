@@ -63,7 +63,8 @@
 
 .main-header {
     padding: var(--spacing-lg) 0;
-    background: url('/static/images/fon_image.png') center/cover no-repeat;
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/fon_image.png') center/cover no-repeat;
+    position: relative;
 }
 
 /* Sticky Header для Desktop */

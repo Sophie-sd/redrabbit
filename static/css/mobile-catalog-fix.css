@@ -1,0 +1,34 @@
+.mobile-menu li button {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    outline: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-menu li button:hover,
+.mobile-menu li button:focus {
+    background: var(--color-bg-secondary);
+    color: var(--color-primary);
+    outline: none;
+}
+
+.mobile-menu li button:active {
+    background: var(--color-bg-secondary);
+    transform: scale(0.98);
+}
+
+#catalogMenuToggle {
+    font-family: inherit;
+    font-weight: 500;
+}
+
