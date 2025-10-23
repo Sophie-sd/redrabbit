@@ -72,7 +72,8 @@
   margin-top: var(--spacing-xs, 8px);
 }
 
-.sidebar-menu__item:hover .sidebar-menu__submenu {
+.sidebar-menu__item:hover .sidebar-menu__submenu,
+.sidebar-menu__item.active .sidebar-menu__submenu {
   max-height: 600px;
 }
 
