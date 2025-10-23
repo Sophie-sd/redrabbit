@@ -1671,8 +1671,10 @@
   
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--catalog-gap);
-    padding: 0 var(--space-sm);
+    gap: 10px;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
   }
   
   /* Заголовок каталогу */

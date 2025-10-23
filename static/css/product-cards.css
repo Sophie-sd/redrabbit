@@ -43,7 +43,6 @@
   overflow: hidden;
   transition: all var(--transition-normal);
   height: 100%;
-  max-width: var(--card-max-width);
   width: 100%;
   position: relative;
   box-shadow: var(--card-shadow);

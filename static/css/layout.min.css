@@ -2,10 +2,12 @@
 .container,
 .container-fluid {
     width: 100%;
+    max-width: 100%;
     padding-right: var(--spacing-md);
     padding-left: var(--spacing-md);
     margin-right: auto;
     margin-left: auto;
+    overflow-x: hidden;
 }
 
 @media (min-width: 576px) {
