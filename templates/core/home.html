@@ -141,6 +141,74 @@
     </div>
 </section>
 
+<!-- Top Products Section -->
+<section class="promotions-section" aria-label="Лідери продажу">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Лідери продажу</h2>
+        </div>
+        
+        {% if top_products %}
+        <div class="promotions-slider-container">
+            <button class="promo-nav-btn promo-prev-btn" aria-label="Попередні">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            
+            <div class="promotions-slider" id="topProductsSlider">
+                {% for product in top_products %}
+                    <div class="promo-card">
+                        <a href="{{ product.get_absolute_url }}" class="promo-link">
+                            <div class="promo-image">
+                                {% if product.images.first %}
+                                    <img src="{{ product.images.first.get_image_url }}" alt="{{ product.name }}" loading="lazy">
+                                {% else %}
+                                    <div class="product-placeholder">📦</div>
+                                {% endif %}
+                                
+                                <div class="promo-badges">
+                                    {% if product.is_top %}
+                                        <span class="badge badge-top">ТОП ПРОДАЖ</span>
+                                    {% endif %}
+                                    {% if product.is_sale and product.get_discount_percentage %}
+                                        <span class="badge badge-sale">-{{ product.get_discount_percentage }}%</span>
+                                    {% endif %}
+                                    {% if product.video_url %}
+                                        <span class="badge badge-video">ВІДЕО</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="promo-content">
+                                <h3 class="promo-name">{{ product.name }}</h3>
+                                
+                                <div class="promo-price">
+                                    {% if product.is_sale and product.sale_price %}
+                                        <span class="price-old">{{ product.retail_price }} ₴</span>
+                                        <span class="price-new">{{ product.sale_price }} ₴</span>
+                                    {% else %}
+                                        <span class="price-new">{{ product.retail_price }} ₴</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <button class="promo-nav-btn promo-next-btn" aria-label="Наступні">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+        {% else %}
+            <p class="text-center text-muted">Наразі немає топ товарів</p>
+        {% endif %}
+    </div>
+</section>
+
 <!-- 3. Features Section -->
 <section class="features-section section-padding" aria-label="Наші переваги">
     <div class="container">
@@ -466,6 +534,7 @@
 <script src="{% static 'js/banner-slider.min.js' %}"></script>
 <script src="{% static 'js/recommended-slider.js' %}"></script>
 <script src="{% static 'js/promotions-slider.js' %}"></script>
+<script src="{% static 'js/top-products-slider.js' %}"></script>
 <script src="{% static 'js/reviews-slider.js' %}"></script>
 <script src="{% static 'js/sidebar-menu.js' %}"></script>
 {% endblock %}
