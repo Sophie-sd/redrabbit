@@ -310,9 +310,19 @@
         background: white;
     }
     
+    .promotions-view-all {
+        margin: 24px 0 0;
+    }
+    
     .btn-view-all {
-        padding: 10px 24px;
+        padding: 12px 28px;
         font-size: 14px;
+        gap: 8px;
+    }
+    
+    .btn-view-all svg {
+        width: 16px;
+        height: 16px;
     }
     
     .promotions-section .section-title {
@@ -396,10 +406,6 @@
         margin-top: 20px;
     }
     
-    .promo-view-all {
-        padding: 8px 20px;
-        font-size: 0.85rem;
-    }
 }
 
 @media (max-width: 480px) {
