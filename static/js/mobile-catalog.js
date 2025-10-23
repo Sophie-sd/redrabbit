@@ -1,12 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
     const catalogBtn = document.getElementById('catalogMenuBtn');
     const catalogToggle = document.getElementById('catalogMenuToggle');
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    
+    const mobileMenuToggle = document.querySelector('[data-mobile-menu-toggle]');
+
     function openMobileMenu() {
-        if (mobileMenuBtn) {
-            mobileMenuBtn.click();
-            
+        const mobileMenu = document.querySelector('.mobile-menu');
+        if (mobileMenu && mobileMenuToggle) {
+            mobileMenu.classList.add('active');
+            mobileMenuToggle.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden';
+
             setTimeout(() => {
                 const categoriesSection = document.querySelector('.mobile-submenu');
                 if (categoriesSection) {
@@ -16,17 +19,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         title.setAttribute('aria-expanded', 'true');
                     }
                 }
-            }, 300);
+            }, 100);
         }
     }
-    
+
     if (catalogBtn) {
         catalogBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             openMobileMenu();
         });
     }
-    
+
     if (catalogToggle) {
         catalogToggle.addEventListener('click', function(e) {
             e.preventDefault();
