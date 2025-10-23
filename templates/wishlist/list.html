@@ -142,7 +142,7 @@
 
             <!-- Actions -->
             <div class="wishlist-actions">
-                <a href="{% url 'core:catalog' %}" class="btn btn-secondary btn-lg">
+                <a href="/" class="btn btn-secondary btn-lg">
                     Продовжити покупки
                 </a>
                 <a href="{% url 'wishlist:clear' %}" class="btn btn-outline btn-lg wishlist-clear-btn" data-confirm="Ви впевнені, що хочете очистити список бажань?">
@@ -160,8 +160,8 @@
             </div>
             <h2 class="empty-title">Ваш список бажань порожній</h2>
             <p class="empty-text">Додайте товари, які вам сподобались, щоб не втратити їх</p>
-            <a href="{% url 'core:catalog' %}" class="btn btn-primary btn-lg">
-                Перейти до каталогу
+            <a href="/" class="btn btn-primary btn-lg">
+                На головну
             </a>
         </div>
         {% endif %}

@@ -10,7 +10,7 @@
         <span class="nav-label">Головна</span>
     </a>
     
-    <a href="{% url 'core:catalog' %}" class="nav-item {% if 'catalog' in request.path %}active{% endif %}">
+    <a href="/" class="nav-item {% if request.path == '/' %}active{% endif %}">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M10 3H3V10H10V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M21 3H14V10H21V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

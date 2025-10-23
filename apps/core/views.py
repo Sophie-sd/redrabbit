@@ -82,16 +82,6 @@ class HomeView(TemplateView):
         return context
 
 
-class CatalogView(TemplateView):
-    """Каталог категорій"""
-    template_name = 'core/catalog.html'
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.filter(parent=None, is_active=True).order_by('sort_order', 'name')
-        return context
-
-
 class DeliveryView(TemplateView):
     """Доставка та оплата"""
     template_name = 'core/delivery.html'

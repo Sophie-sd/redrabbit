@@ -11,11 +11,16 @@ class CategoryView(ListView):
     
     def get_queryset(self):
         self.category = get_object_or_404(Category, slug=self.kwargs['slug'])
+        
+        if self.category.children.filter(is_active=True).exists():
+            return Product.objects.none()
+        
         return Product.objects.filter(category=self.category, is_active=True)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category'] = self.category
+        context['subcategories'] = self.category.children.filter(is_active=True, slug__isnull=False).exclude(slug='')
         return context
 
 
