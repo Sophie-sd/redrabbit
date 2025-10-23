@@ -128,6 +128,14 @@
                 </svg>
             </button>
         </div>
+        <div class="promotions-view-all">
+            <a href="{% url 'products:sale' %}" class="btn-view-all">
+                Дивитись всі акції
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
         {% else %}
             <p class="text-center text-muted">Наразі немає акційних товарів</p>
         {% endif %}
