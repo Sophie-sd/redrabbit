@@ -23,6 +23,7 @@ class CatalogManager {
         this.initWishlist();
         this.initCartActions();
         this.initPagination();
+        this.initFiltersToggle();
     }
     
     cacheElements() {
@@ -755,10 +756,20 @@ class CatalogManager {
         }, 3000);
     }
     
+    initFiltersToggle() {
+        const filtersToggle = document.getElementById('filtersToggle');
+        const filtersContent = document.getElementById('filtersContent');
+        
+        if (filtersToggle && filtersContent) {
+            filtersToggle.addEventListener('click', () => {
+                filtersToggle.classList.toggle('active');
+                filtersContent.classList.toggle('active');
+            });
+        }
+    }
+    
     handleResize() {
-        // Обробка зміни розміру вікна
         if (window.innerWidth >= 768) {
-            // Закриваємо мобільні фільтри на більших екранах
             const catalogSidebar = document.getElementById('catalogSidebar');
             if (catalogSidebar && catalogSidebar.classList.contains('active')) {
                 catalogSidebar.classList.remove('active');
