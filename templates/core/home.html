@@ -69,83 +69,67 @@
     </div>
 </section>
 
-<!-- Mobile Promotions Section (показується тільки на мобільних) -->
-<section class="promotions-section mobile-only" aria-label="Акційні пропозиції">
+<!-- Sale Products Section -->
+<section class="promotions-section" aria-label="Акційні товари">
     <div class="container">
-        <div class="section-header text-center">
-            <h2 class="section-title">Акційні пропозиції</h2>
-            <p class="section-subtitle">Вигідні пропозиції з обмеженим терміном дії</p>
+        <div class="section-header">
+            <h2 class="section-title">Акції</h2>
+            <a href="{% url 'products:sale' %}" class="section-link">Дивитись все →</a>
         </div>
         
-        {% if promotion_products %}
+        {% if sale_products %}
         <div class="promotions-slider-container">
-            <button class="promo-nav-btn promo-prev-btn" aria-label="Попередні товари">
+            <button class="promo-nav-btn promo-prev-btn" aria-label="Попередні">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
             
             <div class="promotions-slider" id="promotionsSlider">
-                {% for promo in promotion_products %}
+                {% for product in sale_products %}
                     <div class="promo-card">
-                        <div class="promo-image">
-                            <a href="{{ promo.product.get_absolute_url }}">
-                                {% if promo.product.images.first %}
-                                    <img src="{{ promo.product.images.first.get_image_url }}" alt="{{ promo.product.name }}" loading="lazy">
+                        <a href="{{ product.get_absolute_url }}" class="promo-link">
+                            <div class="promo-image">
+                                {% if product.images.first %}
+                                    <img src="{{ product.images.first.get_image_url }}" alt="{{ product.name }}" loading="lazy">
                                 {% else %}
-                                    <div class="product-placeholder">
-                                        <span class="placeholder-icon">📦</span>
-                                    </div>
+                                    <div class="product-placeholder">📦</div>
                                 {% endif %}
                                 
-                                <div class="promo-badge">-{{ promo.get_discount_percentage }}%</div>
-                            </a>
-                        </div>
-                        
-                        <div class="promo-content">
-                            <h3 class="promo-name">
-                                <a href="{{ promo.product.get_absolute_url }}">{{ promo.product.name }}</a>
-                            </h3>
-                            
-                            <div class="promo-price">
-                                <span class="price-old">{{ promo.get_original_price }} ₴</span>
-                                <span class="price-new">{{ promo.discount_price }} ₴</span>
+                                <div class="promo-badges">
+                                    {% if product.is_sale and product.get_discount_percentage %}
+                                        <span class="badge badge-sale">-{{ product.get_discount_percentage }}%</span>
+                                    {% endif %}
+                                    {% if product.is_top %}
+                                        <span class="badge badge-top">ТОП ПРОДАЖ</span>
+                                    {% endif %}
+                                    {% if product.video_url %}
+                                        <span class="badge badge-video">ВІДЕО</span>
+                                    {% endif %}
+                                </div>
                             </div>
                             
-                            <button class="btn btn-primary btn-sm add-to-cart" 
-                                    data-product-id="{{ promo.product.id }}"
-                                    data-product-name="{{ promo.product.name }}"
-                                    {% if not promo.product.is_in_stock %}disabled{% endif %}>
-                                {% if promo.product.is_in_stock %}
-                                    Купити
-                                {% else %}
-                                    Немає в наявності
-                                {% endif %}
-                            </button>
-                        </div>
+                            <div class="promo-content">
+                                <h3 class="promo-name">{{ product.name }}</h3>
+                                
+                                <div class="promo-price">
+                                    <span class="price-old">{{ product.retail_price }} ₴</span>
+                                    <span class="price-new">{{ product.sale_price }} ₴</span>
+                                </div>
+                            </div>
+                        </a>
                     </div>
                 {% endfor %}
             </div>
             
-            <button class="promo-nav-btn promo-next-btn" aria-label="Наступні товари">
+            <button class="promo-nav-btn promo-next-btn" aria-label="Наступні">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
         </div>
-        
-        <!-- Кнопка "Переглянути всі" -->
-        <div class="promotions-actions">
-            <a href="{% url 'products:sale' %}" class="promo-view-all">
-                Переглянути всі
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-            </a>
-        </div>
         {% else %}
-            <p class="text-center text-muted">Наразі немає акційних пропозицій</p>
+            <p class="text-center text-muted">Наразі немає акційних товарів</p>
         {% endif %}
     </div>
 </section>
