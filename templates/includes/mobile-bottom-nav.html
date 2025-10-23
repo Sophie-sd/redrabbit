@@ -10,7 +10,7 @@
         <span class="nav-label">Головна</span>
     </a>
     
-    <a href="/" class="nav-item {% if request.path == '/' %}active{% endif %}">
+    <button type="button" class="nav-item" id="catalogMenuBtn">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M10 3H3V10H10V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M21 3H14V10H21V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -18,7 +18,7 @@
             <path d="M10 14H3V21H10V14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <span class="nav-label">Каталог</span>
-    </a>
+    </button>
     
     <a href="{% url 'cart:detail' %}" class="nav-item nav-item-cart {% if 'cart' in request.path %}active{% endif %}">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
