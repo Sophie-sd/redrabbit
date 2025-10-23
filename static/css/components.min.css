@@ -80,7 +80,7 @@
         position: sticky;
         top: 40px;
         z-index: 998;
-        background: var(--white);
+        background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/fon_image.png') center/cover no-repeat;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         transition: all 0.3s ease;
     }
