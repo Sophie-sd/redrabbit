@@ -2,22 +2,22 @@
 
 <aside class="sidebar-menu" aria-label="Меню категорій">
     <ul class="sidebar-menu__list">
-        {% for category in main_categories %}
-        {% if category.is_active %}
-        <li class="sidebar-menu__item {% if category.children.all %}has-children{% endif %}">
-            <a href="{{ category.get_absolute_url }}" class="sidebar-menu__link">
+        {% for cat in main_categories %}
+        {% if cat.is_active and cat.slug %}
+        <li class="sidebar-menu__item {% if cat.children.all %}has-children{% endif %} {% if category and cat.id == category.id or category and category.parent and cat.id == category.parent.id %}active{% endif %}">
+            <a href="{{ cat.get_absolute_url }}" class="sidebar-menu__link">
                 <span class="sidebar-menu__icon">🎁</span>
-                <span class="sidebar-menu__text">{{ category.name }}</span>
-                {% if category.children.all %}
+                <span class="sidebar-menu__text">{{ cat.name }}</span>
+                {% if cat.children.all %}
                 <span class="sidebar-menu__arrow">→</span>
                 {% endif %}
             </a>
-            {% if category.children.all %}
+            {% if cat.children.all %}
             <div class="sidebar-menu__submenu">
                 <ul class="submenu__list">
-                    {% for child in category.children.all %}
-                    {% if child.is_active %}
-                    <li class="submenu__item">
+                    {% for child in cat.children.all %}
+                    {% if child.is_active and child.slug %}
+                    <li class="submenu__item {% if category and child.id == category.id %}active{% endif %}">
                         <a href="{{ child.get_absolute_url }}" class="submenu__link">
                             {{ child.name }}
                         </a>
