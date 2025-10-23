@@ -238,43 +238,48 @@
     width: 100%;
 }
 
-/* Кнопка "Переглянути всі" */
-.promotions-actions {
+/* Кнопка "Дивитись всі акції" */
+.promotions-view-all {
     text-align: center;
-    margin-top: 30px;
+    margin: 32px 0 0;
 }
 
-.promo-view-all {
+.btn-view-all {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 24px;
-    background: white;
-    border: 2px solid #e91e63;
-    color: #e91e63;
-    border-radius: 25px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(233, 30, 99, 0.1);
-}
-
-.promo-view-all:hover {
-    background: #e91e63;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 36px;
+    background: linear-gradient(135deg, #fa9a85 0%, #f77f6a 100%);
     color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.25);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 50px;
+    border: none;
+    box-shadow: 0 4px 16px rgba(250, 154, 133, 0.3);
+    transition: all 0.3s ease;
+    letter-spacing: 0.3px;
 }
 
-.promo-view-all svg {
+.btn-view-all:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(250, 154, 133, 0.4);
+    background: linear-gradient(135deg, #f77f6a 0%, #fa9a85 100%);
+}
+
+.btn-view-all svg {
     width: 18px;
     height: 18px;
     transition: transform 0.3s ease;
 }
 
-.promo-view-all:hover svg {
-    transform: translateX(4px);
+.btn-view-all:hover svg {
+    transform: translateX(5px);
+}
+
+.btn-view-all:active {
+    transform: translateY(-1px);
 }
 
 /* Адаптивність сторінки акцій */
