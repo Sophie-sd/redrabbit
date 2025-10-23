@@ -23,6 +23,7 @@
         </aside>
         
         <main class="catalog-main">
+            {% if not subcategories %}
             <div class="filters-bar">
                 <button type="button" class="filters-toggle" id="filtersToggle">
                     <svg class="filters-toggle__icon" viewBox="0 0 24 24" fill="none">
@@ -84,7 +85,9 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             
+            {% if not subcategories %}
             <div class="mobile-controls">
                 <button type="button" class="mobile-filters-btn" id="mobileFiltersBtn">
                     <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -111,6 +114,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             
             <div class="active-filters hidden" id="activeFilters"></div>
         
