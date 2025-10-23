@@ -278,7 +278,25 @@
 }
 
 .wishlist-link,
-.cart-link,
+.cart-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: #ff4444;
+    text-decoration: none;
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-md);
+    transition: all var(--transition-fast);
+    background: rgba(255,255,255,0.15);
+}
+
+.wishlist-link:hover,
+.cart-link:hover {
+    background: rgba(255,255,255,0.25);
+    color: #ff4444;
+}
+
 .account-link {
     position: relative;
     display: flex;
@@ -292,8 +310,6 @@
     background: rgba(255,255,255,0.15);
 }
 
-.wishlist-link:hover,
-.cart-link:hover,
 .account-link:hover {
     background: rgba(255,255,255,0.25);
     color: #fff;
