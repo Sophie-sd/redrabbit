@@ -1,34 +1,44 @@
 document.addEventListener('DOMContentLoaded', function() {
     const catalogBtn = document.getElementById('catalogMenuBtn');
     const catalogToggle = document.getElementById('catalogMenuToggle');
-    const mobileMenu = document.querySelector('.mobile-menu');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     
-    function toggleCatalog() {
-        if (mobileMenu) {
-            const categoriesSection = mobileMenu.querySelector('.mobile-submenu');
-            if (categoriesSection) {
-                categoriesSection.classList.toggle('expanded');
-                const isExpanded = categoriesSection.classList.contains('expanded');
-                categoriesSection.setAttribute('aria-expanded', isExpanded);
-            } else {
-                if (!mobileMenu.classList.contains('active')) {
-                    mobileMenu.classList.add('active');
+    function openMobileMenu() {
+        if (mobileMenuBtn) {
+            mobileMenuBtn.click();
+            
+            setTimeout(() => {
+                const categoriesSection = document.querySelector('.mobile-submenu');
+                if (categoriesSection) {
+                    categoriesSection.classList.add('active');
+                    const title = categoriesSection.querySelector('.submenu-title');
+                    if (title) {
+                        title.setAttribute('aria-expanded', 'true');
+                    }
                 }
-            }
+            }, 300);
         }
     }
     
     if (catalogBtn) {
         catalogBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            toggleCatalog();
+            openMobileMenu();
         });
     }
     
     if (catalogToggle) {
         catalogToggle.addEventListener('click', function(e) {
             e.preventDefault();
-            toggleCatalog();
+            const categoriesSection = document.querySelector('.mobile-submenu');
+            if (categoriesSection) {
+                categoriesSection.classList.toggle('active');
+                const title = categoriesSection.querySelector('.submenu-title');
+                if (title) {
+                    const isActive = categoriesSection.classList.contains('active');
+                    title.setAttribute('aria-expanded', isActive.toString());
+                }
+            }
         });
     }
 });
