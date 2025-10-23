@@ -489,8 +489,8 @@
     }
     
     .main-header {
-        background: var(--white);
-        border-bottom: 1px solid var(--neutral-light);
+        background: url('../images/fon_image.png') center/cover no-repeat;
+        border-bottom: none;
     }
     
     .footer-main {
@@ -596,8 +596,8 @@
         position: sticky;
         top: 0;
         z-index: 100;
-        background: var(--white);
-        border-bottom: 1px solid var(--neutral-light);
+        background: transparent;
+        border-bottom: none;
     }
     
     
