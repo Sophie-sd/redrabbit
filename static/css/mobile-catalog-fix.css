@@ -1,9 +1,14 @@
-.mobile-menu li button {
+.mobile-menu li button,
+.mobile-menu li button:hover,
+.mobile-menu li button:focus,
+.mobile-menu li button:active,
+.mobile-menu li button:focus-visible {
     width: 100%;
     text-align: left;
     background: transparent;
-    border: none;
-    outline: none;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
     padding: 12px 16px;
     color: #333;
     font-size: 1rem;
@@ -16,11 +21,9 @@
     border-radius: 8px;
 }
 
-.mobile-menu li button:hover,
-.mobile-menu li button:focus {
+.mobile-menu li button:hover {
     background: rgba(250,154,133,0.1);
     color: #fa9a85;
-    outline: none;
 }
 
 .mobile-menu li button:active {
@@ -32,11 +35,18 @@
     font-weight: 500;
 }
 
-.mobile-bottom-nav button.nav-item {
+.mobile-bottom-nav button.nav-item,
+.mobile-bottom-nav button.nav-item:hover,
+.mobile-bottom-nav button.nav-item:focus,
+.mobile-bottom-nav button.nav-item:active,
+.mobile-bottom-nav button.nav-item:focus-visible {
     background: transparent;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-bottom-nav button.nav-item:active {
     background: rgba(250,154,133,0.1);
 }
-
