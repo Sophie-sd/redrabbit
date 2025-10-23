@@ -37,10 +37,11 @@
     background: none;
     border: none;
     border-radius: var(--border-radius);
-    color: var(--neutral-dark);
+    color: #ff4444;
     cursor: pointer;
     transition: all var(--transition-fast);
     padding: var(--spacing-sm);
+    font-size: 1.5rem;
 }
 
 .mobile-search-btn:hover,
