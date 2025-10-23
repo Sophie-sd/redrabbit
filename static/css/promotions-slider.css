@@ -239,21 +239,26 @@
 }
 
 /* Кнопка "Дивитись всі акції" */
-.promotions-section .promotions-view-all {
+.promotions-view-all {
     text-align: center;
     margin: 32px 0 0;
     padding: 0;
 }
 
-.promotions-section .btn-view-all {
-    display: inline-flex !important;
+.promotions-section .promotions-view-all {
+    text-align: center;
+    margin: 32px 0 0;
+}
+
+.btn-view-all {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
     padding: 14px 36px;
     background: linear-gradient(135deg, #fa9a85 0%, #f77f6a 100%);
-    color: #fff !important;
-    text-decoration: none !important;
+    color: #fff;
+    text-decoration: none;
     font-size: 16px;
     font-weight: 600;
     border-radius: 50px;
@@ -263,24 +268,24 @@
     letter-spacing: 0.3px;
 }
 
-.promotions-section .btn-view-all:hover {
+.btn-view-all:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 24px rgba(250, 154, 133, 0.4);
     background: linear-gradient(135deg, #f77f6a 0%, #fa9a85 100%);
-    color: #fff !important;
+    color: #fff;
 }
 
-.promotions-section .btn-view-all svg {
+.btn-view-all svg {
     width: 18px;
     height: 18px;
     transition: transform 0.3s ease;
 }
 
-.promotions-section .btn-view-all:hover svg {
+.btn-view-all:hover svg {
     transform: translateX(5px);
 }
 
-.promotions-section .btn-view-all:active {
+.btn-view-all:active {
     transform: translateY(-1px);
 }
 
@@ -317,17 +322,17 @@
         background: white;
     }
     
-    .promotions-section .promotions-view-all {
+    .promotions-view-all {
         margin: 24px 0 0;
     }
     
-    .promotions-section .btn-view-all {
-        padding: 12px 28px !important;
-        font-size: 14px !important;
+    .btn-view-all {
+        padding: 12px 28px;
+        font-size: 14px;
         gap: 8px;
     }
     
-    .promotions-section .btn-view-all svg {
+    .btn-view-all svg {
         width: 16px;
         height: 16px;
     }
