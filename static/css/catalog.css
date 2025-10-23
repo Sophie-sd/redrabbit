@@ -1601,6 +1601,14 @@
     gap: var(--space-sm);
   }
   
+  .subcategories-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .subcategory-card {
+    padding: var(--space-md);
+  }
+  
   /* Показуємо мобільні контроли */
   .catalog-layout .mobile-controls {
     display: flex;
