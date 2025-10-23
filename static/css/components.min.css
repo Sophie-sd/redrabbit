@@ -229,8 +229,12 @@
     transition: color 0.2s ease;
 }
 
+.phone-link {
+    color: #fff;
+}
+
 .phone-link:hover {
-    color: var(--primary-pink);
+    color: rgba(255,255,255,0.8);
 }
 
 .phone-icon {
@@ -277,18 +281,19 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
-    color: var(--neutral-dark);
+    color: #fff;
     text-decoration: none;
     padding: var(--spacing-sm);
     border-radius: var(--border-radius-md);
     transition: all var(--transition-fast);
+    background: rgba(255,255,255,0.1);
 }
 
 .wishlist-link:hover,
 .cart-link:hover,
 .account-link:hover {
-    background: var(--gray-light);
-    color: var(--primary-pink);
+    background: rgba(255,255,255,0.2);
+    color: #fff;
 }
 
 .action-icon {
