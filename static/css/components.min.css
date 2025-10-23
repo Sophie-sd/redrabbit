@@ -259,6 +259,10 @@
     border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
     cursor: pointer;
     transition: all var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
 }
 
 .search-btn:hover {
