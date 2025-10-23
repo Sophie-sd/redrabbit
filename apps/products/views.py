@@ -16,7 +16,6 @@ class CategoryView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category'] = self.category
-        context['main_categories'] = Category.objects.filter(parent=None, is_active=True).prefetch_related('children')
         return context
 
 
