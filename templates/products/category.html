@@ -19,33 +19,7 @@
     
     <div class="catalog-layout">
         <aside class="catalog-sidebar" id="catalogSidebar">
-            <div class="categories-panel">
-                <h3 class="categories-title">Категорії</h3>
-                <ul class="categories-list">
-                    {% for cat in main_categories %}
-                    {% if cat.is_active and cat.slug %}
-                    <li class="categories-item {% if cat.children.all %}has-children{% endif %} {% if cat.id == category.id or cat.id == category.parent.id %}active{% endif %}">
-                        <a href="{{ cat.get_absolute_url }}" class="categories-link">
-                            {{ cat.name }}
-                        </a>
-                        {% if cat.children.all %}
-                        <ul class="subcategories-list">
-                            {% for child in cat.children.all %}
-                            {% if child.is_active and child.slug %}
-                            <li class="subcategories-item {% if child.id == category.id %}active{% endif %}">
-                                <a href="{{ child.get_absolute_url }}" class="subcategories-link">
-                                    {{ child.name }}
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </li>
-                    {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
+            {% include 'includes/sidebar-menu.html' %}
         </aside>
         
         <main class="catalog-main">
