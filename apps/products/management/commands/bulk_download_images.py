@@ -4,10 +4,10 @@
 import xml.etree.ElementTree as ET
 import requests
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from django.core.management.base import BaseCommand
-from django.db import transaction
 from apps.products.models import Product
-from apps.products.utils import download_product_images
+from apps.products.utils.image_downloader import download_product_images
 
 
 class Command(BaseCommand):
@@ -38,12 +38,19 @@ class Command(BaseCommand):
             default=3,
             help='Максимальна кількість повторних спроб'
         )
+        parser.add_argument(
+            '--workers',
+            type=int,
+            default=10,
+            help='Кількість паралельних потоків (за замовчуванням: 10)'
+        )
 
     def handle(self, *args, **options):
         url = options['url']
         batch_size = options['batch_size']
         delay = options['delay']
         max_retries = options['max_retries']
+        workers = options['workers']
 
         self.stdout.write(self.style.SUCCESS('🖼️  МАСОВЕ ЗАВАНТАЖЕННЯ КАРТИНОК'))
         self.stdout.write('='*60)
@@ -87,64 +94,68 @@ class Command(BaseCommand):
 
             self.stdout.write(f'Знайдено картинки для {len(images_index)} товарів')
 
-            # Обробляємо товари пакетами
+            def process_product(product, current_num):
+                if not product.external_id:
+                    return 'skipped', None
+                
+                picture_urls = images_index.get(product.external_id, [])
+                if not picture_urls:
+                    return 'skipped', None
+                
+                for retry in range(max_retries):
+                    try:
+                        success_count, error_count = download_product_images(
+                            product, 
+                            picture_urls, 
+                            clear_existing=False
+                        )
+                        
+                        if success_count > 0:
+                            return 'success', success_count
+                        elif error_count > 0:
+                            return 'error', error_count
+                    except Exception:
+                        if retry < max_retries - 1:
+                            time.sleep(delay * (retry + 1))
+                
+                return 'failed', None
+
             processed = 0
             downloaded = 0
             skipped = 0
             errors = 0
 
             for i in range(0, total_products, batch_size):
-                batch = products_without_images[i:i + batch_size]
+                batch = list(products_without_images[i:i + batch_size])
                 
                 self.stdout.write(f'\n📦 Пакет {i//batch_size + 1}: товари {i+1}-{min(i+batch_size, total_products)}')
                 
-                with transaction.atomic():
-                    for product in batch:
-                        if not product.external_id:
-                            skipped += 1
-                            continue
-
-                        picture_urls = images_index.get(product.external_id, [])
-                        if not picture_urls:
-                            skipped += 1
-                            continue
-
-                        # Завантажуємо картинки з повторними спробами
-                        success = False
-                        for retry in range(max_retries):
-                            try:
-                                success_count, error_count = download_product_images(
-                                    product, 
-                                    picture_urls, 
-                                    clear_existing=False
-                                )
-                                
-                                if success_count > 0:
-                                    downloaded += 1
-                                    success = True
-                                    break
-                                elif error_count > 0:
-                                    errors += error_count
-                                    
-                            except Exception as e:
-                                if retry == max_retries - 1:
-                                    self.stdout.write(f'    ❌ {product.name}: {e}')
-                                    errors += 1
-                                else:
-                                    time.sleep(delay * (retry + 1))  # Збільшуємо затримку з кожною спробою
-
-                        if not success:
-                            skipped += 1
-
+                with ThreadPoolExecutor(max_workers=workers) as executor:
+                    futures = {}
+                    for idx, product in enumerate(batch):
+                        current_num = i + idx + 1
+                        future = executor.submit(process_product, product, current_num)
+                        futures[future] = (product, current_num)
+                    
+                    for future in as_completed(futures):
+                        product, current_num = futures[future]
+                        status, count = future.result()
+                        
                         processed += 1
                         
-                        # Затримка між товарами
-                        if delay > 0:
-                            time.sleep(delay)
-
-                    # Прогрес
-                    self.stdout.write(f'    ✅ Оброблено: {processed}/{total_products} '
-                                    f'(завантажено: {downloaded}, пропущено: {skipped})')
+                        if status == 'success':
+                            downloaded += 1
+                            self.stdout.write(f'  [{current_num}/{total_products}] {product.name[:40]}... {self.style.SUCCESS("✅")} {count}')
+                        elif status == 'skipped':
+                            skipped += 1
+                        elif status == 'failed':
+                            skipped += 1
+                        elif status == 'error':
+                            errors += count
+                        
+                        self.stdout.flush()
+                
+                self.stdout.write(f'  📊 Оброблено: {processed}/{total_products} | Завантажено: {downloaded} | Пропущено: {skipped}')
 
             # Підсумок
             self.stdout.write('\n' + '='*60)

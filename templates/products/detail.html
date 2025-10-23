@@ -17,7 +17,7 @@
             <div class="product-gallery">
                 <div class="product-main-image" id="mainImage">
                     {% if product.images.all %}
-                        <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" id="currentImage">
+                        <img src="{{ product.images.first.get_image_url }}" alt="{{ product.name }}" id="currentImage">
                     {% else %}
                         <div class="product-placeholder">
                             <span>📦</span>
@@ -28,8 +28,8 @@
                 {% if product.images.count > 1 %}
                 <div class="product-thumbnails">
                     {% for image in product.images.all %}
-                    <div class="thumbnail {% if forloop.first %}active{% endif %}" data-image="{{ image.image.url }}">
-                        <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.name }}">
+                    <div class="thumbnail {% if forloop.first %}active{% endif %}" data-image="{{ image.get_image_url }}">
+                        <img src="{{ image.get_image_url }}" alt="{{ image.alt_text|default:product.name }}">
                     </div>
                     {% endfor %}
                 </div>
@@ -148,7 +148,7 @@
                     <a href="{{ item.get_absolute_url }}" class="product-link">
                         <div class="product-image">
                             {% if item.images.first %}
-                                <img src="{{ item.images.first.image.url }}" alt="{{ item.name }}" loading="lazy">
+                                <img src="{{ item.images.first.get_image_url }}" alt="{{ item.name }}" loading="lazy">
                             {% else %}
                                 <div class="product-placeholder">
                                     <span>📦</span>

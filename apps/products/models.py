@@ -219,7 +219,8 @@ class ProductImage(models.Model):
     """Зображення товарів"""
     
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField('Зображення', upload_to='products/')
+    image = models.ImageField('Зображення', upload_to='products/', blank=True, null=True)
+    image_url = models.URLField('URL зображення', max_length=500, blank=True)
     alt_text = models.CharField('Alt текст', max_length=200, blank=True)
     is_main = models.BooleanField('Головне зображення', default=False)
     sort_order = models.PositiveIntegerField('Порядок', default=0)
@@ -228,6 +229,12 @@ class ProductImage(models.Model):
         verbose_name = 'Зображення товару'
         verbose_name_plural = 'Зображення товарів'
         ordering = ['sort_order']
+    
+    def get_image_url(self):
+        """Повертає URL зображення (завантажене або зовнішнє)"""
+        if self.image:
+            return self.image.url
+        return self.image_url
     
     def save(self, *args, **kwargs):
         if self.image and hasattr(self.image, 'file'):

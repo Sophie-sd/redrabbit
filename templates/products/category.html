@@ -195,7 +195,7 @@
                         <div class="product-card__media">
                             {% if product.images.first %}
                                 <img 
-                                    src="{{ product.images.first.image.url }}" 
+                                    src="{{ product.images.first.get_image_url }}" 
                                     alt="{{ product.name }}" 
                                     class="product-card__image"
                                     loading="lazy"

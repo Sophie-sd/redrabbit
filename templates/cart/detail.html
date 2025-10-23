@@ -20,7 +20,7 @@
                         <div class="cart-item" data-product-id="{{ item.product.id }}" data-price="{{ item.price }}">
                             <div class="item-image">
                                 {% if item.product.images.first %}
-                                    <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}">
+                                    <img src="{{ item.product.images.first.get_image_url }}" alt="{{ item.product.name }}">
                                 {% else %}
                                     <div class="product-placeholder">
                                         <i class="icon-product">📦</i>

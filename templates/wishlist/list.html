@@ -34,7 +34,7 @@
                     <div class="product-card__media">
                         {% if product.main_image %}
                             <img 
-                                src="{{ product.main_image.image.url }}" 
+                                src="{{ product.main_image.get_image_url }}" 
                                 alt="{{ product.name }}" 
                                 class="product-card__image"
                                 loading="lazy"

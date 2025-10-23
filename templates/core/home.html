@@ -91,7 +91,7 @@
                         <div class="promo-image">
                             <a href="{{ promo.product.get_absolute_url }}">
                                 {% if promo.product.images.first %}
-                                    <img src="{{ promo.product.images.first.image.url }}" alt="{{ promo.product.name }}" loading="lazy">
+                                    <img src="{{ promo.product.images.first.get_image_url }}" alt="{{ promo.product.name }}" loading="lazy">
                                 {% else %}
                                     <div class="product-placeholder">
                                         <span class="placeholder-icon">📦</span>
@@ -172,7 +172,7 @@
                         <div class="promo-image">
                             <a href="{{ promo.product.get_absolute_url }}">
                                 {% if promo.product.images.first %}
-                                    <img src="{{ promo.product.images.first.image.url }}" alt="{{ promo.product.name }}" loading="lazy">
+                                    <img src="{{ promo.product.images.first.get_image_url }}" alt="{{ promo.product.name }}" loading="lazy">
                                 {% else %}
                                     <div class="product-placeholder">
                                         <span class="placeholder-icon">📦</span>
@@ -299,7 +299,7 @@
                         <div class="product-image">
                             <a href="{{ product.get_absolute_url }}">
                                 {% if product.images.first %}
-                                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" loading="lazy">
+                                    <img src="{{ product.images.first.get_image_url }}" alt="{{ product.name }}" loading="lazy">
                                 {% else %}
                                     <div class="product-placeholder">
                                         <span class="placeholder-icon">📦</span>
@@ -450,7 +450,7 @@
                     <div class="review-product">
                         <div class="review-product__image">
                             {% if review.product.images.first %}
-                                <img src="{{ review.product.images.first.image.url }}" alt="{{ review.product.name }}" loading="lazy">
+                                <img src="{{ review.product.images.first.get_image_url }}" alt="{{ review.product.name }}" loading="lazy">
                             {% endif %}
                         </div>
                         <a href="{{ review.product.get_absolute_url }}" class="review-product__name">
@@ -505,7 +505,7 @@
                 <a href="{{ product.get_absolute_url }}" class="product-card__link">
                     <div class="product-card__image">
                         {% if product.images.first %}
-                            <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" loading="lazy">
+                            <img src="{{ product.images.first.get_image_url }}" alt="{{ product.name }}" loading="lazy">
                         {% endif %}
                         {% if product.is_top %}
                         <span class="product-badge badge-hit">ХІТ</span>

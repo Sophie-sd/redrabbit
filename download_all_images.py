@@ -20,8 +20,9 @@ try:
         'bulk_download_images',
         url='https://smtm.com.ua/_prices/import-retail-ua-2.xml',
         batch_size=100,
-        delay=0.1,
-        max_retries=3,
+        delay=0,
+        max_retries=2,
+        workers=20,
         verbosity=1
     )
     print('\n✅ Завантаження картинок завершене!')
