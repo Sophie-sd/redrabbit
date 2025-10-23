@@ -4,14 +4,13 @@
     <ul class="sidebar-menu__list">
         {% for cat in main_categories %}
         {% if cat.is_active and cat.slug %}
-        <li class="sidebar-menu__item {% if cat.children.all %}has-children{% endif %} {% if category and cat.id == category.id or category and category.parent and cat.id == category.parent.id %}active{% endif %}">
-            <a href="{{ cat.get_absolute_url }}" class="sidebar-menu__link">
-                <span class="sidebar-menu__icon">🎁</span>
-                <span class="sidebar-menu__text">{{ cat.name }}</span>
-                {% if cat.children.all %}
-                <span class="sidebar-menu__arrow">→</span>
-                {% endif %}
-            </a>
+                <li class="sidebar-menu__item {% if cat.children.all %}has-children{% endif %} {% if category and cat.id == category.id or category and category.parent and cat.id == category.parent.id %}active{% endif %}">
+                    <a href="{{ cat.get_absolute_url }}" class="sidebar-menu__link">
+                        <span class="sidebar-menu__text">{{ cat.name }}</span>
+                        {% if cat.children.all %}
+                        <span class="sidebar-menu__arrow">→</span>
+                        {% endif %}
+                    </a>
             {% if cat.children.all %}
             <div class="sidebar-menu__submenu">
                 <ul class="submenu__list">

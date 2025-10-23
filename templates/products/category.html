@@ -120,12 +120,10 @@
         
         <!-- Показуємо підкатегорії якщо це батьківська категорія -->
         {% if subcategories %}
-            <div class="subcategories-grid">
+            <div class="subcategories-list">
                 {% for subcat in subcategories %}
-                <a href="{{ subcat.get_absolute_url }}" class="subcategory-card">
-                    <span class="subcategory-icon">🎁</span>
-                    <h3 class="subcategory-name">{{ subcat.name }}</h3>
-                    <span class="subcategory-arrow">→</span>
+                <a href="{{ subcat.get_absolute_url }}" class="subcategory-btn">
+                    {{ subcat.name }}
                 </a>
                 {% endfor %}
             </div>
