@@ -50,6 +50,8 @@ class Category(models.Model):
         super().save(*args, **kwargs)
     
     def get_absolute_url(self):
+        if not self.slug:
+            return '#'
         return reverse('products:category', kwargs={'slug': self.slug})
     
     def get_all_children(self):
