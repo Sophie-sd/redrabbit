@@ -120,12 +120,15 @@
         
         <!-- Показуємо підкатегорії якщо це батьківська категорія -->
         {% if subcategories %}
-            <div class="subcategories-list">
-                {% for subcat in subcategories %}
-                <a href="{{ subcat.get_absolute_url }}" class="subcategory-btn">
-                    {{ subcat.name }}
-                </a>
-                {% endfor %}
+            <div class="subcategories-wrapper">
+                <h2 class="subcategories-title">Оберіть категорію:</h2>
+                <div class="subcategories-list">
+                    {% for subcat in subcategories %}
+                    <a href="{{ subcat.get_absolute_url }}" class="subcategory-btn">
+                        {{ subcat.name }}
+                    </a>
+                    {% endfor %}
+                </div>
             </div>
         {% elif products %}
             <div class="products-grid" id="productsGrid" role="main" aria-live="polite">
