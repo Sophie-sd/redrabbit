@@ -310,6 +310,11 @@
         background: white;
     }
     
+    .btn-view-all {
+        padding: 10px 24px;
+        font-size: 14px;
+    }
+    
     .promotions-section .section-title {
         font-size: 1.5rem;
     }
