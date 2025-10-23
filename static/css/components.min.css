@@ -1536,6 +1536,13 @@
 @media (min-width: 992px) {
     .main-header {
         padding: var(--spacing-md) 0;
+        background-position: center;
+        background-size: cover;
+    }
+    
+    .header {
+        background-position: center;
+        background-size: cover;
     }
 }
 
