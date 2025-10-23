@@ -2,12 +2,17 @@
   background: var(--color-text-primary);
   color: var(--color-text-white);
   padding: var(--spacing-xxl, 60px) 0 var(--spacing-lg, 24px);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .footer-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--spacing-xl, 32px);
+  width: 100%;
+  max-width: 100%;
 }
 
 .footer-col {
