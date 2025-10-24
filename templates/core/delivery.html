@@ -1,80 +1,88 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Дискретна доставка інтимних товарів - 100% конфіденційно{% endblock %}
-{% block description %}Дискретна доставка інтимних товарів по Україні. Нейтральна упаковка, конфіденційність гарантована. Нова Пошта, поштомати. Безпечна оплата. 18+{% endblock %}
+{% block title %}Доставка та оплата - redrabbit{% endblock %}
+{% block description %}Доставка товарів по Україні. Нова Пошта, Укр Пошта. Безкоштовна доставка від 500 ₴. Різні способи оплати. 18+{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="page-header section-padding-sm bg-primary">
-    <div class="container">
-        <div class="page-header-content text-center text-white">
-            <h1 class="page-title">Дискретна доставка та безпечна оплата</h1>
-            <p class="page-subtitle">🔒 Повна конфіденційність | 📦 Нейтральна упаковка | 🚚 Швидка доставка</p>
-        </div>
-    </div>
-</section>
-
 <!-- Delivery Methods -->
 <section class="delivery-methods-section section-padding">
     <div class="container">
         <div class="section-header text-center mb-5">
-            <h2 class="section-title">Способи дискретної доставки</h2>
-            <p class="section-subtitle">⚠️ <strong>Всі посилки пакуються в нейтральну упаковку без позначок про вміст</strong></p>
-            <p class="section-subtitle">Ніхто не дізнається, що ви замовили. Повна конфіденційність гарантована!</p>
+            <h2 class="section-title">Доставка</h2>
         </div>
         
         <div class="delivery-grid">
             <div class="delivery-card card fade-in">
-                <div class="delivery-badge">🔒 Найдискретніше</div>
                 <div class="delivery-image">
                     <img src="{% static 'images/nova_posta.png' %}" alt="Нова Пошта" loading="lazy">
                 </div>
                 <div class="delivery-content">
-                    <h3 class="delivery-title">Нова Пошта (Рекомендуємо!)</h3>
-                    <p class="delivery-description">Доставка за тарифами перевізника</p>
+                    <h3 class="delivery-title">Нова Пошта</h3>
+                    <p class="delivery-description">Доставка на відділення / Кур'єром на адресу</p>
+                    <p class="delivery-description"><strong>1-2 робочих дня</strong></p>
                     <ul class="delivery-features">
-                        <li><strong>🔒 ПОШТОМАТ - максимальна анонімність</strong></li>
-                        <li>📦 Понад 7000 відділень по Україні</li>
-                        <li>⚡ Швидка доставка 1-2 дні</li>
-                        <li>👁️ Відстеження посилки онлайн</li>
-                        <li>🏠 Доставка до дому (кур'єр не бачить вміст)</li>
-                        <li><strong>Нейтральна упаковка - ніяких позначок!</strong></li>
+                        <li>Понад 7000 відділень по Україні</li>
+                        <li>Швидка доставка 1-2 дні</li>
+                        <li>Відстеження посилки онлайн</li>
+                        <li>Доставка до дому кур'єром</li>
+                        <li>Поштомати для зручного отримання</li>
                     </ul>
                 </div>
             </div>
             
             <div class="delivery-card card fade-in">
-                <div class="delivery-badge economical">Економно</div>
                 <div class="delivery-image">
                     <img src="{% static 'images/ukr_posta.png' %}" alt="Укр Пошта" loading="lazy">
                 </div>
                 <div class="delivery-content">
                     <h3 class="delivery-title">Укр Пошта</h3>
-                    <p class="delivery-description">Доставка за тарифами перевізника</p>
+                    <p class="delivery-description">Доставка на відділення</p>
                     <ul class="delivery-features">
-                        <li>📮 Найбільша мережа відділень</li>
-                        <li>💰 Доступні ціни на доставку</li>
-                        <li>🌾 Доставка в сільську місцевість</li>
-                        <li>✅ Надійна державна служба</li>
-                        <li><strong>🔒 Дискретна упаковка гарантована</strong></li>
+                        <li>Найбільша мережа відділень</li>
+                        <li>Доступні ціни на доставку</li>
+                        <li>Доставка в сільську місцевість</li>
+                        <li>Надійна державна служба</li>
+                        <li>Відстеження посилки</li>
                     </ul>
                 </div>
             </div>
             
-            <div class="delivery-card card fade-in disabled-state">
-                <div class="delivery-badge disabled-badge">Недоступно</div>
+            <div class="delivery-card card fade-in">
                 <div class="delivery-image">
-                    <img src="{% static 'images/samovyviz.png' %}" alt="Самовивіз" loading="lazy">
+                    <svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="120" height="120" fill="#FA9A85" rx="10"/>
+                        <path d="M60 30 L85 50 L85 85 L35 85 L35 50 Z" fill="white" stroke="white" stroke-width="2"/>
+                        <rect x="50" y="65" width="20" height="20" fill="#FA9A85"/>
+                        <path d="M40 50 L60 35 L80 50" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </div>
                 <div class="delivery-content">
-                    <h3 class="delivery-title">Самовивіз</h3>
-                    <p class="delivery-description perfect-location">Тимчасово недоступний</p>
+                    <h3 class="delivery-title">Безкоштовна доставка</h3>
+                    <p class="delivery-description"><strong>Всі замовлення від 500 ₴ доставимо безкоштовно</strong></p>
                     <ul class="delivery-features">
-                        <li>🚫 З міркувань конфіденційності</li>
-                        <li>🔒 Рекомендуємо поштомат</li>
-                        <li>📞 Консультації по телефону</li>
-                        <li>💬 Анонімна підтримка клієнтів</li>
+                        <li>Мінімальна сума замовлення 500 ₴</li>
+                        <li>Безкоштовна доставка по всій Україні</li>
+                        <li>Доступно для Нової Пошти та Укр Пошти</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="delivery-card card fade-in">
+                <div class="delivery-image">
+                    <svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="60" cy="60" r="50" fill="#FA9A85"/>
+                        <path d="M45 55 L55 65 L75 45" fill="none" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="60" cy="60" r="35" fill="none" stroke="white" stroke-width="3"/>
+                    </svg>
+                </div>
+                <div class="delivery-content">
+                    <h3 class="delivery-title">Анонімність</h3>
+                    <p class="delivery-description"><strong>Ми подбаємо, щоб ніхто не дізнався про тебе та твоє замовлення</strong></p>
+                    <ul class="delivery-features">
+                        <li>Нейтральна упаковка без позначок</li>
+                        <li>Конфіденційність персональних даних</li>
+                        <li>Дискретна обробка замовлення</li>
                     </ul>
                 </div>
             </div>
@@ -86,117 +94,59 @@
 <section class="payment-methods-section section-padding bg-light">
     <div class="container">
         <div class="section-header text-center mb-5">
-            <h2 class="section-title">Способи безпечної оплати</h2>
-            <p class="section-subtitle">🔐 В банківській виписці буде нейтральна назва платежу</p>
-            <p class="section-subtitle"><strong>Повна конфіденційність ваших фінансових даних!</strong></p>
+            <h2 class="section-title">Оплата</h2>
+            <p class="section-subtitle">У нашому магазині ми пропонуємо різні способи оплати, щоб зробити ваші покупки зручніше:</p>
         </div>
         
         <div class="payment-grid">
             <div class="payment-card card fade-in">
-                <div class="payment-badge trusted">🔒 Анонімно</div>
-                <div class="payment-image">
-                    <img src="{% static 'images/oplata_pry_dostavtsi.png' %}" alt="Оплата при доставці" loading="lazy">
-                </div>
-                <div class="payment-content">
-                    <h3 class="payment-title">Оплата при отриманні</h3>
-                    <p class="payment-description">Комісію за переказ оплачує отримувач</p>
-                    <ul class="payment-features">
-                        <li>💰 Оплачуєте готівкою у відділенні</li>
-                        <li>📦 Працівник пошти не бачить назву товару</li>
-                        <li>🔒 Дискретна передача посилки</li>
-                        <li>💳 Додаткова комісія 2% + 20 грн</li>
-                        <li>✅ Гарантія повернення коштів</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="payment-card card fade-in">
-                <div class="payment-badge instant">⚡ Швидко</div>
                 <div class="payment-image">
                     <img src="{% static 'images/online_pay.png' %}" alt="Онлайн оплата" loading="lazy">
                 </div>
                 <div class="payment-content">
-                    <h3 class="payment-title">Онлайн-оплата Visa, Mastercard</h3>
-                    <p class="payment-description">Оплата картою через захищений сервіс LiqPay</p>
+                    <h3 class="payment-title">Онлайн оплата</h3>
+                    <p class="payment-description">платіжні картки, Apple Pay/Google Pay та багато інших</p>
                     <ul class="payment-features">
-                        <li>🔐 Безпечна оплата з SSL-шифруванням</li>
-                        <li>⚡ Миттєве підтвердження платежу</li>
-                        <li><strong>💳 В виписці буде нейтральна назва</strong></li>
-                        <li>🛡️ Захист по стандарту PCI DSS</li>
-                        <li>💰 Без додаткових комісій</li>
+                        <li>Visa, Mastercard</li>
+                        <li>Apple Pay</li>
+                        <li>Google Pay</li>
+                        <li>Миттєве підтвердження платежу</li>
+                        <li>Безпечна оплата з SSL-шифруванням</li>
                     </ul>
                 </div>
             </div>
             
             <div class="payment-card card fade-in">
-                <div class="payment-badge business">🏦 Банк</div>
                 <div class="payment-image">
-                    <img src="{% static 'images/za_recvizitamy.png' %}" alt="Оплата по реквізитам" loading="lazy">
+                    <img src="{% static 'images/za_recvizitamy.png' %}" alt="Безготівкова оплата" loading="lazy">
                 </div>
                 <div class="payment-content">
-                    <h3 class="payment-title">Оплата по реквізитам</h3>
-                    <p class="payment-description">Банківський переказ на рахунок</p>
+                    <h3 class="payment-title">Безготівкова оплата</h3>
+                    <p class="payment-description">оплата на розрахунковий рахунок у банку</p>
                     <ul class="payment-features">
-                        <li>🏦 Банківський переказ</li>
-                        <li>💻 Оплата через інтернет-банкінг</li>
-                        <li><strong>📄 Призначення платежу буде нейтральним</strong></li>
-                        <li>🔒 Конфіденційність гарантована</li>
+                        <li>Банківський переказ</li>
+                        <li>Оплата через інтернет-банкінг</li>
+                        <li>Для юридичних осіб</li>
+                        <li>Можливість оплати за реквізитами</li>
                     </ul>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- Additional Info -->
-<section class="additional-info-section section-padding">
-    <div class="container">
-        <div class="info-blocks-grid">
-            <div class="info-block">
-                <h3 class="info-title">
-                    <i class="info-icon">🔒</i>
-                    Дискретність доставки
-                </h3>
-                <ul class="info-list">
-                    <li><strong>Нейтральна упаковка:</strong> без позначок, логотипів та надписів</li>
-                    <li><strong>Анонімність:</strong> працівник пошти не бачить назву товару</li>
-                    <li><strong>Безкоштовна доставка:</strong> від 1500 грн по Україні</li>
-                    <li><strong>Термін доставки:</strong> 1-3 робочих дні</li>
-                    <li><strong>Відправка:</strong> щодня до 16:00 в непрозорій упаковці</li>
-                </ul>
+            
+            <div class="payment-card card fade-in">
+                <div class="payment-image">
+                    <img src="{% static 'images/oplata_pry_dostavtsi.png' %}" alt="Оплата при отриманні" loading="lazy">
+                </div>
+                <div class="payment-content">
+                    <h3 class="payment-title">Оплата при отриманні</h3>
+                    <p class="payment-description">сплачуйте за товар при фактичному отриманні</p>
+                    <ul class="payment-features">
+                        <li>Оплата готівкою у відділенні</li>
+                        <li>Оплата карткою у відділенні</li>
+                        <li>Додаткова комісія перевізника</li>
+                        <li>Зручно та безпечно</li>
+                    </ul>
+                </div>
             </div>
-            <div class="info-block">
-                <h3 class="info-title">
-                    <i class="info-icon">🛡️</i>
-                    Гарантії конфіденційності
-                </h3>
-                <ul class="info-list">
-                    <li><strong>100% конфіденційність</strong> ваших даних</li>
-                    <li><strong>Захист персональної інформації</strong> відповідно до законодавства</li>
-                    <li><strong>Анонімна доставка</strong> та оплата</li>
-                    <li><strong>Повернення:</strong> протягом 14 днів (для товарів у запечатаній упаковці)</li>
-                    <li><strong>Підтримка:</strong> делікатні консультації фахівців</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Contact Info -->
-<section class="contact-delivery-section section-padding">
-    <div class="container text-center">
-        <h3 class="contact-title">🔒 Маєте питання щодо дискретної доставки?</h3>
-        <p class="contact-description">Наші менеджери делікатно проконсультують вас. Повна конфіденційність гарантована.</p>
-        <p class="contact-description"><small>Всі розмови конфіденційні. Ми цінуємо вашу приватність.</small></p>
-        <div class="contact-buttons">
-            <a href="tel:{{ site_phone|cut:' '|cut:'('|cut:')'|cut:'-' }}" class="btn btn-primary btn-lg">
-                <i class="btn-icon">📞</i>
-                Подзвонити (конфіденційно)
-            </a>
-            <a href="{% url 'core:contacts' %}" class="btn btn-outline btn-lg">
-                <i class="btn-icon">💬</i>
-                Написати нам
-            </a>
         </div>
     </div>
 </section>
