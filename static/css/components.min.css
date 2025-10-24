@@ -967,6 +967,14 @@
     color: var(--white);
     border-radius: 50%;
     font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.schedule-icon i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: normal;
 }
 
 .card-title {
