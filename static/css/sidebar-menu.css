@@ -4,8 +4,9 @@
   border-radius: var(--radius-lg, 12px);
   padding: var(--spacing-md, 16px);
   position: sticky;
-  top: 100px;
+  top: 20px;
   align-self: flex-start;
+  z-index: 997;
 }
 
 .sidebar-menu__list {

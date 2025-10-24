@@ -1,5 +1,5 @@
 .home-main-layout {
-  padding: var(--spacing-lg) 0;
+  padding: var(--spacing-sm) 0;
   width: 100%;
   overflow-x: hidden;
 }
@@ -16,11 +16,12 @@
 
 .home-catalog-sidebar {
   position: sticky;
-  top: calc(var(--spacing-lg) + 60px);
+  top: 20px;
   background: var(--white);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-sm);
   padding: var(--spacing-sm);
+  z-index: 997;
 }
 
 .home-content {
