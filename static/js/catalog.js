@@ -105,31 +105,31 @@ class CatalogManager {
             });
         }
         
-        const desktopSortBtn = document.getElementById('desktopSortBtn');
-        const desktopSortDropdown = document.getElementById('desktopSortDropdown');
+        this.desktopSortBtn = document.getElementById('desktopSortBtn');
+        this.desktopSortDropdown = document.getElementById('desktopSortDropdown');
         
-        if (desktopSortBtn && desktopSortDropdown) {
-            desktopSortBtn.addEventListener('click', (e) => {
+        if (this.desktopSortBtn && this.desktopSortDropdown) {
+            this.desktopSortBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                desktopSortDropdown.classList.toggle('hidden');
-                desktopSortBtn.classList.toggle('active');
+                this.desktopSortDropdown.classList.toggle('hidden');
+                this.desktopSortBtn.classList.toggle('active');
             });
             
-            desktopSortDropdown.querySelectorAll('.sort-option').forEach(option => {
+            this.desktopSortDropdown.querySelectorAll('.sort-option').forEach(option => {
                 option.addEventListener('click', () => {
                     const value = option.dataset.value;
                     this.currentSort = value;
-                    desktopSortBtn.querySelector('.sort-text').textContent = option.textContent;
-                    desktopSortDropdown.classList.add('hidden');
-                    desktopSortBtn.classList.remove('active');
+                    this.desktopSortBtn.querySelector('.sort-text').textContent = option.textContent;
+                    this.desktopSortDropdown.classList.add('hidden');
+                    this.desktopSortBtn.classList.remove('active');
                     this.applyFilters();
                 });
             });
             
-            document.addEventListener('click', (e) => {
-                if (!desktopSortBtn.contains(e.target) && !desktopSortDropdown.contains(e.target)) {
-                    desktopSortDropdown.classList.add('hidden');
-                    desktopSortBtn.classList.remove('active');
+        document.addEventListener('click', (e) => {
+                if (!this.desktopSortBtn.contains(e.target) && !this.desktopSortDropdown.contains(e.target)) {
+                    this.desktopSortDropdown.classList.add('hidden');
+                    this.desktopSortBtn.classList.remove('active');
                 }
             });
         }
@@ -190,7 +190,7 @@ class CatalogManager {
     
     filterProducts() {
         return this.originalCards.filter(card => {
-            const price = parseFloat(card.dataset.salePrice);
+                const price = parseFloat(card.dataset.salePrice);
             if (price < this.activeFilters.price.min || price > this.activeFilters.price.max) {
                 return false;
             }
@@ -500,7 +500,7 @@ class CatalogManager {
         const applyBtn = this.mobileFiltersModal.querySelector('.modal-filters__apply');
         if (applyBtn) {
             applyBtn.addEventListener('click', () => {
-                this.applyFilters();
+            this.applyFilters();
                 this.closeMobileFilters();
             });
         }
@@ -572,20 +572,20 @@ class CatalogManager {
                 
                 try {
                     const response = await fetch('/wishlist/toggle/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
                             'X-CSRFToken': this.getCSRFToken()
                         },
                         body: JSON.stringify({ product_id: productId })
-                    });
-                    
-                    const data = await response.json();
-                    
+            });
+            
+            const data = await response.json();
+            
                     if (data.added) {
                         button.classList.add('active');
                         this.showToast('Додано до обраного');
-                    } else {
+                } else {
                         button.classList.remove('active');
                         this.showToast('Видалено з обраного');
                     }
@@ -608,24 +608,24 @@ class CatalogManager {
                 const productId = button.dataset.productId;
                 
                 try {
-                    const response = await fetch('/cart/add/', {
-                        method: 'POST',
-                        headers: {
+            const response = await fetch('/cart/add/', {
+                method: 'POST',
+                headers: {
                             'Content-Type': 'application/json',
                             'X-CSRFToken': this.getCSRFToken()
-                        },
+                },
                         body: JSON.stringify({ product_id: productId, quantity: 1 })
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        this.showToast('Товар додано до кошика');
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.showToast('Товар додано до кошика');
                         this.updateCartBadge(data.cart_count);
                     } else {
                         this.showToast(data.message || 'Помилка при додаванні до кошика', 'error');
-                    }
-                } catch (error) {
+            }
+        } catch (error) {
                     console.error('Помилка:', error);
                     this.showToast('Помилка при додаванні до кошика', 'error');
                 }
