@@ -1318,29 +1318,21 @@
 /* ============================================ */
 
 /* Модальне вікно фільтрів */
-.modal-filters {
+.mobile-filters-modal {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: flex-end;
-}
-
-.modal-filters.hidden {
+  z-index: 9999;
   display: none;
-}
-
-.modal-filters__backdrop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  align-items: flex-end;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(2px);
+}
+
+.mobile-filters-modal.active {
+  display: flex;
 }
 
 .modal-filters__content {
