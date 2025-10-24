@@ -1,7 +1,6 @@
 .home-main-layout {
   padding: var(--spacing-md) 0;
   width: 100%;
-  overflow-x: hidden;
 }
 
 .layout-grid {
@@ -11,18 +10,14 @@
   align-items: start;
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
 }
 
 .home-catalog-sidebar {
+  position: -webkit-sticky;
   position: sticky;
-  top: 120px;
-  background: var(--white);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-sm);
-  padding: var(--spacing-sm);
-  max-height: calc(100vh - 140px);
-  overflow-y: auto;
+  top: calc(var(--spacing-lg, 24px) + 90px);
+  background: transparent;
+  align-self: flex-start;
 }
 
 .home-content {

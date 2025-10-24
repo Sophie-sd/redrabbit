@@ -3,11 +3,32 @@
   background: var(--color-bg-secondary);
   border-radius: var(--radius-lg, 12px);
   padding: var(--spacing-md, 16px);
+  position: -webkit-sticky;
   position: sticky;
-  top: 120px;
+  top: calc(var(--spacing-lg, 24px) + 90px);
   align-self: flex-start;
-  max-height: calc(100vh - 140px);
+  max-height: calc(100vh - 130px);
   overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brand-light) transparent;
+}
+
+.sidebar-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb {
+  background: var(--color-brand-light);
+  border-radius: 3px;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-primary);
 }
 
 .sidebar-menu__list {
