@@ -20,23 +20,24 @@
                 <i class="icon-grid" aria-hidden="true"></i>
                 Каталог
             </button>
-        </li>
-        
-        <!-- Categories -->
-        {% if main_categories %}
-            <li class="mobile-submenu">
+            <!-- Categories Submenu -->
+            {% if main_categories %}
+            <div class="mobile-submenu">
                 <span class="submenu-title">Категорії</span>
                 <ul class="submenu-list">
                     {% for category in main_categories %}
-                        <li>
-                            <a href="{{ category.get_absolute_url }}">
-                                {{ category.name }}
-                            </a>
-                        </li>
+                    {% if category.is_active and category.slug %}
+                    <li>
+                        <a href="{{ category.get_absolute_url }}">
+                            {{ category.name }}
+                        </a>
+                    </li>
+                    {% endif %}
                     {% endfor %}
                 </ul>
-            </li>
-        {% endif %}
+            </div>
+            {% endif %}
+        </li>
         
         <li>
             <a href="{% url 'products:sale' %}" class="{% if request.resolver_match.url_name == 'sale' %}active{% endif %}">
