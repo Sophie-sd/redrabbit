@@ -1,107 +1,61 @@
 {% load static %}
 
-<!-- Мобільний футер (показується тільки на мобільних) -->
 <div class="mobile-footer">
-    <!-- Форма підписки -->
-    <div class="mobile-subscribe">
-        <p class="mobile-subscribe-title">Першими дізнавайтеся про нові товари та акції</p>
-        
-        <form class="subscribe-form" id="mobileSubscribeForm">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="subscribeName">Ваше ім'я<span class="required">*</span></label>
-                <input type="text" id="subscribeName" name="name" class="form-control" placeholder="Ім'я" required>
+    <div class="container">
+        <div class="mobile-footer-accordions">
+            <div class="footer-accordion">
+                <button class="footer-accordion-btn" aria-expanded="false">
+                    <span>Інформація</span>
+                    <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <div class="footer-accordion-content">
+                    <ul class="footer-accordion-links">
+                        <li><a href="{% url 'core:home' %}">Головна</a></li>
+                        <li><a href="{% url 'core:about' %}">Про нас</a></li>
+                        <li><a href="{% url 'core:delivery' %}">Доставка та оплата</a></li>
+                        <li><a href="{% url 'core:returns' %}">Повернення та обмін</a></li>
+                        <li><a href="{% url 'core:contacts' %}">Контакти</a></li>
+                    </ul>
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label for="subscribeEmail">Електронна пошта<span class="required">*</span></label>
-                <input type="email" id="subscribeEmail" name="email" class="form-control" placeholder="username@gmail.com" required>
+
+            <div class="footer-accordion">
+                <button class="footer-accordion-btn" aria-expanded="false">
+                    <span>Каталог</span>
+                    <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <div class="footer-accordion-content">
+                    <ul class="footer-accordion-links">
+                        {% for category in main_categories %}
+                        <li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
+                        {% endfor %}
+                        <li><a href="{% url 'products:sale' %}" class="sale-link">Акції</a></li>
+                    </ul>
+                </div>
             </div>
-            
-            <div class="form-privacy">
-                <input type="checkbox" 
-                       id="mobilePrivacy" 
-                       name="privacy" 
-                       required>
-                <label for="mobilePrivacy">
-                    Даю згоду на обробку персональних даних згідно 
-                    <a href="{% url 'core:privacy' %}">політики конфіденційності</a>
-                </label>
-            </div>
-            
-            <button type="submit" class="btn btn-subscribe">Підписатися</button>
-        </form>
-    </div>
-    
-    <!-- Соціальні мережі - placeholder -->
-    <div class="mobile-social">
-        <!-- Додайте ваші соціальні мережі тут -->
-    </div>
-    
-    <!-- Акордеони -->
-    <div class="mobile-accordions">
-        <!-- Сервіси -->
-        <div class="accordion-item">
-            <button class="accordion-header" data-accordion-toggle>
-                <span>Сервіси</span>
-                <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </button>
-            <div class="accordion-content">
-                <ul class="accordion-links">
-                    <li><a href="{% url 'core:delivery' %}">Доставка та оплата</a></li>
-                    <li><a href="{% url 'core:returns' %}">Повернення та обмін</a></li>
-                    <li><a href="#">Угода користувача</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <!-- Про нас -->
-        <div class="accordion-item">
-            <button class="accordion-header" data-accordion-toggle>
-                <span>Про нас</span>
-                <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </button>
-            <div class="accordion-content">
-                <ul class="accordion-links">
-                    <li><a href="{% url 'core:about' %}">Про компанію</a></li>
-                    <li><a href="{% url 'core:contacts' %}">Контакти</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <!-- Контакти -->
-        <div class="accordion-item">
-            <button class="accordion-header" data-accordion-toggle>
-                <span>Контакти</span>
-                <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </button>
-            <div class="accordion-content">
-                <div class="contact-info-grid">
-                    <div class="contact-column">
-                        <p><strong>{{ site_phone }}</strong></p>
-                        <p>{{ site_email }}</p>
-                    </div>
-                    <div class="schedule-column">
-                        <p>Пн-Пт 09:00-18:00,</p>
-                        <p>Сб 10:00-16:00,</p>
-                        <p>Нд Вихідний</p>
-                    </div>
+
+            <div class="footer-accordion">
+                <button class="footer-accordion-btn" aria-expanded="false">
+                    <span>Клієнтам</span>
+                    <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <div class="footer-accordion-content">
+                    <ul class="footer-accordion-links">
+                        <li><a href="{% url 'core:terms' %}">Умови використання</a></li>
+                        <li><a href="{% url 'core:privacy' %}">Політика конфіденційності</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Копірайт -->
-    <div class="mobile-copyright">
-        <p class="copyright-text">© Всі права захищені, {{ "now"|date:"Y" }}</p>
-        <p class="developer-link">Інтернет-магазин</p>
+
+        <div class="mobile-footer-bottom">
+            <p class="mobile-copyright">© {{ "now"|date:"Y" }} {{ site_name }}. Всі права захищено. | 18+</p>
+        </div>
     </div>
 </div>
-
-
