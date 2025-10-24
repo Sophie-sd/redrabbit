@@ -484,10 +484,12 @@
         height: auto;
     }
     
-    /* Ховаємо мобільне меню overlay */
-    .mobile-menu,
+    .mobile-menu {
+        display: block;
+    }
+    
     .mobile-menu-overlay {
-        display: none;
+        display: block;
     }
     
     /* Ховаємо категорії на мобільних */

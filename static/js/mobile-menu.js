@@ -1,6 +1,5 @@
 class MobileMenu {
     constructor() {
-        this.menuBtn = document.getElementById('mobile-menu-btn');
         this.catalogBtn = document.getElementById('catalogMenuBtn');
         this.catalogToggle = document.getElementById('catalogMenuToggle');
         this.menu = document.getElementById('mobile-menu');
@@ -13,29 +12,24 @@ class MobileMenu {
     }
 
     init() {
-        if (!this.menu || !this.overlay) return;
+        if (!this.menu || !this.overlay || !this.catalogBtn) {
+            return;
+        }
         this.bindEvents();
     }
 
     bindEvents() {
-        if (this.menuBtn) {
-            this.menuBtn.addEventListener('click', e => {
-                e.preventDefault();
-                this.toggleMenu();
-            });
-        }
-
         if (this.catalogBtn) {
             this.catalogBtn.addEventListener('click', e => {
                 e.preventDefault();
                 e.stopPropagation();
                 this.openMenu();
-                requestAnimationFrame(() => {
+                setTimeout(() => {
                     if (this.catalogSubmenu && this.catalogToggle) {
                         this.catalogSubmenu.classList.add('active');
                         this.catalogToggle.classList.add('active');
                     }
-                });
+                }, 100);
             });
         }
 

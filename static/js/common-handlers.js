@@ -122,10 +122,6 @@
         
         if (applyBtn) {
             applyBtn.addEventListener('click', function() {
-                // Застосувати фільтри - тут можна додати логіку фільтрації
-                console.log('Applying filters...');
-                
-                // Закрити dropdown після застосування
                 const dropdown = document.getElementById('filtersDropdown');
                 const toggleBtn = document.getElementById('filtersToggleBtn');
                 

@@ -1,18 +1,19 @@
-.mobile-menu li button,
+.mobile-menu-nav li button,
 .mobile-bottom-nav button.nav-item {
     background: transparent;
     border: none;
     outline: none;
     box-shadow: none;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(220, 53, 69, 0.1);
     cursor: pointer;
     -webkit-user-select: none;
     user-select: none;
     touch-action: manipulation;
     transition: all 0.2s ease;
+    font-family: inherit;
 }
 
-.mobile-menu li button {
+.mobile-menu-nav li button {
     width: 100%;
     text-align: left;
     padding: 12px 16px;
@@ -22,25 +23,25 @@
     align-items: center;
     gap: 8px;
     border-radius: 8px;
-    font-family: inherit;
     font-weight: 500;
 }
 
-.mobile-menu li button:hover {
+.mobile-menu-nav li button:hover {
     background: rgba(220, 53, 69, 0.1);
     color: var(--color-brand-primary);
 }
 
-.mobile-menu li button:active {
+.mobile-menu-nav li button:active {
     background: rgba(220, 53, 69, 0.2);
 }
 
 .mobile-bottom-nav button.nav-item {
     padding: 4px 8px;
+    min-height: 48px;
 }
 
 .mobile-bottom-nav button.nav-item:active {
-    background: rgba(220, 53, 69, 0.1);
+    background: rgba(220, 53, 69, 0.05);
 }
 
 #catalogMenuToggle {
@@ -62,14 +63,39 @@
     position: relative;
 }
 
-.mobile-menu-nav .mobile-submenu {
+.mobile-submenu {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease;
-    margin-left: 0;
-    padding-left: 0;
+    transition: max-height 0.4s ease;
+    margin: 0;
+    padding: 0;
 }
 
-.mobile-menu-nav .mobile-submenu.active {
-    max-height: 800px;
+.mobile-submenu.active {
+    max-height: 1000px;
+}
+
+.mobile-submenu .submenu-list {
+    list-style: none;
+    margin: 8px 0 0 0;
+    padding: 0 0 0 32px;
+}
+
+.mobile-submenu .submenu-list li {
+    margin: 0;
+}
+
+.mobile-submenu .submenu-list a {
+    display: block;
+    padding: 10px 16px;
+    color: #555;
+    font-size: 0.95rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.mobile-submenu .submenu-list a:hover {
+    background: rgba(220, 53, 69, 0.08);
+    color: var(--color-brand-primary);
+    padding-left: 20px;
 }
