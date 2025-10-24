@@ -94,6 +94,12 @@
   color: var(--color-bg-secondary);
 }
 
+.footer-address {
+  margin-top: var(--spacing-md, 16px);
+  padding-top: var(--spacing-md, 16px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .footer-social {
   margin-top: var(--spacing-lg, 24px);
 }
@@ -211,7 +217,7 @@
 }
 
 .footer-bottom {
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--color-text-primary);
   padding: var(--spacing-md, 16px) 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }

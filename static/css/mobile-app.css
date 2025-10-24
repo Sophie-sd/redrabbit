@@ -330,6 +330,12 @@
     color: white;
 }
 
+.mobile-address {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #444;
+}
+
 @media (max-width: 480px) {
     .contact-info-grid {
         gap: 12px;
