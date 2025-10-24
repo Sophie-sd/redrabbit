@@ -51,88 +51,30 @@
   transform: translateX(3px);
 }
 
-.footer-links-simple {
-  margin-top: var(--spacing-md, 16px);
-}
-
-.footer-catalog {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm, 12px);
-}
-
-.catalog-toggle {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--radius-md, 8px);
-  padding: var(--spacing-sm, 12px) var(--spacing-md, 16px);
-  color: var(--color-text-white);
-  font-size: 15px;
-  cursor: pointer;
-  transition: all var(--transition-fast, 0.2s);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.catalog-toggle:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: var(--color-brand-accent);
-}
-
-.catalog-toggle-icon {
-  width: 18px;
-  height: 18px;
-  stroke-width: 2px;
-  transition: transform var(--transition-fast, 0.2s);
-}
-
-.catalog-toggle.active .catalog-toggle-icon {
-  transform: rotate(180deg);
-}
-
-.footer-catalog-dropdown {
-  list-style: none;
-  padding: var(--spacing-md, 16px);
-  margin: 0;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: var(--radius-md, 8px);
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: all var(--transition-normal, 0.3s);
-}
-
-.footer-catalog-dropdown.active {
-  max-height: 500px;
-  opacity: 1;
-}
-
-.footer-catalog-dropdown li {
-  margin-bottom: var(--spacing-sm, 12px);
-}
-
-.footer-catalog-dropdown li:last-child {
-  margin-bottom: 0;
-}
-
-.footer-catalog-dropdown a {
-  color: var(--color-bg-secondary);
-  text-decoration: none;
-  font-size: 14px;
-  transition: color var(--transition-fast, 0.2s);
-}
-
-.footer-catalog-dropdown a:hover {
-  color: var(--color-brand-light);
-}
-
 .footer-contact {
   margin-bottom: var(--spacing-md, 16px);
 }
 
+.footer-phone,
+.footer-email {
+  margin-bottom: var(--spacing-sm, 12px);
+}
+
+.footer-phone a,
+.footer-email a {
+  color: var(--color-text-white);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-fast, 0.2s);
+}
+
+.footer-phone a:hover,
+.footer-email a:hover {
+  color: var(--color-brand-accent);
+}
+
 .footer-schedule {
-  margin-bottom: var(--spacing-md, 16px);
+  margin-top: var(--spacing-lg, 24px);
   padding: var(--spacing-md, 16px);
   background: rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-md, 8px);
@@ -149,82 +91,6 @@
   font-size: 14px;
   line-height: 1.6;
   color: var(--color-bg-secondary);
-}
-
-.footer-phone,
-.footer-email {
-  margin-bottom: var(--spacing-sm, 12px);
-}
-
-.footer-phone a,
-.footer-email a {
-  color: var(--color-text-white);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 15px;
-  transition: color var(--transition-fast, 0.2s);
-}
-
-.footer-phone a:hover,
-.footer-email a:hover {
-  color: var(--color-brand-accent);
-}
-
-.footer-subscribe {
-  margin-top: var(--spacing-lg, 24px);
-  padding: var(--spacing-md, 16px);
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius-md, 8px);
-}
-
-.footer-subscribe__title {
-  color: var(--color-text-white);
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: var(--spacing-sm, 12px);
-}
-
-.subscribe-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm, 12px);
-}
-
-.subscribe-input {
-  padding: var(--spacing-sm, 12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--radius-sm, 6px);
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--color-text-white);
-  font-size: 14px;
-  transition: all var(--transition-fast, 0.2s);
-}
-
-.subscribe-input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.subscribe-input:focus {
-  outline: none;
-  border-color: var(--color-brand-accent);
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.subscribe-btn {
-  padding: var(--spacing-sm, 12px);
-  background: var(--color-brand-primary);
-  color: var(--color-text-white);
-  border: none;
-  border-radius: var(--radius-sm, 6px);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast, 0.2s);
-}
-
-.subscribe-btn:hover {
-  background: var(--color-brand-accent);
-  transform: translateY(-2px);
 }
 
 .footer-social {
@@ -265,6 +131,80 @@
   background: var(--color-brand-accent);
   transform: translateY(-3px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.footer-subscribe-text {
+  color: var(--color-bg-secondary);
+  font-size: 14px;
+  margin-bottom: var(--spacing-md, 16px);
+  line-height: 1.5;
+}
+
+.footer-subscribe-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 12px);
+}
+
+.footer-input {
+  padding: var(--spacing-sm, 12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-md, 8px);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-text-white);
+  font-size: 14px;
+  transition: all var(--transition-fast, 0.2s);
+}
+
+.footer-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.footer-input:focus {
+  outline: none;
+  border-color: var(--color-brand-light);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.footer-privacy {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-xs, 8px);
+  font-size: 12px;
+  color: var(--color-bg-secondary);
+  cursor: pointer;
+}
+
+.footer-privacy input[type="checkbox"] {
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.footer-privacy a {
+  color: var(--color-brand-light);
+  text-decoration: underline;
+}
+
+.footer-privacy a:hover {
+  color: var(--color-brand-accent);
+}
+
+.footer-submit-btn {
+  padding: var(--spacing-sm, 12px) var(--spacing-md, 16px);
+  background: var(--color-brand-primary);
+  color: var(--color-text-white);
+  border: none;
+  border-radius: var(--radius-md, 8px);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal, 0.3s);
+}
+
+.footer-submit-btn:hover {
+  background: var(--color-brand-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
 
 .footer-bottom {
@@ -325,10 +265,37 @@
 
 @media (max-width: 768px) {
   .footer-main {
-    display: none;
+    padding: var(--spacing-xl, 40px) 0 var(--spacing-md, 16px);
   }
   
-  .footer-bottom {
-    display: none;
+  .footer-bottom__content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .footer-payments {
+    flex-direction: column;
+    gap: var(--spacing-xs, 8px);
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg, 24px);
+  }
+  
+  .footer-title {
+    font-size: 16px;
+  }
+  
+  .social-link {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .social-link svg {
+    width: 18px;
+    height: 18px;
   }
 }
+
+
