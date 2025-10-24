@@ -72,10 +72,9 @@
     font-size: 1em;
     font-weight: 600;
     margin: 0;
-    color: white;
+    color: rgb(0, 0, 0);
     text-align: center;
     line-height: 1.2;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     width: 100%;
 }
 
