@@ -1,19 +1,26 @@
-.mobile-menu li button {
-    width: 100%;
-    text-align: left;
+.mobile-menu li button,
+.mobile-bottom-nav button.nav-item {
     background: transparent;
     border: none;
     outline: none;
     box-shadow: none;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+    transition: all 0.2s ease;
+}
+
+.mobile-menu li button {
+    width: 100%;
+    text-align: left;
     padding: 12px 16px;
     color: #333;
     font-size: 1rem;
-    cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.2s ease;
-    -webkit-tap-highlight-color: transparent;
     border-radius: 8px;
     font-family: inherit;
     font-weight: 500;
@@ -28,6 +35,18 @@
     background: rgba(220, 53, 69, 0.2);
 }
 
+.mobile-bottom-nav button.nav-item {
+    padding: 4px 8px;
+}
+
+.mobile-bottom-nav button.nav-item:active {
+    background: rgba(220, 53, 69, 0.1);
+}
+
+#catalogMenuToggle {
+    position: relative;
+}
+
 #catalogMenuToggle::after {
     content: '▼';
     margin-left: auto;
@@ -39,38 +58,18 @@
     transform: rotate(180deg);
 }
 
-.mobile-bottom-nav button.nav-item {
-    background: transparent;
-    border: none;
-    outline: none;
-    box-shadow: none;
-    -webkit-tap-highlight-color: rgba(220, 53, 69, 0.2);
-    padding: 4px 8px;
-    cursor: pointer;
-    -webkit-user-select: none;
-    user-select: none;
-    touch-action: manipulation;
-}
-
-.mobile-bottom-nav button.nav-item:hover,
-.mobile-bottom-nav button.nav-item:focus,
-.mobile-bottom-nav button.nav-item:active,
-.mobile-bottom-nav button.nav-item:focus-visible {
-    background: transparent;
-    border: none;
-    outline: none;
-    box-shadow: none;
-}
-
-.mobile-bottom-nav button.nav-item:active {
-    background: rgba(220, 53, 69, 0.1);
-}
-
 .mobile-menu-nav > ul > li {
     position: relative;
 }
 
 .mobile-menu-nav .mobile-submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
     margin-left: 0;
     padding-left: 0;
+}
+
+.mobile-menu-nav .mobile-submenu.active {
+    max-height: 800px;
 }

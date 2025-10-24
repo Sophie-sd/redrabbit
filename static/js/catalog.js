@@ -435,6 +435,7 @@ class CatalogManager {
         // Відкриття модального вікна
         this.mobileFiltersBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             this.copyFiltersToModal();
             this.mobileFiltersModal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
