@@ -1,36 +1,7 @@
-"""
-Адміністративна панель товарів
-"""
 from django.contrib import admin
 from django.utils.html import format_html
 from django.contrib import messages
-
-from .models import Category, Product, ProductImage, ProductAttribute, ProductTag, ProductReview, Brand
-
-
-class ProductImageInline(admin.TabularInline):
-    model = ProductImage
-    extra = 1
-    fields = ['get_image_preview', 'image', 'alt_text', 'is_main', 'sort_order']
-    readonly_fields = ['get_image_preview']
-    classes = ['collapse']
-    verbose_name = 'Зображення товару'
-    verbose_name_plural = 'Зображення товару'
-    
-    def get_image_preview(self, obj):
-        if obj.image:
-            return format_html('<img src="{}" class="admin-thumbnail" />', obj.image.url)
-        return "Немає зображення"
-    get_image_preview.short_description = 'Превью'
-
-
-class ProductAttributeInline(admin.TabularInline):
-    model = ProductAttribute
-    extra = 1
-    fields = ['name', 'value', 'sort_order']
-    classes = ['collapse']
-    verbose_name = 'Характеристика'
-    verbose_name_plural = 'Характеристики товару'
+from .models import Category, Product, ProductReview, Brand
 
 
 @admin.register(Category)
@@ -38,27 +9,21 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ['get_category_image', 'name', 'parent', 'get_products_count', 'is_active', 'sort_order']
     list_display_links = ['get_category_image', 'name']
     list_filter = ['is_active', 'parent']
-    search_fields = ['name', 'description', 'external_id']
-    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ['name', 'external_id']
     list_editable = ['is_active', 'sort_order']
     ordering = ['sort_order', 'name']
-    save_on_top = True
+    readonly_fields = ['external_id']
     
     fieldsets = (
         ('Основна інформація', {
-            'fields': ('name', 'slug', 'parent', 'image', 'description')
+            'fields': ('name', 'slug', 'parent', 'image')
         }),
         ('Налаштування', {
             'fields': (('is_active', 'sort_order'),)
         }),
-        ('Імпорт', {
+        ('Інформація', {
             'fields': ('external_id',),
             'classes': ('collapse',),
-            'description': 'ID категорії в системі постачальника (автоматично)'
-        }),
-        ('SEO', {
-            'fields': ('meta_title', 'meta_description'),
-            'classes': ('collapse',)
         }),
     )
     
@@ -81,69 +46,44 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     list_display = [
         'get_product_image', 'name', 'category', 'sku', 
-        'get_price_display', 'stock', 'get_status_display', 'get_badges', 'updated_at'
+        'get_price_display', 'get_badges', 'updated_at'
     ]
     list_display_links = ['get_product_image', 'name']
-    list_filter = [
-        'is_active', 'category', 'is_sale', 'is_top', 'is_new', 'is_featured',
-        'created_at', 'updated_at'
-    ]
-    search_fields = ['name', 'sku', 'description', 'external_id', 'vendor_name']
-    prepopulated_fields = {'slug': ('name',)}
-    list_editable = ['stock']
-    ordering = ['sort_order', '-created_at']
-    date_hierarchy = 'created_at'
+    list_filter = ['category', 'is_sale', 'is_top', 'is_new', 'updated_at']
+    search_fields = ['name', 'sku', 'external_id', 'vendor_name']
+    ordering = ['sort_order', '-updated_at']
+    date_hierarchy = 'updated_at'
     list_per_page = 50
-    save_on_top = True
-    
-    inlines = [ProductImageInline, ProductAttributeInline]
     
     fieldsets = (
-        ('Основна інформація', {
-            'fields': ('name', 'slug', 'category', 'sku', 'description')
+        ('Товар', {
+            'fields': ('name', 'category', 'sku')
         }),
-        ('Ціна', {
-            'fields': ('retail_price', ('is_sale', 'sale_price')),
-            'description': 'Акційна ціна оновлюється автоматично з файлів постачальника'
+        ('Акційна ціна', {
+            'fields': (('retail_price', 'sale_price'),),
+            'description': 'Встановіть sale_price щоб товар з\'явився в акціях'
         }),
-        ('Склад та наявність', {
-            'fields': (('stock', 'is_active'), 'is_featured')
-        }),
-        ('Бейджі (встановлюються вручну)', {
-            'fields': (('is_top', 'is_new'), 'sort_order'),
-            'description': 'ХІТ та НОВИНКА встановлюються вручну. Бейдж АКЦІЯ з\'являється автоматично при наявності акційної ціни'
-        }),
-        ('Інформація з імпорту', {
-            'fields': ('external_id', 'vendor_name'),
-            'classes': ('collapse',),
-            'description': 'Дані з файлів постачальника (автоматично)'
-        }),
-        ('SEO', {
-            'fields': ('meta_title', 'meta_description'),
-            'classes': ('collapse',)
-        }),
-        ('Системна інформація', {
-            'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',)
+        ('Мітки', {
+            'fields': (('is_top', 'is_new'), 'is_featured', 'sort_order'),
+            'description': 'is_top - ХІТ ПРОДАЖ, is_new - НОВИНКА, is_featured - показувати в рекомендованих'
         }),
     )
     
-    readonly_fields = ['created_at', 'updated_at']
+    readonly_fields = ['name', 'category', 'sku', 'retail_price']
     
     actions = [
-        'activate_products', 
-        'deactivate_products',
+        'mark_as_sale',
+        'remove_from_sale',
         'mark_as_top',
         'unmark_as_top',
         'mark_as_new',
         'unmark_as_new',
-        'export_to_csv',
     ]
     
     def get_product_image(self, obj):
         main_image = obj.images.filter(is_main=True).first() or obj.images.first()
         if main_image:
-            return format_html('<img src="{}" class="admin-thumbnail-small" />', main_image.image.url)
+            return format_html('<img src="{}" class="admin-thumbnail-small" />', main_image.get_image_url())
         return format_html('<div class="admin-icon-placeholder">📦</div>')
     get_product_image.short_description = 'Фото'
     
@@ -157,15 +97,6 @@ class ProductAdmin(admin.ModelAdmin):
         return format_html('<strong>{} ₴</strong>', obj.retail_price)
     get_price_display.short_description = 'Ціна'
     
-    def get_status_display(self, obj):
-        if obj.is_active:
-            if obj.stock > 0:
-                return format_html('<span class="status-active">● В наявності</span>')
-            else:
-                return format_html('<span class="status-warning">⚠ Немає на складі</span>')
-        return format_html('<span class="status-inactive">✕ Неактивний</span>')
-    get_status_display.short_description = 'Статус'
-    
     def get_badges(self, obj):
         stickers = obj.get_stickers()
         if not stickers:
@@ -178,78 +109,50 @@ class ProductAdmin(admin.ModelAdmin):
         return format_html(' '.join(badges_html))
     get_badges.short_description = 'Бейджі'
     
-    def activate_products(self, request, queryset):
-        updated = queryset.update(is_active=True)
-        self.message_user(request, f"Активовано {updated} товарів", messages.SUCCESS)
-    activate_products.short_description = "✓ Активувати обрані товари"
+    def mark_as_sale(self, request, queryset):
+        count = 0
+        for product in queryset:
+            if not product.sale_price:
+                continue
+            product.is_sale = True
+            product.save(update_fields=['is_sale'])
+            count += 1
+        self.message_user(request, f"Додано в акції: {count} товарів", messages.SUCCESS)
+    mark_as_sale.short_description = "🔥 Додати в акції"
     
-    def deactivate_products(self, request, queryset):
-        updated = queryset.update(is_active=False)
-        self.message_user(request, f"Деактивовано {updated} товарів", messages.SUCCESS)
-    deactivate_products.short_description = "✕ Деактивувати обрані товари"
+    def remove_from_sale(self, request, queryset):
+        updated = queryset.update(is_sale=False, sale_price=None)
+        self.message_user(request, f"Видалено з акцій: {updated} товарів", messages.SUCCESS)
+    remove_from_sale.short_description = "Видалити з акцій"
     
     def mark_as_top(self, request, queryset):
         updated = queryset.update(is_top=True)
         self.message_user(request, f"Позначено як ХІТ: {updated} товарів", messages.SUCCESS)
-    mark_as_top.short_description = "⭐ Позначити як ХІТ"
+    mark_as_top.short_description = "⭐ Позначити ХІТ ПРОДАЖ"
     
     def unmark_as_top(self, request, queryset):
         updated = queryset.update(is_top=False)
-        self.message_user(request, f"Знято позначку ХІТ: {updated} товарів", messages.SUCCESS)
-    unmark_as_top.short_description = "Зняти позначку ХІТ"
+        self.message_user(request, f"Знято ХІТ ПРОДАЖ: {updated} товарів", messages.SUCCESS)
+    unmark_as_top.short_description = "Зняти ХІТ ПРОДАЖ"
     
     def mark_as_new(self, request, queryset):
         updated = queryset.update(is_new=True)
-        self.message_user(request, f"Позначено як НОВИНКИ: {updated} товарів", messages.SUCCESS)
-    mark_as_new.short_description = "✨ Позначити як НОВИНКИ"
+        self.message_user(request, f"Позначено НОВИНКА: {updated} товарів", messages.SUCCESS)
+    mark_as_new.short_description = "✨ Позначити НОВИНКА"
     
     def unmark_as_new(self, request, queryset):
         updated = queryset.update(is_new=False)
-        self.message_user(request, f"Знято позначку НОВИНКА: {updated} товарів", messages.SUCCESS)
-    unmark_as_new.short_description = "Зняти позначку НОВИНКА"
-    
-    def export_to_csv(self, request, queryset):
-        import csv
-        from django.http import HttpResponse
-        
-        response = HttpResponse(content_type='text/csv; charset=utf-8')
-        response['Content-Disposition'] = 'attachment; filename="products_export.csv"'
-        response.write('\ufeff')
-        
-        writer = csv.writer(response)
-        writer.writerow(['SKU', 'Назва', 'Категорія', 'Ціна', 'Акційна ціна', 'Кількість', 'Статус'])
-        
-        for product in queryset:
-            writer.writerow([
-                product.sku,
-                product.name,
-                product.category.name,
-                product.retail_price,
-                product.sale_price or '',
-                product.stock,
-                'Активний' if product.is_active else 'Неактивний'
-            ])
-        
-        self.message_user(request, f"Експортовано {queryset.count()} товарів", messages.SUCCESS)
-        return response
-    export_to_csv.short_description = "📊 Експортувати в CSV"
+        self.message_user(request, f"Знято НОВИНКА: {updated} товарів", messages.SUCCESS)
+    unmark_as_new.short_description = "Зняти НОВИНКА"
     
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('category').prefetch_related('images')
     
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "category":
-            kwargs["queryset"] = Category.objects.filter(is_active=True).order_by('sort_order', 'name')
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-
-@admin.register(ProductTag)
-class ProductTagAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'is_active']
-    list_editable = ['is_active']
-    search_fields = ['name']
-    prepopulated_fields = {'slug': ('name',)}
-    ordering = ['name']
+    def has_add_permission(self, request):
+        return False
+    
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(ProductReview)
@@ -263,15 +166,11 @@ class ProductReviewAdmin(admin.ModelAdmin):
     list_per_page = 50
     
     fieldsets = (
-        ('Основна інформація', {
-            'fields': ('product', 'author_name', 'rating', 'text')
+        ('Відгук', {
+            'fields': ('product', 'author_name', 'rating', 'text', 'category_badge')
         }),
-        ('Додатково', {
-            'fields': ('category_badge', 'is_approved')
-        }),
-        ('Системна інформація', {
-            'fields': ('created_at',),
-            'classes': ('collapse',)
+        ('Модерація', {
+            'fields': ('is_approved',)
         }),
     )
     
@@ -282,12 +181,12 @@ class ProductReviewAdmin(admin.ModelAdmin):
     def approve_reviews(self, request, queryset):
         updated = queryset.update(is_approved=True)
         self.message_user(request, f'Схвалено {updated} відгуків', messages.SUCCESS)
-    approve_reviews.short_description = '✓ Схвалити вибрані відгуки'
+    approve_reviews.short_description = '✓ Схвалити відгуки'
     
     def disapprove_reviews(self, request, queryset):
         updated = queryset.update(is_approved=False)
         self.message_user(request, f'Відхилено {updated} відгуків', messages.WARNING)
-    disapprove_reviews.short_description = '✗ Відхилити вибрані відгуки'
+    disapprove_reviews.short_description = '✗ Відхилити відгуки'
     
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('product')
@@ -295,20 +194,15 @@ class ProductReviewAdmin(admin.ModelAdmin):
 
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
-    list_display = ['get_brand_logo', 'name', 'is_active', 'sort_order', 'created_at']
+    list_display = ['get_brand_logo', 'name', 'is_active', 'sort_order']
     list_display_links = ['get_brand_logo', 'name']
     list_editable = ['is_active', 'sort_order']
-    list_filter = ['is_active', 'created_at']
-    search_fields = ['name', 'description']
-    prepopulated_fields = {'slug': ('name',)}
-    date_hierarchy = 'created_at'
+    list_filter = ['is_active']
+    search_fields = ['name']
     
     fieldsets = (
-        ('Основна інформація', {
-            'fields': ('name', 'slug', 'logo', 'description')
-        }),
-        ('Налаштування', {
-            'fields': ('is_active', 'sort_order')
+        ('Бренд', {
+            'fields': ('name', 'slug', 'logo', 'is_active', 'sort_order')
         }),
     )
     
