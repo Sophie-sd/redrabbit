@@ -124,22 +124,22 @@
 }
 
 .sidebar-menu__item.info-menu > .sidebar-menu__link {
-  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(41, 128, 185, 0.1) 100%);
-  border: 1px solid rgba(52, 152, 219, 0.3);
-  color: #2980b9;
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(200, 35, 51, 0.1) 100%);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  color: #dc3545;
 }
 
 .sidebar-menu__item.info-menu > .sidebar-menu__link:hover {
-  background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(41, 128, 185, 0.15) 100%);
-  border-color: rgba(52, 152, 219, 0.5);
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.15) 0%, rgba(200, 35, 51, 0.15) 100%);
+  border-color: rgba(220, 53, 69, 0.5);
 }
 
 .sidebar-menu__item.info-menu .sidebar-menu__arrow {
-  color: #2980b9;
+  color: #dc3545;
 }
 
 .sidebar-menu__item.info-menu .submenu__link:hover {
-  color: #2980b9;
+  color: #dc3545;
 }
 
 @media (max-width: 992px) {
