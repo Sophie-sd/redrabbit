@@ -33,7 +33,7 @@
 .wishlist-header .title-icon {
     width: 48px;
     height: 48px;
-    stroke: var(--primary-pink);
+    stroke: var(--color-brand-primary);
     flex-shrink: 0;
 }
 
@@ -82,7 +82,7 @@
 
 .wishlist-item:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border-color: var(--primary-pink);
+    border-color: var(--color-brand-primary);
 }
 
 .item-image {
@@ -139,7 +139,7 @@
 }
 
 .item-name a:hover {
-    color: var(--primary-pink);
+    color: var(--color-brand-primary);
 }
 
 .item-category {
@@ -172,7 +172,7 @@
 .price-current {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--primary-pink);
+    color: var(--color-brand-primary);
 }
 
 .price-old {
@@ -240,7 +240,7 @@
     align-items: center;
     gap: var(--spacing-xs);
     padding: 0.75rem 1.25rem;
-    background: var(--primary-pink);
+    background: var(--color-brand-primary);
     color: var(--white);
     border: none;
     border-radius: var(--border-radius);
@@ -252,9 +252,9 @@
 }
 
 .btn-add-to-cart:hover {
-    background: var(--primary-purple);
+    background: var(--color-brand-accent);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(233, 30, 99, 0.3);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
 }
 
 .btn-add-to-cart svg {
@@ -361,8 +361,8 @@
 .btn-wishlist:hover,
 .wishlist-btn:hover,
 .product-card__wishlist:hover {
-    border-color: var(--primary-pink);
-    background: rgba(233, 30, 99, 0.05);
+    border-color: var(--color-brand-primary);
+    background: rgba(220, 53, 69, 0.05);
 }
 
 .btn-toggle-wishlist.active,
@@ -371,8 +371,8 @@
 .wishlist-btn.active,
 .product-card__wishlist.active,
 .product-card__wishlist--active {
-    background: var(--primary-pink);
-    border-color: var(--primary-pink);
+    background: var(--color-brand-primary);
+    border-color: var(--color-brand-primary);
     color: var(--white);
 }
 

@@ -7,20 +7,20 @@
   /* ========== REDRABBIT КОЛЬОРИ (60-30-10) ========== */
   
   /* 60% - ФОНОВІ КОЛЬОРИ */
-  --color-bg-primary: #FFFFFF;
-  --color-bg-secondary: #F2E8DA;  /* Pristine - слонова кістка */
+  --color-bg-primary: #FFF5F5;  /* Ледь червоний відтінок */
+  --color-bg-secondary: #FFE5E5;  /* Світлий червоний */
   --color-bg-tertiary: #FAFAFA;
   
   /* 30% - БРЕНДОВІ КОЛЬОРИ */
-  --color-brand-primary: #FA9A85;    /* Peach Pink - основний брендовий */
-  --color-brand-light: #FFBE98;      /* Peach Fuzz - світліший персиковий */
-  --color-brand-accent: #E881A6;     /* Aurora Pink - яскравий рожевий */
+  --color-brand-primary: #DC3545;    /* Червоний - основний брендовий */
+  --color-brand-light: #E57373;      /* Світліший червоний */
+  --color-brand-accent: #C62828;     /* Темний червоний для акцентів */
   --color-brand-mint: #60C8B3;       /* Bermuda - м'ятний */
   --color-brand-purple: #B380AA;     /* Pale Pansy - ліловий */
   
   /* 10% - АКЦЕНТНІ КОЛЬОРИ (CTA) */
-  --color-cta-primary: #E53935;      /* Червоний для CTA кнопок */
-  --color-cta-coral: #F97272;        /* Georgia Peach для акцентів */
+  --color-cta-primary: #DC3545;      /* Червоний для CTA кнопок */
+  --color-cta-coral: #E57373;        /* Світліший червоний для акцентів */
   
   /* ТЕКСТОВІ КОЛЬОРИ */
   --color-text-primary: #2C2C2C;
@@ -41,7 +41,7 @@
   
   /* БЕЙДЖІ ТОВАРІВ */
   --badge-top: #FFD700;       /* Жовтий "ТОП ПРОДАЖ" */
-  --badge-sale: #F97272;      /* Georgia Peach "-X%" */
+  --badge-sale: #DC3545;      /* Червоний "-X%" */
   --badge-video: #4285F4;     /* Синій "ВІДЕО" */
   --badge-new: #60C8B3;       /* Bermuda "НОВИНКА" */
   

@@ -29,7 +29,7 @@ body {
     font-size: 1rem;
     line-height: 1.6;
     color: var(--neutral-dark);
-    background-color: var(--white);
+    background-color: var(--color-bg-primary);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -73,14 +73,14 @@ p {
 }
 
 a {
-    color: var(--primary-pink);
+    color: var(--color-brand-primary);
     text-decoration: none;
     transition: color var(--transition-fast);
 }
 
 a:hover,
 a:focus {
-    color: var(--primary-pink-dark);
+    color: var(--color-brand-accent);
     text-decoration: none;
 }
 
@@ -144,18 +144,18 @@ img {
 }
 
 .btn:focus {
-    outline: 2px solid var(--primary-pink);
+    outline: 2px solid var(--color-brand-primary);
     outline-offset: 2px;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-pink-light) 100%);
+    background: linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-light) 100%);
     color: var(--white);
-    border-color: var(--primary-pink);
+    border-color: var(--color-brand-primary);
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, var(--primary-pink-dark) 0%, var(--primary-pink) 100%);
+    background: linear-gradient(135deg, var(--color-brand-accent) 0%, var(--color-brand-primary) 100%);
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
 }
@@ -168,18 +168,18 @@ img {
 
 .btn-secondary:hover {
     background: var(--gray-light);
-    border-color: var(--primary-pink);
-    color: var(--primary-pink);
+    border-color: var(--color-brand-primary);
+    color: var(--color-brand-primary);
 }
 
 .btn-outline {
     background: transparent;
-    color: var(--primary-pink);
-    border-color: var(--primary-pink);
+    color: var(--color-brand-primary);
+    border-color: var(--color-brand-primary);
 }
 
 .btn-outline:hover {
-    background: var(--primary-pink);
+    background: var(--color-brand-primary);
     color: var(--white);
 }
 
@@ -214,8 +214,8 @@ img {
 
 .form-control:focus {
     outline: none;
-    border-color: var(--primary-pink);
-    box-shadow: 0 0 0 3px rgba(255,20,147,0.1);
+    border-color: var(--color-brand-primary);
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
 }
 
 .form-control::placeholder {
@@ -405,7 +405,7 @@ img {
 }
 
 .bg-primary {
-    background-color: var(--primary-pink);
+    background-color: var(--color-brand-primary);
 }
 
 .bg-light {
@@ -550,7 +550,7 @@ img {
     position: absolute;
     top: -40px;
     left: 0;
-    background: var(--primary-pink);
+    background: var(--color-brand-primary);
     color: var(--white);
     padding: var(--spacing-sm) var(--spacing-md);
     text-decoration: none;
