@@ -830,8 +830,14 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
-  padding: var(--space-md) 0;
-  border-top: 1px solid var(--color-gray-200);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+}
+
+.active-filters.hidden {
+  display: none;
 }
 
 .filter-chip {
