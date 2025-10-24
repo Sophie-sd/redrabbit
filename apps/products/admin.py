@@ -49,7 +49,7 @@ class ProductAdmin(admin.ModelAdmin):
         'get_price_display', 'get_badges', 'updated_at'
     ]
     list_display_links = ['get_product_image', 'name']
-    list_filter = ['category', 'is_sale', 'is_top', 'is_new', 'updated_at']
+    list_filter = ['category', 'is_sale', 'is_top', 'updated_at']
     search_fields = ['name', 'sku', 'external_id', 'vendor_name']
     ordering = ['sort_order', '-updated_at']
     date_hierarchy = 'updated_at'
@@ -64,8 +64,8 @@ class ProductAdmin(admin.ModelAdmin):
             'description': 'Встановіть sale_price щоб товар з\'явився в акціях'
         }),
         ('Мітки', {
-            'fields': (('is_top', 'is_new'), 'is_featured', 'sort_order'),
-            'description': 'is_top - ХІТ ПРОДАЖ, is_new - НОВИНКА, is_featured - показувати в рекомендованих'
+            'fields': ('is_top', 'is_featured', 'sort_order'),
+            'description': 'is_top - ХІТ ПРОДАЖ, is_featured - показувати в рекомендованих'
         }),
     )
     
@@ -76,8 +76,6 @@ class ProductAdmin(admin.ModelAdmin):
         'remove_from_sale',
         'mark_as_top',
         'unmark_as_top',
-        'mark_as_new',
-        'unmark_as_new',
     ]
     
     def get_product_image(self, obj):
@@ -134,16 +132,6 @@ class ProductAdmin(admin.ModelAdmin):
         updated = queryset.update(is_top=False)
         self.message_user(request, f"Знято ХІТ ПРОДАЖ: {updated} товарів", messages.SUCCESS)
     unmark_as_top.short_description = "Зняти ХІТ ПРОДАЖ"
-    
-    def mark_as_new(self, request, queryset):
-        updated = queryset.update(is_new=True)
-        self.message_user(request, f"Позначено НОВИНКА: {updated} товарів", messages.SUCCESS)
-    mark_as_new.short_description = "✨ Позначити НОВИНКА"
-    
-    def unmark_as_new(self, request, queryset):
-        updated = queryset.update(is_new=False)
-        self.message_user(request, f"Знято НОВИНКА: {updated} товарів", messages.SUCCESS)
-    unmark_as_new.short_description = "Зняти НОВИНКА"
     
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('category').prefetch_related('images')

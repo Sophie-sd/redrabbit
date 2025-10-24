@@ -209,168 +209,18 @@
     </div>
 </section>
 
-<!-- 3. Features Section -->
-<section class="features-section section-padding" aria-label="Наші переваги">
+<section class="promo-images-section" aria-label="Промо зображення">
     <div class="container">
-        <div class="features-grid">
-            <div class="feature-item fade-in">
-                <div class="feature-icon">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
-                        <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
-                        <path d="M7 11V7C7 4.23858 9.23858 2 12 2C14.7614 2 17 4.23858 17 7V11" stroke="currentColor" stroke-width="2"/>
-                    </svg>
-                </div>
-                <div class="feature-content">
-                    <h3 class="feature-title">Захист персональних даних</h3>
-                    <p class="feature-description">Не зберігаємо та не використовуємо ваші персональні дані</p>
-                </div>
+        <div class="promo-images-grid">
+            <div class="promo-image-item">
+                <img src="{% static 'images/fon_image1.png' %}" alt="Промо 1" loading="lazy">
             </div>
-            
-            <div class="feature-item fade-in">
-                <div class="feature-icon">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
-                        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" stroke="currentColor" stroke-width="2"/>
-                    </svg>
-                </div>
-                <div class="feature-content">
-                    <h3 class="feature-title">Безпечна доставка</h3>
-                    <p class="feature-description">Не маркуємо коробки, дискретна упаковка</p>
-                </div>
+            <div class="promo-image-item">
+                <img src="{% static 'images/fon_image2.png' %}" alt="Промо 2" loading="lazy">
             </div>
-            
-            <div class="feature-item fade-in">
-                <div class="feature-icon">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
-                        <rect x="5" y="2" width="14" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
-                        <path d="M12 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="feature-content">
-                    <h3 class="feature-title">Без спаму</h3>
-                    <p class="feature-description">Не розсилаємо спам на телефон</p>
-                </div>
+            <div class="promo-image-item">
+                <img src="{% static 'images/fon_image3.png' %}" alt="Промо 3" loading="lazy">
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- 4. New Products Section (Новинки) -->
-<section class="new-products-section section-padding bg-light" aria-label="Новинки">
-    <div class="container">
-        <div class="section-header text-center">
-            <h2 class="section-title">Новинки</h2>
-            <p class="section-subtitle">
-                Найсвіжіші надходження косметики та інструментів
-            </p>
-        </div>
-        
-        <div class="recommended-slider-container">
-            <button class="slider-nav-btn slider-prev-btn" aria-label="Попередні товари">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
-            
-            <div class="recommended-slider" id="recommendedSlider">
-                {% for product in new_products %}
-                    <div class="product-card card fade-in">
-                        <div class="product-image">
-                            <a href="{{ product.get_absolute_url }}">
-                                {% if product.images.first %}
-                                    <img src="{{ product.images.first.get_image_url }}" alt="{{ product.name }}" loading="lazy">
-                                {% else %}
-                                    <div class="product-placeholder">
-                                        <span class="placeholder-icon">📦</span>
-                                    </div>
-                                {% endif %}
-                                
-                                {% if product.get_stickers %}
-                                    <div class="product-stickers">
-                                        {% for sticker in product.get_stickers %}
-                                            <span class="product-sticker sticker-{{ sticker.type }}">
-                                                {{ sticker.text }}
-                                            </span>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </a>
-                        </div>
-                        
-                        <div class="product-content">
-                            <h3 class="product-name">
-                                <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
-                            </h3>
-                            
-                            <div class="product-price">
-                                {% if product.is_sale and product.sale_price %}
-                                    <span class="price-old">{{ product.retail_price }} ₴</span>
-                                    <span class="price-current">{{ product.sale_price }} ₴</span>
-                                {% else %}
-                                    <div class="price-row">
-                                        <span class="price-current">{{ product.retail_price }} ₴</span>
-                                        <small class="price-type">роздріб</small>
-                                    </div>
-                                    {% if user.is_authenticated and product.wholesale_price %}
-                                        <div class="price-row wholesale">
-                                            <span class="price-wholesale">{{ product.wholesale_price }} ₴</span>
-                                            <small class="price-type">опт</small>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                                
-                                {% if product.price_3_qty or product.price_5_qty %}
-                                    <div class="quantity-prices">
-                                        {% if product.price_3_qty %}
-                                            <div class="qty-price">
-                                                <span>від 3 шт: <strong>{{ product.price_3_qty }} ₴</strong></span>
-                                            </div>
-                                        {% endif %}
-                                        {% if product.price_5_qty %}
-                                            <div class="qty-price">
-                                                <span>від 5 шт: <strong>{{ product.price_5_qty }} ₴</strong></span>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="product-actions">
-                                <button class="btn btn-primary btn-sm add-to-cart" 
-                                        data-product-id="{{ product.id }}"
-                                        data-product-name="{{ product.name }}"
-                                        {% if not product.is_in_stock %}disabled{% endif %}>
-                                    {% if product.is_in_stock %}
-                                        Купити
-                                    {% else %}
-                                        Немає в наявності
-                                    {% endif %}
-                                </button>
-                                <button class="btn btn-outline btn-sm wishlist-btn" 
-                                        data-product-id="{{ product.id }}"
-                                        aria-label="Додати в список бажань">
-                                    <span class="icon-heart">♡</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                {% empty %}
-                    <div class="text-center">
-                        <p class="text-muted">Новинки завантажуються...</p>
-                    </div>
-                {% endfor %}
-            </div>
-            
-            <button class="slider-nav-btn slider-next-btn" aria-label="Наступні товари">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
-        </div>
-        
-        <div class="text-center mt-5">
-            <a href="#categories" class="btn btn-secondary btn-lg">
-                Переглянути всі товари
-            </a>
         </div>
     </div>
 </section>
@@ -532,7 +382,6 @@
 
 {% block extra_js %}
 <script src="{% static 'js/banner-slider.min.js' %}"></script>
-<script src="{% static 'js/recommended-slider.js' %}"></script>
 <script src="{% static 'js/promotions-slider.js' %}"></script>
 <script src="{% static 'js/top-products-slider.js' %}"></script>
 <script src="{% static 'js/reviews-slider.js' %}"></script>

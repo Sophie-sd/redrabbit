@@ -27,12 +27,6 @@ class HomeView(TemplateView):
         # Отримуємо активні банери
         banners = Banner.objects.filter(is_active=True).order_by('order', '-created_at')
         
-        # Отримуємо новинки (товари з бейджем НОВИНКА)
-        new_products = Product.objects.filter(
-            is_active=True,
-            is_new=True
-        ).select_related('category').prefetch_related('images').order_by('sort_order', '-created_at')[:12]
-        
         # Отримуємо акційні товари (товари з бейджем АКЦІЯ)
         sale_products = Product.objects.filter(
             is_active=True,
@@ -72,7 +66,6 @@ class HomeView(TemplateView):
         
         context.update({
             'banners': banners,
-            'new_products': new_products,
             'sale_products': sale_products,
             'top_products': top_products,
             'brands': brands,
