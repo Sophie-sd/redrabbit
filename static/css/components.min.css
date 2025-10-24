@@ -600,10 +600,16 @@
 .mobile-submenu {
     display: none;
     margin-top: var(--spacing-xs);
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
 }
 
 .mobile-submenu.active {
     display: block;
+    max-height: 2000px;
+    opacity: 1;
 }
 
 .mobile-submenu .submenu-title {
