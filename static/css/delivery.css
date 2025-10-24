@@ -5,6 +5,27 @@
     background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
 }
 
+/* Anonymity Notice */
+.anonymity-notice {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 0 15px;
+}
+
+.anonymity-text {
+    display: inline-block;
+    font-size: 1.25em;
+    font-weight: 600;
+    color: #dc3545;
+    margin: 0;
+    padding: 15px 30px;
+    background: rgba(220, 53, 69, 0.08);
+    border-radius: 50px;
+    border: 2px solid rgba(220, 53, 69, 0.2);
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.15);
+    transition: all 0.3s ease;
+}
+
 .delivery-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -202,6 +223,11 @@
 
 /* Адаптивність */
 @media (max-width: 1024px) {
+    .anonymity-text {
+        font-size: 1.15em;
+        padding: 12px 25px;
+    }
+    
     .delivery-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
@@ -214,6 +240,15 @@
 }
 
 @media (max-width: 768px) {
+    .anonymity-notice {
+        margin-bottom: 30px;
+    }
+    
+    .anonymity-text {
+        font-size: 1.05em;
+        padding: 12px 20px;
+    }
+    
     .delivery-grid {
         grid-template-columns: 1fr;
         gap: 15px;
@@ -275,6 +310,16 @@
 }
 
 @media (max-width: 480px) {
+    .anonymity-notice {
+        margin-bottom: 25px;
+    }
+    
+    .anonymity-text {
+        font-size: 0.9em;
+        padding: 10px 15px;
+        line-height: 1.4;
+    }
+    
     .delivery-grid {
         grid-template-columns: 1fr;
         gap: 12px;
