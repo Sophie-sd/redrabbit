@@ -16,7 +16,7 @@
 
 .home-catalog-sidebar {
   position: sticky;
-  top: 20px;
+  top: 120px;
   background: var(--white);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-sm);

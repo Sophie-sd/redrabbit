@@ -4,7 +4,7 @@
   border-radius: var(--radius-lg, 12px);
   padding: var(--spacing-md, 16px);
   position: sticky;
-  top: 20px;
+  top: 120px;
   align-self: flex-start;
   z-index: 997;
 }
