@@ -1,0 +1,47 @@
+{% load static %}
+
+<div class="mobile-catalog-header">
+    <h2 class="mobile-catalog-title">Каталог</h2>
+    <button class="mobile-catalog-close" id="mobile-catalog-close" aria-label="Закрити каталог">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+</div>
+
+<div class="mobile-catalog-content">
+    {% if main_categories %}
+    <ul class="mobile-categories-list">
+        {% for category in main_categories %}
+        {% if category.is_active and category.slug %}
+        <li class="mobile-category-item {% if category.children.all %}has-children{% endif %}">
+            {% if category.children.all %}
+            <button type="button" class="mobile-category-toggle" data-category-id="{{ category.id }}">
+                <span class="category-name">{{ category.name }}</span>
+                <svg class="category-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <ul class="mobile-subcategories-list">
+                {% for child in category.children.all %}
+                {% if child.is_active and child.slug %}
+                <li class="mobile-subcategory-item">
+                    <a href="{{ child.get_absolute_url }}" class="mobile-subcategory-link">
+                        {{ child.name }}
+                    </a>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% else %}
+            <a href="{{ category.get_absolute_url }}" class="mobile-category-link">
+                <span class="category-name">{{ category.name }}</span>
+            </a>
+            {% endif %}
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+

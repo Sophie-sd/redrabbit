@@ -77,7 +77,7 @@
     
     <!-- 6. Mobile Styles -->
     <link rel="stylesheet" href="{% static 'css/mobile.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/mobile-catalog-fix.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mobile-catalog.css' %}">
     <link rel="stylesheet" href="{% static 'css/mobile-app.css' %}">
     <link rel="stylesheet" href="{% static 'css/ios-safari.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/mobile-search.css' %}">
@@ -131,11 +131,11 @@
         {% include 'includes/header.html' %}
     </header>
     
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Мобільне меню">
-        {% include 'includes/mobile-menu.html' %}
+    <!-- Mobile Catalog -->
+    <div class="mobile-catalog" id="mobile-catalog" role="navigation" aria-label="Мобільний каталог">
+        {% include 'includes/mobile-catalog.html' %}
     </div>
-    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+    <div class="mobile-catalog-overlay" id="mobile-catalog-overlay"></div>
     
     <!-- Main Content -->
     <main id="main-content" class="main-content" role="main">
@@ -169,7 +169,7 @@
     <script src="{% static 'js/live-search.js' %}" defer></script>
     <script src="{% static 'js/utils.min.js' %}" defer></script>
     <script src="{% static 'js/common-handlers.js' %}" defer></script>
-    <script src="{% static 'js/mobile-menu.js' %}" defer></script>
+    <script src="{% static 'js/mobile-catalog.js' %}" defer></script>
     <script src="{% static 'js/mobile-search.js' %}" defer></script>
     <script src="{% static 'js/mobile-cart-badge.js' %}" defer></script>
     <script src="{% static 'js/wishlist.js' %}" defer></script>
