@@ -1574,8 +1574,7 @@
 @media (max-width: 767px) {
   :root {
     --catalog-padding: var(--space-md);
-    --catalog-gap: 12px;
-    --product-card-max-width: 160px;
+    --catalog-gap: 8px;
   }
   
   .catalog-container {
@@ -1609,7 +1608,7 @@
   
   .subcategories-wrapper {
     padding: 16px;
-    margin: 0 12px 20px;
+    margin: 0 8px 20px;
     border-radius: 12px;
   }
   
@@ -1636,8 +1635,8 @@
 
   .mobile-controls {
     display: flex;
-    gap: 10px;
-    padding: 12px;
+    gap: 8px;
+    padding: 12px 8px;
     width: 100%;
     overflow-x: hidden;
   }
@@ -1671,17 +1670,23 @@
   }
   
   .products-grid {
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    padding: 0 12px;
+    gap: 8px;
+    padding: 0 8px;
     width: 100%;
     overflow-x: hidden;
+  }
+
+  .product-card {
+    width: 100%;
+    max-width: none;
   }
   
   .catalog-header {
     margin: var(--space-lg) 0;
     text-align: left;
-    padding: 0 12px;
+    padding: 0 8px;
   }
   
   .catalog-title {
@@ -1696,11 +1701,11 @@
   }
 
   .pagination {
-    padding: 0 12px;
+    padding: 0 8px;
   }
 
   .active-filters {
-    padding: 0 12px;
+    padding: 0 8px;
   }
 }
 

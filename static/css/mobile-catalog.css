@@ -101,11 +101,16 @@
     border: none;
     text-align: left;
     font-size: 1rem;
-    font-weight: 500;
-    color: #DC3545;
+    font-weight: 600;
+    color: #DC3545 !important;
     cursor: pointer;
     transition: background 0.2s ease;
     text-decoration: none;
+}
+
+.mobile-category-toggle .category-name,
+.mobile-category-link .category-name {
+    color: #DC3545 !important;
 }
 
 .mobile-category-toggle:active,

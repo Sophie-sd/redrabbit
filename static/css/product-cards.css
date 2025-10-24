@@ -387,7 +387,6 @@
 /* Мобільні */
 @media (max-width: 480px) {
   :root {
-    --card-max-width: 160px;
     --card-padding: 8px;
     --card-gap: 4px;
     --wishlist-size: 28px;
