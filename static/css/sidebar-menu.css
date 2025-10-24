@@ -6,7 +6,8 @@
   position: sticky;
   top: 120px;
   align-self: flex-start;
-  z-index: 997;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
 }
 
 .sidebar-menu__list {

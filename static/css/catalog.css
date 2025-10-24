@@ -54,9 +54,9 @@
 
 .catalog-sidebar {
   position: sticky;
-  top: var(--space-lg);
+  top: 120px;
   height: fit-content;
-  max-height: calc(100vh - var(--space-xl));
+  max-height: calc(100vh - 140px);
   overflow-y: auto;
   margin-bottom: var(--space-xxxl);
 }

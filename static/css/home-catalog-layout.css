@@ -1,5 +1,5 @@
 .home-main-layout {
-  padding: var(--spacing-sm) 0;
+  padding: var(--spacing-md) 0;
   width: 100%;
   overflow-x: hidden;
 }
@@ -21,7 +21,8 @@
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-sm);
   padding: var(--spacing-sm);
-  z-index: 997;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
 }
 
 .home-content {
