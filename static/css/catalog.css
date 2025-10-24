@@ -596,7 +596,7 @@
 
 .sort-dropdown {
   position: absolute;
-  top: calc(100% + 2px);
+  top: calc(100% + 4px);
   left: 0;
   right: 0;
   background: var(--color-white);
@@ -1521,7 +1521,6 @@
   padding-bottom: 0;
 }
 
-.modal-filters__body .filter-group__label,
 .modal-filters__body .filter-label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
