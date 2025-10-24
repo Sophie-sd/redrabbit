@@ -73,7 +73,7 @@
 
 .mobile-subscribe-title {
     font-size: 1.05rem;
-    font-weight: 700;
+    font-weight: 800;
     color: #fff;
     margin-bottom: 20px;
     line-height: 1.5;
@@ -376,15 +376,15 @@
 }
 
 .mobile-copyright .copyright-text {
-    font-size: 12px;
+    font-size: 13px;
     color: #ccc;
     line-height: 1.6;
-    margin: 0 0 10px 0;
+    margin: 0 0 8px 0;
     font-weight: 500;
 }
 
 .mobile-copyright .developer-link {
-    font-size: 11px;
+    font-size: 12px;
     color: #999;
     line-height: 1.6;
     margin: 0;
@@ -399,7 +399,6 @@
 
 .mobile-copyright .developer-link a:hover {
     color: var(--color-brand-light);
-    text-decoration: underline;
 }
 
 /* Кнопка каталогу для мобільних */
