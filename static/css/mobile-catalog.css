@@ -165,6 +165,29 @@
     padding-left: 44px;
 }
 
+.mobile-category-item.info-menu .mobile-category-toggle {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(41, 128, 185, 0.1) 100%);
+    border-left: 4px solid #3498db;
+    color: #2980b9;
+    font-weight: 600;
+}
+
+.mobile-category-item.info-menu .mobile-category-toggle:active {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(41, 128, 185, 0.15) 100%);
+}
+
+.mobile-category-item.info-menu .category-arrow {
+    stroke: #2980b9;
+}
+
+.mobile-category-item.info-menu .mobile-subcategories-list {
+    background: rgba(52, 152, 219, 0.05);
+}
+
+.mobile-category-item.info-menu .mobile-subcategory-link:active {
+    color: #2980b9;
+}
+
 @media (max-width: 767px) {
     .mobile-catalog {
         display: block;

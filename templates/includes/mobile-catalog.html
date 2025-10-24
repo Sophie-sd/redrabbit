@@ -41,6 +41,29 @@
         </li>
         {% endif %}
         {% endfor %}
+        
+        <li class="mobile-category-item has-children info-menu">
+            <button type="button" class="mobile-category-toggle" data-category-id="info">
+                <span class="category-name">Інформація</span>
+                <svg class="category-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <ul class="mobile-subcategories-list">
+                <li class="mobile-subcategory-item">
+                    <a href="{% url 'core:about' %}" class="mobile-subcategory-link">Про нас</a>
+                </li>
+                <li class="mobile-subcategory-item">
+                    <a href="{% url 'core:delivery' %}" class="mobile-subcategory-link">Доставка та оплата</a>
+                </li>
+                <li class="mobile-subcategory-item">
+                    <a href="{% url 'core:returns' %}" class="mobile-subcategory-link">Повернення та обмін</a>
+                </li>
+                <li class="mobile-subcategory-item">
+                    <a href="{% url 'core:contacts' %}" class="mobile-subcategory-link">Контакти</a>
+                </li>
+            </ul>
+        </li>
     </ul>
     {% endif %}
 </div>

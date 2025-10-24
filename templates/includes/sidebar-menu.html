@@ -29,6 +29,29 @@
         </li>
         {% endif %}
         {% endfor %}
+        
+        <li class="sidebar-menu__item has-children info-menu">
+            <a href="#" class="sidebar-menu__link">
+                <span class="sidebar-menu__text">Інформація</span>
+                <span class="sidebar-menu__arrow">→</span>
+            </a>
+            <div class="sidebar-menu__submenu">
+                <ul class="submenu__list">
+                    <li class="submenu__item">
+                        <a href="{% url 'core:about' %}" class="submenu__link">Про нас</a>
+                    </li>
+                    <li class="submenu__item">
+                        <a href="{% url 'core:delivery' %}" class="submenu__link">Доставка та оплата</a>
+                    </li>
+                    <li class="submenu__item">
+                        <a href="{% url 'core:returns' %}" class="submenu__link">Повернення та обмін</a>
+                    </li>
+                    <li class="submenu__item">
+                        <a href="{% url 'core:contacts' %}" class="submenu__link">Контакти</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
     </ul>
 </aside>
 
