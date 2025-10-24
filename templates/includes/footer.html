@@ -4,7 +4,7 @@
     <div class="container">
         <div class="footer-grid">
             <div class="footer-col">
-                <h4 class="footer-title">Інформація</h4>
+                <h4 class="footer-title">ІНФОРМАЦІЯ</h4>
                 <ul class="footer-links">
                     <li><a href="{% url 'core:home' %}">Головна</a></li>
                     <li><a href="{% url 'core:about' %}">Про нас</a></li>
@@ -15,31 +15,79 @@
             </div>
             
             <div class="footer-col">
-                <h4 class="footer-title">Каталог</h4>
-                <div class="footer-dropdown">
-                    <button class="footer-dropdown-btn" aria-expanded="false">
+                <h4 class="footer-title">КАТАЛОГ</h4>
+                <div class="footer-catalog">
+                    <button class="catalog-toggle" id="footerCatalogToggle">
                         <span>Категорії</span>
-                        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                            <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <svg class="catalog-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </button>
-                    <ul class="footer-dropdown-menu">
+                    <ul class="footer-catalog-dropdown" id="footerCatalogDropdown">
                         {% for category in main_categories %}
                         <li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
                         {% endfor %}
                     </ul>
+                    <ul class="footer-links footer-links-simple">
+                        <li><a href="{% url 'products:sale' %}">Акції</a></li>
+                    </ul>
                 </div>
-                <ul class="footer-links">
-                    <li><a href="{% url 'products:sale' %}">Акції</a></li>
-                </ul>
             </div>
             
             <div class="footer-col">
-                <h4 class="footer-title">Клієнтам</h4>
+                <h4 class="footer-title">КЛІЄНТАМ</h4>
                 <ul class="footer-links">
                     <li><a href="{% url 'core:terms' %}">Умови використання</a></li>
                     <li><a href="{% url 'core:privacy' %}">Політика конфіденційності</a></li>
                 </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4 class="footer-title">КОНТАКТИ</h4>
+                <div class="footer-contact">
+                    <div class="footer-schedule">
+                        <p class="footer-schedule__title">Графік роботи:</p>
+                        <p>Пн-Сб: 9:00-18:00</p>
+                        <p>Нд: Вихідний</p>
+                    </div>
+                    <p class="footer-phone">
+                        <a href="tel:{{ site_phone }}">{{ site_phone }}</a>
+                    </p>
+                    <p class="footer-email">
+                        <a href="mailto:{{ site_email }}">{{ site_email }}</a>
+                    </p>
+                </div>
+                
+                <div class="footer-subscribe">
+                    <p class="footer-subscribe__title">Розсилка</p>
+                    <form class="subscribe-form" id="footerSubscribeForm">
+                        {% csrf_token %}
+                        <input type="text" name="name" class="subscribe-input" placeholder="Ваше ім'я" required>
+                        <input type="email" name="email" class="subscribe-input" placeholder="Email" required>
+                        <button type="submit" class="subscribe-btn">Підписатися</button>
+                    </form>
+                </div>
+                
+                <div class="footer-social">
+                    <p class="footer-social__title">Ми в соцмережах:</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Instagram" title="Instagram">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153a4.908 4.908 0 0 1 1.153 1.772c.247.637.415 1.363.465 2.428.047 1.066.06 1.405.06 4.122 0 2.717-.01 3.056-.06 4.122-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 0 1-1.153 1.772 4.915 4.915 0 0 1-1.772 1.153c-.637.247-1.363.415-2.428.465-1.066.047-1.405.06-4.122.06-2.717 0-3.056-.01-4.122-.06-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 0 1-1.772-1.153 4.904 4.904 0 0 1-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12c0-2.717.01-3.056.06-4.122.05-1.066.217-1.79.465-2.428a4.88 4.88 0 0 1 1.153-1.772A4.897 4.897 0 0 1 5.45 2.525c.638-.248 1.362-.415 2.428-.465C8.944 2.013 9.283 2 12 2zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-.25a1.25 1.25 0 0 0-2.5 0 1.25 1.25 0 0 0 2.5 0zM12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Facebook" title="Facebook">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Telegram" title="Telegram">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.008-1.252-.241-1.865-.44-.752-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
