@@ -72,7 +72,11 @@ class CatalogManager {
         ];
         
         allCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', () => this.applyFilters());
+            checkbox.addEventListener('change', () => {
+                if (!this.isInMobileModal(checkbox)) {
+                    this.applyFilters();
+                }
+            });
         });
         
         if (this.clearFiltersBtn) {
@@ -80,7 +84,15 @@ class CatalogManager {
         }
         
         if (this.applyFiltersBtn) {
-            this.applyFiltersBtn.addEventListener('click', () => this.applyFilters());
+            this.applyFiltersBtn.addEventListener('click', () => {
+                this.applyFilters();
+                const filtersToggle = document.getElementById('filtersToggle');
+                const filtersContent = document.getElementById('filtersContent');
+                if (filtersToggle && filtersContent) {
+                    filtersToggle.classList.remove('active');
+                    filtersContent.classList.remove('active');
+                }
+            });
         }
         
         if (this.sortSelectBtn && this.sortDropdown) {
@@ -299,6 +311,7 @@ class CatalogManager {
         this.initCartActions();
         
         this.toggleEmptyState(products.length === 0);
+        this.hidePagination(products.length !== this.originalCards.length);
     }
     
     updateActiveFiltersDisplay() {
@@ -466,6 +479,13 @@ class CatalogManager {
         }
     }
     
+    hidePagination(hide) {
+        const pagination = document.querySelector('.pagination');
+        if (pagination) {
+            pagination.style.display = hide ? 'none' : 'flex';
+        }
+    }
+    
     initFiltersToggle() {
         const filtersToggle = document.getElementById('filtersToggle');
         const filtersContent = document.getElementById('filtersContent');
@@ -504,8 +524,9 @@ class CatalogManager {
         const applyBtn = this.mobileFiltersModal.querySelector('.modal-filters__apply');
         if (applyBtn) {
             applyBtn.addEventListener('click', () => {
-            this.applyFilters();
+                this.syncMobileFiltersToOriginal();
                 this.closeMobileFilters();
+                this.applyFilters();
             });
         }
         
@@ -549,7 +570,11 @@ class CatalogManager {
         document.body.style.overflow = 'hidden';
     }
     
-    closeMobileFilters() {
+    isInMobileModal(element) {
+        return element.closest('.mobile-filters-modal') !== null;
+    }
+    
+    syncMobileFiltersToOriginal() {
         if (!this.mobileFiltersModal) return;
         
         const modalBody = this.mobileFiltersModal.querySelector('.modal-filters__body');
@@ -566,6 +591,10 @@ class CatalogManager {
                 }
             }
         });
+    }
+    
+    closeMobileFilters() {
+        if (!this.mobileFiltersModal) return;
         
         this.mobileFiltersModal.classList.remove('active');
         document.body.style.overflow = '';
