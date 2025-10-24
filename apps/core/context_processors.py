@@ -12,8 +12,8 @@ def base_context(request):
     context = {
         'main_categories': Category.objects.filter(parent=None, is_active=True).order_by('sort_order', 'name')[:9],
         'site_name': 'redrabbit',
-        'site_phone': '+38 (098) 888-67-28',
-        'site_email': 'sexopt.com.ua@gmail.com',
+        'site_phone': '+38 (093) 700-88-06',
+        'site_email': 'redrabbit.store001@gmail.com',
         'site_address': 'Дискретна доставка по всій Україні',
     }
     
