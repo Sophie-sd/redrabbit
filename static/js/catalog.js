@@ -84,8 +84,10 @@ class CatalogManager {
         }
         
         if (this.sortSelectBtn && this.sortDropdown) {
-            this.sortSelectBtn.addEventListener('click', () => {
+            this.sortSelectBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 this.sortDropdown.classList.toggle('hidden');
+                this.sortSelectBtn.classList.toggle('active');
             });
             
             this.sortDropdown.querySelectorAll('.sort-option').forEach(option => {
@@ -94,6 +96,7 @@ class CatalogManager {
                     this.currentSort = value;
                     this.sortSelectBtn.querySelector('.sort-select-text').textContent = option.textContent;
                     this.sortDropdown.classList.add('hidden');
+                    this.sortSelectBtn.classList.remove('active');
                     this.applyFilters();
                 });
             });
@@ -101,6 +104,7 @@ class CatalogManager {
             document.addEventListener('click', (e) => {
                 if (!this.sortSelectBtn.contains(e.target) && !this.sortDropdown.contains(e.target)) {
                     this.sortDropdown.classList.add('hidden');
+                    this.sortSelectBtn.classList.remove('active');
                 }
             });
         }
@@ -520,7 +524,12 @@ class CatalogManager {
         const modalBody = this.mobileFiltersModal.querySelector('.modal-filters__body');
         
         if (filtersContent && modalBody) {
-            modalBody.innerHTML = filtersContent.innerHTML;
+            const contentClone = filtersContent.cloneNode(true);
+            const actionsGroup = contentClone.querySelector('.filter-group--actions');
+            if (actionsGroup) {
+                actionsGroup.remove();
+            }
+            modalBody.innerHTML = contentClone.querySelector('.filters-grid').innerHTML;
             
             const allCheckboxes = modalBody.querySelectorAll('input[type="checkbox"], input[type="number"]');
             allCheckboxes.forEach(input => {

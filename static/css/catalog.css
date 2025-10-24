@@ -1180,6 +1180,7 @@
   align-items: center;
   gap: var(--space-sm);
   margin-top: var(--space-xxxl);
+  margin-bottom: var(--space-xl);
   padding: var(--space-xl) 0;
 }
 
@@ -1839,6 +1840,7 @@
 
   .pagination {
     padding: 0 8px;
+    margin-bottom: var(--space-xxxl);
   }
 
   .active-filters {
