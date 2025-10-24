@@ -5,10 +5,10 @@
   padding: var(--spacing-md, 16px);
   position: -webkit-sticky;
   position: sticky;
-  top: 88px;
+  top: 110px;
   z-index: 50;
   align-self: flex-start;
-  max-height: calc(100vh - 96px);
+  max-height: calc(100vh - 120px);
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: thin;

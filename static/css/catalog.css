@@ -53,7 +53,7 @@
 .catalog-sidebar {
   position: -webkit-sticky;
   position: sticky;
-  top: 88px;
+  top: 110px;
   z-index: 50;
   height: fit-content;
   align-self: flex-start;
