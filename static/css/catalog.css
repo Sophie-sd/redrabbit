@@ -1705,8 +1705,6 @@
   }
   
   .filter-group:last-child {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: var(--space-sm);
   }
   
