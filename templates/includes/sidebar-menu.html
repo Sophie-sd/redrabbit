@@ -5,16 +5,12 @@
         {% for cat in main_categories %}
         {% if cat.is_active and cat.slug %}
                 <li class="sidebar-menu__item {% if cat.children.all %}has-children{% endif %} {% if category and cat.id == category.id or category and category.parent and cat.id == category.parent.id %}active{% endif %}">
-                    {% if cat.children.all %}
-                    <button type="button" class="sidebar-menu__link sidebar-menu__toggle">
-                        <span class="sidebar-menu__text">{{ cat.name }}</span>
-                        <span class="sidebar-menu__arrow">→</span>
-                    </button>
-                    {% else %}
                     <a href="{{ cat.get_absolute_url }}" class="sidebar-menu__link">
                         <span class="sidebar-menu__text">{{ cat.name }}</span>
+                        {% if cat.children.all %}
+                        <span class="sidebar-menu__arrow">→</span>
+                        {% endif %}
                     </a>
-                    {% endif %}
             {% if cat.children.all %}
             <div class="sidebar-menu__submenu">
                 <ul class="submenu__list">
