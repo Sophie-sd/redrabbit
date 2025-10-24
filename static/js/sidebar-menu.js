@@ -2,34 +2,31 @@
   const menuItems = document.querySelectorAll('.sidebar-menu__item.has-children');
   
   menuItems.forEach(item => {
-    const link = item.querySelector('.sidebar-menu__link');
+    const toggle = item.querySelector('.sidebar-menu__toggle');
     const submenu = item.querySelector('.sidebar-menu__submenu');
     
-    if (!link || !submenu) return;
+    if (!toggle || !submenu) return;
     
-    link.addEventListener('click', function(e) {
-      const href = this.getAttribute('href');
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
       
-      // Якщо є підменю, запобігаємо переходу і toggle підменю
-      if (submenu) {
-        e.preventDefault();
-        item.classList.toggle('active');
-        
-        // Закриваємо інші відкриті підменю
-        menuItems.forEach(otherItem => {
-          if (otherItem !== item) {
-            otherItem.classList.remove('active');
-          }
-        });
+      const isExpanded = item.classList.contains('expanded');
+      
+      menuItems.forEach(otherItem => {
+        otherItem.classList.remove('expanded');
+      });
+      
+      if (!isExpanded) {
+        item.classList.add('expanded');
       }
     });
   });
   
-  // Закриття при кліку поза меню
   document.addEventListener('click', function(e) {
     if (!e.target.closest('.sidebar-menu')) {
       menuItems.forEach(item => {
-        item.classList.remove('active');
+        item.classList.remove('expanded');
       });
     }
   });

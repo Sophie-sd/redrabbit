@@ -53,6 +53,10 @@
   border-radius: var(--radius-md, 8px);
   transition: all var(--transition-fast, 0.2s);
   font-size: var(--font-size-base, 16px);
+  background: none;
+  border: none;
+  width: 100%;
+  cursor: pointer;
 }
 
 .sidebar-menu__link:hover {
@@ -88,9 +92,13 @@
   margin-top: var(--spacing-xs, 8px);
 }
 
-.sidebar-menu__item:hover .sidebar-menu__submenu,
+.sidebar-menu__item.expanded .sidebar-menu__submenu,
 .sidebar-menu__item.active .sidebar-menu__submenu {
   max-height: 600px;
+}
+
+.sidebar-menu__item.expanded .sidebar-menu__arrow {
+  transform: rotate(90deg);
 }
 
 .submenu__list {
