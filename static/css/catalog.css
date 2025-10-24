@@ -1406,7 +1406,6 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding-bottom: 80px; /* Додаємо відступ для нижнього меню */
 }
 
 @keyframes slideUp {
@@ -1456,7 +1455,6 @@
 .modal-filters__body {
   flex: 1;
   padding: var(--space-sm) var(--space-md);
-  padding-bottom: 80px;
   overflow-y: auto;
 }
 
