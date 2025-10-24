@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load product_filters %}
 
 {% block title %}{{ category.name }} - Beauty Shop{% endblock %}
 {% block description %}{{ category.meta_description|default:category.description|truncatewords:20 }}{% endblock %}
@@ -50,12 +51,96 @@
                             <label class="filter-label">Наявність</label>
                             <div class="filter-checkboxes">
                                 <label class="filter-checkbox">
-                                    <input type="checkbox" value="in_stock" name="availability" id="availabilityInStock">
+                                    <input type="checkbox" value="in_stock" name="availability" class="filter-checkbox-input">
                                     <span>В наявності</span>
                                 </label>
                                 <label class="filter-checkbox">
-                                    <input type="checkbox" value="out_of_stock" name="availability" id="availabilityOutOfStock">
+                                    <input type="checkbox" value="out_of_stock" name="availability" class="filter-checkbox-input">
                                     <span>Під замовлення</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Бренд</label>
+                            <div class="filter-checkboxes filter-checkboxes--scrollable">
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="Passion (Польща)" name="brand" class="filter-checkbox-input">
+                                    <span>Passion</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="Satisfyer (Німеччина)" name="brand" class="filter-checkbox-input">
+                                    <span>Satisfyer</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="Obsessive (Польща)" name="brand" class="filter-checkbox-input">
+                                    <span>Obsessive</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="Leg Avenue (США)" name="brand" class="filter-checkbox-input">
+                                    <span>Leg Avenue</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="Noir Handmade (Польща)" name="brand" class="filter-checkbox-input">
+                                    <span>Noir Handmade</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="Dorcel (Франція)" name="brand" class="filter-checkbox-input">
+                                    <span>Dorcel</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="Tenga (Япония)" name="brand" class="filter-checkbox-input">
+                                    <span>Tenga</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Живлення</label>
+                            <div class="filter-checkboxes">
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="вбудовані акумулятори" name="power" class="filter-checkbox-input">
+                                    <span>Акумулятор</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="батарейки" name="power" class="filter-checkbox-input">
+                                    <span>Батарейки</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="від мережі 220V" name="power" class="filter-checkbox-input">
+                                    <span>Мережа 220V</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Водостійкість</label>
+                            <div class="filter-checkboxes">
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="можна занурювати" name="waterproof" class="filter-checkbox-input">
+                                    <span>Повністю водостійкий</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="водостійка" name="waterproof" class="filter-checkbox-input">
+                                    <span>Водостійкий</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="захист від бризок" name="waterproof" class="filter-checkbox-input">
+                                    <span>Захист від бризок</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Вібрація</label>
+                            <div class="filter-checkboxes">
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="так" name="vibration" class="filter-checkbox-input">
+                                    <span>З вібрацією</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="ні" name="vibration" class="filter-checkbox-input">
+                                    <span>Без вібрації</span>
                                 </label>
                             </div>
                         </div>
@@ -64,21 +149,21 @@
                             <label class="filter-label">Тип товару</label>
                             <div class="filter-checkboxes">
                                 <label class="filter-checkbox">
-                                    <input type="checkbox" value="new" name="type" id="typeNew">
+                                    <input type="checkbox" value="new" name="type" class="filter-checkbox-input">
                                     <span>Новинки</span>
                                 </label>
                                 <label class="filter-checkbox">
-                                    <input type="checkbox" value="sale" name="type" id="typeSale">
+                                    <input type="checkbox" value="sale" name="type" class="filter-checkbox-input">
                                     <span>Акційні</span>
                                 </label>
                                 <label class="filter-checkbox">
-                                    <input type="checkbox" value="top" name="type" id="typeTop">
+                                    <input type="checkbox" value="top" name="type" class="filter-checkbox-input">
                                     <span>Хіти продажу</span>
                                 </label>
                             </div>
                         </div>
                         
-                        <div class="filter-group">
+                        <div class="filter-group filter-group--actions">
                             <button type="button" class="filters-clear-btn" id="clearAllFilters">Очистити</button>
                             <button type="button" class="filters-apply-btn" id="applyFiltersBtn">Застосувати</button>
                         </div>
@@ -140,6 +225,11 @@
                          data-is-sale="{{ product.is_sale }}"
                          data-is-new="{{ product.is_new }}"
                          data-is-top="{{ product.is_top }}"
+                         data-vendor="{{ product.vendor_name }}"
+                         data-power="{{ product|get_attribute:'Живлення' }}"
+                         data-waterproof="{{ product|get_attribute:'Водостійкість' }}"
+                         data-vibration="{{ product|get_attribute:'Вібрація' }}"
+                         data-material="{{ product|get_attribute:'Матеріал' }}"
                          data-name="{{ product.name }}">
                          
                         <!-- Медіаблок -->

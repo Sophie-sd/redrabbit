@@ -13,3 +13,10 @@ def get_item(dictionary, key):
         return dictionary.get(key)
     return None
 
+
+@register.filter
+def get_attribute(product, attr_name):
+    """Отримує значення атрибута товару"""
+    attr = product.attributes.filter(name=attr_name).first()
+    return attr.value if attr else ''
+
