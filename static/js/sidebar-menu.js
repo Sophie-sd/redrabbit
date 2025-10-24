@@ -1,34 +1,11 @@
-(function() {
-  const menuItems = document.querySelectorAll('.sidebar-menu__item.has-children');
-  
-  menuItems.forEach(item => {
-    const toggle = item.querySelector('.sidebar-menu__toggle');
-    const submenu = item.querySelector('.sidebar-menu__submenu');
+document.addEventListener('DOMContentLoaded', () => {
+    const sidebarToggles = document.querySelectorAll('.sidebar-menu__toggle');
     
-    if (!toggle || !submenu) return;
-    
-    toggle.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      const isExpanded = item.classList.contains('expanded');
-      
-      menuItems.forEach(otherItem => {
-        otherItem.classList.remove('expanded');
-      });
-      
-      if (!isExpanded) {
-        item.classList.add('expanded');
-      }
+    sidebarToggles.forEach(toggle => {
+        toggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const item = toggle.closest('.sidebar-menu__item');
+            item.classList.toggle('open');
+        });
     });
-  });
-  
-  document.addEventListener('click', function(e) {
-    if (!e.target.closest('.sidebar-menu')) {
-      menuItems.forEach(item => {
-        item.classList.remove('expanded');
-      });
-    }
-  });
-})();
-
+});

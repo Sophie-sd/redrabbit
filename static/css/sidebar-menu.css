@@ -53,10 +53,11 @@
   border-radius: var(--radius-md, 8px);
   transition: all var(--transition-fast, 0.2s);
   font-size: var(--font-size-base, 16px);
-  background: none;
-  border: none;
   width: 100%;
+  background: transparent;
+  border: none;
   cursor: pointer;
+  text-align: left;
 }
 
 .sidebar-menu__link:hover {
@@ -81,8 +82,8 @@
   transition: transform var(--transition-fast, 0.2s);
 }
 
-.sidebar-menu__item.has-children:hover .sidebar-menu__arrow {
-  transform: translateX(4px);
+.sidebar-menu__item.open .sidebar-menu__arrow {
+  transform: rotate(90deg);
 }
 
 .sidebar-menu__submenu {
@@ -92,13 +93,9 @@
   margin-top: var(--spacing-xs, 8px);
 }
 
-.sidebar-menu__item.expanded .sidebar-menu__submenu,
+.sidebar-menu__item.open .sidebar-menu__submenu,
 .sidebar-menu__item.active .sidebar-menu__submenu {
   max-height: 600px;
-}
-
-.sidebar-menu__item.expanded .sidebar-menu__arrow {
-  transform: rotate(90deg);
 }
 
 .submenu__list {
