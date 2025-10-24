@@ -146,51 +146,74 @@
             <h2 class="section-title text-center">Схожі товари</h2>
             <div class="products-grid">
                 {% for item in similar %}
-                <div class="product-card">
-                    <a href="{{ item.get_absolute_url }}" class="product-link">
-                        <div class="product-image">
-                            {% if item.images.first %}
-                                <img src="{{ item.images.first.get_image_url }}" alt="{{ item.name }}" loading="lazy">
-                            {% else %}
-                                <div class="product-placeholder">
-                                    <span>📦</span>
-                                </div>
-                            {% endif %}
-                            
-                            {% if item.is_sale or item.is_new or item.is_top %}
-                            <div class="product-badges">
+                <article class="product-card">
+                    <div class="product-card__media">
+                        {% if item.images.first %}
+                            <img 
+                                src="{{ item.images.first.get_image_url }}" 
+                                alt="{{ item.name }}" 
+                                class="product-card__image"
+                                loading="lazy"
+                            >
+                        {% else %}
+                            <div class="product-card__placeholder">📦</div>
+                        {% endif %}
+                        
+                        <button 
+                            type="button"
+                            class="product-card__wishlist" 
+                            data-product-id="{{ item.id }}" 
+                            aria-label="Додати в обране"
+                            title="Додати в обране"
+                        >
+                            <span class="product-card__wishlist-icon">♡</span>
+                        </button>
+                        
+                        {% if item.is_sale or item.is_new or item.is_top %}
+                            <div class="product-card__badges">
                                 {% if item.is_sale %}
-                                    <span class="badge badge-sale">SALE</span>
+                                    <span class="product-badge product-badge--sale">
+                                        -{{ item.get_discount_percentage }}%
+                                    </span>
                                 {% endif %}
                                 {% if item.is_new %}
-                                    <span class="badge badge-new">NEW</span>
+                                    <span class="product-badge product-badge--new">NEW</span>
                                 {% endif %}
                                 {% if item.is_top %}
-                                    <span class="badge badge-top">TOP</span>
+                                    <span class="product-badge product-badge--hit">ХІТ</span>
                                 {% endif %}
                             </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="product-card__content">
+                        <h3 class="product-card__name">
+                            <a href="{{ item.get_absolute_url }}" class="product-card__link">
+                                {{ item.name }}
+                            </a>
+                        </h3>
+                        
+                        <div class="product-card__price">
+                            {% if item.is_sale and item.sale_price %}
+                                <span class="product-card__price-current">{{ item.sale_price }} ₴</span>
+                                <span class="product-card__price-old">{{ item.retail_price }} ₴</span>
+                                <span class="product-card__price-save">-{{ item.get_discount_amount }} ₴</span>
+                            {% else %}
+                                <span class="product-card__price-current">{{ item.retail_price }} ₴</span>
                             {% endif %}
                         </div>
-                        
-                        <div class="product-content">
-                            <h3 class="product-name">{{ item.name }}</h3>
-                            <div class="product-price">
-                                {% if item.is_sale and item.sale_price %}
-                                    <span class="price-old">{{ item.retail_price }} ₴</span>
-                                    <span class="price-new">{{ item.sale_price }} ₴</span>
-                                {% else %}
-                                    <span class="price-current">{{ item.retail_price }} ₴</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </a>
+                    </div>
                     
-                    <div class="product-actions">
-                        <button class="btn-add-cart" data-product-id="{{ item.id }}">
+                    <div class="product-card__actions">
+                        <button 
+                            type="button"
+                            class="product-card__add-cart" 
+                            data-product-id="{{ item.id }}"
+                        >
                             До кошика
                         </button>
                     </div>
-                </div>
+                </article>
                 {% endfor %}
             </div>
         </section>
@@ -266,10 +289,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Додавання в кошик
-    const addToCartBtns = document.querySelectorAll('.btn-add-cart');
-    addToCartBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
+    // Додавання в кошик (основна кнопка)
+    const mainAddToCartBtn = document.querySelector('.product-detail-actions .btn-add-cart');
+    if (mainAddToCartBtn) {
+        mainAddToCartBtn.addEventListener('click', function() {
             const productId = this.dataset.productId;
             const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
             
@@ -286,6 +309,59 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.success) {
                     alert('Товар додано в кошик!');
                     updateCartCount(data.cart_count);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    }
+    
+    // Додавання в кошик (схожі товари)
+    const similarAddToCartBtns = document.querySelectorAll('.similar-products .product-card__add-cart');
+    similarAddToCartBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const productId = this.dataset.productId;
+            
+            fetch('/cart/add/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: `product_id=${productId}&quantity=1`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Товар додано в кошик!');
+                    updateCartCount(data.cart_count);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+    
+    // Wishlist для схожих товарів
+    const similarWishlistBtns = document.querySelectorAll('.similar-products .product-card__wishlist');
+    similarWishlistBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const productId = this.dataset.productId;
+            
+            fetch('/wishlist/toggle/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ product_id: productId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.added) {
+                    this.classList.add('active');
+                    alert('Додано до обраного!');
+                } else {
+                    this.classList.remove('active');
+                    alert('Видалено з обраного');
                 }
             })
             .catch(error => console.error('Error:', error));
