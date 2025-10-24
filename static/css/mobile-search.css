@@ -34,9 +34,9 @@
     justify-content: center;
     width: 44px;
     height: 44px;
-    background: none;
+    background: rgba(250, 154, 133, 0.15);
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: 10px;
     color: #ff4444;
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -46,7 +46,7 @@
 
 .mobile-search-btn:hover,
 .mobile-search-btn:focus {
-    background: var(--gray-light);
+    background: rgba(250, 154, 133, 0.25);
     color: var(--color-brand-primary);
 }
 

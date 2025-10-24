@@ -26,8 +26,8 @@
     <meta property="twitter:image" content="{% block twitter_image %}{{ block.super }}{% endblock %}">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicon.svg' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/redrabbit_logo.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/redrabbit_logo.png' %}">
     
     <!-- iOS Safari specific -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -98,7 +98,7 @@
         "@type": "Store",
         "name": "redrabbit",
         "url": "{{ request.scheme }}://{{ request.get_host }}",
-        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/favicon.svg' %}",
+        "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/redrabbit_logo.png' %}",
         "description": "Інтернет-магазин інтимних товарів для дорослих з дискретною доставкою по Україні",
         "contactPoint": {
             "@type": "ContactPoint",
