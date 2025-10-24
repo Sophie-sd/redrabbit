@@ -493,8 +493,9 @@
     background: var(--white);
     box-shadow: var(--shadow-lg);
     z-index: 2000;
-    transition: right var(--transition-normal);
+    transition: right 0.3s ease;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .mobile-menu.active {
