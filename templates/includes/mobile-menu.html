@@ -22,8 +22,7 @@
             </button>
             <!-- Categories Submenu -->
             {% if main_categories %}
-            <div class="mobile-submenu">
-                <span class="submenu-title">Категорії</span>
+            <div class="mobile-submenu" id="catalogSubmenu">
                 <ul class="submenu-list">
                     {% for category in main_categories %}
                     {% if category.is_active and category.slug %}
