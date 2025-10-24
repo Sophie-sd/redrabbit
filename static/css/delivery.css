@@ -7,7 +7,7 @@
 
 .delivery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
     margin-top: 40px;
     padding: 15px 0;
@@ -36,13 +36,15 @@
     margin-bottom: 25px;
 }
 
-.delivery-image img {
+.delivery-image img,
+.delivery-image svg {
     max-width: 120px;
     height: auto;
     transition: transform 0.3s ease;
 }
 
-.delivery-card:hover .delivery-image img {
+.delivery-card:hover .delivery-image img,
+.delivery-card:hover .delivery-image svg {
     transform: scale(1.1);
 }
 
@@ -86,47 +88,6 @@
     font-size: 1.2em;
 }
 
-.delivery-badge {
-    position: absolute;
-    top: -15px;
-    right: -15px;
-    background: #e91e63;
-    color: white;
-    padding: 8px 15px;
-    border-radius: 25px;
-    font-size: 0.75em;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
-    border: 3px solid white;
-    z-index: 30;
-    transition: all 0.3s ease;
-    cursor: default;
-}
-
-.delivery-badge:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(233, 30, 99, 0.6);
-}
-
-.delivery-badge.economical {
-    background: #28a745;
-    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
-}
-
-.delivery-badge.economical:hover {
-    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
-}
-
-.delivery-badge.free {
-    background: #17a2b8;
-    box-shadow: 0 4px 15px rgba(23, 162, 184, 0.4);
-}
-
-.delivery-badge.free:hover {
-    box-shadow: 0 6px 20px rgba(23, 162, 184, 0.6);
-}
 
 /* Payment Methods Section */
 .payment-methods-section {
@@ -214,206 +175,23 @@
     font-size: 1.2em;
 }
 
-.payment-badge {
-    position: absolute;
-    top: -15px;
-    right: -15px;
-    background: #343a40;
-    color: white;
-    padding: 8px 15px;
-    border-radius: 25px;
-    font-size: 0.75em;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    box-shadow: 0 4px 15px rgba(52, 58, 64, 0.4);
-    border: 3px solid white;
-    z-index: 30;
-    transition: all 0.3s ease;
-    cursor: default;
-}
-
-.payment-badge:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(52, 58, 64, 0.6);
-}
-
-.payment-badge.trusted {
-    background: #28a745;
-    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
-}
-
-.payment-badge.trusted:hover {
-    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
-}
-
-.payment-badge.instant {
-    background: #007bff;
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
-}
-
-.payment-badge.instant:hover {
-    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6);
-}
-
-.payment-badge.business {
-    background: #6f42c1;
-    box-shadow: 0 4px 15px rgba(111, 66, 193, 0.4);
-}
-
-.payment-badge.business:hover {
-    box-shadow: 0 6px 20px rgba(111, 66, 193, 0.6);
-}
-
-/* Additional Info Section */
-.additional-info-section {
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-}
-
-/* Grid для блоків на десктопі */
-.info-blocks-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
-}
-
-/* Окремі блоки */
-.info-block {
-    background: white;
-    border-radius: 20px;
-    padding: 35px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-    border: 2px solid rgba(233, 30, 99, 0.1);
-    transition: all 0.3s ease;
-}
-
-.info-block:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(233, 30, 99, 0.15);
-    border-color: rgba(233, 30, 99, 0.2);
-}
-
-.info-title {
-    font-size: 1.3em;
-    font-weight: 700;
-    color: #e91e63;
-    margin: 0 0 25px 0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.info-icon {
-    font-size: 1.4em;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-style: normal;
-}
-
-.info-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.info-list li {
-    padding: 12px 0;
-    padding-left: 30px;
-    position: relative;
-    color: #2c3e50;
-    line-height: 1.7;
-    font-size: 15px;
-}
-
-.info-list li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    top: 12px;
-    color: #e91e63;
-    font-weight: bold;
-    font-size: 1.1em;
-}
-
-.info-list li strong {
-    color: #e91e63;
-    font-weight: 600;
-}
-
-/* Contact Delivery Section */
-.contact-delivery-section {
-    background: linear-gradient(135deg, #e91e63 0%, #ff4081 100%);
-    color: white;
-}
-
-.contact-title {
-    font-size: 2em;
-    font-weight: 700;
-    margin: 0 0 15px 0;
-    color: white;
-}
-
-.contact-description {
-    font-size: 1.1em;
-    margin: 0 0 30px 0;
-    opacity: 0.9;
-    color: white;
-}
-
-.contact-buttons .btn {
-    margin: 0 15px 15px 0;
-    min-width: 180px;
-    padding: 12px 24px;
-    font-weight: 600;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-/* Стилі для кнопки "Подзвонити" (primary) */
-.contact-delivery-section .btn.btn-primary {
-    background: white;
-    color: #e91e63;
-    border: 2px solid white;
-}
-
-.contact-delivery-section .btn.btn-primary:hover {
-    background: rgba(255, 255, 255, 0.9);
-    color: #e91e63;
-    border-color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* Стилі для кнопки "Написати нам" (outline) */
-.contact-delivery-section .btn.btn-outline {
-    background: transparent;
-    color: white;
-    border: 2px solid white;
-}
-
-.contact-delivery-section .btn.btn-outline:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border-color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* Стилі для іконок у кнопках */
-.contact-delivery-section .btn-icon {
-    margin-right: 8px;
-    display: inline-block;
-    transform: none;
-    vertical-align: middle;
-    font-style: normal;
-}
-
 
 /* Адаптивність */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .delivery-grid,
+    .payment-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .delivery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-top: 30px;
+    }
+    
     .payment-grid {
         grid-template-columns: 1fr;
         gap: 20px;
@@ -422,15 +200,14 @@
     
     .delivery-card,
     .payment-card {
-        padding: 20px;
+        padding: 16px;
         border-radius: 15px;
     }
     
-    /* Виправлення відступів від галочок у мобільній версії */
     .delivery-features li,
     .payment-features li {
-        padding-left: 30px;
-        padding-right: 10px;
+        padding-left: 25px;
+        padding-right: 8px;
     }
     
     .delivery-features li::before,
@@ -439,146 +216,64 @@
     }
     
     .delivery-image img,
+    .delivery-image svg,
     .payment-image img {
-        max-width: 100px;
+        max-width: 90px;
+        height: 90px;
     }
     
     .delivery-title,
     .payment-title {
-        font-size: 1.2em;
+        font-size: 1.1em;
     }
     
-    /* Адаптивність для блоків - один під одним на мобільній */
-    .info-blocks-grid {
-        grid-template-columns: 1fr;
-        gap: 0;
-    }
-    
-    .info-block {
-        background: transparent;
-        border: none;
-        box-shadow: none;
-        padding: 0 20px;
-        margin-bottom: 35px;
-        text-align: center;
-    }
-    
-    .info-block:hover {
-        transform: none;
-        box-shadow: none;
-    }
-    
-    .info-title {
-        font-size: 1.2em;
-        margin-bottom: 20px;
-        justify-content: center;
-    }
-    
-    .info-list {
-        text-align: left;
-        display: inline-block;
-        max-width: 100%;
-    }
-    
-    .info-list li {
-        padding: 10px 0;
-        padding-left: 0;
-        font-size: 14px;
-    }
-    
-    .info-list li::before {
-        content: none;
-    }
-    
-    /* Відділяємо блок "Маєте питання" від footer */
-    .contact-delivery-section {
-        padding: 40px 20px;
-        border-radius: 20px;
-        margin: 50px 15px 60px 15px;
-    }
-    
-    .contact-title {
-        font-size: 1.4em;
-    }
-    
-    .contact-description {
-        font-size: 0.95em;
-    }
-    
-    .contact-buttons .btn {
-        display: block;
-        width: 100%;
-        margin: 0 0 15px 0;
+    .delivery-description,
+    .payment-description {
+        font-size: 0.9em;
     }
 }
 
 @media (max-width: 480px) {
+    .delivery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
     .delivery-card,
     .payment-card {
-        padding: 15px;
+        padding: 12px;
         border-radius: 12px;
     }
     
     .delivery-image img,
+    .delivery-image svg,
     .payment-image img {
-        max-width: 80px;
+        max-width: 70px;
+        height: 70px;
+    }
+    
+    .delivery-title,
+    .payment-title {
+        font-size: 0.95em;
+    }
+    
+    .delivery-description,
+    .payment-description {
+        font-size: 0.8em;
+        margin-bottom: 12px;
     }
     
     .delivery-features li,
     .payment-features li {
-        font-size: 0.85em;
-        padding: 6px 0;
-        padding-left: 28px;
+        font-size: 0.75em;
+        padding: 5px 0;
+        padding-left: 20px;
     }
     
     .delivery-features li::before,
     .payment-features li::before {
-        left: 3px;
-    }
-    
-    .info-list li {
-        font-size: 0.85em;
-        padding: 8px 0;
-        padding-left: 25px;
-        position: relative;
-    }
-    
-    /* Стилі для блоків на маленьких екранах */
-    .info-block {
-        padding: 0 15px;
-        margin-bottom: 30px;
-    }
-    
-    .info-title {
-        font-size: 1.1em;
-        margin-bottom: 18px;
-        gap: 10px;
-    }
-    
-    .info-list li {
-        font-size: 13px;
-        padding: 8px 0;
-        padding-left: 0;
-    }
-    
-    .info-list li::before {
-        content: none;
-    }
-    
-    /* Відділяємо блок "Маєте питання" від footer на маленьких екранах */
-    .contact-delivery-section {
-        padding: 30px 15px;
-        border-radius: 15px;
-        margin: 45px 10px 55px 10px;
-    }
-    
-    .contact-title {
-        font-size: 1.2em;
-    }
-    
-    .contact-description {
-        font-size: 0.9em;
-        margin-bottom: 20px;
+        left: 2px;
+        font-size: 1em;
     }
 }
 
@@ -610,6 +305,10 @@
     animation-delay: 0.3s;
 }
 
+.fade-in:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
 /* Спеціальні стилі для iOS Safari */
 @supports (-webkit-touch-callout: none) {
     .delivery-card,
@@ -622,5 +321,11 @@
     .payment-card:hover {
         -webkit-transform: translateY(-10px) translateZ(0);
         transform: translateY(-10px) translateZ(0);
+    }
+    
+    .delivery-image svg,
+    .payment-image svg {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
     }
 }
