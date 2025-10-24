@@ -4,7 +4,6 @@
   padding: var(--spacing-xxl, 60px) 0 var(--spacing-lg, 24px);
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
 }
 
 .footer-grid {
