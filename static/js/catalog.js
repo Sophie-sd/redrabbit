@@ -104,6 +104,35 @@ class CatalogManager {
                 }
             });
         }
+        
+        const desktopSortBtn = document.getElementById('desktopSortBtn');
+        const desktopSortDropdown = document.getElementById('desktopSortDropdown');
+        
+        if (desktopSortBtn && desktopSortDropdown) {
+            desktopSortBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                desktopSortDropdown.classList.toggle('hidden');
+                desktopSortBtn.classList.toggle('active');
+            });
+            
+            desktopSortDropdown.querySelectorAll('.sort-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    const value = option.dataset.value;
+                    this.currentSort = value;
+                    desktopSortBtn.querySelector('.sort-text').textContent = option.textContent;
+                    desktopSortDropdown.classList.add('hidden');
+                    desktopSortBtn.classList.remove('active');
+                    this.applyFilters();
+                });
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!desktopSortBtn.contains(e.target) && !desktopSortDropdown.contains(e.target)) {
+                    desktopSortDropdown.classList.add('hidden');
+                    desktopSortBtn.classList.remove('active');
+                }
+            });
+        }
     }
     
     loadInitialData() {

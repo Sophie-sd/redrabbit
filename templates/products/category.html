@@ -26,15 +26,37 @@
         <main class="catalog-main">
             {% if not subcategories %}
             <div class="filters-bar">
-                <button type="button" class="filters-toggle" id="filtersToggle">
-                    <svg class="filters-toggle__icon" viewBox="0 0 24 24" fill="none">
-                        <path d="M3 4H21V6H3V4ZM6 10H18V12H6V10ZM9 16H15V18H9V16Z" fill="currentColor"/>
-                    </svg>
-                    <span class="filters-toggle__text">Фільтри</span>
-                    <svg class="filters-toggle__arrow" viewBox="0 0 24 24" fill="none">
-                        <path d="M7 10L12 15L17 10H7Z" fill="currentColor"/>
-                    </svg>
-                </button>
+                <div class="filters-controls">
+                    <button type="button" class="filters-toggle" id="filtersToggle">
+                        <svg class="filters-toggle__icon" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 4H21V6H3V4ZM6 10H18V12H6V10ZM9 16H15V18H9V16Z" fill="currentColor"/>
+                        </svg>
+                        <span class="filters-toggle__text">Фільтри</span>
+                        <svg class="filters-toggle__arrow" viewBox="0 0 24 24" fill="none">
+                            <path d="M7 10L12 15L17 10H7Z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    
+                    <div class="desktop-sort-control">
+                        <button type="button" class="desktop-sort-btn" id="desktopSortBtn">
+                            <svg class="sort-icon" viewBox="0 0 24 24" fill="none">
+                                <path d="M3 6h18M3 12h13M3 18h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span class="sort-text">Сортувати</span>
+                            <svg class="sort-arrow" viewBox="0 0 24 24" fill="none">
+                                <path d="M7 10L12 15L17 10H7Z" fill="currentColor"/>
+                            </svg>
+                        </button>
+                        <div class="desktop-sort-dropdown hidden" id="desktopSortDropdown">
+                            <div class="sort-option" data-value="default">За замовчуванням</div>
+                            <div class="sort-option" data-value="price_asc">За ціною: дешевші спочатку</div>
+                            <div class="sort-option" data-value="price_desc">За ціною: дорожчі спочатку</div>
+                            <div class="sort-option" data-value="name">За назвою</div>
+                            <div class="sort-option" data-value="popular">За популярністю</div>
+                            <div class="sort-option" data-value="new">За новизною</div>
+                        </div>
+                    </div>
+                </div>
                 
                 <div class="filters-content" id="filtersContent">
                     <div class="filters-grid">
@@ -61,89 +83,61 @@
                             </div>
                         </div>
                         
+                        {% if available_brands %}
                         <div class="filter-group">
                             <label class="filter-label">Бренд</label>
                             <div class="filter-checkboxes filter-checkboxes--scrollable">
+                                {% for brand in available_brands %}
                                 <label class="filter-checkbox">
-                                    <input type="checkbox" value="Passion (Польща)" name="brand" class="filter-checkbox-input">
-                                    <span>Passion</span>
+                                    <input type="checkbox" value="{{ brand }}" name="brand" class="filter-checkbox-input">
+                                    <span>{{ brand|cut:" (Польща)"|cut:" (Німеччина)"|cut:" (США)"|cut:" (Франція)"|cut:" (Японія)"|cut:" (Япония)"|cut:" (Україна)"|cut:" (Китай)"|cut:" (Південна Корея)"|cut:" (Великобританія)" }}</span>
                                 </label>
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="Satisfyer (Німеччина)" name="brand" class="filter-checkbox-input">
-                                    <span>Satisfyer</span>
-                                </label>
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="Obsessive (Польща)" name="brand" class="filter-checkbox-input">
-                                    <span>Obsessive</span>
-                                </label>
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="Leg Avenue (США)" name="brand" class="filter-checkbox-input">
-                                    <span>Leg Avenue</span>
-                                </label>
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="Noir Handmade (Польща)" name="brand" class="filter-checkbox-input">
-                                    <span>Noir Handmade</span>
-                                </label>
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="Dorcel (Франція)" name="brand" class="filter-checkbox-input">
-                                    <span>Dorcel</span>
-                                </label>
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="Tenga (Япония)" name="brand" class="filter-checkbox-input">
-                                    <span>Tenga</span>
-                                </label>
+                                {% endfor %}
                             </div>
                         </div>
+                        {% endif %}
                         
+                        {% if available_power %}
                         <div class="filter-group">
                             <label class="filter-label">Живлення</label>
                             <div class="filter-checkboxes">
+                                {% for power in available_power %}
                                 <label class="filter-checkbox">
-                                    <input type="checkbox" value="вбудовані акумулятори" name="power" class="filter-checkbox-input">
-                                    <span>Акумулятор</span>
+                                    <input type="checkbox" value="{{ power }}" name="power" class="filter-checkbox-input">
+                                    <span>{% if power == "вбудовані акумулятори" %}Акумулятор{% elif power == "батарейки" %}Батарейки{% elif power == "від мережі 220V" %}Мережа 220V{% else %}{{ power }}{% endif %}</span>
                                 </label>
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="батарейки" name="power" class="filter-checkbox-input">
-                                    <span>Батарейки</span>
-                                </label>
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="від мережі 220V" name="power" class="filter-checkbox-input">
-                                    <span>Мережа 220V</span>
-                                </label>
+                                {% endfor %}
                             </div>
                         </div>
+                        {% endif %}
                         
+                        {% if available_waterproof %}
                         <div class="filter-group">
                             <label class="filter-label">Водостійкість</label>
                             <div class="filter-checkboxes">
+                                {% for waterproof in available_waterproof %}
                                 <label class="filter-checkbox">
-                                    <input type="checkbox" value="можна занурювати" name="waterproof" class="filter-checkbox-input">
-                                    <span>Повністю водостійкий</span>
+                                    <input type="checkbox" value="{{ waterproof }}" name="waterproof" class="filter-checkbox-input">
+                                    <span>{% if waterproof == "можна занурювати" %}Повністю водостійкий{% elif waterproof == "водостійка" %}Водостійкий{% elif waterproof == "захист від бризок" %}Захист від бризок{% else %}{{ waterproof }}{% endif %}</span>
                                 </label>
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="водостійка" name="waterproof" class="filter-checkbox-input">
-                                    <span>Водостійкий</span>
-                                </label>
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="захист від бризок" name="waterproof" class="filter-checkbox-input">
-                                    <span>Захист від бризок</span>
-                                </label>
+                                {% endfor %}
                             </div>
                         </div>
+                        {% endif %}
                         
+                        {% if available_vibration %}
                         <div class="filter-group">
                             <label class="filter-label">Вібрація</label>
                             <div class="filter-checkboxes">
+                                {% for vibration in available_vibration %}
                                 <label class="filter-checkbox">
-                                    <input type="checkbox" value="так" name="vibration" class="filter-checkbox-input">
-                                    <span>З вібрацією</span>
+                                    <input type="checkbox" value="{{ vibration }}" name="vibration" class="filter-checkbox-input">
+                                    <span>{% if vibration == "так" %}З вібрацією{% elif vibration == "ні" %}Без вібрації{% else %}{{ vibration }}{% endif %}</span>
                                 </label>
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="ні" name="vibration" class="filter-checkbox-input">
-                                    <span>Без вібрації</span>
-                                </label>
+                                {% endfor %}
                             </div>
                         </div>
+                        {% endif %}
                         
                         <div class="filter-group">
                             <label class="filter-label">Тип товару</label>

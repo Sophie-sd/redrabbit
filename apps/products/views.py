@@ -1,6 +1,7 @@
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
-from .models import Product, Category
+from django.db.models import Count
+from .models import Product, Category, ProductAttribute
 
 
 class CategoryView(ListView):
@@ -15,12 +16,48 @@ class CategoryView(ListView):
         if self.category.children.filter(is_active=True).exists():
             return Product.objects.none()
         
-        return Product.objects.filter(category=self.category, is_active=True)
+        return Product.objects.filter(
+            category=self.category, 
+            is_active=True
+        ).prefetch_related('attributes')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category'] = self.category
         context['subcategories'] = self.category.children.filter(is_active=True, slug__isnull=False).exclude(slug='')
+        
+        if not context['subcategories']:
+            products_in_category = Product.objects.filter(
+                category=self.category,
+                is_active=True
+            )
+            
+            brands = products_in_category.exclude(vendor_name='').values('vendor_name').annotate(
+                count=Count('id')
+            ).order_by('-count')[:10]
+            context['available_brands'] = [b['vendor_name'] for b in brands]
+            
+            power_types = ProductAttribute.objects.filter(
+                product__category=self.category,
+                product__is_active=True,
+                name='Живлення'
+            ).values('value').annotate(count=Count('id')).order_by('-count')
+            context['available_power'] = [p['value'] for p in power_types if p['value']]
+            
+            waterproof_types = ProductAttribute.objects.filter(
+                product__category=self.category,
+                product__is_active=True,
+                name='Водостійкість'
+            ).values('value').annotate(count=Count('id')).order_by('-count')
+            context['available_waterproof'] = [w['value'] for w in waterproof_types if w['value']]
+            
+            vibration_types = ProductAttribute.objects.filter(
+                product__category=self.category,
+                product__is_active=True,
+                name='Вібрація'
+            ).values('value').annotate(count=Count('id')).order_by('-count')
+            context['available_vibration'] = [v['value'] for v in vibration_types if v['value']]
+        
         return context
 
 
