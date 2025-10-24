@@ -114,9 +114,7 @@
 .delivery-free-shipping {
     text-align: center;
     margin-top: 40px;
-    padding: 25px 20px;
-    background: linear-gradient(135deg, #FA9A85 0%, #FF6B6B 100%);
-    border-radius: 15px;
+    padding: 20px 20px;
     max-width: 900px;
     margin-left: auto;
     margin-right: auto;
@@ -124,9 +122,9 @@
 
 .free-shipping-text {
     font-size: 1.3em;
-    color: white;
+    color: #dc3545;
     margin: 0;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .free-shipping-text strong {
@@ -251,22 +249,21 @@
     
     .delivery-grid {
         grid-template-columns: 1fr;
-        gap: 15px;
+        gap: 20px;
         margin-top: 30px;
     }
     
     .delivery-free-shipping {
         margin-top: 25px;
-        padding: 20px 15px;
-        border-radius: 12px;
+        padding: 15px 15px;
     }
     
     .free-shipping-text {
-        font-size: 1.1em;
+        font-size: 1.15em;
     }
     
     .free-shipping-text strong {
-        font-size: 1.15em;
+        font-size: 1.2em;
     }
     
     .payment-grid {
@@ -277,35 +274,36 @@
     
     .delivery-card,
     .payment-card {
-        padding: 16px;
+        padding: 20px;
         border-radius: 15px;
-    }
-    
-    .delivery-features li,
-    .payment-features li {
-        padding-left: 25px;
-        padding-right: 8px;
-    }
-    
-    .delivery-features li::before,
-    .payment-features li::before {
-        left: 5px;
     }
     
     .delivery-image img,
     .payment-image img {
-        max-width: 90px;
+        max-width: 100px;
         height: auto;
     }
     
     .delivery-title,
     .payment-title {
-        font-size: 1.1em;
+        font-size: 1.25em;
     }
     
     .delivery-description,
     .payment-description {
-        font-size: 0.9em;
+        font-size: 0.95em;
+    }
+    
+    .delivery-features li,
+    .payment-features li {
+        padding-left: 28px;
+        padding-right: 10px;
+        font-size: 0.95em;
+    }
+    
+    .delivery-features li::before,
+    .payment-features li::before {
+        left: 5px;
     }
 }
 
@@ -322,57 +320,56 @@
     
     .delivery-grid {
         grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 15px;
     }
     
     .delivery-card,
     .payment-card {
-        padding: 15px;
-        border-radius: 12px;
+        padding: 18px;
+        border-radius: 15px;
     }
     
     .delivery-image img,
     .payment-image img {
-        max-width: 80px;
+        max-width: 90px;
         height: auto;
     }
     
     .delivery-title,
     .payment-title {
-        font-size: 1.05em;
+        font-size: 1.2em;
     }
     
     .delivery-description,
     .payment-description {
-        font-size: 0.85em;
-        margin-bottom: 12px;
+        font-size: 0.9em;
+        margin-bottom: 15px;
     }
     
     .delivery-features li,
     .payment-features li {
-        font-size: 0.8em;
-        padding: 5px 0;
-        padding-left: 22px;
+        font-size: 0.9em;
+        padding: 6px 0;
+        padding-left: 26px;
     }
     
     .delivery-features li::before,
     .payment-features li::before {
-        left: 2px;
-        font-size: 1em;
+        left: 3px;
+        font-size: 1.1em;
     }
     
     .delivery-free-shipping {
         margin-top: 20px;
-        padding: 18px 12px;
-        border-radius: 10px;
+        padding: 15px 12px;
     }
     
     .free-shipping-text {
-        font-size: 1em;
+        font-size: 1.05em;
     }
     
     .free-shipping-text strong {
-        font-size: 1.1em;
+        font-size: 1.15em;
     }
 }
 
