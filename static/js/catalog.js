@@ -552,10 +552,16 @@ class CatalogManager {
             }
             modalBody.innerHTML = contentClone.querySelector('.filters-grid').innerHTML;
             
-            const allCheckboxes = modalBody.querySelectorAll('input[type="checkbox"], input[type="number"]');
-            allCheckboxes.forEach(input => {
-                const original = document.getElementById(input.id) || 
-                    document.querySelector(`input[name="${input.name}"][value="${input.value}"]`);
+            const allInputs = modalBody.querySelectorAll('input[type="checkbox"], input[type="number"]');
+            allInputs.forEach(input => {
+                let original;
+                if (input.id) {
+                    original = document.getElementById(input.id);
+                } else if (input.name && input.value) {
+                    const selector = `.filters-content input[name="${input.name}"][value="${input.value.replace(/"/g, '\\"')}"]`;
+                    original = document.querySelector(selector);
+                }
+                
                 if (original) {
                     if (input.type === 'checkbox') {
                         input.checked = original.checked;
@@ -581,8 +587,14 @@ class CatalogManager {
         const allInputs = modalBody.querySelectorAll('input[type="checkbox"], input[type="number"]');
         
         allInputs.forEach(input => {
-            const original = document.getElementById(input.id) || 
-                document.querySelector(`input[name="${input.name}"][value="${input.value}"]`);
+            let original;
+            if (input.id) {
+                original = document.getElementById(input.id);
+            } else if (input.name && input.type === 'checkbox' && input.value) {
+                const selector = `.filters-content input[name="${input.name}"][value="${input.value.replace(/"/g, '\\"')}"]`;
+                original = document.querySelector(selector);
+            }
+            
             if (original) {
                 if (input.type === 'checkbox') {
                     original.checked = input.checked;

@@ -41,22 +41,23 @@ class CategoryView(ListView):
                 product__category=self.category,
                 product__is_active=True,
                 name='Живлення'
-            ).values('value').annotate(count=Count('id')).order_by('-count')
-            context['available_power'] = [p['value'] for p in power_types if p['value']]
+            ).exclude(value='').values('value').distinct()
+            context['available_power'] = sorted(set([p['value'] for p in power_types if p['value']]))
             
             waterproof_types = ProductAttribute.objects.filter(
                 product__category=self.category,
                 product__is_active=True,
                 name='Водостійкість'
-            ).values('value').annotate(count=Count('id')).order_by('-count')
-            context['available_waterproof'] = [w['value'] for w in waterproof_types if w['value']]
+            ).exclude(value='').values('value').distinct()
+            context['available_waterproof'] = sorted(set([w['value'] for w in waterproof_types if w['value']]))
             
             vibration_types = ProductAttribute.objects.filter(
                 product__category=self.category,
                 product__is_active=True,
                 name='Вібрація'
-            ).values('value').annotate(count=Count('id')).order_by('-count')
-            context['available_vibration'] = [v['value'] for v in vibration_types if v['value']]
+            ).exclude(value='').values('value').distinct()
+            context['available_vibration'] = sorted(set([v['value'] for v in vibration_types if v['value']]))
+
         
         return context
 
