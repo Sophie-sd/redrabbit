@@ -596,16 +596,16 @@
 
 .sort-dropdown {
   position: absolute;
-  top: 100%;
+  bottom: 100%;
   left: 0;
   right: 0;
+  margin-bottom: 4px;
   background: var(--color-white);
   border: 1px solid var(--color-gray-300);
-  border-top: none;
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
-  z-index: 100;
-  max-height: 200px;
+  z-index: 1000;
+  max-height: 240px;
   overflow-y: auto;
 }
 
@@ -1456,7 +1456,8 @@
 
 .modal-filters__body {
   flex: 1;
-  padding: var(--space-md); /* Зменшено з var(--space-lg) */
+  padding: var(--space-md);
+  padding-bottom: calc(var(--space-md) + 80px);
   overflow-y: auto;
 }
 
@@ -1538,13 +1539,13 @@
 
 .modal-filters__footer {
   display: flex;
-  gap: var(--space-sm); /* Зменшено з var(--space-md) */
-  padding: var(--space-md); /* Зменшено з var(--space-lg) */
+  gap: var(--space-sm);
+  padding: var(--space-md);
   border-top: 1px solid var(--color-gray-200);
   background: var(--color-white);
-  position: sticky; /* Закріплюємо внизу */
+  position: sticky;
   bottom: 0;
-  margin-bottom: -80px; /* Компенсуємо padding-bottom */
+  z-index: 10;
 }
 
 .modal-filters__clear {
