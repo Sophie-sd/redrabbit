@@ -69,7 +69,7 @@
 
 .thumbnail:hover,
 .thumbnail.active {
-    border-color: #e91e63;
+    border-color: #d32f2f;
 }
 
 .thumbnail img {
@@ -213,7 +213,7 @@
 .product-detail-price {
     font-size: 2rem;
     font-weight: 700;
-    color: #e91e63;
+    color: #d32f2f;
     margin: 20px 0;
 }
 

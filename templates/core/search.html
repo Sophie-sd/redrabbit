@@ -74,9 +74,7 @@
                                     
                                     <!-- Product Labels -->
                                     <div class="product-labels">
-                                        {% if product.is_sale and product.sale_price %}
-                                            <span class="product-label sale">АКЦІЯ -{{ product.get_discount_percentage }}%</span>
-                                        {% endif %}
+                                        {% include 'includes/sale_countdown.html' with product=product %}
                                         {% if product.is_new %}
                                             <span class="product-label new">Новинка</span>
                                         {% endif %}

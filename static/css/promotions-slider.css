@@ -33,14 +33,16 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 50px;
+    overflow: visible;
 }
 
 .promotions-slider {
     display: flex;
     overflow-x: auto;
+    overflow-y: visible;
     scroll-behavior: smooth;
     gap: 15px;
-    padding: 10px 0 20px;
+    padding: 15px 0 20px;
     scrollbar-width: none;
 }
 
@@ -61,7 +63,7 @@
 
 .promo-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(233, 30, 99, 0.15);
+    box-shadow: 0 8px 24px rgba(211, 47, 47, 0.15);
 }
 
 /* Зображення товару - ЗМЕНШЕНИЙ РОЗМІР */
@@ -141,7 +143,7 @@
 }
 
 .promo-name a:hover {
-    color: #e91e63;
+    color: #d32f2f;
 }
 
 /* Ціни - КОМПАКТНІ */
@@ -161,7 +163,7 @@
 
 .promo-price .price-new {
     font-size: 1rem;
-    color: #e91e63;
+    color: #d32f2f;
     font-weight: 700;
 }
 
@@ -176,7 +178,7 @@
     font-size: 0.85rem;
     font-weight: 600;
     border-radius: 6px;
-    background: #e91e63;
+    background: #d32f2f;
     color: white;
     border: none;
     cursor: pointer;
@@ -184,9 +186,9 @@
 }
 
 .promo-add-cart:hover:not(:disabled) {
-    background: #c2185b;
+    background: #b71c1c;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+    box-shadow: 0 4px 12px rgba(211, 47, 47, 0.4);
 }
 
 .promo-add-cart--disabled {
@@ -204,15 +206,15 @@
 }
 
 .promo-content .btn-primary {
-    background: #e91e63;
+    background: #d32f2f;
     border: none;
     color: white;
 }
 
 .promo-content .btn-primary:hover:not(:disabled) {
-    background: #c2185b;
+    background: #b71c1c;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+    box-shadow: 0 4px 12px rgba(211, 47, 47, 0.4);
 }
 
 .promo-content .btn:disabled {
@@ -228,7 +230,7 @@
     width: 40px;
     height: 40px;
     background: white;
-    border: 2px solid #e91e63;
+    border: 2px solid #d32f2f;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -236,11 +238,11 @@
     cursor: pointer;
     transition: all 0.3s ease;
     z-index: 10;
-    color: #e91e63;
+    color: #d32f2f;
 }
 
 .promo-nav-btn:hover {
-    background: #e91e63;
+    background: #d32f2f;
     color: white;
     transform: translateY(-50%) scale(1.1);
 }

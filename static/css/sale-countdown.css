@@ -1,6 +1,6 @@
 .product-badge--sale-name {
     display: block;
-    background: #e91e63;
+    background: #d32f2f;
     color: white;
     padding: 5px 10px;
     border-radius: 4px;
@@ -27,16 +27,16 @@
 
 .sale-countdown {
     display: block;
-    padding: 6px 10px;
-    background: rgba(255, 68, 68, 0.85);
+    padding: 8px 12px;
+    background: rgba(255, 68, 68, 0.75);
     color: white;
-    border-radius: 6px;
-    font-size: 11px;
+    border-radius: 8px;
+    font-size: 12px;
     font-weight: 600;
-    line-height: 1.2;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    line-height: 1.3;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     white-space: nowrap;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(6px);
 }
 
 .countdown-ended {
@@ -81,7 +81,7 @@
 }
 
 .product-card__wishlist--active {
-    background: #e91e63;
+    background: #d32f2f;
     color: white;
 }
 
@@ -102,8 +102,8 @@
     }
     
     .sale-countdown {
-        font-size: 9px;
-        padding: 4px 8px;
+        font-size: 10px;
+        padding: 6px 10px;
     }
     
     .product-card__badges,
