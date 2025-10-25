@@ -86,7 +86,7 @@
             
             <div class="promotions-slider" id="promotionsSlider">
                 {% for product in sale_products %}
-                    {% include 'includes/product_card.html' with product=product %}
+                    {% include 'includes/promo_card.html' with product=product %}
                 {% endfor %}
             </div>
             
@@ -127,7 +127,7 @@
             
             <div class="promotions-slider" id="topProductsSlider">
                 {% for product in top_products %}
-                    {% include 'includes/product_card.html' with product=product %}
+                    {% include 'includes/promo_card.html' with product=product %}
                 {% endfor %}
             </div>
             

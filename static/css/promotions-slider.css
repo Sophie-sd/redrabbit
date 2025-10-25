@@ -103,7 +103,17 @@
     font-size: 4rem;
 }
 
-/* Бейджі акції - видалено, використовується sale-countdown.css */
+/* Бейджі для промо-карток */
+.promo-badges {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 10;
+    max-width: calc(100% - 50px);
+}
 
 /* Контент картки - КОМПАКТНИЙ */
 .promo-content {
