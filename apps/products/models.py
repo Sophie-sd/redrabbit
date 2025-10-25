@@ -88,6 +88,18 @@ class Product(models.Model):
         null=True, 
         blank=True
     )
+    sale_start_date = models.DateTimeField(
+        'Дата початку акції',
+        null=True,
+        blank=True,
+        help_text='Залиште порожнім для необмеженої акції'
+    )
+    sale_end_date = models.DateTimeField(
+        'Дата закінчення акції',
+        null=True,
+        blank=True,
+        help_text='Акція автоматично завершиться після цієї дати'
+    )
     
     # Бейджі (встановлюються в адмінці)
     is_top = models.BooleanField('Хіт', default=False)
@@ -172,15 +184,31 @@ class Product(models.Model):
         """Повертає головне зображення товару"""
         return self.images.filter(is_main=True).first() or self.images.first()
     
+    def is_sale_active(self):
+        """Перевіряє чи активна акція (враховуючи терміни)"""
+        if not self.is_sale or not self.sale_price:
+            return False
+        
+        from django.utils import timezone
+        now = timezone.now()
+        
+        if self.sale_start_date and now < self.sale_start_date:
+            return False
+        
+        if self.sale_end_date and now > self.sale_end_date:
+            return False
+        
+        return True
+    
     def get_current_price(self):
         """Повертає актуальну ціну (акційну якщо є, інакше звичайну)"""
-        if self.is_sale and self.sale_price:
+        if self.is_sale_active():
             return self.sale_price
         return self.retail_price
     
     def get_discount_percentage(self):
         """Розраховує відсоток знижки"""
-        if self.is_sale and self.sale_price and self.retail_price > 0:
+        if self.is_sale_active() and self.retail_price > 0:
             discount = ((self.retail_price - self.sale_price) / self.retail_price) * 100
             return round(discount)
         return 0
@@ -192,7 +220,7 @@ class Product(models.Model):
             stickers.append({'type': 'top', 'text': 'ТОП ПРОДАЖ', 'class': 'badge-top'})
         if self.is_new:
             stickers.append({'type': 'new', 'text': 'Новинка', 'class': 'badge-new'})
-        if self.is_sale and self.sale_price:
+        if self.is_sale_active():
             discount = self.get_discount_percentage()
             if discount > 0:
                 stickers.append({'type': 'sale', 'text': f'-{discount}%', 'class': 'badge-sale'})

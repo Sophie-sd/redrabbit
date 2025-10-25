@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.contrib import messages
+from django.http import HttpResponse
+from django.utils import timezone
+import csv
 from .models import Category, Product, ProductReview, Brand
 
 
@@ -60,8 +63,11 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('name', 'category', 'sku')
         }),
         ('Акційна ціна', {
-            'fields': (('retail_price', 'sale_price'),),
-            'description': 'Встановіть sale_price щоб товар з\'явився в акціях'
+            'fields': (
+                ('retail_price', 'sale_price'),
+                ('sale_start_date', 'sale_end_date'),
+            ),
+            'description': 'Встановіть sale_price та терміни для автоматичної акції'
         }),
         ('Мітки', {
             'fields': ('is_top', 'is_featured', 'sort_order'),
@@ -76,6 +82,9 @@ class ProductAdmin(admin.ModelAdmin):
         'remove_from_sale',
         'mark_as_top',
         'unmark_as_top',
+        'mark_as_new',
+        'unmark_as_new',
+        'export_products_csv',
     ]
     
     def get_product_image(self, obj):
@@ -132,6 +141,44 @@ class ProductAdmin(admin.ModelAdmin):
         updated = queryset.update(is_top=False)
         self.message_user(request, f"Знято ХІТ ПРОДАЖ: {updated} товарів", messages.SUCCESS)
     unmark_as_top.short_description = "Зняти ХІТ ПРОДАЖ"
+    
+    def mark_as_new(self, request, queryset):
+        updated = queryset.update(is_new=True)
+        self.message_user(request, f"Позначено НОВИНКА: {updated} товарів", messages.SUCCESS)
+    mark_as_new.short_description = "⭐ Позначити НОВИНКА"
+    
+    def unmark_as_new(self, request, queryset):
+        updated = queryset.update(is_new=False)
+        self.message_user(request, f"Знято НОВИНКА: {updated} товарів", messages.SUCCESS)
+    unmark_as_new.short_description = "Зняти НОВИНКА"
+    
+    def export_products_csv(self, request, queryset):
+        response = HttpResponse(content_type='text/csv; charset=utf-8')
+        response['Content-Disposition'] = 'attachment; filename="products_export.csv"'
+        response.write('\ufeff')
+        
+        writer = csv.writer(response)
+        writer.writerow([
+            'SKU', 'Назва', 'Категорія', 'Ціна', 'Акційна ціна',
+            'ХІТ', 'Новинка', 'Акція', 'Наявність'
+        ])
+        
+        for product in queryset:
+            writer.writerow([
+                product.sku,
+                product.name,
+                product.category.name,
+                product.retail_price,
+                product.sale_price or '',
+                'Так' if product.is_top else 'Ні',
+                'Так' if product.is_new else 'Ні',
+                'Так' if product.is_sale else 'Ні',
+                product.stock,
+            ])
+        
+        self.message_user(request, f"Експортовано {queryset.count()} товарів")
+        return response
+    export_products_csv.short_description = "📥 Експортувати в CSV"
     
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('category').prefetch_related('images')
