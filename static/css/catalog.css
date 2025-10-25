@@ -1689,11 +1689,13 @@
     padding: 0;
     width: 100%;
     overflow-x: hidden;
+    min-height: 100vh;
   }
   
   .catalog-layout {
     display: block;
     width: 100%;
+    min-height: 100vh;
   }
   
   .catalog-sidebar {
@@ -1702,6 +1704,7 @@
   
   .catalog-main {
     width: 100%;
+    min-height: 100vh;
     -webkit-overflow-scrolling: touch;
   }
   
@@ -1779,9 +1782,9 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
-    padding: 0 8px;
+    padding: 0 8px 40px;
     width: 100%;
-    overflow-x: hidden;
+    min-height: 50vh;
     -webkit-overflow-scrolling: touch;
   }
 

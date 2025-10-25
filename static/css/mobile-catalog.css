@@ -79,12 +79,14 @@
 
 .mobile-catalog-content {
     padding: 8px 0;
+    min-height: calc(100vh - 70px);
 }
 
 .mobile-categories-list {
     list-style: none;
     margin: 0;
     padding: 0;
+    padding-bottom: 20px;
 }
 
 .mobile-category-item {
@@ -134,15 +136,16 @@
     margin: 0;
     padding: 0;
     max-height: 0;
-    overflow: hidden;
     background: #fafafa;
     transition: max-height 0.3s ease;
-    -webkit-overflow-scrolling: touch;
+    opacity: 0;
+    visibility: hidden;
 }
 
 .mobile-category-item.active .mobile-subcategories-list {
     max-height: 1000px;
-    overflow-y: auto;
+    opacity: 1;
+    visibility: visible;
 }
 
 .mobile-subcategory-item {
