@@ -83,20 +83,11 @@
                         </h3>
                         
                         <div class="product-card__price">
-                            {% if product.is_sale and product.sale_price %}
-                                <span class="product-card__price-current" aria-label="Акційна ціна">
-                                    {{ product.sale_price }} ₴
-                                </span>
-                                <span class="product-card__price-old" aria-label="Стара ціна">
-                                    {{ product.retail_price }} ₴
-                                </span>
-                                <span class="product-card__price-save" aria-label="Економія">
-                                    -{{ product.get_discount_amount }} ₴
-                                </span>
+                            {% if product.is_sale_active %}
+                                <span class="product-card__price-current">{{ product.sale_price }} ₴</span>
+                                <span class="product-card__price-old">{{ product.retail_price }} ₴</span>
                             {% else %}
-                                <span class="product-card__price-current" aria-label="Ціна">
-                                    {{ product.retail_price }} ₴
-                                </span>
+                                <span class="product-card__price-current">{{ product.retail_price }} ₴</span>
                             {% endif %}
                         </div>
                     </div>

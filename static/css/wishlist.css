@@ -542,6 +542,13 @@
         width: 32px;
         height: 32px;
     }
+    
+    .wishlist-content .products-grid,
+    .products-grid--cols-4 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 0;
+    }
 
     .wishlist-item {
         grid-template-columns: 80px 1fr;

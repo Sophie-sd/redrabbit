@@ -154,13 +154,13 @@
 .product-badges,
 .product-stickers {
   position: absolute;
-  top: var(--badge-offset);
-  left: var(--badge-offset);
+  top: 8px;
+  left: 8px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: 4px;
   z-index: 15;
-  transform: translateX(-2px) translateY(-2px);
+  max-width: calc(100% - 50px);
 }
 
 .product-badge,
