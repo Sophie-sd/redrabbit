@@ -1,0 +1,63 @@
+<article class="product-card">
+    <div class="product-card__media">
+        <a href="{{ product.get_absolute_url }}">
+            {% if product.images.first %}
+                <img src="{{ product.images.first.get_image_url }}" alt="{{ product.name }}" loading="lazy" class="product-card__image" width="300" height="300">
+            {% else %}
+                <div class="product-card__placeholder">📦</div>
+            {% endif %}
+        </a>
+        
+        <button 
+            type="button"
+            class="product-card__wishlist" 
+            data-product-id="{{ product.id }}" 
+            aria-label="Додати в обране"
+            title="Додати в обране"
+        >
+            <span class="product-card__wishlist-icon">♡</span>
+        </button>
+        
+        <div class="product-card__badges">
+            {% include 'includes/sale_countdown.html' with product=product %}
+            {% if product.is_new %}
+                <span class="product-badge product-badge--new">NEW</span>
+            {% endif %}
+            {% if product.is_top %}
+                <span class="product-badge product-badge--hit">ХІТ</span>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="product-card__content">
+        <h3 class="product-card__name">
+            <a href="{{ product.get_absolute_url }}" class="product-card__link">{{ product.name }}</a>
+        </h3>
+        
+        <div class="product-card__price">
+            {% if product.is_sale_active %}
+                <span class="product-card__price-current">{{ product.sale_price }} ₴</span>
+                <span class="product-card__price-old">{{ product.retail_price }} ₴</span>
+            {% else %}
+                <span class="product-card__price-current">{{ product.retail_price }} ₴</span>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="product-card__actions">
+        {% if product.is_in_stock %}
+            <button 
+                type="button"
+                class="product-card__add-cart" 
+                data-product-id="{{ product.id }}"
+            >
+                До кошика
+            </button>
+        {% else %}
+            <button type="button" class="product-card__add-cart product-card__add-cart--disabled" disabled>
+                Немає в наявності
+            </button>
+        {% endif %}
+    </div>
+</article>
+

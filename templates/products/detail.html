@@ -142,67 +142,7 @@
             <h2 class="section-title text-center">Схожі товари</h2>
             <div class="products-grid">
                 {% for item in similar %}
-                <article class="product-card">
-                    <div class="product-card__media">
-                        {% if item.images.first %}
-                            <img 
-                                src="{{ item.images.first.get_image_url }}" 
-                                alt="{{ item.name }}" 
-                                class="product-card__image"
-                                loading="lazy"
-                            >
-                        {% else %}
-                            <div class="product-card__placeholder">📦</div>
-                        {% endif %}
-                        
-                        <button 
-                            type="button"
-                            class="product-card__wishlist" 
-                            data-product-id="{{ item.id }}" 
-                            aria-label="Додати в обране"
-                            title="Додати в обране"
-                        >
-                            <span class="product-card__wishlist-icon">♡</span>
-                        </button>
-                        
-                        <div class="product-card__badges">
-                            {% include 'includes/sale_countdown.html' with product=item %}
-                            {% if item.is_new %}
-                                <span class="product-badge product-badge--new">NEW</span>
-                            {% endif %}
-                            {% if item.is_top %}
-                                <span class="product-badge product-badge--hit">ХІТ</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                    <div class="product-card__content">
-                        <h3 class="product-card__name">
-                            <a href="{{ item.get_absolute_url }}" class="product-card__link">
-                                {{ item.name }}
-                            </a>
-                        </h3>
-                        
-                        <div class="product-card__price">
-                            {% if item.is_sale_active %}
-                                <span class="product-card__price-current">{{ item.sale_price }} ₴</span>
-                                <span class="product-card__price-old">{{ item.retail_price }} ₴</span>
-                            {% else %}
-                                <span class="product-card__price-current">{{ item.retail_price }} ₴</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                    <div class="product-card__actions">
-                        <button 
-                            type="button"
-                            class="product-card__add-cart" 
-                            data-product-id="{{ item.id }}"
-                        >
-                            До кошика
-                        </button>
-                    </div>
-                </article>
+                    {% include 'includes/product_card.html' with product=item %}
                 {% endfor %}
             </div>
         </section>
