@@ -243,9 +243,9 @@
                             </button>
                             
                             <!-- Бейджі -->
-                            {% if product.is_sale or product.is_new or product.is_top %}
+                            {% if product.is_sale_active or product.is_new or product.is_top %}
                                 <div class="product-card__badges">
-                                    {% if product.is_sale %}
+                                    {% if product.is_sale_active %}
                                         <span class="product-badge product-badge--sale" aria-label="Знижка">
                                             -{{ product.get_discount_percentage }}%
                                         </span>
@@ -273,7 +273,7 @@
                             </h3>
                             
                             <div class="product-card__price">
-                                {% if product.is_sale and product.sale_price %}
+                                {% if product.is_sale_active %}
                                     <span class="product-card__price-current" aria-label="Акційна ціна">
                                         {{ product.sale_price }} ₴
                                     </span>
@@ -283,6 +283,7 @@
                                     <span class="product-card__price-save" aria-label="Економія">
                                         -{{ product.get_discount_amount }} ₴
                                     </span>
+                                    {% include 'includes/sale_countdown.html' with product=product %}
                                 {% else %}
                                     <span class="product-card__price-current" aria-label="Ціна">
                                         {{ product.retail_price }} ₴

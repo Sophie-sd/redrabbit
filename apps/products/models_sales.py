@@ -2,6 +2,8 @@
 Модель для управління акційними пропозиціями
 """
 from django.db import models
+from django.db.models.signals import m2m_changed
+from django.dispatch import receiver
 from django.utils import timezone
 from decimal import Decimal
 
@@ -99,13 +101,17 @@ class Sale(models.Model):
             product.sale_end_date = None
             product.save(update_fields=['is_sale', 'sale_price', 'sale_start_date', 'sale_end_date'])
     
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.is_active:
-            self.apply_to_products()
-        else:
-            self.remove_from_products()
-    
     def __str__(self):
         return self.name
+
+
+@receiver(m2m_changed, sender=Sale.categories.through)
+@receiver(m2m_changed, sender=Sale.products.through)
+def sale_m2m_changed(sender, instance, action, **kwargs):
+    """Застосовує або знімає акцію при зміні категорій/товарів"""
+    if action in ['post_add', 'post_remove', 'post_clear']:
+        if instance.is_active:
+            instance.apply_to_products()
+        else:
+            instance.remove_from_products()
 

@@ -300,10 +300,23 @@ class SaleAdmin(admin.ModelAdmin):
     
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
+    
+    def response_add(self, request, obj, post_url_continue=None):
         if obj.is_active:
             obj.apply_to_products()
             count = len(obj.get_affected_products())
             self.message_user(request, f"Акцію застосовано до {count} товарів", messages.SUCCESS)
+        return super().response_add(request, obj, post_url_continue)
+    
+    def response_change(self, request, obj):
+        if obj.is_active:
+            obj.apply_to_products()
+            count = len(obj.get_affected_products())
+            self.message_user(request, f"Акцію оновлено для {count} товарів", messages.SUCCESS)
+        else:
+            obj.remove_from_products()
+            self.message_user(request, "Акцію знято з товарів", messages.WARNING)
+        return super().response_change(request, obj)
 
 
 @admin.register(Brand)
