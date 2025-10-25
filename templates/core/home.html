@@ -96,9 +96,7 @@
                                 {% endif %}
                                 
                                 <div class="promo-badges">
-                                    {% if product.is_sale_active and product.get_discount_percentage %}
-                                        <span class="badge badge-sale">-{{ product.get_discount_percentage }}%</span>
-                                    {% endif %}
+                                    {% include 'includes/sale_countdown.html' with product=product %}
                                     {% if product.is_top %}
                                         <span class="badge badge-top">ТОП ПРОДАЖ</span>
                                     {% endif %}
@@ -112,8 +110,12 @@
                                 <h3 class="promo-name">{{ product.name }}</h3>
                                 
                                 <div class="promo-price">
-                                    <span class="price-old">{{ product.retail_price }} ₴</span>
-                                    <span class="price-new">{{ product.sale_price }} ₴</span>
+                                    {% if product.is_sale_active %}
+                                        <span class="price-new">{{ product.sale_price }} ₴</span>
+                                        <span class="price-old">{{ product.retail_price }} ₴</span>
+                                    {% else %}
+                                        <span class="price-new">{{ product.retail_price }} ₴</span>
+                                    {% endif %}
                                 </div>
                             </div>
                         </a>
@@ -168,11 +170,9 @@
                                 {% endif %}
                                 
                                 <div class="promo-badges">
+                                    {% include 'includes/sale_countdown.html' with product=product %}
                                     {% if product.is_top %}
                                         <span class="badge badge-top">ТОП ПРОДАЖ</span>
-                                    {% endif %}
-                                    {% if product.is_sale_active and product.get_discount_percentage %}
-                                        <span class="badge badge-sale">-{{ product.get_discount_percentage }}%</span>
                                     {% endif %}
                                     {% if product.video_url %}
                                         <span class="badge badge-video">ВІДЕО</span>
@@ -185,9 +185,8 @@
                                 
                                 <div class="promo-price">
                                     {% if product.is_sale_active %}
-                                        <span class="price-old">{{ product.retail_price }} ₴</span>
                                         <span class="price-new">{{ product.sale_price }} ₴</span>
-                                        {% include 'includes/sale_countdown.html' with product=product %}
+                                        <span class="price-old">{{ product.retail_price }} ₴</span>
                                     {% else %}
                                         <span class="price-new">{{ product.retail_price }} ₴</span>
                                     {% endif %}
@@ -350,12 +349,12 @@
                         {% endif %}
                     </div>
                     <div class="product-card__content">
+                        {% include 'includes/sale_countdown.html' with product=product %}
                         <h3 class="product-card__title">{{ product.name }}</h3>
                         <div class="product-card__price">
                             {% if product.is_sale_active %}
-                                <span class="price-old">{{ product.retail_price }} ₴</span>
                                 <span class="price-new">{{ product.sale_price }} ₴</span>
-                                {% include 'includes/sale_countdown.html' with product=product %}
+                                <span class="price-old">{{ product.retail_price }} ₴</span>
                             {% else %}
                                 <span class="price">{{ product.retail_price }} ₴</span>
                             {% endif %}

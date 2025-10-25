@@ -64,11 +64,8 @@
                 {% endif %}
                 
                 <!-- Бейджі -->
-                {% if product.is_sale or product.is_new or product.is_top %}
                 <div class="product-badges">
-                    {% if product.is_sale %}
-                        <span class="badge badge-sale">SALE -{{ product.get_discount_percentage }}%</span>
-                    {% endif %}
+                    {% include 'includes/sale_countdown.html' with product=product %}
                     {% if product.is_new %}
                         <span class="badge badge-new">NEW</span>
                     {% endif %}
@@ -76,11 +73,10 @@
                         <span class="badge badge-top">TOP</span>
                     {% endif %}
                 </div>
-                {% endif %}
                 
                 <!-- Ціна -->
                 <div class="product-detail-price">
-                    {% if product.is_sale and product.sale_price %}
+                    {% if product.is_sale_active %}
                         <span class="price-new">{{ product.sale_price }} ₴</span>
                         <span class="price-old">{{ product.retail_price }} ₴</span>
                     {% else %}
@@ -169,21 +165,15 @@
                             <span class="product-card__wishlist-icon">♡</span>
                         </button>
                         
-                        {% if item.is_sale or item.is_new or item.is_top %}
-                            <div class="product-card__badges">
-                                {% if item.is_sale %}
-                                    <span class="product-badge product-badge--sale">
-                                        -{{ item.get_discount_percentage }}%
-                                    </span>
-                                {% endif %}
-                                {% if item.is_new %}
-                                    <span class="product-badge product-badge--new">NEW</span>
-                                {% endif %}
-                                {% if item.is_top %}
-                                    <span class="product-badge product-badge--hit">ХІТ</span>
-                                {% endif %}
-                            </div>
-                        {% endif %}
+                        <div class="product-card__badges">
+                            {% include 'includes/sale_countdown.html' with product=item %}
+                            {% if item.is_new %}
+                                <span class="product-badge product-badge--new">NEW</span>
+                            {% endif %}
+                            {% if item.is_top %}
+                                <span class="product-badge product-badge--hit">ХІТ</span>
+                            {% endif %}
+                        </div>
                     </div>
                     
                     <div class="product-card__content">
@@ -194,10 +184,9 @@
                         </h3>
                         
                         <div class="product-card__price">
-                            {% if item.is_sale and item.sale_price %}
+                            {% if item.is_sale_active %}
                                 <span class="product-card__price-current">{{ item.sale_price }} ₴</span>
                                 <span class="product-card__price-old">{{ item.retail_price }} ₴</span>
-                                <span class="product-card__price-save">-{{ item.get_discount_amount }} ₴</span>
                             {% else %}
                                 <span class="product-card__price-current">{{ item.retail_price }} ₴</span>
                             {% endif %}

@@ -243,25 +243,19 @@
                             </button>
                             
                             <!-- Бейджі -->
-                            {% if product.is_sale_active or product.is_new or product.is_top %}
-                                <div class="product-card__badges">
-                                    {% if product.is_sale_active %}
-                                        <span class="product-badge product-badge--sale" aria-label="Знижка">
-                                            -{{ product.get_discount_percentage }}%
-                                        </span>
-                                    {% endif %}
-                                    {% if product.is_new %}
-                                        <span class="product-badge product-badge--new" aria-label="Новинка">
-                                            NEW
-                                        </span>
-                                    {% endif %}
-                                    {% if product.is_top %}
-                                        <span class="product-badge product-badge--hit" aria-label="Хіт продажу">
-                                            ХІТ
-                                        </span>
-                                    {% endif %}
-                                </div>
-                            {% endif %}
+                            <div class="product-card__badges">
+                                {% include 'includes/sale_countdown.html' with product=product %}
+                                {% if product.is_new %}
+                                    <span class="product-badge product-badge--new" aria-label="Новинка">
+                                        NEW
+                                    </span>
+                                {% endif %}
+                                {% if product.is_top %}
+                                    <span class="product-badge product-badge--hit" aria-label="Хіт продажу">
+                                        ХІТ
+                                    </span>
+                                {% endif %}
+                            </div>
                         </div>
                         
                         <!-- Контент картки -->
@@ -280,10 +274,6 @@
                                     <span class="product-card__price-old" aria-label="Стара ціна">
                                         {{ product.retail_price }} ₴
                                     </span>
-                                    <span class="product-card__price-save" aria-label="Економія">
-                                        -{{ product.get_discount_amount }} ₴
-                                    </span>
-                                    {% include 'includes/sale_countdown.html' with product=product %}
                                 {% else %}
                                     <span class="product-card__price-current" aria-label="Ціна">
                                         {{ product.retail_price }} ₴

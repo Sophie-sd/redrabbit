@@ -88,6 +88,13 @@ class Product(models.Model):
         null=True, 
         blank=True
     )
+    sale_name = models.CharField(
+        'Назва акції',
+        max_length=200,
+        blank=True,
+        default='',
+        help_text='Назва акції для відображення на стікері'
+    )
     sale_start_date = models.DateTimeField(
         'Дата початку акції',
         null=True,

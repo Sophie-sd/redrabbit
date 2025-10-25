@@ -87,9 +87,10 @@ class Sale(models.Model):
             sale_price = self.calculate_sale_price(product.retail_price)
             product.is_sale = True
             product.sale_price = sale_price
+            product.sale_name = self.name
             product.sale_start_date = self.start_date
             product.sale_end_date = self.end_date
-            product.save(update_fields=['is_sale', 'sale_price', 'sale_start_date', 'sale_end_date'])
+            product.save(update_fields=['is_sale', 'sale_price', 'sale_name', 'sale_start_date', 'sale_end_date'])
     
     def remove_from_products(self):
         """Знімає акцію з товарів"""
@@ -97,9 +98,10 @@ class Sale(models.Model):
         for product in products:
             product.is_sale = False
             product.sale_price = None
+            product.sale_name = ''
             product.sale_start_date = None
             product.sale_end_date = None
-            product.save(update_fields=['is_sale', 'sale_price', 'sale_start_date', 'sale_end_date'])
+            product.save(update_fields=['is_sale', 'sale_price', 'sale_name', 'sale_start_date', 'sale_end_date'])
     
     def __str__(self):
         return self.name

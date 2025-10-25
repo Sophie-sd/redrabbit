@@ -91,95 +91,48 @@
                 </div>
             </div>
             
-            <!-- Products Grid - використовуємо структуру promo-card як на головній -->
+            <!-- Products Grid -->
             <div class="products-grid products-grid--sale">
                 {% for product in products %}
-                    {% if product.id in promo_dict %}
-                        {% with promo=promo_dict|get_item:product.id %}
-                            <div class="promo-card">
-                                <div class="promo-image">
-                                    <a href="{{ product.get_absolute_url }}">
-                                        {% if product.images.first %}
-                                            <img src="{{ product.images.first.get_image_url }}" alt="{{ product.name }}" loading="lazy">
-                                        {% else %}
-                                            <div class="product-placeholder">
-                                                <span class="placeholder-icon">📦</span>
-                                            </div>
-                                        {% endif %}
-                                        
-                                        <div class="promo-badge">-{{ promo.get_discount_percentage }}%</div>
-                                    </a>
-                                </div>
-                                
-                                <div class="promo-content">
-                                    <h3 class="promo-name">
-                                        <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
-                                    </h3>
-                                    
-                                    <div class="promo-price">
-                                        <span class="price-old">{{ product.retail_price }} ₴</span>
-                                        <span class="price-new">{{ promo.discount_price }} ₴</span>
+                    <div class="promo-card">
+                        <div class="promo-image">
+                            <a href="{{ product.get_absolute_url }}">
+                                {% if product.images.first %}
+                                    <img src="{{ product.images.first.get_image_url }}" alt="{{ product.name }}" loading="lazy">
+                                {% else %}
+                                    <div class="product-placeholder">
+                                        <span class="placeholder-icon">📦</span>
                                     </div>
-                                    
-                                    <button class="btn btn-primary btn-sm add-to-cart" 
-                                            data-product-id="{{ product.id }}"
-                                            data-product-name="{{ product.name }}"
-                                            {% if not product.is_in_stock %}disabled{% endif %}>
-                                        {% if product.is_in_stock %}
-                                            Купити
-                                        {% else %}
-                                            Немає в наявності
-                                        {% endif %}
-                                    </button>
+                                {% endif %}
+                                
+                                <div class="promo-badges">
+                                    {% include 'includes/sale_countdown.html' with product=product %}
                                 </div>
-                            </div>
-                        {% endwith %}
-                    {% else %}
-                        <div class="promo-card">
-                            <div class="promo-image">
-                                <a href="{{ product.get_absolute_url }}">
-                                    {% if product.images.first %}
-                                        <img src="{{ product.images.first.get_image_url }}" alt="{{ product.name }}" loading="lazy">
-                                    {% else %}
-                                        <div class="product-placeholder">
-                                            <span class="placeholder-icon">📦</span>
-                                        </div>
-                                    {% endif %}
-                                    
-                                    <div class="promo-badge">-{{ product.get_discount_percentage }}%</div>
-                                </a>
+                            </a>
+                        </div>
+                        
+                        <div class="promo-content">
+                            <h3 class="promo-name">
+                                <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                            </h3>
+                            
+                            <div class="promo-price">
+                                <span class="price-new">{{ product.sale_price }} ₴</span>
+                                <span class="price-old">{{ product.retail_price }} ₴</span>
                             </div>
                             
-                            <div class="promo-content">
-                                <h3 class="promo-name">
-                                    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
-                                </h3>
-                                
-                                <div class="promo-price">
-                                    <span class="price-old">{{ product.retail_price }} ₴</span>
-                                    <span class="price-new">
-                                        {% if product.sale_price %}
-                                            {{ product.sale_price }}
-                                        {% else %}
-                                            {{ product.retail_price }}
-                                        {% endif %}
-                                        ₴
-                                    </span>
-                                </div>
-                                
-                                <button class="btn btn-primary btn-sm add-to-cart" 
-                                        data-product-id="{{ product.id }}"
-                                        data-product-name="{{ product.name }}"
-                                        {% if not product.is_in_stock %}disabled{% endif %}>
-                                    {% if product.is_in_stock %}
-                                        Купити
-                                    {% else %}
-                                        Немає в наявності
-                                    {% endif %}
-                                </button>
-                            </div>
+                            <button class="btn btn-primary btn-sm add-to-cart" 
+                                    data-product-id="{{ product.id }}"
+                                    data-product-name="{{ product.name }}"
+                                    {% if not product.is_in_stock %}disabled{% endif %}>
+                                {% if product.is_in_stock %}
+                                    Купити
+                                {% else %}
+                                    Немає в наявності
+                                {% endif %}
+                            </button>
                         </div>
-                    {% endif %}
+                    </div>
                 {% endfor %}
             </div>
             

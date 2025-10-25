@@ -1,47 +1,88 @@
-.sale-countdown {
+.product-badge--sale-name,
+.promo-badges .product-badge--sale-name {
+    display: inline-block;
+    background: #ff4444;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.product-badge--discount,
+.promo-badges .product-badge--discount {
+    display: inline-block;
+    background: #ff6b6b;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.sale-countdown,
+.promo-badges .sale-countdown {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: linear-gradient(135deg, #ff4444 0%, #ff6b6b 100%);
-    color: white;
-    border-radius: 20px;
-    font-size: 12px;
+    gap: 4px;
+    padding: 4px 10px;
+    background: rgba(255, 68, 68, 0.1);
+    border: 1px solid #ff4444;
+    color: #ff4444;
+    border-radius: 4px;
+    font-size: 11px;
     font-weight: 600;
-    margin-top: 8px;
-    animation: pulse 2s ease-in-out infinite;
+    margin-top: 4px;
 }
 
 .sale-countdown::before {
     content: "⏰";
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .sale-countdown-text {
     font-family: 'Courier New', monospace;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
 }
 
 .countdown-ended {
-    background: linear-gradient(135deg, #999 0%, #666 100%);
-    animation: none;
+    background: rgba(153, 153, 153, 0.1);
+    border-color: #999;
+    color: #999;
 }
 
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3);
-    }
-    50% {
-        transform: scale(1.05);
-        box-shadow: 0 4px 16px rgba(255, 68, 68, 0.5);
-    }
+.promo-badges,
+.product-badges,
+.product-card__badges {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 2;
 }
 
 @media (max-width: 768px) {
-    .sale-countdown {
-        font-size: 11px;
-        padding: 4px 10px;
+    .product-badge--sale-name,
+    .promo-badges .product-badge--sale-name {
+        font-size: 10px;
+        padding: 4px 8px;
+    }
+    
+    .product-badge--discount,
+    .promo-badges .product-badge--discount {
+        font-size: 12px;
+    }
+    
+    .sale-countdown,
+    .promo-badges .sale-countdown {
+        font-size: 10px;
+        padding: 3px 8px;
     }
 }
 
