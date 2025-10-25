@@ -7,12 +7,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const endTime = parseInt(element.dataset.countdown);
         if (!endTime) return;
         
-        const textElement = element.querySelector('.sale-countdown-text') || element;
         const now = Date.now();
         const diff = endTime - now;
         
         if (diff <= 0) {
-            textElement.textContent = 'Акція завершена';
+            element.textContent = '⏰ Завершено';
             element.classList.add('countdown-ended');
             return false;
         }
@@ -22,16 +21,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
         
-        let text = '';
+        let text = '⏰ ';
         if (days > 0) {
-            text = `⏰ ${days}д ${hours}г ${minutes}хв`;
+            text += `${days}д ${hours}г`;
         } else if (hours > 0) {
-            text = `⏰ ${hours}г ${minutes}хв ${seconds}с`;
+            text += `${hours}г ${minutes}хв`;
+        } else if (minutes > 0) {
+            text += `${minutes}хв ${seconds}с`;
         } else {
-            text = `⏰ ${minutes}хв ${seconds}с`;
+            text += `${seconds}с`;
         }
         
-        textElement.textContent = text;
+        element.textContent = text;
         return true;
     }
     

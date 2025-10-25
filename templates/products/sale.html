@@ -104,11 +104,21 @@
                                         <span class="placeholder-icon">📦</span>
                                     </div>
                                 {% endif %}
-                                
-                                <div class="promo-badges">
-                                    {% include 'includes/sale_countdown.html' with product=product %}
-                                </div>
                             </a>
+                            
+                            <button 
+                                type="button"
+                                class="product-card__wishlist" 
+                                data-product-id="{{ product.id }}" 
+                                aria-label="Додати в обране"
+                                title="Додати в обране"
+                            >
+                                <span class="product-card__wishlist-icon">♡</span>
+                            </button>
+                            
+                            <div class="promo-badges">
+                                {% include 'includes/sale_countdown.html' with product=product %}
+                            </div>
                         </div>
                         
                         <div class="promo-content">
