@@ -39,6 +39,22 @@
                 <span class="price-new">{{ product.retail_price }} ₴</span>
             {% endif %}
         </div>
+        
+        <div class="promo-actions">
+            {% if product.is_in_stock %}
+                <button 
+                    type="button"
+                    class="promo-add-cart" 
+                    data-product-id="{{ product.id }}"
+                >
+                    До кошика
+                </button>
+            {% else %}
+                <button type="button" class="promo-add-cart promo-add-cart--disabled" disabled>
+                    Немає в наявності
+                </button>
+            {% endif %}
+        </div>
     </div>
 </div>
 
