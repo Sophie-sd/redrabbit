@@ -107,7 +107,12 @@
     }
     
     body {
-        overscroll-behavior: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .main-content {
+        -webkit-overflow-scrolling: touch;
+        overflow-y: auto;
     }
     
     /* Form Element Styles */

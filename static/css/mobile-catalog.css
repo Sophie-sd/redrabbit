@@ -10,6 +10,7 @@
     z-index: 2000;
     transition: right 0.3s ease;
     overflow-y: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
 }
 
@@ -136,10 +137,12 @@
     overflow: hidden;
     background: #fafafa;
     transition: max-height 0.3s ease;
+    -webkit-overflow-scrolling: touch;
 }
 
 .mobile-category-item.active .mobile-subcategories-list {
     max-height: 1000px;
+    overflow-y: auto;
 }
 
 .mobile-subcategory-item {

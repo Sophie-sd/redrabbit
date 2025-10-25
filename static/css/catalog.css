@@ -505,7 +505,8 @@
 /* ============================================ */
 
 .catalog-main {
-  min-width: 0; /* Дозволяє flex елементу стискатися */
+  min-width: 0;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Мобільні контроли */
@@ -1701,6 +1702,7 @@
   
   .catalog-main {
     width: 100%;
+    -webkit-overflow-scrolling: touch;
   }
   
   .filters-grid {
@@ -1780,6 +1782,7 @@
     padding: 0 8px;
     width: 100%;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
   .product-card {
