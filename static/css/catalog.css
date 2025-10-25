@@ -1784,7 +1784,6 @@
     gap: 8px;
     padding: 0 8px 40px;
     width: 100%;
-    min-height: 50vh;
     -webkit-overflow-scrolling: touch;
   }
   
