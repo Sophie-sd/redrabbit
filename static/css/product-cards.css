@@ -16,7 +16,7 @@
   --badge-padding: 4px 8px;
   --badge-radius: 16px;
   --badge-font-size: 10px;
-  --badge-offset: -2px;
+  --badge-offset: 8px;
   
   /* Кнопка обраного */
   --wishlist-size: 32px;
@@ -154,13 +154,13 @@
 .product-badges,
 .product-stickers {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: var(--badge-offset);
+  left: var(--badge-offset);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-xs);
   z-index: 15;
-  max-width: calc(100% - 50px);
+  transform: translateX(-2px) translateY(-2px);
 }
 
 .product-badge,
@@ -396,7 +396,7 @@
     --wishlist-icon-size: 14px;
     --wishlist-offset: 6px;
     --badge-font-size: 8px;
-    --badge-offset: -1px;
+    --badge-offset: 6px;
   }
   
   .product-card__name,

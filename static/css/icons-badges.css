@@ -114,13 +114,12 @@
 .product-card__badges,
 .product-stickers {
   position: absolute;
-  top: var(--badge-offset, -2px);
-  left: var(--badge-offset, -2px);
+  top: var(--badge-offset, 8px);
+  left: var(--badge-offset, 8px);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xs);
   z-index: 15;
-  transform: translateX(-2px) translateY(-2px);
 }
 
 /* Product badge base */
