@@ -7,7 +7,6 @@
     padding-left: var(--spacing-md);
     margin-right: auto;
     margin-left: auto;
-    overflow-x: hidden;
 }
 
 @media (min-width: 576px) {
