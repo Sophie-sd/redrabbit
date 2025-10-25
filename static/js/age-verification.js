@@ -44,6 +44,10 @@
     
     overlay.innerHTML = `
       <div class="age-modal">
+        <div class="age-modal__logo">
+          <img src="/static/images/redrabbit_logo.png" alt="redrabbit" class="age-modal__logo-img">
+          <span class="age-modal__logo-text">redrabbit</span>
+        </div>
         <h2 class="age-modal__title" id="age-modal-title">УВАГА!</h2>
         <p class="age-modal__text" id="age-modal-desc">
           Цей сайт містить матеріали для дорослих.<br>
