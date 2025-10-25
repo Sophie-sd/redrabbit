@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 import csv
 from .models import Category, Product, ProductReview, Brand
+from .proxy_models import SaleProduct
 
 
 @admin.register(Category)
@@ -49,37 +50,30 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     list_display = [
         'get_product_image', 'name', 'category', 'sku', 
-        'get_price_display', 'get_badges', 'updated_at'
+        'get_price_display', 'get_badges', 'stock'
     ]
     list_display_links = ['get_product_image', 'name']
-    list_filter = ['category', 'is_sale', 'is_top', 'updated_at']
+    list_filter = ['category', 'is_sale', 'is_top', 'is_new']
     search_fields = ['name', 'sku', 'external_id', 'vendor_name']
     ordering = ['sort_order', '-updated_at']
-    date_hierarchy = 'updated_at'
     list_per_page = 50
     
     fieldsets = (
-        ('Товар', {
-            'fields': ('name', 'category', 'sku')
+        ('Основна інформація', {
+            'fields': ('name', 'category', 'sku', 'stock')
         }),
-        ('Акційна ціна', {
-            'fields': (
-                ('retail_price', 'sale_price'),
-                ('sale_start_date', 'sale_end_date'),
-            ),
-            'description': 'Встановіть sale_price та терміни для автоматичної акції'
+        ('Ціноутворення', {
+            'fields': ('retail_price',),
         }),
-        ('Мітки', {
-            'fields': ('is_top', 'is_featured', 'sort_order'),
-            'description': 'is_top - ХІТ ПРОДАЖ, is_featured - показувати в рекомендованих'
+        ('Бейджі', {
+            'fields': ('is_top', 'is_new', 'is_featured', 'sort_order'),
+            'description': 'is_top - ХІТ ПРОДАЖ, is_new - НОВИНКА'
         }),
     )
     
-    readonly_fields = ['name', 'category', 'sku', 'retail_price']
+    readonly_fields = ['name', 'category', 'sku', 'retail_price', 'stock']
     
     actions = [
-        'mark_as_sale',
-        'remove_from_sale',
         'mark_as_top',
         'unmark_as_top',
         'mark_as_new',
@@ -95,10 +89,10 @@ class ProductAdmin(admin.ModelAdmin):
     get_product_image.short_description = 'Фото'
     
     def get_price_display(self, obj):
-        if obj.is_sale and obj.sale_price:
+        if obj.is_sale_active():
             discount = obj.get_discount_percentage()
             return format_html(
-                '<div><strong>{} ₴</strong><br><span class="badge badge-sale">{} ₴ (-{}%)</span></div>',
+                '<div><s style="color: #999;">{} ₴</s><br><strong style="color: #ff4444; font-size: 16px;">{} ₴</strong> <span style="background: #ff4444; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;">-{}%</span></div>',
                 obj.retail_price, obj.sale_price, discount
             )
         return format_html('<strong>{} ₴</strong>', obj.retail_price)
@@ -115,22 +109,6 @@ class ProductAdmin(admin.ModelAdmin):
         
         return format_html(' '.join(badges_html))
     get_badges.short_description = 'Бейджі'
-    
-    def mark_as_sale(self, request, queryset):
-        count = 0
-        for product in queryset:
-            if not product.sale_price:
-                continue
-            product.is_sale = True
-            product.save(update_fields=['is_sale'])
-            count += 1
-        self.message_user(request, f"Додано в акції: {count} товарів", messages.SUCCESS)
-    mark_as_sale.short_description = "🔥 Додати в акції"
-    
-    def remove_from_sale(self, request, queryset):
-        updated = queryset.update(is_sale=False, sale_price=None)
-        self.message_user(request, f"Видалено з акцій: {updated} товарів", messages.SUCCESS)
-    remove_from_sale.short_description = "Видалити з акцій"
     
     def mark_as_top(self, request, queryset):
         updated = queryset.update(is_top=True)
@@ -225,6 +203,111 @@ class ProductReviewAdmin(admin.ModelAdmin):
     
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('product')
+
+
+@admin.register(SaleProduct)
+class SaleProductAdmin(admin.ModelAdmin):
+    list_display = [
+        'get_product_image', 'name', 'category', 
+        'get_original_price', 'get_sale_price_field', 'get_dates', 'get_status'
+    ]
+    list_display_links = ['get_product_image', 'name']
+    list_filter = ['category', 'is_sale', 'sale_start_date', 'sale_end_date']
+    search_fields = ['name', 'sku']
+    ordering = ['-updated_at']
+    list_per_page = 50
+    
+    fieldsets = (
+        ('Товар', {
+            'fields': ('name', 'category', 'sku', 'retail_price')
+        }),
+        ('Акційна пропозиція', {
+            'fields': (
+                'is_sale',
+                'sale_price',
+                ('sale_start_date', 'sale_end_date'),
+            ),
+            'description': 'Встановіть акційну ціну та терміни дії'
+        }),
+    )
+    
+    readonly_fields = ['name', 'category', 'sku', 'retail_price']
+    
+    actions = ['activate_sale', 'deactivate_sale', 'extend_sale']
+    
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(is_active=True).select_related('category').prefetch_related('images')
+    
+    def get_product_image(self, obj):
+        main_image = obj.images.filter(is_main=True).first() or obj.images.first()
+        if main_image:
+            return format_html('<img src="{}" class="admin-thumbnail-small" />', main_image.get_image_url())
+        return format_html('<div class="admin-icon-placeholder">📦</div>')
+    get_product_image.short_description = 'Фото'
+    
+    def get_original_price(self, obj):
+        return format_html('<strong>{} ₴</strong>', obj.retail_price)
+    get_original_price.short_description = 'Звичайна ціна'
+    
+    def get_sale_price_field(self, obj):
+        if obj.sale_price:
+            discount = obj.get_discount_percentage() if obj.is_sale_active() else 0
+            if discount > 0:
+                return format_html(
+                    '<strong style="color: #ff4444; font-size: 16px;">{} ₴</strong><br><span style="background: #ff4444; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;">-{}%</span>',
+                    obj.sale_price, discount
+                )
+            return format_html('<strong style="color: #ff4444;">{} ₴</strong>', obj.sale_price)
+        return '—'
+    get_sale_price_field.short_description = 'Акційна ціна'
+    
+    def get_dates(self, obj):
+        if obj.sale_start_date or obj.sale_end_date:
+            start = obj.sale_start_date.strftime('%d.%m.%Y') if obj.sale_start_date else '—'
+            end = obj.sale_end_date.strftime('%d.%m.%Y') if obj.sale_end_date else '—'
+            return format_html('<small>З: {}<br>До: {}</small>', start, end)
+        return '—'
+    get_dates.short_description = 'Термін дії'
+    
+    def get_status(self, obj):
+        if obj.is_sale and obj.is_sale_active():
+            return format_html('<span style="color: #4CAF50; font-weight: 600;">🔥 Активна</span>')
+        elif obj.is_sale and obj.sale_price:
+            return format_html('<span style="color: #ff9800;">⏰ Очікує/завершена</span>')
+        else:
+            return format_html('<span style="color: #999;">✗ Не активна</span>')
+    get_status.short_description = 'Статус'
+    
+    def activate_sale(self, request, queryset):
+        updated = 0
+        for product in queryset:
+            if product.sale_price:
+                product.is_sale = True
+                product.save(update_fields=['is_sale'])
+                updated += 1
+        self.message_user(request, f"Активовано {updated} акцій", messages.SUCCESS)
+    activate_sale.short_description = "🔥 Активувати акцію"
+    
+    def deactivate_sale(self, request, queryset):
+        updated = queryset.update(is_sale=False)
+        self.message_user(request, f"Деактивовано {updated} акцій", messages.SUCCESS)
+    deactivate_sale.short_description = "✗ Деактивувати акцію"
+    
+    def extend_sale(self, request, queryset):
+        from datetime import timedelta
+        for product in queryset:
+            if product.sale_end_date:
+                product.sale_end_date += timedelta(days=7)
+                product.save(update_fields=['sale_end_date'])
+        self.message_user(request, f"Продовжено {queryset.count()} акцій на 7 днів", messages.SUCCESS)
+    extend_sale.short_description = "📅 Продовжити на 7 днів"
+    
+    def has_add_permission(self, request):
+        return False
+    
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(Brand)

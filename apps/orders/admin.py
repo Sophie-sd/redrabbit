@@ -94,50 +94,89 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(Promotion)
 class PromotionAdmin(admin.ModelAdmin):
     list_display = [
-        'name', 'code', 'discount_type', 'discount_value', 
-        'get_usage', 'is_active', 'start_date', 'end_date'
+        'code', 'name', 'get_discount_display', 'apply_to',
+        'get_usage', 'get_status', 'is_active', 'start_date', 'end_date'
     ]
-    list_filter = ['is_active', 'discount_type', 'start_date', 'end_date']
+    list_filter = ['is_active', 'discount_type', 'apply_to', 'start_date']
     search_fields = ['name', 'code']
-    list_editable = ['is_active']
+    list_editable = []
     readonly_fields = ['uses_count', 'created_at']
+    filter_horizontal = ['categories']
+    date_hierarchy = 'start_date'
     
     fieldsets = (
         ('Основна інформація', {
             'fields': ('name', 'code', 'is_active')
         }),
-        ('Знижка', {
-            'fields': (('discount_type', 'discount_value'), 'min_order_amount')
+        ('Умови знижки', {
+            'fields': (
+                ('discount_type', 'discount_value'),
+                'min_order_amount',
+            ),
+            'description': 'Встановіть тип та розмір знижки'
+        }),
+        ('Застосування промокоду', {
+            'fields': (
+                'apply_to',
+                'categories',
+            ),
+            'description': 'Виберіть до яких товарів застосовується промокод'
         }),
         ('Термін дії', {
-            'fields': (('start_date', 'end_date'),)
+            'fields': (('start_date', 'end_date'),),
+            'description': 'Промокод буде активним тільки в цей період'
         }),
-        ('Обмеження', {
-            'fields': (('max_uses', 'uses_count'),)
+        ('Обмеження використання', {
+            'fields': (('max_uses', 'uses_count'),),
         }),
     )
     
-    actions = ['activate_promotions', 'deactivate_promotions']
+    actions = ['activate_promotions', 'deactivate_promotions', 'duplicate_promo']
+    
+    def get_discount_display(self, obj):
+        if obj.discount_type == 'percentage':
+            return format_html('<strong>{}%</strong>', obj.discount_value)
+        return format_html('<strong>{} ₴</strong>', obj.discount_value)
+    get_discount_display.short_description = 'Знижка'
     
     def get_usage(self, obj):
         if obj.max_uses:
             percentage = (obj.uses_count / obj.max_uses) * 100
+            color = '#4CAF50' if percentage < 80 else '#ff9800' if percentage < 100 else '#f44336'
             return format_html(
-                '<span class="badge">{}/{} ({}%)</span>',
-                obj.uses_count, obj.max_uses, round(percentage)
+                '<span style="color: {}; font-weight: 600;">{}/{}</span>',
+                color, obj.uses_count, obj.max_uses
             )
-        return format_html('<span class="badge">{}</span>', obj.uses_count)
+        return format_html('<span style="color: #2196F3;">{}</span>', obj.uses_count)
     get_usage.short_description = 'Використань'
+    
+    def get_status(self, obj):
+        if obj.is_valid():
+            return format_html('<span style="color: #4CAF50; font-weight: 600;">✓ Активний</span>')
+        elif not obj.is_active:
+            return format_html('<span style="color: #999;">✗ Вимкнено</span>')
+        else:
+            return format_html('<span style="color: #ff9800;">⏰ Неактивний</span>')
+    get_status.short_description = 'Статус'
     
     def activate_promotions(self, request, queryset):
         updated = queryset.update(is_active=True)
-        self.message_user(request, f"Активовано {updated} акцій")
-    activate_promotions.short_description = "✓ Активувати акції"
+        self.message_user(request, f"Активовано {updated} промокодів")
+    activate_promotions.short_description = "✓ Активувати"
     
     def deactivate_promotions(self, request, queryset):
         updated = queryset.update(is_active=False)
-        self.message_user(request, f"Деактивовано {updated} акцій")
-    deactivate_promotions.short_description = "✗ Деактивувати акції"
+        self.message_user(request, f"Деактивовано {updated} промокодів")
+    deactivate_promotions.short_description = "✗ Деактивувати"
+    
+    def duplicate_promo(self, request, queryset):
+        for promo in queryset:
+            promo.pk = None
+            promo.code = f"{promo.code}_copy"
+            promo.uses_count = 0
+            promo.save()
+        self.message_user(request, f"Створено {queryset.count()} копій промокодів")
+    duplicate_promo.short_description = "📋 Дублювати"
 
 
 @admin.register(Newsletter)

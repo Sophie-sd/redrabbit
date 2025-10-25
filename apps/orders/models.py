@@ -143,33 +143,62 @@ class Newsletter(models.Model):
 
 
 class Promotion(models.Model):
-    """Акції та промокоди"""
+    """Промокоди"""
     
-    name = models.CharField('Назва акції', max_length=200)
-    code = models.CharField('Промокод', max_length=50, unique=True, blank=True)
+    APPLY_TO_CHOICES = [
+        ('all', 'Всі товари'),
+        ('non_sale', 'Тільки не акційні'),
+        ('categories', 'Обрані категорії'),
+    ]
+    
+    name = models.CharField('Назва промокоду', max_length=200)
+    code = models.CharField('Промокод', max_length=50, unique=True)
     discount_type = models.CharField('Тип знижки', max_length=20, choices=[
-        ('percentage', 'Відсоток'),
-        ('fixed', 'Фіксована сума'),
-        ('free_shipping', 'Безкоштовна доставка'),
-    ])
+        ('percentage', 'Відсоток від суми'),
+        ('fixed', 'Фіксована знижка'),
+    ], default='percentage')
     discount_value = models.DecimalField('Розмір знижки', max_digits=10, decimal_places=2)
-    min_order_amount = models.DecimalField('Мінімальна сума замовлення', max_digits=10, decimal_places=2, default=0)
-    max_uses = models.PositiveIntegerField('Максимальна кількість використань', null=True, blank=True)
-    uses_count = models.PositiveIntegerField('Кількість використань', default=0)
     
-    is_active = models.BooleanField('Активна', default=True)
-    start_date = models.DateTimeField('Дата початку')
-    end_date = models.DateTimeField('Дата закінчення')
+    apply_to = models.CharField('Застосувати до', max_length=20, choices=APPLY_TO_CHOICES, default='all')
+    categories = models.ManyToManyField(
+        'products.Category',
+        verbose_name='Категорії',
+        blank=True,
+        help_text='Категорії на які діє промокод (якщо обрано "Обрані категорії")'
+    )
+    
+    min_order_amount = models.DecimalField(
+        'Мінімальна сума замовлення', 
+        max_digits=10, 
+        decimal_places=2, 
+        default=0,
+        help_text='Залиште 0 якщо без обмежень'
+    )
+    max_uses = models.PositiveIntegerField(
+        'Максимальна кількість використань', 
+        null=True, 
+        blank=True,
+        help_text='Залиште порожнім для необмеженої кількості'
+    )
+    uses_count = models.PositiveIntegerField('Кількість використань', default=0, editable=False)
+    
+    is_active = models.BooleanField('Активний', default=True)
+    start_date = models.DateTimeField('Дата початку', help_text='Промокод стане активним з цієї дати')
+    end_date = models.DateTimeField('Дата закінчення', help_text='Промокод автоматично завершиться')
     
     created_at = models.DateTimeField('Створено', auto_now_add=True)
     
     class Meta:
-        verbose_name = 'Акція'
-        verbose_name_plural = 'Акції'
+        verbose_name = 'Промокод'
+        verbose_name_plural = 'Промокоди'
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['code', 'is_active']),
+            models.Index(fields=['start_date', 'end_date']),
+        ]
     
     def is_valid(self):
-        """Перевіряє чи дійсна акція"""
+        """Перевіряє чи дійсний промокод"""
         from django.utils import timezone
         now = timezone.now()
         
@@ -184,19 +213,29 @@ class Promotion(models.Model):
         
         return True
     
-    def apply_discount(self, order_total):
-        """Застосовує знижку до суми замовлення"""
+    def can_apply_to_product(self, product):
+        """Перевіряє чи можна застосувати промокод до товару"""
+        if self.apply_to == 'all':
+            return True
+        elif self.apply_to == 'non_sale':
+            return not product.is_sale_active()
+        elif self.apply_to == 'categories':
+            return self.categories.filter(id=product.category_id).exists()
+        return False
+    
+    def calculate_discount(self, order_total):
+        """Розраховує знижку"""
         if order_total < self.min_order_amount:
             return 0
         
         if self.discount_type == 'percentage':
-            return order_total * (self.discount_value / 100)
-        elif self.discount_type == 'fixed':
-            return min(self.discount_value, order_total)
+            discount = order_total * (self.discount_value / 100)
+        else:
+            discount = self.discount_value
         
-        return 0
+        return min(discount, order_total)
     
     def __str__(self):
-        return self.name
+        return f"{self.code} - {self.name}"
 
 
