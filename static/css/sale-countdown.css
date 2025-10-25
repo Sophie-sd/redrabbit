@@ -1,0 +1,47 @@
+.sale-countdown {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #ff4444 0%, #ff6b6b 100%);
+    color: white;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 8px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.sale-countdown::before {
+    content: "⏰";
+    font-size: 14px;
+}
+
+.sale-countdown-text {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+}
+
+.countdown-ended {
+    background: linear-gradient(135deg, #999 0%, #666 100%);
+    animation: none;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 16px rgba(255, 68, 68, 0.5);
+    }
+}
+
+@media (max-width: 768px) {
+    .sale-countdown {
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+}
+

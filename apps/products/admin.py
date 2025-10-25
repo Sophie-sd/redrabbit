@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 import csv
 from .models import Category, Product, ProductReview, Brand
-from .proxy_models import SaleProduct
+from .models_sales import Sale
 
 
 @admin.register(Category)
@@ -205,109 +205,105 @@ class ProductReviewAdmin(admin.ModelAdmin):
         return super().get_queryset(request).select_related('product')
 
 
-@admin.register(SaleProduct)
-class SaleProductAdmin(admin.ModelAdmin):
+@admin.register(Sale)
+class SaleAdmin(admin.ModelAdmin):
     list_display = [
-        'get_product_image', 'name', 'category', 
-        'get_original_price', 'get_sale_price_field', 'get_dates', 'get_status'
+        'name', 'get_discount_display', 'get_affected_count',
+        'get_period', 'get_status', 'is_active'
     ]
-    list_display_links = ['get_product_image', 'name']
-    list_filter = ['category', 'is_sale', 'sale_start_date', 'sale_end_date']
-    search_fields = ['name', 'sku']
-    ordering = ['-updated_at']
-    list_per_page = 50
+    list_filter = ['is_active', 'discount_type', 'start_date', 'end_date']
+    search_fields = ['name']
+    filter_horizontal = ['categories', 'products']
+    date_hierarchy = 'start_date'
     
     fieldsets = (
-        ('Товар', {
-            'fields': ('name', 'category', 'sku', 'retail_price')
+        ('Основна інформація', {
+            'fields': ('name', 'is_active')
         }),
-        ('Акційна пропозиція', {
+        ('Умови знижки', {
             'fields': (
-                'is_sale',
-                'sale_price',
-                ('sale_start_date', 'sale_end_date'),
+                ('discount_type', 'discount_value'),
             ),
-            'description': 'Встановіть акційну ціну та терміни дії'
+            'description': 'Оберіть тип знижки: відсоток або фіксована сума'
+        }),
+        ('Застосування знижки', {
+            'fields': (
+                'categories',
+                'products',
+            ),
+            'description': 'Оберіть категорії (включаючи підкатегорії) та/або конкретні товари'
+        }),
+        ('Термін дії', {
+            'fields': (
+                ('start_date', 'end_date'),
+            ),
         }),
     )
     
-    readonly_fields = ['name', 'category', 'sku', 'retail_price']
+    actions = ['activate_sales', 'deactivate_sales', 'apply_now']
     
-    actions = ['activate_sale', 'deactivate_sale', 'extend_sale']
+    def get_discount_display(self, obj):
+        if obj.discount_type == 'percentage':
+            return format_html('<strong style="color: #ff4444;">-{}%</strong>', obj.discount_value)
+        return format_html('<strong style="color: #ff4444;">-{} ₴</strong>', obj.discount_value)
+    get_discount_display.short_description = 'Знижка'
     
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.filter(is_active=True).select_related('category').prefetch_related('images')
+    def get_affected_count(self, obj):
+        try:
+            products = obj.get_affected_products()
+            cat_count = obj.categories.count()
+            prod_count = obj.products.count()
+            return format_html(
+                '<span style="color: #666;">Категорій: {}<br>Товарів: {} → <strong>{}</strong> в акції</span>',
+                cat_count, prod_count, len(products)
+            )
+        except:
+            return '—'
+    get_affected_count.short_description = 'Охоплення'
     
-    def get_product_image(self, obj):
-        main_image = obj.images.filter(is_main=True).first() or obj.images.first()
-        if main_image:
-            return format_html('<img src="{}" class="admin-thumbnail-small" />', main_image.get_image_url())
-        return format_html('<div class="admin-icon-placeholder">📦</div>')
-    get_product_image.short_description = 'Фото'
-    
-    def get_original_price(self, obj):
-        return format_html('<strong>{} ₴</strong>', obj.retail_price)
-    get_original_price.short_description = 'Звичайна ціна'
-    
-    def get_sale_price_field(self, obj):
-        if obj.sale_price:
-            discount = obj.get_discount_percentage() if obj.is_sale_active() else 0
-            if discount > 0:
-                return format_html(
-                    '<strong style="color: #ff4444; font-size: 16px;">{} ₴</strong><br><span style="background: #ff4444; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;">-{}%</span>',
-                    obj.sale_price, discount
-                )
-            return format_html('<strong style="color: #ff4444;">{} ₴</strong>', obj.sale_price)
-        return '—'
-    get_sale_price_field.short_description = 'Акційна ціна'
-    
-    def get_dates(self, obj):
-        if obj.sale_start_date or obj.sale_end_date:
-            start = obj.sale_start_date.strftime('%d.%m.%Y') if obj.sale_start_date else '—'
-            end = obj.sale_end_date.strftime('%d.%m.%Y') if obj.sale_end_date else '—'
-            return format_html('<small>З: {}<br>До: {}</small>', start, end)
-        return '—'
-    get_dates.short_description = 'Термін дії'
+    def get_period(self, obj):
+        start = obj.start_date.strftime('%d.%m.%Y %H:%M')
+        end = obj.end_date.strftime('%d.%m.%Y %H:%M')
+        return format_html('<small>{}<br>до<br>{}</small>', start, end)
+    get_period.short_description = 'Період'
     
     def get_status(self, obj):
-        if obj.is_sale and obj.is_sale_active():
+        if obj.is_active_now():
             return format_html('<span style="color: #4CAF50; font-weight: 600;">🔥 Активна</span>')
-        elif obj.is_sale and obj.sale_price:
-            return format_html('<span style="color: #ff9800;">⏰ Очікує/завершена</span>')
+        elif obj.is_active and obj.start_date > timezone.now():
+            return format_html('<span style="color: #2196F3;">⏰ Очікує</span>')
+        elif obj.is_active and obj.end_date < timezone.now():
+            return format_html('<span style="color: #ff9800;">⌛ Завершена</span>')
         else:
-            return format_html('<span style="color: #999;">✗ Не активна</span>')
+            return format_html('<span style="color: #999;">✗ Вимкнена</span>')
     get_status.short_description = 'Статус'
     
-    def activate_sale(self, request, queryset):
-        updated = 0
-        for product in queryset:
-            if product.sale_price:
-                product.is_sale = True
-                product.save(update_fields=['is_sale'])
-                updated += 1
-        self.message_user(request, f"Активовано {updated} акцій", messages.SUCCESS)
-    activate_sale.short_description = "🔥 Активувати акцію"
+    def activate_sales(self, request, queryset):
+        for sale in queryset:
+            sale.is_active = True
+            sale.save()
+        self.message_user(request, f"Активовано {queryset.count()} акцій", messages.SUCCESS)
+    activate_sales.short_description = "✓ Активувати"
     
-    def deactivate_sale(self, request, queryset):
-        updated = queryset.update(is_sale=False)
-        self.message_user(request, f"Деактивовано {updated} акцій", messages.SUCCESS)
-    deactivate_sale.short_description = "✗ Деактивувати акцію"
+    def deactivate_sales(self, request, queryset):
+        for sale in queryset:
+            sale.is_active = False
+            sale.save()
+        self.message_user(request, f"Деактивовано {queryset.count()} акцій", messages.SUCCESS)
+    deactivate_sales.short_description = "✗ Деактивувати"
     
-    def extend_sale(self, request, queryset):
-        from datetime import timedelta
-        for product in queryset:
-            if product.sale_end_date:
-                product.sale_end_date += timedelta(days=7)
-                product.save(update_fields=['sale_end_date'])
-        self.message_user(request, f"Продовжено {queryset.count()} акцій на 7 днів", messages.SUCCESS)
-    extend_sale.short_description = "📅 Продовжити на 7 днів"
+    def apply_now(self, request, queryset):
+        for sale in queryset:
+            sale.apply_to_products()
+        self.message_user(request, f"Застосовано {queryset.count()} акцій до товарів", messages.SUCCESS)
+    apply_now.short_description = "🔄 Застосувати зараз"
     
-    def has_add_permission(self, request):
-        return False
-    
-    def has_delete_permission(self, request, obj=None):
-        return False
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        if obj.is_active:
+            obj.apply_to_products()
+            count = len(obj.get_affected_products())
+            self.message_user(request, f"Акцію застосовано до {count} товарів", messages.SUCCESS)
 
 
 @admin.register(Brand)
