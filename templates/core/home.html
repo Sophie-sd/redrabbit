@@ -213,13 +213,22 @@
     <div class="container">
         <div class="promo-images-grid">
             <div class="promo-image-item">
-                <img src="{% static 'images/fon_image1.png' %}" alt="Промо 1" loading="lazy">
+                <picture>
+                    <source media="(max-width: 768px)" srcset="{% static 'images/fon_image_mb1.png' %}">
+                    <img src="{% static 'images/fon_image1.png' %}" alt="Промо 1" loading="lazy">
+                </picture>
             </div>
             <div class="promo-image-item">
-                <img src="{% static 'images/fon_image2.png' %}" alt="Промо 2" loading="lazy">
+                <picture>
+                    <source media="(max-width: 768px)" srcset="{% static 'images/fon_image_mb2.png' %}">
+                    <img src="{% static 'images/fon_image2.png' %}" alt="Промо 2" loading="lazy">
+                </picture>
             </div>
             <div class="promo-image-item">
-                <img src="{% static 'images/fon_image3.png' %}" alt="Промо 3" loading="lazy">
+                <picture>
+                    <source media="(max-width: 768px)" srcset="{% static 'images/fon_image_mb3.png' %}">
+                    <img src="{% static 'images/fon_image3.png' %}" alt="Промо 3" loading="lazy">
+                </picture>
             </div>
         </div>
     </div>
