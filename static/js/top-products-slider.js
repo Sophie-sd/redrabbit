@@ -11,8 +11,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function getScrollAmount() {
         const cardWidth = cards[0].offsetWidth;
-        const gap = 20;
-        return (cardWidth + gap) * 4;
+        const isMobile = window.innerWidth <= 768;
+        const gap = isMobile ? 10 : 15;
+        const cardsToScroll = isMobile ? 2 : 4;
+        return (cardWidth + gap) * cardsToScroll;
     }
     
     if (nextBtn) {

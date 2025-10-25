@@ -27,19 +27,16 @@
 
 .sale-countdown {
     display: block;
-    padding: 3px 8px;
-    background: rgba(255, 68, 68, 0.95);
+    padding: 6px 10px;
+    background: rgba(0, 0, 0, 0.6);
     color: white;
-    border-radius: 4px;
-    font-size: 10px;
+    border-radius: 6px;
+    font-size: 11px;
     font-weight: 600;
     line-height: 1.2;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     white-space: nowrap;
-}
-
-.sale-countdown::before {
-    content: "⏰ ";
+    backdrop-filter: blur(4px);
 }
 
 .countdown-ended {
@@ -47,16 +44,17 @@
 }
 
 .product-card__badges,
-.product-badges {
+.product-badges,
+.promo-badges {
     position: absolute;
-    top: 8px;
-    left: 8px;
+    top: -5px;
+    left: -5px;
     z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
-    max-width: calc(100% - 50px);
+    max-width: calc(100% - 30px);
 }
 
 .product-card__wishlist {
@@ -105,12 +103,13 @@
     
     .sale-countdown {
         font-size: 9px;
-        padding: 2px 6px;
+        padding: 4px 8px;
     }
     
     .product-card__badges,
-    .product-badges {
-        max-width: calc(100% - 40px);
+    .product-badges,
+    .promo-badges {
+        max-width: calc(100% - 30px);
     }
     
     .product-card__wishlist {
