@@ -5,18 +5,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const container = slider.closest('.promotions-slider-container');
     const prevBtn = container.querySelector('.promo-prev-btn');
     const nextBtn = container.querySelector('.promo-next-btn');
+    const cards = slider.querySelectorAll('.promo-card');
     
-    const scrollAmount = 300;
+    if (cards.length === 0) return;
+    
+    function getScrollAmount() {
+        const cardWidth = cards[0].offsetWidth;
+        const gap = 20;
+        return (cardWidth + gap) * 4;
+    }
     
     if (nextBtn) {
         nextBtn.addEventListener('click', () => {
-            slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            slider.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
         });
     }
     
     if (prevBtn) {
         prevBtn.addEventListener('click', () => {
-            slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            slider.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
         });
     }
 });

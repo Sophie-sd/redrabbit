@@ -19,23 +19,19 @@ function initPromotionsSlider(sliderId) {
     
     if (cards.length === 0) return;
     
-    // Функція для розрахунку ширини прокрутки
+    // Функція для розрахунку ширини прокрутки (4 картки)
     function getScrollAmount() {
         const cardWidth = cards[0].offsetWidth;
-        const gap = 20; // gap між картками
-        return cardWidth + gap;
+        const gap = 20;
+        return (cardWidth + gap) * 4;
     }
     
     // Функція прокрутки
     function scrollSlider(direction) {
         const scrollAmount = getScrollAmount();
-        const currentScroll = slider.scrollLeft;
-        const targetScroll = direction === 'next' 
-            ? currentScroll + scrollAmount 
-            : currentScroll - scrollAmount;
         
-        slider.scrollTo({
-            left: targetScroll,
+        slider.scrollBy({
+            left: direction === 'next' ? scrollAmount : -scrollAmount,
             behavior: 'smooth'
         });
     }
