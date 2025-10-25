@@ -47,14 +47,14 @@
 .product-badges,
 .promo-badges {
     position: absolute;
-    top: -5px;
-    left: -5px;
+    top: 8px;
+    left: 8px;
     z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
-    max-width: calc(100% - 30px);
+    max-width: calc(100% - 50px);
 }
 
 .product-card__wishlist {
