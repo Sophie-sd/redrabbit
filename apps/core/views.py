@@ -106,7 +106,7 @@ class PrivacyView(TemplateView):
 
 
 class SearchView(TemplateView):
-    """Пошук товарів"""
+    """Пошук товарів - перші 5 товарів, решта через AJAX"""
     template_name = 'core/search.html'
     
     def get_context_data(self, **kwargs):
@@ -114,28 +114,18 @@ class SearchView(TemplateView):
         query = self.request.GET.get('q', '').strip()
         
         if query:
-            # Оптимізований запит з prefetch для уникнення N+1 проблеми
-            base_queryset = Product.objects.filter(
+            # Показуємо тільки перші 5 товарів для швидкого першого відображення
+            products = Product.objects.filter(
                 Q(name__icontains=query) | 
                 Q(description__icontains=query) |
                 Q(category__name__icontains=query),
                 is_active=True
-            ).select_related('category').prefetch_related('images').distinct()
-            
-            # Беремо перші 20 для відображення
-            products = base_queryset[:20]
-            
-            # Підраховуємо кількість (використовуємо len() на вже завантажених даних якщо <= 20)
-            # Для великих результатів робимо окремий count()
-            if len(products) < 20:
-                total_count = len(products)
-            else:
-                total_count = base_queryset.count()
+            ).select_related('category').prefetch_related('images').distinct()[:5]
             
             context.update({
                 'products': products,
                 'query': query,
-                'results_count': total_count,
+                'initial_count': len(products),
             })
         
         return context
@@ -172,3 +162,70 @@ def search_autocomplete(request):
         return JsonResponse({'results': results})
     except Exception as e:
         return JsonResponse({'results': [], 'error': str(e)}, status=500)
+
+
+def search_paginated(request):
+    """API для пагінованого пошуку"""
+    query = request.GET.get('q', '').strip()
+    page = int(request.GET.get('page', 1))
+    per_page = int(request.GET.get('per_page', 20))
+    
+    if not query:
+        return JsonResponse({'error': 'Query required'}, status=400)
+    
+    try:
+        # Базовий запит
+        base_queryset = Product.objects.filter(
+            Q(name__icontains=query) | 
+            Q(description__icontains=query) |
+            Q(category__name__icontains=query),
+            is_active=True
+        ).select_related('category').prefetch_related('images').distinct()
+        
+        # Загальна кількість
+        total_count = base_queryset.count()
+        
+        # Пагінація
+        offset = (page - 1) * per_page
+        products = base_queryset[offset:offset + per_page]
+        
+        # Формуємо результати
+        results = []
+        for p in products:
+            image_url = None
+            if p.images.exists():
+                first_image = p.images.first()
+                if first_image and hasattr(first_image, 'image'):
+                    image_url = first_image.image.url if first_image.image else None
+            
+            # Отримуємо ціну (якщо є акція - акційна, інакше роздрібна)
+            if p.is_sale_active() and p.sale_price:
+                price = p.sale_price
+            else:
+                price = p.retail_price
+            
+            results.append({
+                'id': p.id,
+                'name': p.name,
+                'url': p.get_absolute_url(),
+                'price': str(int(price)),
+                'image': image_url,
+                'category': p.category.name if p.category else '',
+                'is_sale': p.is_sale_active(),
+                'is_top': p.is_top,
+                'is_new': p.is_new,
+            })
+        
+        # Підраховуємо сторінки
+        total_pages = (total_count + per_page - 1) // per_page
+        
+        return JsonResponse({
+            'products': results,
+            'total_count': total_count,
+            'current_page': page,
+            'total_pages': total_pages,
+            'has_next': page < total_pages,
+            'has_prev': page > 1,
+        })
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

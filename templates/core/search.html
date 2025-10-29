@@ -13,6 +13,14 @@
 <link rel="stylesheet" href="{% static 'css/search-page.css' %}">
 {% endblock %}
 
+{% block extra_js %}
+<script>
+    window.searchQuery = "{{ query|escapejs }}";
+    window.initialCount = {{ initial_count|default:0 }};
+</script>
+<script src="{% static 'js/search-pagination.js' %}"></script>
+{% endblock %}
+
 {% block content %}
 <main class="search-page">
     <div class="container">
@@ -23,11 +31,9 @@
                     Результати пошуку: <span class="search-query">"{{ query }}"</span>
                 </h1>
                 <div class="search-meta">
-                    {% if results_count > 0 %}
-                        <p class="results-count">Знайдено {{ results_count }} товар{{ results_count|pluralize:"ів,ів,ів" }}</p>
-                    {% else %}
-                        <p class="results-count no-results">За вашим запитом нічого не знайдено</p>
-                    {% endif %}
+                    <p class="results-count" id="resultsCount">
+                        Завантаження<span class="loading-dots">...</span>
+                    </p>
                 </div>
             {% else %}
                 <h1 class="search-title">Пошук товарів</h1>
@@ -68,6 +74,15 @@
                             {% include 'includes/product_card.html' with product=product %}
                         {% endfor %}
                     </div>
+                    
+                    <!-- Loading Spinner -->
+                    <div class="search-loading" id="searchLoading">
+                        <div class="spinner"></div>
+                        <p>Завантаження товарів...</p>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="search-pagination" id="searchPagination"></div>
                 </section>
             {% else %}
                 <!-- No Results -->

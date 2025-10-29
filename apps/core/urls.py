@@ -19,6 +19,7 @@ urlpatterns = [
     path('terms/', views.TermsView.as_view(), name='terms'),
     path('privacy/', views.PrivacyView.as_view(), name='privacy'),
     
-    # API для автокомпліту пошуку
+    # API для пошуку
     path('api/search/autocomplete/', views.search_autocomplete, name='search_autocomplete'),
+    path('api/search/paginated/', views.search_paginated, name='search_paginated'),
 ]
