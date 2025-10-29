@@ -91,6 +91,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--spacing-lg);
+    position: relative;
 }
 
 .logo-link {
@@ -129,11 +130,14 @@
 .search-container {
     flex: 1;
     max-width: 500px;
+    position: relative;
+    z-index: 100;
 }
 
 .search-input-group {
     position: relative;
     display: flex;
+    isolation: isolate;
 }
 
 .search-input {
@@ -167,13 +171,16 @@
     transform: translateY(-10px);
     transition: all 0.2s ease;
     box-shadow: var(--shadow-md);
-    z-index: 10;
+    z-index: 1000;
+    pointer-events: none;
 }
 
 .search-autocomplete.active {
     max-height: 400px;
     opacity: 1;
     transform: translateY(0);
+    overflow-y: auto;
+    pointer-events: auto;
 }
 
 .autocomplete-item {
@@ -185,17 +192,33 @@
     text-decoration: none;
     color: var(--neutral-dark);
     transition: background 0.2s ease;
+    cursor: pointer;
+    position: relative;
 }
 
 .autocomplete-item:hover {
     background: var(--neutral-lighter);
 }
 
-.autocomplete-item img {
+.autocomplete-item:active {
+    background: var(--color-gray-200);
+}
+
+.autocomplete-item img,
+.autocomplete-placeholder {
     width: 40px;
     height: 40px;
     object-fit: cover;
     border-radius: var(--border-radius-sm);
+    flex-shrink: 0;
+}
+
+.autocomplete-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-gray-100);
+    font-size: 20px;
 }
 
 .autocomplete-name {
@@ -332,6 +355,10 @@
 
 @media (max-width: 767px) {
     .header-phone .phone-contact {
+        display: none;
+    }
+    
+    .search-autocomplete {
         display: none;
     }
 }

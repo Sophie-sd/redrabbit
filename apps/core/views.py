@@ -144,16 +144,27 @@ def search_autocomplete(request):
     if len(query) < 2:
         return JsonResponse({'results': []})
     
-    products = Product.objects.filter(
-        Q(name__icontains=query),
-        is_active=True
-    ).select_related('category').prefetch_related('images')[:5]
-    
-    results = [{
-        'name': p.name,
-        'url': p.get_absolute_url(),
-        'price': str(p.retail_price),
-        'image': p.images.first().image.url if p.images.exists() else None
-    } for p in products]
-    
-    return JsonResponse({'results': results})
+    try:
+        products = Product.objects.filter(
+            Q(name__icontains=query) | Q(description__icontains=query),
+            is_active=True
+        ).select_related('category').prefetch_related('images')[:5]
+        
+        results = []
+        for p in products:
+            image_url = None
+            if p.images.exists():
+                first_image = p.images.first()
+                if first_image and hasattr(first_image, 'image'):
+                    image_url = first_image.image.url if first_image.image else None
+            
+            results.append({
+                'name': p.name,
+                'url': p.get_absolute_url(),
+                'price': str(int(p.retail_price)),
+                'image': image_url
+            })
+        
+        return JsonResponse({'results': results})
+    except Exception as e:
+        return JsonResponse({'results': [], 'error': str(e)}, status=500)
