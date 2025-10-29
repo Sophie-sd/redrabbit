@@ -9,6 +9,13 @@ from django.db import connection
 from apps.products.models import Product, Category
 from .models import Banner
 
+# PostgreSQL Full-Text Search (якщо доступний)
+try:
+    from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+    POSTGRES_AVAILABLE = True
+except ImportError:
+    POSTGRES_AVAILABLE = False
+
 # Безпечний імпорт Brand та ProductReview
 try:
     from apps.products.models import Brand, ProductReview
@@ -165,7 +172,7 @@ def search_autocomplete(request):
 
 
 def search_paginated(request):
-    """API для пагінованого пошуку"""
+    """API для пагінованого пошуку з підтримкою PostgreSQL Full-Text Search"""
     query = request.GET.get('q', '').strip()
     page = int(request.GET.get('page', 1))
     per_page = int(request.GET.get('per_page', 20))
@@ -174,13 +181,32 @@ def search_paginated(request):
         return JsonResponse({'error': 'Query required'}, status=400)
     
     try:
-        # Базовий запит
-        base_queryset = Product.objects.filter(
-            Q(name__icontains=query) | 
-            Q(description__icontains=query) |
-            Q(category__name__icontains=query),
-            is_active=True
-        ).select_related('category').prefetch_related('images').distinct()
+        # Визначаємо тип БД
+        db_engine = connection.settings_dict['ENGINE']
+        use_postgres_search = 'postgresql' in db_engine and POSTGRES_AVAILABLE
+        
+        if use_postgres_search:
+            # PostgreSQL Full-Text Search - набагато швидший!
+            search_vector = SearchVector('name', weight='A') + \
+                           SearchVector('description', weight='B') + \
+                           SearchVector('category__name', weight='C')
+            search_query = SearchQuery(query, search_type='websearch')
+            
+            base_queryset = Product.objects.annotate(
+                search=search_vector,
+                rank=SearchRank(search_vector, search_query)
+            ).filter(
+                search=search_query,
+                is_active=True
+            ).order_by('-rank').select_related('category').prefetch_related('images').distinct()
+        else:
+            # SQLite fallback - звичайний пошук (для розробки)
+            base_queryset = Product.objects.filter(
+                Q(name__icontains=query) | 
+                Q(description__icontains=query) |
+                Q(category__name__icontains=query),
+                is_active=True
+            ).select_related('category').prefetch_related('images').distinct()
         
         # Загальна кількість
         total_count = base_queryset.count()

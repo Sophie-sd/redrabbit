@@ -7,6 +7,9 @@ import os
 
 DEBUG = False
 
+# Додаємо PostgreSQL specific apps для Full-Text Search
+INSTALLED_APPS = INSTALLED_APPS + ['django.contrib.postgres']
+
 # Override SECRET_KEY for production
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-me-in-production')
 
