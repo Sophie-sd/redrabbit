@@ -166,6 +166,9 @@ class Product(models.Model):
             models.Index(fields=['sku']),
             models.Index(fields=['slug']),
             models.Index(fields=['created_at']),
+            # Індекси для пошуку
+            models.Index(fields=['name']),
+            models.Index(fields=['is_active', 'name']),
         ]
     
     def save(self, *args, **kwargs):
