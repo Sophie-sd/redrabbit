@@ -221,6 +221,12 @@
     gap: var(--spacing-xs);
 }
 
+.phone-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 .phone-link {
     display: flex;
     align-items: center;
@@ -249,6 +255,85 @@
     color: #fff;
     text-shadow: 0 1px 3px rgba(0,0,0,0.5);
     font-weight: 600;
+}
+
+.messengers-icons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+.messenger-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.messenger-viber {
+    background: #7360f2;
+    color: #fff;
+}
+
+.messenger-viber:hover {
+    background: #5a4bbf;
+    transform: scale(1.1);
+}
+
+.messenger-telegram {
+    background: #0088cc;
+    color: #fff;
+}
+
+.messenger-telegram:hover {
+    background: #006699;
+    transform: scale(1.1);
+}
+
+.messenger-whatsapp {
+    background: #25d366;
+    color: #fff;
+}
+
+.messenger-whatsapp:hover {
+    background: #1da851;
+    transform: scale(1.1);
+}
+
+.messenger-link svg {
+    width: 16px;
+    height: 16px;
+}
+
+@media (max-width: 991px) {
+    .phone-contact {
+        gap: 6px;
+    }
+    
+    .messengers-icons {
+        gap: 6px;
+    }
+    
+    .messenger-link {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .messenger-link svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+@media (max-width: 767px) {
+    .header-phone .phone-contact {
+        display: none;
+    }
 }
 
 .search-btn {

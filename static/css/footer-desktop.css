@@ -75,6 +75,76 @@
   color: var(--color-brand-accent);
 }
 
+.footer-messengers {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.footer-messenger-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.footer-messenger-viber {
+  background: #7360f2;
+  color: #fff;
+}
+
+.footer-messenger-viber:hover {
+  background: #5a4bbf;
+  transform: translateY(-2px) scale(1.05);
+}
+
+.footer-messenger-telegram {
+  background: #0088cc;
+  color: #fff;
+}
+
+.footer-messenger-telegram:hover {
+  background: #006699;
+  transform: translateY(-2px) scale(1.05);
+}
+
+.footer-messenger-whatsapp {
+  background: #25d366;
+  color: #fff;
+}
+
+.footer-messenger-whatsapp:hover {
+  background: #1da851;
+  transform: translateY(-2px) scale(1.05);
+}
+
+.footer-messenger-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 768px) {
+  .footer-messengers {
+    justify-content: flex-start;
+    gap: 8px;
+  }
+  
+  .footer-messenger-link {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .footer-messenger-link svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 .footer-schedule {
   margin-top: var(--spacing-lg, 24px);
   padding: var(--spacing-md, 16px);

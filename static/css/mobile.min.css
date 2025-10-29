@@ -631,6 +631,60 @@
         text-align: center;
     }
     
+    .mobile-messengers {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin: 12px 0;
+    }
+    
+    .mobile-messenger-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+    
+    .mobile-messenger-viber {
+        background: #7360f2;
+        color: #fff;
+    }
+    
+    .mobile-messenger-viber:hover {
+        background: #5a4bbf;
+        transform: scale(1.05);
+    }
+    
+    .mobile-messenger-telegram {
+        background: #0088cc;
+        color: #fff;
+    }
+    
+    .mobile-messenger-telegram:hover {
+        background: #006699;
+        transform: scale(1.05);
+    }
+    
+    .mobile-messenger-whatsapp {
+        background: #25d366;
+        color: #fff;
+    }
+    
+    .mobile-messenger-whatsapp:hover {
+        background: #1da851;
+        transform: scale(1.05);
+    }
+    
+    .mobile-messenger-link svg {
+        width: 18px;
+        height: 18px;
+    }
+    
     .footer-bottom {
         background: var(--neutral-dark);
         padding: var(--spacing-md) 0;
