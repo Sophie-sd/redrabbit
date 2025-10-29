@@ -114,19 +114,23 @@ class SearchView(TemplateView):
         query = self.request.GET.get('q', '').strip()
         
         if query:
-            # Спочатку отримуємо всі результати для підрахунку
-            all_products = Product.objects.filter(
+            # Оптимізований запит з prefetch для уникнення N+1 проблеми
+            base_queryset = Product.objects.filter(
                 Q(name__icontains=query) | 
                 Q(description__icontains=query) |
                 Q(category__name__icontains=query),
                 is_active=True
-            ).distinct()
+            ).select_related('category').prefetch_related('images').distinct()
             
-            # Підраховуємо загальну кількість
-            total_count = all_products.count()
+            # Беремо перші 20 для відображення
+            products = base_queryset[:20]
             
-            # Берем тільки перші 20 для відображення
-            products = all_products[:20]
+            # Підраховуємо кількість (використовуємо len() на вже завантажених даних якщо <= 20)
+            # Для великих результатів робимо окремий count()
+            if len(products) < 20:
+                total_count = len(products)
+            else:
+                total_count = base_queryset.count()
             
             context.update({
                 'products': products,
