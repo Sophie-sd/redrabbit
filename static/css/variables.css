@@ -159,8 +159,7 @@
   
   /* ========== КОМПОНЕНТИ ========== */
   
-  /* Product Cards */
-  --card-max-width: 260px;
+  /* Product Cards (загальні стилі) */
   --card-border-radius: var(--border-radius-lg);
   --card-aspect-ratio: 1 / 1;
   --card-padding: var(--spacing-sm);
@@ -185,6 +184,8 @@
   --catalog-max-width: 1200px;
   --catalog-padding: var(--spacing-lg);
   --catalog-gap: 18px;
+  --product-card-max-width: 260px;
+  --product-card-border-radius: 12px;
   
   /* Filters */
   --filters-height: 80px;
@@ -202,7 +203,6 @@
 /* ========== MOBILE VARIABLES ========== */
 @media (max-width: 768px) {
   :root {
-    --card-max-width: 220px;
     --card-padding: 10px;
     --card-gap: 6px;
     --wishlist-size: 30px;
@@ -214,7 +214,6 @@
 
 @media (max-width: 480px) {
   :root {
-    --card-max-width: 160px;
     --card-padding: 8px;
     --card-gap: 4px;
     --wishlist-size: 28px;
