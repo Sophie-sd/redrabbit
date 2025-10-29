@@ -39,17 +39,24 @@ class Migration(migrations.Migration):
             reverse_sql="DROP INDEX IF EXISTS products_product_description_gin_trgm_idx;",
         ),
         
-        # Створюємо Full-Text Search індекс для швидкого пошуку
+        # Створюємо окремі Full-Text Search індекси для name та description
+        # Комбінування векторів робиться в runtime через SearchVector в коді
         migrations.RunSQL(
             sql="""
-                CREATE INDEX IF NOT EXISTS products_product_search_idx 
+                CREATE INDEX IF NOT EXISTS products_product_name_search_idx 
                 ON products_product 
-                USING gin (
-                    to_tsvector('english', COALESCE(name, '')) || 
-                    to_tsvector('english', COALESCE(description, ''))
-                );
+                USING gin (to_tsvector('english', COALESCE(name, '')));
             """,
-            reverse_sql="DROP INDEX IF EXISTS products_product_search_idx;",
+            reverse_sql="DROP INDEX IF EXISTS products_product_name_search_idx;",
+        ),
+        
+        migrations.RunSQL(
+            sql="""
+                CREATE INDEX IF NOT EXISTS products_product_description_search_idx 
+                ON products_product 
+                USING gin (to_tsvector('english', COALESCE(description, '')));
+            """,
+            reverse_sql="DROP INDEX IF EXISTS products_product_description_search_idx;",
         ),
     ]
 
