@@ -1,7 +1,7 @@
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
-from django.db.models import Count
-from .models import Product, Category, ProductAttribute
+from django.db.models import Count, Q
+from .models import Product, Category
 
 
 class CategoryView(ListView):
@@ -13,51 +13,36 @@ class CategoryView(ListView):
     def get_queryset(self):
         self.category = get_object_or_404(Category, slug=self.kwargs['slug'])
         
+        # Якщо є підкатегорії - показуємо їх замість товарів
         if self.category.children.filter(is_active=True).exists():
             return Product.objects.none()
         
+        # Товари з цієї категорії (враховуємо ManyToMany)
         return Product.objects.filter(
-            category=self.category, 
+            Q(categories=self.category) | Q(primary_category=self.category),
             is_active=True
-        ).prefetch_related('attributes')
+        ).distinct().select_related('primary_category').prefetch_related('images', 'categories')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category'] = self.category
-        context['subcategories'] = self.category.children.filter(is_active=True, slug__isnull=False).exclude(slug='')
         
-        if not context['subcategories']:
-            products_in_category = Product.objects.filter(
-                category=self.category,
-                is_active=True
-            )
-            
-            brands = products_in_category.exclude(vendor_name='').values('vendor_name').annotate(
-                count=Count('id')
-            ).order_by('-count')[:10]
-            context['available_brands'] = [b['vendor_name'] for b in brands]
-            
-            power_types = ProductAttribute.objects.filter(
-                product__category=self.category,
-                product__is_active=True,
-                name='Живлення'
-            ).exclude(value='').values('value').distinct()
-            context['available_power'] = sorted(set([p['value'] for p in power_types if p['value']]))
-            
-            waterproof_types = ProductAttribute.objects.filter(
-                product__category=self.category,
-                product__is_active=True,
-                name='Водостійкість'
-            ).exclude(value='').values('value').distinct()
-            context['available_waterproof'] = sorted(set([w['value'] for w in waterproof_types if w['value']]))
-            
-            vibration_types = ProductAttribute.objects.filter(
-                product__category=self.category,
-                product__is_active=True,
-                name='Вібрація'
-            ).exclude(value='').values('value').distinct()
-            context['available_vibration'] = sorted(set([v['value'] for v in vibration_types if v['value']]))
-
+        # Підкатегорії (розділи)
+        subcategories = self.category.children.filter(
+            is_active=True, 
+            slug__isnull=False
+        ).exclude(slug='')
+        context['subcategories'] = subcategories
+        
+        # Якщо є підкатегорії - це фільтр "Розділи"
+        if subcategories:
+            context['available_subcategories'] = subcategories
+        
+        # Мін/Макс ціна для фільтру ціни
+        if self.object_list:
+            prices = self.object_list.values_list('retail_price', flat=True)
+            context['min_price'] = int(min(prices)) if prices else 0
+            context['max_price'] = int(max(prices)) if prices else 10000
         
         return context
 

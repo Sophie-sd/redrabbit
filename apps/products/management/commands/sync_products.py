@@ -154,9 +154,13 @@ class Command(BaseCommand):
                                 # Оновлюємо категорію
                                 if category_id and category_id in categories_index:
                                     new_category = categories_index[category_id]
-                                    if product.category != new_category:
-                                        product.category = new_category
+                                    if product.primary_category != new_category:
+                                        product.primary_category = new_category
                                         updated = True
+                                    
+                                    # Додаємо в categories якщо немає
+                                    if new_category not in product.categories.all():
+                                        product.categories.add(new_category)
 
                                 if updated:
                                     product.save()

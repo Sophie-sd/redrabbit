@@ -1,0 +1,156 @@
+/* Візуальне виділення категорій Жінкам/Чоловікам/Для двох */
+
+:root {
+    --color-women: #e91e63;
+    --color-men: #2196f3;
+    --color-couple: #9c27b0;
+    --color-general: #607d8b;
+}
+
+/* Іконки категорій в меню */
+.category-item--women .category-link {
+    border-left: 3px solid var(--color-women);
+}
+
+.category-item--men .category-link {
+    border-left: 3px solid var(--color-men);
+}
+
+.category-item--couple .category-link {
+    border-left: 3px solid var(--color-couple);
+}
+
+.category-item--women:hover .category-link {
+    background: rgba(233, 30, 99, 0.05);
+}
+
+.category-item--men:hover .category-link {
+    background: rgba(33, 150, 243, 0.05);
+}
+
+.category-item--couple:hover .category-link {
+    background: rgba(156, 39, 176, 0.05);
+}
+
+/* Іконки категорій */
+.category-icon {
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-right: var(--space-sm);
+}
+
+.category-item--women .category-icon {
+    color: var(--color-women);
+}
+
+.category-item--men .category-icon {
+    color: var(--color-men);
+}
+
+.category-item--couple .category-icon {
+    color: var(--color-couple);
+}
+
+/* Заголовок категорії на сторінці */
+.catalog-header--women .catalog-title {
+    color: var(--color-women);
+}
+
+.catalog-header--men .catalog-title {
+    color: var(--color-men);
+}
+
+.catalog-header--couple .catalog-title {
+    color: var(--color-couple);
+}
+
+/* Бейджі для категорій */
+.category-badge {
+    display: inline-flex;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 10px;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    margin-left: var(--space-xs);
+}
+
+.category-badge--women {
+    background: var(--color-women);
+    color: var(--color-white);
+}
+
+.category-badge--men {
+    background: var(--color-men);
+    color: var(--color-white);
+}
+
+.category-badge--couple {
+    background: var(--color-couple);
+    color: var(--color-white);
+}
+
+/* Фільтри категорій */
+.filters-bar--women .filters-apply-btn {
+    background: var(--color-women);
+    border-color: var(--color-women);
+}
+
+.filters-bar--women .filters-apply-btn:hover {
+    background: #c2185b;
+}
+
+.filters-bar--men .filters-apply-btn {
+    background: var(--color-men);
+    border-color: var(--color-men);
+}
+
+.filters-bar--men .filters-apply-btn:hover {
+    background: #1976d2;
+}
+
+.filters-bar--couple .filters-apply-btn {
+    background: var(--color-couple);
+    border-color: var(--color-couple);
+}
+
+.filters-bar--couple .filters-apply-btn:hover {
+    background: #7b1fa2;
+}
+
+/* Адаптив для мобільних */
+@media (max-width: 767px) {
+    .category-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 16px;
+    }
+    
+    .category-link {
+        padding: var(--space-sm);
+    }
+}
+
+/* iOS Safari оптимізація */
+@supports (-webkit-touch-callout: none) {
+    .category-link {
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    .category-item--women .category-link:active {
+        background: rgba(233, 30, 99, 0.1);
+    }
+    
+    .category-item--men .category-link:active {
+        background: rgba(33, 150, 243, 0.1);
+    }
+    
+    .category-item--couple .category-link:active {
+        background: rgba(156, 39, 176, 0.1);
+    }
+}
+

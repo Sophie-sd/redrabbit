@@ -11,6 +11,13 @@ import time
 class Category(models.Model):
     """Категорії товарів з підтримкою ієрархії"""
     
+    CATEGORY_TYPES = [
+        ('general', 'Загальна'),
+        ('women', 'Для жінок'),
+        ('men', 'Для чоловіків'),
+        ('couple', 'Для пар'),
+    ]
+    
     name = models.CharField('Назва', max_length=200)
     slug = models.SlugField('URL', max_length=200, unique=True, blank=True)
     external_id = models.CharField(
@@ -30,6 +37,8 @@ class Category(models.Model):
         verbose_name='Батьківська категорія'
     )
     image = models.ImageField('Зображення', upload_to='categories/', blank=True)
+    icon = models.CharField('Іконка', max_length=50, blank=True, help_text='Emoji або CSS клас')
+    category_type = models.CharField('Тип категорії', max_length=20, choices=CATEGORY_TYPES, default='general')
     description = models.TextField('Опис', blank=True)
     is_active = models.BooleanField('Активна', default=True)
     sort_order = models.PositiveIntegerField('Порядок сортування', default=0)
@@ -73,7 +82,16 @@ class Product(models.Model):
     
     name = models.CharField('Назва', max_length=200)
     slug = models.SlugField('URL', max_length=200, unique=True, blank=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категорія')
+    categories = models.ManyToManyField(Category, related_name='products', verbose_name='Категорії', blank=True)
+    primary_category = models.ForeignKey(
+        Category, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        related_name='primary_products', 
+        verbose_name='Основна категорія',
+        help_text='Категорія для URL та основного відображення'
+    )
     description = models.TextField('Опис', blank=True)
     
     # Ціна

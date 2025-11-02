@@ -138,7 +138,6 @@ class Command(BaseCommand):
                     # Дані для створення/оновлення
                     product_data = {
                         'name': name[:200],
-                        'category': category,
                         'description': description or '',
                         'retail_price': retail_price,
                         'vendor_name': vendor[:200] if vendor else '',
@@ -153,7 +152,17 @@ class Command(BaseCommand):
                         # Оновлюємо існуючий
                         for key, value in product_data.items():
                             setattr(existing_product, key, value)
+                        
+                        # Оновлюємо категорії
+                        if not existing_product.primary_category:
+                            existing_product.primary_category = category
+                        
                         existing_product.save()
+                        
+                        # Додаємо в categories якщо немає
+                        if category not in existing_product.categories.all():
+                            existing_product.categories.add(category)
+                        
                         product = existing_product
                         updated_count += 1
                         action = '↻'
@@ -161,8 +170,12 @@ class Command(BaseCommand):
                         # Створюємо новий
                         product = Product.objects.create(
                             external_id=vendor_code or offer_id,
+                            primary_category=category,
                             **product_data
                         )
+                        # Додаємо в ManyToMany після створення
+                        product.categories.add(category)
+                        
                         created_count += 1
                         action = '✓'
                     

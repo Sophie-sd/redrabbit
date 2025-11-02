@@ -10,9 +10,9 @@ from .models_sales import Sale
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['get_category_image', 'name', 'parent', 'get_products_count', 'is_active', 'sort_order']
+    list_display = ['get_category_image', 'name', 'icon', 'category_type', 'parent', 'get_products_count', 'is_active', 'sort_order']
     list_display_links = ['get_category_image', 'name']
-    list_filter = ['is_active', 'parent']
+    list_filter = ['is_active', 'category_type', 'parent']
     search_fields = ['name', 'external_id']
     list_editable = ['is_active', 'sort_order']
     ordering = ['sort_order', 'name']
@@ -20,7 +20,7 @@ class CategoryAdmin(admin.ModelAdmin):
     
     fieldsets = (
         ('Основна інформація', {
-            'fields': ('name', 'slug', 'parent', 'image')
+            'fields': ('name', 'slug', 'parent', 'icon', 'category_type', 'image')
         }),
         ('Налаштування', {
             'fields': (('is_active', 'sort_order'),)
@@ -38,7 +38,7 @@ class CategoryAdmin(admin.ModelAdmin):
     get_category_image.short_description = 'Фото'
     
     def get_products_count(self, obj):
-        count = obj.product_set.filter(is_active=True).count()
+        count = obj.products.filter(is_active=True).count()
         return format_html('<span class="badge badge-info">{}</span>', count)
     get_products_count.short_description = 'Товарів'
     
@@ -49,18 +49,19 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = [
-        'get_product_image', 'name', 'category', 'sku', 
+        'get_product_image', 'name', 'get_categories_display', 'sku', 
         'get_price_display', 'get_badges', 'stock'
     ]
     list_display_links = ['get_product_image', 'name']
-    list_filter = ['category', 'is_sale', 'is_top', 'is_new']
+    list_filter = ['primary_category', 'is_sale', 'is_top', 'is_new']
     search_fields = ['name', 'sku', 'external_id', 'vendor_name']
     ordering = ['sort_order', '-updated_at']
     list_per_page = 50
+    filter_horizontal = ['categories']
     
     fieldsets = (
         ('Основна інформація', {
-            'fields': ('name', 'category', 'sku', 'stock')
+            'fields': ('name', 'primary_category', 'categories', 'sku', 'stock')
         }),
         ('Ціноутворення', {
             'fields': ('retail_price',),
@@ -71,7 +72,7 @@ class ProductAdmin(admin.ModelAdmin):
         }),
     )
     
-    readonly_fields = ['name', 'category', 'sku', 'retail_price', 'stock']
+    readonly_fields = ['name', 'sku', 'retail_price', 'stock']
     
     actions = [
         'mark_as_top',
@@ -87,6 +88,16 @@ class ProductAdmin(admin.ModelAdmin):
             return format_html('<img src="{}" class="admin-thumbnail-small" />', main_image.get_image_url())
         return format_html('<div class="admin-icon-placeholder">📦</div>')
     get_product_image.short_description = 'Фото'
+    
+    def get_categories_display(self, obj):
+        if obj.primary_category:
+            cats = [obj.primary_category.name]
+            other_cats = obj.categories.exclude(id=obj.primary_category.id).count()
+            if other_cats > 0:
+                cats.append(f'+{other_cats}')
+            return ' '.join(cats)
+        return '—'
+    get_categories_display.short_description = 'Категорії'
     
     def get_price_display(self, obj):
         if obj.is_sale_active():
@@ -142,10 +153,11 @@ class ProductAdmin(admin.ModelAdmin):
         ])
         
         for product in queryset:
+            primary_cat = product.primary_category.name if product.primary_category else '—'
             writer.writerow([
                 product.sku,
                 product.name,
-                product.category.name,
+                primary_cat,
                 product.retail_price,
                 product.sale_price or '',
                 'Так' if product.is_top else 'Ні',
@@ -159,7 +171,7 @@ class ProductAdmin(admin.ModelAdmin):
     export_products_csv.short_description = "📥 Експортувати в CSV"
     
     def get_queryset(self, request):
-        return super().get_queryset(request).select_related('category').prefetch_related('images')
+        return super().get_queryset(request).select_related('primary_category').prefetch_related('images', 'categories')
     
     def has_add_permission(self, request):
         return False

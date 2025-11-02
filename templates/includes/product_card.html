@@ -1,4 +1,11 @@
-<article class="product-card">
+<article class="product-card" 
+    data-sale-price="{{ product.get_current_price }}"
+    data-name="{{ product.name }}"
+    data-is-top="{{ product.is_top }}"
+    data-is-new="{{ product.is_new }}"
+    data-is-sale="{{ product.is_sale_active }}"
+    data-categories="{% for cat in product.categories.all %}{{ cat.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
+>
     <div class="product-card__media">
         <a href="{{ product.get_absolute_url }}">
             {% if product.images.first %}

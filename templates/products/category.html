@@ -7,12 +7,16 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/catalog.css' %}">
+<link rel="stylesheet" href="{% static 'css/categories-visual.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="catalog-container">
-    <header class="catalog-header">
-        <h1 class="catalog-title">{{ category.name }}</h1>
+    <header class="catalog-header catalog-header--{{ category.category_type }}">
+        <h1 class="catalog-title">
+            {% if category.icon %}<span class="category-icon">{{ category.icon }}</span>{% endif %}
+            {{ category.name }}
+        </h1>
         {% if category.description %}
             <p class="catalog-subtitle">{{ category.description }}</p>
         {% endif %}
@@ -25,7 +29,7 @@
         
         <main class="catalog-main">
             {% if not subcategories %}
-            <div class="filters-bar">
+            <div class="filters-bar filters-bar--{{ category.category_type }}">
                 <div class="filters-controls">
                     <button type="button" class="filters-toggle" id="filtersToggle">
                         <svg class="filters-toggle__icon" viewBox="0 0 24 24" fill="none">
@@ -60,100 +64,26 @@
                 
                 <div class="filters-content" id="filtersContent">
                     <div class="filters-grid">
+                        {% if available_subcategories %}
+                        <div class="filter-group">
+                            <label class="filter-label">Розділ</label>
+                            <div class="filter-checkboxes filter-checkboxes--scrollable">
+                                {% for subcat in available_subcategories %}
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" value="{{ subcat.slug }}" name="subcategory" class="filter-checkbox-input">
+                                    <span>{{ subcat.name }}</span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        
                         <div class="filter-group">
                             <label class="filter-label">Ціна, ₴</label>
                             <div class="price-inputs">
-                                <input type="number" class="price-input" id="priceMin" placeholder="Від" min="0">
+                                <input type="number" class="price-input" id="priceMin" placeholder="Від {{ min_price|default:0 }}" min="0">
                                 <span>—</span>
-                                <input type="number" class="price-input" id="priceMax" placeholder="До" min="0">
-                            </div>
-                        </div>
-                        
-                        <div class="filter-group">
-                            <label class="filter-label">Наявність</label>
-                            <div class="filter-checkboxes">
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="in_stock" name="availability" class="filter-checkbox-input">
-                                    <span>В наявності</span>
-                                </label>
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="out_of_stock" name="availability" class="filter-checkbox-input">
-                                    <span>Під замовлення</span>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        {% if available_brands %}
-                        <div class="filter-group">
-                            <label class="filter-label">Бренд</label>
-                            <div class="filter-checkboxes filter-checkboxes--scrollable">
-                                {% for brand in available_brands %}
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="{{ brand }}" name="brand" class="filter-checkbox-input">
-                                    <span>{{ brand|cut:" (Польща)"|cut:" (Німеччина)"|cut:" (США)"|cut:" (Франція)"|cut:" (Японія)"|cut:" (Япония)"|cut:" (Україна)"|cut:" (Китай)"|cut:" (Південна Корея)"|cut:" (Великобританія)" }}</span>
-                                </label>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-                        
-                        {% if available_power %}
-                        <div class="filter-group">
-                            <label class="filter-label">Живлення</label>
-                            <div class="filter-checkboxes">
-                                {% for power in available_power %}
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="{{ power }}" name="power" class="filter-checkbox-input">
-                                    <span>{% if power == "вбудовані акумулятори" %}Акумулятор{% elif power == "батарейки" %}Батарейки{% elif power == "від мережі 220V" %}Мережа 220V{% else %}{{ power }}{% endif %}</span>
-                                </label>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-                        
-                        {% if available_waterproof %}
-                        <div class="filter-group">
-                            <label class="filter-label">Водостійкість</label>
-                            <div class="filter-checkboxes">
-                                {% for waterproof in available_waterproof %}
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="{{ waterproof }}" name="waterproof" class="filter-checkbox-input">
-                                    <span>{% if waterproof == "можна занурювати" %}Повністю водостійкий{% elif waterproof == "водостійка" %}Водостійкий{% elif waterproof == "захист від бризок" %}Захист від бризок{% else %}{{ waterproof }}{% endif %}</span>
-                                </label>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-                        
-                        {% if available_vibration %}
-                        <div class="filter-group">
-                            <label class="filter-label">Вібрація</label>
-                            <div class="filter-checkboxes">
-                                {% for vibration in available_vibration %}
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="{{ vibration }}" name="vibration" class="filter-checkbox-input">
-                                    <span>{% if vibration == "так" %}З вібрацією{% elif vibration == "ні" %}Без вібрації{% else %}{{ vibration }}{% endif %}</span>
-                                </label>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-                        
-                        <div class="filter-group">
-                            <label class="filter-label">Тип товару</label>
-                            <div class="filter-checkboxes">
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="new" name="type" class="filter-checkbox-input">
-                                    <span>Новинки</span>
-                                </label>
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="sale" name="type" class="filter-checkbox-input">
-                                    <span>Акційні</span>
-                                </label>
-                                <label class="filter-checkbox">
-                                    <input type="checkbox" value="top" name="type" class="filter-checkbox-input">
-                                    <span>Хіти продажу</span>
-                                </label>
+                                <input type="number" class="price-input" id="priceMax" placeholder="До {{ max_price|default:10000 }}" min="0">
                             </div>
                         </div>
                         
@@ -289,6 +219,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/catalog.js' %}"></script>
+<script src="{% static 'js/catalog_new.js' %}"></script>
 {% endblock %}
 
