@@ -29,7 +29,11 @@ if product_count == 0:
         print()
     
     print('📥 Запуск initial_import.py...\n')
-    exec(open('initial_import.py').read())
+    if os.path.exists('initial_import.py'):
+        exec(open('initial_import.py').read())
+    else:
+        print('⚠️  Файл initial_import.py не знайдено')
+        print('💡 Імпорт товарів потрібно виконати вручну через management команди\n')
 else:
     print(f'✓ БД вже містить {product_count} товарів')
     print('✓ Пропускаємо імпорт (щоб не витрачати 20+ хвилин)\n')
