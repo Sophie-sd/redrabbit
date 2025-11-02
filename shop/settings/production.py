@@ -169,13 +169,49 @@ LOGGING = {
     },
 }
 
-# Кешування
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
+# Кешування - використовуємо Redis якщо доступний, інакше locmem
+REDIS_URL = os.getenv('REDIS_URL', None)
+
+if REDIS_URL:
+    # Використовуємо Redis для кешування (рекомендовано для production)
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': REDIS_URL,
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                'SOCKET_CONNECT_TIMEOUT': 5,
+                'SOCKET_TIMEOUT': 5,
+                'RETRY_ON_TIMEOUT': True,
+                'MAX_CONNECTIONS': 50,
+                'COMPRESSOR': 'django_redis.compressors.zlib.ZlibCompressor',
+                'PARSER_CLASS': 'redis.connection.HiredisParser',
+            },
+            'KEY_PREFIX': 'intshop',
+            'TIMEOUT': 300,  # 5 хвилин за замовчуванням
+        }
     }
-}
+    
+    # Використовуємо Redis для сесій (опціонально)
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+    SESSION_CACHE_ALIAS = 'default'
+    
+    import logging
+    cache_logger = logging.getLogger('django.core.cache')
+    cache_logger.info(f"✅ Redis cache enabled: {REDIS_URL}")
+else:
+    # Fallback на локальну пам'ять
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'unique-snowflake',
+            'TIMEOUT': 300,
+        }
+    }
+    
+    import logging
+    cache_logger = logging.getLogger('django.core.cache')
+    cache_logger.info("⚠️  Redis not configured, using locmem cache (not recommended for production)")
 
 # Додаткові налаштування для Render
 SECURE_REFERRER_POLICY = 'same-origin'

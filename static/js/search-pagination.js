@@ -86,7 +86,7 @@
    * Завантажує товари для вказаної сторінки
    */
   async function loadPage(page) {
-    if (isLoading || allProductsLoaded) return;
+    if (isLoading) return;
     
     isLoading = true;
     if (searchLoading) searchLoading.style.display = 'block';
@@ -103,22 +103,25 @@
       // Оновлюємо лічильник
       updateResultsCount(data.total_count);
       
+      // Очищаємо сітку якщо це перша сторінка або нова сторінка
+      if (page === 1 || page !== currentPage + 1) {
+        productsGrid.innerHTML = '';
+      }
+      
       // Додаємо товари до сітки
       if (data.products && data.products.length > 0) {
         data.products.forEach(product => {
           const cardHtml = createProductCard(product);
           productsGrid.insertAdjacentHTML('beforeend', cardHtml);
         });
+      } else if (page === 1) {
+        productsGrid.innerHTML = '<div class="no-results">Товарів не знайдено</div>';
       }
       
       // Оновлюємо стан пагінації
       currentPage = data.current_page;
       totalPages = data.total_pages;
-      
-      // Якщо це остання сторінка
-      if (!data.has_next) {
-        allProductsLoaded = true;
-      }
+      allProductsLoaded = !data.has_next;
       
       // Оновлюємо пагінацію
       renderPagination(data);
@@ -126,6 +129,9 @@
     } catch (error) {
       console.error('Error loading search results:', error);
       resultsCount.textContent = 'Помилка завантаження результатів';
+      if (page === 1) {
+        productsGrid.innerHTML = '<div class="error-message">Помилка завантаження товарів. Спробуйте пізніше.</div>';
+      }
     } finally {
       isLoading = false;
       if (searchLoading) searchLoading.style.display = 'none';
@@ -215,55 +221,26 @@
             searchResults.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
           
-          // Очищаємо сітку та завантажуємо нову сторінку
-          const initialCards = productsGrid.querySelectorAll('.product-card');
-          // Залишаємо тільки перші 5 карток (initial load)
-          if (page === 1) {
-            // Для першої сторінки залишаємо початкові 5
-            Array.from(initialCards).slice(5).forEach(card => card.remove());
-            currentPage = 0;
-            allProductsLoaded = false;
-          } else {
-            // Для інших сторінок очищаємо все крім перших 5
-            Array.from(initialCards).slice(5).forEach(card => card.remove());
-            currentPage = 0;
-            allProductsLoaded = false;
-            // Завантажуємо всі сторінки до потрібної
-            loadMultiplePages(page);
-            return;
-          }
-          
+          // Завантажуємо нову сторінку (очищення сітки відбудеться в loadPage)
+          allProductsLoaded = false;
           loadPage(page);
         }
       });
     });
   }
 
-  /**
-   * Завантажує кілька сторінок підряд
-   */
-  async function loadMultiplePages(targetPage) {
-    for (let page = 2; page <= targetPage; page++) {
-      await loadPage(page);
-    }
-  }
 
   /**
-   * Ініціалізація - завантажуємо решту товарів
+   * Ініціалізація
    */
   function init() {
-    // Якщо є початкові товари, показуємо їх кількість
-    if (window.initialCount > 0) {
-      updateResultsCount(window.initialCount);
-    }
-    
-    // Автоматично завантажуємо наступні сторінки
-    setTimeout(() => {
-      loadPage(2); // Завантажуємо другу сторінку (перші 5 вже є)
-    }, 100);
+    // Завантажуємо першу сторінку для отримання загальної кількості
+    loadPage(1);
   }
 
   // Запускаємо ініціалізацію
-  init();
+  if (query && productsGrid) {
+    init();
+  }
 })();
 

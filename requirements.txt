@@ -29,3 +29,7 @@ lxml==6.0.2
 # Cloudinary для зберігання media файлів на production
 cloudinary==1.36.0
 django-cloudinary-storage==0.3.0
+
+# Redis для кешування (опціонально)
+redis==5.0.1
+django-redis==5.4.0
