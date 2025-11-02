@@ -259,9 +259,12 @@ class Product(models.Model):
         return stickers
     
     def get_similar_products(self, limit=4):
-        """Повертає схожі товари з тієї ж категорії"""
+        """Повертає схожі товари з тієї ж основної категорії"""
+        if not self.primary_category:
+            return Product.objects.none()
+        
         return Product.objects.filter(
-            category=self.category,
+            primary_category=self.primary_category,
             is_active=True
         ).exclude(id=self.id).order_by('?')[:limit]
     
