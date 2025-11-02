@@ -39,13 +39,13 @@ class HomeView(TemplateView):
             is_active=True,
             is_sale=True,
             sale_price__isnull=False
-        ).select_related('category').prefetch_related('images').order_by('sort_order', '-created_at')[:20]
+        ).select_related('primary_category').prefetch_related('images').order_by('sort_order', '-created_at')[:20]
         
         # Отримуємо хіти (товари з бейджем ХІТ)
         top_products = Product.objects.filter(
             is_active=True,
             is_top=True
-        ).select_related('category').prefetch_related('images').order_by('sort_order', '-created_at')[:12]
+        ).select_related('primary_category').prefetch_related('images').order_by('sort_order', '-created_at')[:12]
         
         # Бренди (топ-8) - безпечний запит з перевіркою таблиці
         brands = []
@@ -125,9 +125,10 @@ class SearchView(TemplateView):
             products = Product.objects.filter(
                 Q(name__icontains=query) | 
                 Q(description__icontains=query) |
-                Q(category__name__icontains=query),
+                Q(primary_category__name__icontains=query) |
+                Q(categories__name__icontains=query),
                 is_active=True
-            ).select_related('category').prefetch_related('images').distinct()[:5]
+            ).select_related('primary_category').prefetch_related('images', 'categories').distinct()[:5]
             
             context.update({
                 'products': products,
@@ -149,7 +150,7 @@ def search_autocomplete(request):
         products = Product.objects.filter(
             Q(name__icontains=query) | Q(description__icontains=query),
             is_active=True
-        ).select_related('category').prefetch_related('images')[:5]
+        ).select_related('primary_category').prefetch_related('images', 'categories')[:5]
         
         results = []
         for p in products:
@@ -189,7 +190,7 @@ def search_paginated(request):
             # PostgreSQL Full-Text Search - набагато швидший!
             search_vector = SearchVector('name', weight='A') + \
                            SearchVector('description', weight='B') + \
-                           SearchVector('category__name', weight='C')
+                           SearchVector('primary_category__name', weight='C')
             search_query = SearchQuery(query, search_type='websearch')
             
             base_queryset = Product.objects.annotate(
@@ -198,15 +199,16 @@ def search_paginated(request):
             ).filter(
                 search=search_query,
                 is_active=True
-            ).order_by('-rank').select_related('category').prefetch_related('images').distinct()
+            ).order_by('-rank').select_related('primary_category').prefetch_related('images', 'categories').distinct()
         else:
             # SQLite fallback - звичайний пошук (для розробки)
             base_queryset = Product.objects.filter(
                 Q(name__icontains=query) | 
                 Q(description__icontains=query) |
-                Q(category__name__icontains=query),
+                Q(primary_category__name__icontains=query) |
+                Q(categories__name__icontains=query),
                 is_active=True
-            ).select_related('category').prefetch_related('images').distinct()
+            ).select_related('primary_category').prefetch_related('images', 'categories').distinct()
         
         # Загальна кількість
         total_count = base_queryset.count()

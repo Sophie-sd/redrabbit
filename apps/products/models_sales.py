@@ -2,6 +2,7 @@
 Модель для управління акційними пропозиціями
 """
 from django.db import models
+from django.db.models import Q
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.utils import timezone
@@ -61,11 +62,17 @@ class Sale(models.Model):
         products = set(self.products.all())
         
         for category in self.categories.all():
-            category_products = Product.objects.filter(category=category, is_active=True)
+            category_products = Product.objects.filter(
+                Q(primary_category=category) | Q(categories=category),
+                is_active=True
+            ).distinct()
             products.update(category_products)
             
             for child_category in category.get_all_children():
-                child_products = Product.objects.filter(category=child_category, is_active=True)
+                child_products = Product.objects.filter(
+                    Q(primary_category=child_category) | Q(categories=child_category),
+                    is_active=True
+                ).distinct()
                 products.update(child_products)
         
         return list(products)

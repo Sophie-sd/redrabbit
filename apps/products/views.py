@@ -69,4 +69,4 @@ class SaleProductsView(ListView):
             is_sale=True,
             sale_price__isnull=False,
             is_active=True
-        ).select_related('category').prefetch_related('images').order_by('-updated_at')
+        ).select_related('primary_category').prefetch_related('images').order_by('-updated_at')
