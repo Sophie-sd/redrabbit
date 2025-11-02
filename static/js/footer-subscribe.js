@@ -163,3 +163,31 @@ if (!document.getElementById('subscribe-animations')) {
     document.head.appendChild(styleEl);
 }
 
+/**
+ * Обробка кнопки "Інформація" у футері
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    const infoToggle = document.getElementById('footerInfoToggle');
+    const infoDropdown = document.getElementById('footerInfoDropdown');
+    
+    if (infoToggle && infoDropdown) {
+        infoToggle.addEventListener('click', function() {
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            
+            if (isExpanded) {
+                // Закриваємо
+                this.setAttribute('aria-expanded', 'false');
+                infoDropdown.setAttribute('aria-hidden', 'true');
+                infoDropdown.removeAttribute('hidden');
+                infoDropdown.style.maxHeight = '0';
+            } else {
+                // Відкриваємо
+                this.setAttribute('aria-expanded', 'true');
+                infoDropdown.setAttribute('aria-hidden', 'false');
+                infoDropdown.removeAttribute('hidden');
+                infoDropdown.style.maxHeight = infoDropdown.scrollHeight + 'px';
+            }
+        });
+    }
+});
+

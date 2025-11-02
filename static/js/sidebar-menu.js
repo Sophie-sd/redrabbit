@@ -1,159 +1,104 @@
 /**
- * Sidebar Menu - Click-based accordion menu
- * Відкриття/закриття підменю по кліку
- * Працює на всіх пристроях включно з iOS Safari
+ * Sidebar Menu - Правильна логіка кліків
+ * 
+ * ЛОГІКА:
+ * 1. Клік по НАЗВІ категорії → перехід на сторінку (показує ВСІ товари)
+ * 2. Клік по СТРІЛЦІ → розгортання/згортання підменю
+ * 3. Клік по підрозділу → перехід на сторінку підрозділу
+ * 4. Активна категорія автоматично розгорнута
  */
+
 (function() {
     'use strict';
     
-    // Чекаємо поки DOM повністю завантажиться
     function initSidebarMenu() {
-        const menuItems = document.querySelectorAll('.sidebar-menu__item.has-children');
-        
-        if (!menuItems || menuItems.length === 0) {
-            console.log('Sidebar menu items not found');
+        const sidebar = document.querySelector('.sidebar-menu');
+        if (!sidebar) {
             return;
         }
         
-        console.log('Sidebar menu initialized with', menuItems.length, 'items');
+        const itemsWithChildren = sidebar.querySelectorAll('.sidebar-menu__item.has-children');
         
-        // Змінна для відстеження подій (уникнення дублювання)
-        let eventHandled = false;
+        console.log('Sidebar: Знайдено', itemsWithChildren.length, 'категорій з підрозділами');
         
-        menuItems.forEach((item, index) => {
+        itemsWithChildren.forEach((item, index) => {
             const link = item.querySelector('.sidebar-menu__link');
-            const submenu = item.querySelector('.sidebar-menu__submenu');
             const arrow = item.querySelector('.sidebar-menu__arrow');
+            const text = item.querySelector('.sidebar-menu__text');
+            const submenu = item.querySelector('.sidebar-menu__submenu');
             
-            if (!link || !submenu) {
-                console.log('Missing link or submenu for item', index);
+            if (!link || !submenu || !arrow) {
+                console.warn('Sidebar: Не знайдено елементів для категорії', index);
                 return;
             }
             
-            // Функція обробки кліку/тапу
-            function handleToggle(e) {
-                // Якщо подія вже оброблена - ігноруємо дублікати
-                if (e.type === 'click' && eventHandled) {
-                    console.log('Ignoring duplicate click after', e.type);
-                    eventHandled = false;
-                    return;
-                }
-                
-                // Позначаємо що подію оброблено
-                if (e.type === 'mousedown' || e.type === 'touchend') {
-                    eventHandled = true;
-                    setTimeout(() => { eventHandled = false; }, 300);
-                }
-                
+            // ВАЖЛИВО: Блокуємо перехід по всьому link
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+            });
+            
+            // Клік по СТРІЛЦІ → розгортання підменю
+            arrow.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                console.log('Menu item', index, 'clicked via', e.type);
+                console.log('Sidebar: Клік по стрілці категорії', index);
                 
                 const isOpen = item.classList.contains('menu-open');
                 
-                // Закриваємо всі інші підменю
-                menuItems.forEach(otherItem => {
-                    if (otherItem !== item) {
+                // Закриваємо всі інші категорії
+                itemsWithChildren.forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('menu-open')) {
                         closeSubmenu(otherItem);
                     }
                 });
                 
-                // Перемикаємо поточне підменю
+                // Перемикаємо поточну категорію
                 if (isOpen) {
                     closeSubmenu(item);
                 } else {
                     openSubmenu(item);
                 }
+            });
+            
+            // Клік по ТЕКСТУ категорії → перехід на сторінку
+            if (text) {
+                text.style.cursor = 'pointer';
+                text.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    console.log('Sidebar: Перехід на сторінку категорії', link.href);
+                    // Дозволяємо перехід
+                    window.location.href = link.href;
+                });
             }
             
-            // Використовуємо Pointer Events API якщо доступно (сучасний підхід)
-            if (window.PointerEvent) {
-                console.log('Using Pointer Events for item', index);
-                link.addEventListener('pointerdown', handleToggle, false);
-                if (arrow) {
-                    arrow.addEventListener('pointerdown', handleToggle, false);
-                    arrow.style.cursor = 'pointer';
-                }
-            } else {
-                // Fallback для старих браузерів
-                console.log('Using Click/Touch Events for item', index);
-                
-                // Click - основна подія для desktop
-                link.addEventListener('click', handleToggle, false);
-                // Touchend - для мобільних пристроїв
-                link.addEventListener('touchend', handleToggle, false);
-                // Mousedown - запасний варіант для desktop
-                link.addEventListener('mousedown', function(e) {
-                    if (e.button === 0) { // Тільки ліва кнопка миші
-                        handleToggle(e);
-                    }
-                }, false);
-                
-                // Додаємо обробник на стрілку
-                if (arrow) {
-                    arrow.addEventListener('click', handleToggle, false);
-                    arrow.addEventListener('touchend', handleToggle, false);
-                    arrow.addEventListener('mousedown', function(e) {
-                        if (e.button === 0) {
-                            handleToggle(e);
-                        }
-                    }, false);
-                    arrow.style.cursor = 'pointer';
-                }
-            }
-            
-            // Для iOS Safari додаємо cursor: pointer через JavaScript
-            link.style.cursor = 'pointer';
-            
-            // Дозволяємо клік по підкатегоріях (перехід на сторінку)
+            // Підрозділи працюють як звичайні посилання
             const subLinks = submenu.querySelectorAll('.submenu__link');
             subLinks.forEach(subLink => {
                 subLink.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    console.log('Submenu link clicked');
-                    // Дозволяємо перехід на сторінку підкатегорії
+                    console.log('Sidebar: Перехід на підрозділ');
+                    // НЕ блокуємо перехід - працює за замовчуванням
                 });
             });
         });
         
-        // Додатковий метод через делегування подій (запасний варіант)
-        const sidebar = document.querySelector('.sidebar-menu');
-        if (sidebar) {
-            sidebar.addEventListener('click', function(e) {
-                const menuItem = e.target.closest('.sidebar-menu__item.has-children');
-                const submenuLink = e.target.closest('.submenu__link');
-                
-                // Якщо клік по підменю - дозволяємо перехід
-                if (submenuLink) {
-                    console.log('Submenu link via delegation');
-                    return;
-                }
-                
-                // Якщо клік по головному меню з підменю
-                if (menuItem && !submenuLink) {
-                    const link = e.target.closest('.sidebar-menu__link');
-                    if (link && link.parentElement === menuItem) {
-                        console.log('Menu item via delegation');
-                    }
-                }
-            });
-        }
-        
-        // Відкриваємо активну категорію при завантаженні сторінки
-        setTimeout(function() {
-            const activeItem = document.querySelector('.sidebar-menu__item.active.has-children');
-            if (activeItem && !activeItem.classList.contains('info-menu')) {
-                console.log('Opening active menu item');
+        // Автоматично відкриваємо активну категорію при завантаженні
+        setTimeout(() => {
+            const activeItem = sidebar.querySelector('.sidebar-menu__item.active.has-children');
+            if (activeItem) {
+                console.log('Sidebar: Відкриваємо активну категорію');
                 openSubmenu(activeItem);
             }
         }, 100);
         
-        // Закриваємо всі підменю при кліку поза меню
+        // Закриваємо всі підменю при кліку поза sidebar
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.sidebar-menu')) {
-                menuItems.forEach(item => {
-                    closeSubmenu(item);
+                itemsWithChildren.forEach(item => {
+                    if (item.classList.contains('menu-open')) {
+                        closeSubmenu(item);
+                    }
                 });
             }
         });
@@ -192,12 +137,12 @@
             }
         }
         
-        // Оновлюємо max-height при зміні розміру вікна
+        // Оновлюємо maxHeight при зміні розміру вікна
         let resizeTimeout;
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(function() {
-                menuItems.forEach(item => {
+                itemsWithChildren.forEach(item => {
                     if (item.classList.contains('menu-open')) {
                         const submenu = item.querySelector('.sidebar-menu__submenu');
                         if (submenu) {
@@ -209,11 +154,10 @@
         });
     }
     
-    // Ініціалізація при завантаженні DOM
+    // Ініціалізація
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initSidebarMenu);
     } else {
-        // DOM вже завантажений
         initSidebarMenu();
     }
     

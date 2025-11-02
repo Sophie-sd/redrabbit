@@ -1,6 +1,8 @@
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Prefetch
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 from .models import Product, Category
 
 
@@ -11,17 +13,41 @@ class CategoryView(ListView):
     paginate_by = 12
     
     def get_queryset(self):
-        self.category = get_object_or_404(Category, slug=self.kwargs['slug'])
+        self.category = get_object_or_404(
+            Category.objects.select_related('parent').prefetch_related('children'),
+            slug=self.kwargs['slug']
+        )
         
-        # Якщо є підкатегорії - показуємо їх замість товарів
-        if self.category.children.filter(is_active=True).exists():
-            return Product.objects.none()
+        # Отримуємо всі активні підкатегорії
+        child_categories = self.category.children.filter(is_active=True)
         
-        # Товари з цієї категорії (враховуємо ManyToMany)
-        return Product.objects.filter(
-            Q(categories=self.category) | Q(primary_category=self.category),
+        # Базовий queryset з оптимізацією
+        base_queryset = Product.objects.select_related(
+            'primary_category'
+        ).prefetch_related(
+            'images',
+            'categories'
+        )
+        
+        # Якщо є підкатегорії - показуємо товари з УСІХ підкатегорій + з самої категорії
+        if child_categories.exists():
+            # Отримуємо список ID підкатегорій для оптимізації
+            child_ids = list(child_categories.values_list('id', flat=True))
+            
+            # Товари з батьківської категорії ТА з усіх дочірніх категорій
+            return base_queryset.filter(
+                Q(categories__id=self.category.id) | 
+                Q(primary_category__id=self.category.id) |
+                Q(categories__id__in=child_ids) | 
+                Q(primary_category__id__in=child_ids),
+                is_active=True
+            ).distinct()
+        
+        # Товари тільки з цієї категорії (якщо немає підкатегорій)
+        return base_queryset.filter(
+            Q(categories__id=self.category.id) | Q(primary_category__id=self.category.id),
             is_active=True
-        ).distinct().select_related('primary_category').prefetch_related('images', 'categories')
+        ).distinct()
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
