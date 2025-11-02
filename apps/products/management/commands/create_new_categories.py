@@ -16,6 +16,7 @@ class Command(BaseCommand):
         categories_structure = [
             {
                 'name': 'Секс-іграшки',
+                'slug': 'sex-toys',
                 'icon': '🎀',
                 'type': 'general',
                 'children': [
@@ -36,6 +37,7 @@ class Command(BaseCommand):
             },
             {
                 'name': 'Білизна, костюми',
+                'slug': 'underwear-costumes',
                 'icon': '👙',
                 'type': 'general',
                 'children': [
@@ -51,6 +53,7 @@ class Command(BaseCommand):
             },
             {
                 'name': 'БДСМ, Фетиш',
+                'slug': 'bdsm-fetish',
                 'icon': '🔗',
                 'type': 'general',
                 'children': [
@@ -65,6 +68,7 @@ class Command(BaseCommand):
             },
             {
                 'name': 'Прелюдія',
+                'slug': 'foreplay',
                 'icon': '📅',
                 'type': 'general',
                 'children': [
@@ -85,6 +89,7 @@ class Command(BaseCommand):
             },
             {
                 'name': 'Лубриканти',
+                'slug': 'lubricants',
                 'icon': '🧴',
                 'type': 'general',
                 'children': [
@@ -97,6 +102,7 @@ class Command(BaseCommand):
             },
             {
                 'name': 'Сексуальне здоров\'я',
+                'slug': 'sexual-health',
                 'icon': '🩺',
                 'type': 'general',
                 'children': [
@@ -109,6 +115,7 @@ class Command(BaseCommand):
             },
             {
                 'name': 'Жінкам',
+                'slug': 'for-women',
                 'icon': '♀',
                 'type': 'women',
                 'children': [
@@ -128,6 +135,7 @@ class Command(BaseCommand):
             },
             {
                 'name': 'Чоловікам',
+                'slug': 'for-men',
                 'icon': '♂',
                 'type': 'men',
                 'children': [
@@ -142,6 +150,7 @@ class Command(BaseCommand):
             },
             {
                 'name': 'Для двох',
+                'slug': 'for-couples',
                 'icon': '💑',
                 'type': 'couple',
                 'children': [
@@ -162,7 +171,7 @@ class Command(BaseCommand):
         
         for cat_data in categories_structure:
             # Створюємо головну категорію
-            parent_slug = slugify(cat_data['name'])
+            parent_slug = cat_data.get('slug', slugify(cat_data['name']))
             parent, created = Category.objects.get_or_create(
                 slug=parent_slug,
                 defaults={
