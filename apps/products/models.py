@@ -179,7 +179,7 @@ class Product(models.Model):
         verbose_name_plural = 'Товари'
         ordering = ['-created_at']
         indexes = [
-            models.Index(fields=['category', 'is_active']),
+            models.Index(fields=['primary_category', 'is_active']),
             models.Index(fields=['is_active', 'is_sale', 'is_new', 'is_top']),
             models.Index(fields=['sku']),
             models.Index(fields=['slug']),
