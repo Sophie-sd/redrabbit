@@ -75,23 +75,24 @@
 .sidebar-menu__arrow {
   font-size: 18px;
   color: var(--color-cta-primary);
-  transition: transform var(--transition-fast, 0.2s);
+  transition: transform var(--transition-normal, 0.3s) ease;
+  transform-origin: center;
+  display: inline-block;
 }
 
-.sidebar-menu__item.has-children:hover .sidebar-menu__arrow {
-  transform: translateX(4px);
+.sidebar-menu__item.menu-open .sidebar-menu__arrow {
+  transform: rotate(90deg);
 }
 
 .sidebar-menu__submenu {
   max-height: 0;
   overflow: hidden;
-  transition: max-height var(--transition-normal, 0.3s);
-  margin-top: var(--spacing-xs, 8px);
+  transition: max-height var(--transition-normal, 0.3s) ease;
+  margin-top: 0;
 }
 
-.sidebar-menu__item:hover .sidebar-menu__submenu,
-.sidebar-menu__item.active .sidebar-menu__submenu {
-  max-height: 600px;
+.sidebar-menu__item.menu-open .sidebar-menu__submenu {
+  margin-top: var(--spacing-xs, 8px);
 }
 
 .submenu__list {
