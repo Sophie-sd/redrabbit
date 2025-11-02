@@ -1,8 +1,7 @@
 """
-Маппить товари зі старих категорій постачальника на нові категорії
+Розподіляє товари по новим категоріям на основі старих категорій та ключових слів
 """
 from django.core.management.base import BaseCommand
-from django.db.models import Count
 from apps.products.models import Category, Product
 
 
@@ -12,134 +11,153 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS('Маппінг товарів на нові категорії...'))
         
-        # Маппінг: старий slug -> нові slugs (можна кілька категорій)
-        # Формат: {'старий-slug': ['новий-slug-1', 'новий-slug-2']}
-        CATEGORY_MAPPING = {
-            # Жінкам - Вібратори
-            'vibrators': ['zinkam-vibratori', 'seks-igraski-vibratori'],
-            'rabbits': ['zinkam-kroliki'],
-            'clitoral-vibrators': ['zinkam-vibratori', 'seks-igraski-vibratori'],
-            'g-spot': ['zinkam-zona-g'],
+        # Маппінг: ключові слова в назві старої категорії -> slug нової категорії
+        mapping_rules = {
+            # Для Неї
+            'Вібратори': 'for-women-vibratory',
+            'Віброкулі': 'for-women-vibrokuli',
+            'Кролики': 'for-women-krolyky',
+            'We-Vibe': 'for-women-we-vibe',
+            'Вакуум': 'for-women-vakuumni',
+            'Зона G': 'for-women-zona-g',
+            'G-spot': 'for-women-zona-g',
+            'Клітор': 'for-women-vaginalno-klitoralni',
+            'Фалоімітатор': 'for-women-faloimitatory-vibro',
+            'Реалістичн': 'for-women-realistychni',
+            'Віброяйц': 'for-women-vibroyaycya',
+            'Hi-tech': 'for-women-hi-tech',
+            'Пульсатор': 'for-women-pulsatory',
             
-            # Чоловікам
-            'masturbators': ['colovikam-vagini-realisticni-masturbatori', 'seks-igraski-masturbatori-i-vagini'],
-            'prostate-massagers': ['colovikam-masazeri-prostati-z-vibracieu', 'seksualne-zdorovya-masazeri-prostati'],
-            'pumps': ['colovikam-vakuumni-pompi', 'seksualne-zdorovya-vakuumni-pompi-gidropompi'],
+            # Для Нього
+            'Вагін': 'for-men-vaginy-masturbatory',
+            'Мастурбатор': 'for-men-vaginy-masturbatory',
+            'Покет': 'for-men-poket-masturbatory',
+            'Простат': 'for-men-massage-prostaty',
+            'Помп': 'for-men-vakuumni-pompy',
+            'Гідропомп': 'for-men-gidropompy',
+            'Екстендер': 'for-men-ekstendery',
             
-            # Для пар
-            'couple-toys': ['dla-dvox-vibratori', 'dla-dvox-na-podarunok'],
-            'strap-ons': ['dla-dvox-straponi', 'seks-igraski-straponi'],
-            
-            # Білизна
-            'lingerie': ['bilizna-kostumi-komplekti'],
-            'costumes': ['bilizna-kostumi-rolovi-kostumi'],
-            'bodystockings': ['bilizna-kostumi-eroticni-bodistokinci-i-kostumi-sitka'],
-            
-            # БДСМ
-            'bdsm': ['bdsm-fetis-nabori-igrasok'],
-            'restraints': ['bdsm-fetis-nasijniki-povidci'],
-            'whips': ['bdsm-fetis-batogi-steki-flogeri-laskalni'],
+            # Для Пар
+            'Страпон': 'for-couples-strapony',
+            'Насадк': 'for-couples-nasadky-kilcya',
+            'Кільц': 'for-couples-nasadky-kilcya',
+            'Смарт': 'for-couples-smart-toys',
             
             # Лубриканти
-            'lubricants-water': ['lubrikanti-vagina гні'],
-            'lubricants-silicone': ['lubrikanti-analni'],
-            'lubricants-anal': ['lubrikanti-analni'],
-            'lubricants-oral': ['lubrikanti-oralni-istivni'],
+            'Лубрикант': 'lubricants',
+            'Змазк': 'lubricants',
+            'Гель': 'lubricants',
             
             # Прелюдія
-            'massage-oils': ['preludia-klasicni-masla-na-maslianij-osnovi'],
-            'massage-candles': ['preludia-masazni-svicki'],
-            'arousal-gels': ['preludia-ridkij-vibrator'],
+            'Стимулятор клітор': 'foreplay-stymulator-klitor',
+            'Рідкий вібратор': 'foreplay-ridkyy-vibrator',
+            'Пролонгатор': 'foreplay-prolongatory',
+            'Феромон': 'foreplay-kosmetyka-feromony',
+            'Оральн': 'foreplay-oralni-lasky',
+            'Стимулятор G': 'foreplay-stymulator-g',
+            'Стимулятор пеніс': 'foreplay-stymulator-penis',
+            'Свічк': 'foreplay-masazhni-svichky',
+            'Масло': 'foreplay-klasychni-masla',
+            'Пінк': 'foreplay-masazhni-pinky',
+            'Сосків': 'foreplay-stymulator-sosky',
+            'Звужу': 'foreplay-zvuzhuyuchi',
+            'Гігієн': 'foreplay-intymna-gigiena',
+            
+            # Білизна
+            'Білизн': 'underwear-costumes',
+            'Комплект': 'underwear-costumes-komplekty',
+            'Боді': 'underwear-costumes-bodi',
+            'Корсет': 'underwear-costumes-korsety',
+            'Пеньюар': 'underwear-costumes-penyuary-sorochky',
+            'Сорочк': 'underwear-costumes-penyuary-sorochky',
+            'Бодістокінг': 'underwear-costumes-erotychni-bodystocking',
+            'Лаков': 'underwear-costumes-lakovana-bilyzna',
+            'Гартер': 'underwear-costumes-gartery-chokery',
+            'Чокер': 'underwear-costumes-gartery-chokery',
+            'Портупе': 'underwear-costumes-gartery-chokery',
+            'Рольов': 'underwear-costumes-rolovi-kostyumy',
+            'Костюм': 'underwear-costumes-rolovi-kostyumy',
+            
+            # BDSM
+            'БДСМ': 'bdsm-fetish',
+            'BDSM': 'bdsm-fetish',
+            'Маск': 'bdsm-fetish-masky-povyazky',
+            'Пов\'язк': 'bdsm-fetish-masky-povyazky',
+            'Кляп': 'bdsm-fetish-klyapy',
+            'Нашийник': 'bdsm-fetish-nashynyky-povidci',
+            'Повід': 'bdsm-fetish-nashynyky-povidci',
+            'Батіг': 'bdsm-fetish-batogy-steki',
+            'Стек': 'bdsm-fetish-batogy-steki',
+            'Флогер': 'bdsm-fetish-batogy-steki',
+            'Ляскалк': 'bdsm-fetish-batogy-steki',
+            'Затискач': 'bdsm-fetish-zatyskachi',
+            'Свічк BDSM': 'bdsm-fetish-svichky-bdsm',
             
             # Сексуальне здоров'я
-            'kegel': ['seksualne-zdorovya-trenazeri-kegelia'],
-            'penis-pumps': ['seksualne-zdorovya-vakuumni-pompi-gidropompi'],
-            'extenders': ['seksualne-zdorovya-ekstenderi-zbilsenna-clena'],
+            'Кегел': 'sexual-health-trenazhery-kegelya',
+            'Вагінальн кульк': 'sexual-health-vaginalni-kulky',
         }
         
-        # Кеш категорій
-        categories_cache = {cat.slug: cat for cat in Category.objects.all()}
-        
-        updated_count = 0
-        error_count = 0
-        
-        # Обробляємо всі товари
-        products = Product.objects.all().prefetch_related('categories')
+        # Отримуємо всі товари
+        products = Product.objects.select_related('primary_category').prefetch_related('categories').all()
         total = products.count()
+        updated = 0
         
-        self.stdout.write(f'Всього товарів: {total}')
+        self.stdout.write(f'Всього товарів: {total}\n')
         
-        for idx, product in enumerate(products, 1):
-            try:
-                # Спробуємо знайти primary_category товару
-                old_primary = product.primary_category
+        for product in products:
+            if not product.primary_category:
+                continue
                 
-                if not old_primary or not old_primary.slug:
-                    continue
-                
-                old_slug = old_primary.slug
-                
-                # Шукаємо маппінг для старої категорії
-                new_slugs = CATEGORY_MAPPING.get(old_slug, [])
-                
-                # Якщо немає точного маппінгу, пробуємо по ключових словах
-                if not new_slugs:
-                    new_slugs = self._find_by_keywords(old_slug, old_primary.name)
-                
-                if new_slugs:
-                    # Додаємо товар до нових категорій
-                    new_categories = []
-                    for new_slug in new_slugs:
-                        if new_slug in categories_cache:
-                            new_categories.append(categories_cache[new_slug])
-                    
-                    if new_categories:
-                        # Очищаємо старі категорії
-                        product.categories.clear()
-                        
-                        # Додаємо нові
-                        product.categories.add(*new_categories)
-                        
-                        # Встановлюємо primary_category (перша, найбільш спільна)
-                        product.primary_category = new_categories[0]
-                        product.save(update_fields=['primary_category'])
-                        
-                        updated_count += 1
-                        
-                        if idx % 100 == 0:
-                            self.stdout.write(f'  Оброблено: {idx}/{total}')
+            old_category_name = product.primary_category.name
+            matched = False
             
-            except Exception as e:
-                error_count += 1
-                self.stdout.write(self.style.ERROR(f'  Помилка для товару {product.id}: {e}'))
+            # Шукаємо відповідність по ключовим словам
+            for keyword, new_slug in mapping_rules.items():
+                if keyword.lower() in old_category_name.lower():
+                    try:
+                        new_category = Category.objects.get(slug=new_slug)
+                        
+                        # Додаємо до ManyToMany categories якщо ще не додано
+                        if not product.categories.filter(id=new_category.id).exists():
+                            product.categories.add(new_category)
+                            updated += 1
+                            matched = True
+                            
+                            if updated % 100 == 0:
+                                self.stdout.write(f'  Оброблено: {updated} товарів...')
+                        
+                        break  # Знайшли відповідність, виходимо
+                        
+                    except Category.DoesNotExist:
+                        continue
+            
+            # Якщо не знайшли відповідність, додаємо до загальної категорії
+            if not matched and not product.categories.exists():
+                # Визначаємо загальну категорію за типом
+                if 'вібратор' in old_category_name.lower() or 'для жінок' in old_category_name.lower():
+                    try:
+                        general_cat = Category.objects.get(slug='for-women')
+                        product.categories.add(general_cat)
+                        updated += 1
+                    except Category.DoesNotExist:
+                        pass
+                        
+                elif 'для чоловік' in old_category_name.lower() or 'мастурбатор' in old_category_name.lower():
+                    try:
+                        general_cat = Category.objects.get(slug='for-men')
+                        product.categories.add(general_cat)
+                        updated += 1
+                    except Category.DoesNotExist:
+                        pass
+                        
+                elif 'для пар' in old_category_name.lower():
+                    try:
+                        general_cat = Category.objects.get(slug='for-couples')
+                        product.categories.add(general_cat)
+                        updated += 1
+                    except Category.DoesNotExist:
+                        pass
         
         self.stdout.write(self.style.SUCCESS(f'\n✓ Завершено!'))
-        self.stdout.write(f'  Оновлено товарів: {updated_count}')
-        if error_count > 0:
-            self.stdout.write(self.style.WARNING(f'  Помилок: {error_count}'))
-    
-    def _find_by_keywords(self, old_slug, old_name):
-        """Пошук нових категорій по ключових словах"""
-        keywords_map = {
-            'vibr': ['zinkam-vibratori'],
-            'rabbit': ['zinkam-kroliki'],
-            'masturb': ['colovikam-vagini-realisticni-masturbatori'],
-            'prostat': ['colovikam-masazeri-prostati-z-vibracieu'],
-            'pump': ['colovikam-vakuumni-pompi'],
-            'strap': ['dla-dvox-straponi'],
-            'lingerie': ['bilizna-kostumi-komplekti'],
-            'costume': ['bilizna-kostumi-rolovi-kostumi'],
-            'bdsm': ['bdsm-fetis-nabori-igrasok'],
-            'lubric': ['lubrikanti-vaginalni'],
-            'massage': ['preludia-klasicni-masla-na-maslianij-osnovi'],
-            'kegel': ['seksualne-zdorovya-trenazeri-kegelia'],
-        }
-        
-        old_text = f"{old_slug} {old_name}".lower()
-        
-        for keyword, slugs in keywords_map.items():
-            if keyword in old_text:
-                return slugs
-        
-        return []
-
+        self.stdout.write(f'  Оновлено товарів: {updated}')
