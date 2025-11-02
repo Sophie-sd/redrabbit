@@ -44,6 +44,11 @@
   margin-bottom: var(--spacing-xs, 8px);
 }
 
+.sidebar-menu__item.has-children > .sidebar-menu__link {
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
 .sidebar-menu__link {
   display: flex;
   align-items: center;
@@ -54,6 +59,10 @@
   border-radius: var(--radius-md, 8px);
   transition: all var(--transition-fast, 0.2s);
   font-size: var(--font-size-base, 16px);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .sidebar-menu__link:hover {
@@ -78,6 +87,13 @@
   transition: transform var(--transition-normal, 0.3s) ease;
   transform-origin: center;
   display: inline-block;
+  cursor: pointer;
+  padding: 4px;
+  margin: -4px;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .sidebar-menu__item.menu-open .sidebar-menu__arrow {
