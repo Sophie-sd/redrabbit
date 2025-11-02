@@ -9,11 +9,19 @@ def base_context(request):
     """
     Додає базовий контекст до всіх шаблонів
     """
+    # Показуємо тільки НОВІ категорії за slug'ами
+    new_category_slugs = [
+        'for-women', 'for-men', 'for-couples', 
+        'lubricants', 'foreplay', 'underwear-costumes', 
+        'bdsm-fetish', 'sexual-health'
+    ]
+    
     context = {
         'main_categories': Category.objects.filter(
             parent=None, 
-            is_active=True
-        ).exclude(icon='').order_by('sort_order', 'name'),
+            is_active=True,
+            slug__in=new_category_slugs
+        ).order_by('sort_order', 'name'),
         'site_name': 'redrabbit',
         'site_phone': '+38 (093) 700-88-06',
         'site_email': 'redrabbit.store001@gmail.com',
