@@ -17,15 +17,6 @@
   align-self: flex-start;
 }
 
-@media (min-width: 992px) {
-  .home-catalog-sidebar {
-    position: sticky;
-    top: 110px;
-    z-index: 50;
-    height: fit-content;
-  }
-}
-
 .home-content {
   min-width: 0;
 }
