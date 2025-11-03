@@ -53,9 +53,8 @@ class HomeView(TemplateView):
         
         # Отримуємо схвалені відгуки
         reviews = ProductReview.objects.filter(
-            is_approved=True,
-            product__is_active=True
-        ).select_related('product__primary_category').prefetch_related('product__images').order_by('-created_at')[:20]
+            is_approved=True
+        ).select_related('product').prefetch_related('product__images').order_by('-created_at')[:10]
         
         context.update({
             'banners': banners,

@@ -174,13 +174,11 @@
 </div>  <!-- /.home-main-layout -->
 
 <!-- Reviews Section -->
-{% if reviews %}
 <section class="reviews-section" aria-label="Відгуки користувачів">
     <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Відгуки користувачів</h2>
-        </div>
+        <h2 class="section-title">Відгуки користувачів</h2>
         
+        {% if reviews %}
         <div class="reviews-slider-container">
             <button class="reviews-nav-btn reviews-prev-btn" aria-label="Попередні відгуки">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -191,49 +189,27 @@
             <div class="reviews-slider" id="reviewsSlider">
                 {% for review in reviews %}
                 <div class="review-card">
-                    <div class="review-product-info">
-                        <div class="review-product-image">
-                            {% with main_image=review.product.images.all|first %}
-                                {% if main_image %}
-                                    <img src="{{ main_image.get_image_url }}" alt="{{ review.product.name }}" loading="lazy">
-                                {% endif %}
-                            {% endwith %}
-                        </div>
-                        <div class="review-product-details">
-                            <h3 class="review-product-name">{{ review.product.name }}</h3>
-                            {% if review.category_badge %}
-                                <span class="review-category-badge">{{ review.category_badge }}</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                    <div class="review-text">
-                        <p>{{ review.text }}</p>
-                        <button class="review-read-more" aria-label="Читати більше">Більше...</button>
-                    </div>
-                    
-                    <div class="review-footer">
-                        <div class="review-author">
-                            <div class="review-author-avatar">
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                                </svg>
-                            </div>
-                            <span class="review-author-name">{{ review.author_name }}</span>
-                        </div>
-                        <div class="review-meta">
+                    <div class="review-header">
+                        {% with main_image=review.product.images.all.0 %}
+                        <img src="{% if main_image %}{{ main_image.get_image_url }}{% else %}{% static 'images/placeholder-product.png' %}{% endif %}" 
+                             alt="{{ review.product.name }}" 
+                             class="review-product-image"
+                             loading="lazy">
+                        {% endwith %}
+                        <div class="review-author-info">
+                            <div class="review-author-name">{{ review.author_name }}</div>
                             <div class="review-rating">
                                 {% for i in "12345" %}
-                                    {% if forloop.counter <= review.rating %}
-                                        <span class="star star-filled">⭐</span>
-                                    {% else %}
-                                        <span class="star star-empty">☆</span>
-                                    {% endif %}
+                                    <span class="star {% if forloop.counter > review.rating %}empty{% endif %}">★</span>
                                 {% endfor %}
                             </div>
-                            <span class="review-date">{{ review.created_at|date:"d.m.Y" }}</span>
                         </div>
+                        {% if review.category_badge %}
+                        <span class="review-category-badge">{{ review.category_badge }}</span>
+                        {% endif %}
                     </div>
+                    <div class="review-text">{{ review.text }}</div>
+                    <div class="review-date">{{ review.created_at|date:"d.m.Y" }}</div>
                 </div>
                 {% endfor %}
             </div>
@@ -244,10 +220,9 @@
                 </svg>
             </button>
         </div>
+        {% endif %}
     </div>
 </section>
-{% endif %}
-
 {% endblock %}
 
 {% block extra_js %}

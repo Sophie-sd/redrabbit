@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.utils import timezone
 import csv
-from .models import Category, Product, TopProduct, ProductReview
+from .models import Category, Product, TopProduct
 from .models_sales import Sale
 
 
@@ -354,60 +354,6 @@ class TopProductAdmin(admin.ModelAdmin):
             existing_ids = TopProduct.objects.values_list('product_id', flat=True)
             kwargs['queryset'] = Product.objects.filter(is_active=True).exclude(id__in=existing_ids)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
-    
-    def get_queryset(self, request):
-        return super().get_queryset(request).select_related('product').prefetch_related('product__images')
-
-
-@admin.register(ProductReview)
-class ProductReviewAdmin(admin.ModelAdmin):
-    list_display = ['get_product_image', 'get_product_name', 'author_name', 'get_rating_display', 'category_badge', 'is_approved', 'created_at']
-    list_display_links = ['get_product_image', 'get_product_name']
-    list_filter = ['is_approved', 'rating', 'created_at']
-    search_fields = ['product__name', 'author_name', 'text']
-    list_editable = ['is_approved']
-    ordering = ['-created_at']
-    
-    fieldsets = (
-        ('Товар та автор', {
-            'fields': ('product', 'author_name')
-        }),
-        ('Відгук', {
-            'fields': ('rating', 'text', 'category_badge')
-        }),
-        ('Модерація', {
-            'fields': ('is_approved',)
-        }),
-    )
-    
-    actions = ['approve_reviews', 'reject_reviews']
-    
-    def get_product_image(self, obj):
-        main_image = obj.product.images.filter(is_main=True).first() or obj.product.images.first()
-        if main_image:
-            return format_html('<img src="{}" class="admin-thumbnail-small" />', main_image.get_image_url())
-        return format_html('<div class="admin-icon-placeholder">📦</div>')
-    get_product_image.short_description = 'Фото'
-    
-    def get_product_name(self, obj):
-        return obj.product.name
-    get_product_name.short_description = 'Товар'
-    get_product_name.admin_order_field = 'product__name'
-    
-    def get_rating_display(self, obj):
-        stars = '⭐' * obj.rating
-        return format_html('<span style="font-size: 16px;">{}</span>', stars)
-    get_rating_display.short_description = 'Рейтинг'
-    
-    def approve_reviews(self, request, queryset):
-        updated = queryset.update(is_approved=True)
-        self.message_user(request, f"Схвалено {updated} відгуків", messages.SUCCESS)
-    approve_reviews.short_description = "✓ Схвалити"
-    
-    def reject_reviews(self, request, queryset):
-        updated = queryset.update(is_approved=False)
-        self.message_user(request, f"Відхилено {updated} відгуків", messages.WARNING)
-    reject_reviews.short_description = "✗ Відхилити"
     
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('product').prefetch_related('product__images')
