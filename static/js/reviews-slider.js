@@ -7,8 +7,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (!prevBtn || !nextBtn) return;
 
-    const cardWidth = 350 + 24;
-    const scrollAmount = cardWidth * 2;
+    const cardWidth = 380 + 24;
+    
+    function getScrollAmount() {
+        return window.innerWidth <= 768 ? cardWidth : cardWidth * 2;
+    }
 
     function updateButtons() {
         const scrollLeft = slider.scrollLeft;
@@ -20,14 +23,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     prevBtn.addEventListener('click', () => {
         slider.scrollBy({
-            left: -scrollAmount,
+            left: -getScrollAmount(),
             behavior: 'smooth'
         });
     });
 
     nextBtn.addEventListener('click', () => {
         slider.scrollBy({
-            left: scrollAmount,
+            left: getScrollAmount(),
             behavior: 'smooth'
         });
     });
@@ -37,4 +40,21 @@ document.addEventListener('DOMContentLoaded', function() {
     updateButtons();
 
     window.addEventListener('resize', updateButtons);
+
+    document.querySelectorAll('.review-read-more').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const textElement = this.previousElementSibling;
+            
+            if (textElement.classList.contains('collapsed')) {
+                textElement.classList.remove('collapsed');
+                textElement.classList.add('expanded');
+                this.textContent = 'Згорнути ↑';
+            } else {
+                textElement.classList.remove('expanded');
+                textElement.classList.add('collapsed');
+                this.textContent = 'Читати далі →';
+            }
+        });
+    });
 });

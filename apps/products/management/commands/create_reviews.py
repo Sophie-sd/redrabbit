@@ -97,7 +97,13 @@ class Command(BaseCommand):
         created_count = 0
 
         for review_data in reviews_data:
-            product = random.choice(active_products)
+            product = Product.objects.filter(
+                name__icontains=review_data['product_name'].split()[0],
+                is_active=True
+            ).first()
+            
+            if not product:
+                product = random.choice(active_products)
             
             ProductReview.objects.create(
                 product=product,

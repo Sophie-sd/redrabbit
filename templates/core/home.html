@@ -208,7 +208,8 @@
                         <span class="review-category-badge">{{ review.category_badge }}</span>
                         {% endif %}
                     </div>
-                    <div class="review-text">{{ review.text }}</div>
+                    <div class="review-text collapsed" data-full-text="{{ review.text }}">{{ review.text }}</div>
+                    <button class="review-read-more">Читати далі →</button>
                     <div class="review-date">{{ review.created_at|date:"d.m.Y" }}</div>
                 </div>
                 {% endfor %}

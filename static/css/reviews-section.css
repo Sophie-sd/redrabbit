@@ -34,7 +34,7 @@
 }
 
 .review-card {
-    flex: 0 0 350px;
+    flex: 0 0 380px;
     background: var(--white);
     border-radius: 16px;
     padding: 24px;
@@ -43,6 +43,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    height: 280px;
 }
 
 .review-card:hover {
@@ -106,6 +107,42 @@
     line-height: 1.6;
     font-size: 14px;
     flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.review-text.collapsed {
+    max-height: 60px;
+}
+
+.review-text.collapsed::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: linear-gradient(transparent, var(--white));
+}
+
+.review-text.expanded {
+    max-height: none;
+}
+
+.review-read-more {
+    background: none;
+    border: none;
+    color: #ff4444;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    text-align: left;
+    transition: opacity 0.3s ease;
+}
+
+.review-read-more:hover {
+    opacity: 0.8;
 }
 
 .review-date {
@@ -192,9 +229,10 @@
     }
 
     .review-card {
-        flex: 0 0 280px;
+        flex: 0 0 300px;
         padding: 16px;
         gap: 12px;
+        height: 260px;
     }
 
     .reviews-slider {
@@ -222,6 +260,10 @@
 
     .review-text {
         font-size: 13px;
+    }
+    
+    .review-text.collapsed {
+        max-height: 55px;
     }
 
     .reviews-nav-btn {
