@@ -234,8 +234,6 @@
     .review-card {
         flex: 0 0 calc(100vw - 100px);
         padding: 16px;
-        gap: 10px;
-        min-height: 260px;
     }
     
     .review-card.expanded {
