@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from django.http import JsonResponse
 from django.db.models import Q
 from django.db import connection
-from apps.products.models import Product, Category
+from apps.products.models import Product, Category, ProductReview
 from .models import Banner
 
 # PostgreSQL Full-Text Search (якщо доступний)
@@ -51,11 +51,17 @@ class HomeView(TemplateView):
         
         top_products = [entry.product for entry in top_product_entries]
         
+        # Отримуємо схвалені відгуки
+        reviews = ProductReview.objects.filter(
+            is_approved=True,
+            product__is_active=True
+        ).select_related('product__primary_category').prefetch_related('product__images').order_by('-created_at')[:20]
         
         context.update({
             'banners': banners,
             'sale_products': sale_products,
             'top_products': top_products,
+            'reviews': reviews,
             'categories': Category.objects.filter(parent=None, is_active=True).order_by('sort_order', 'name'),
         })
         return context

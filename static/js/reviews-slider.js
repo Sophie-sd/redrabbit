@@ -1,38 +1,51 @@
 (function() {
   const slider = document.getElementById('reviewsSlider');
-  const prevBtn = document.querySelector('.reviews-slider-container .slider-prev-btn');
-  const nextBtn = document.querySelector('.reviews-slider-container .slider-next-btn');
+  if (!slider) return;
   
-  if (!slider || !prevBtn || !nextBtn) return;
+  const prevBtn = document.querySelector('.reviews-prev-btn');
+  const nextBtn = document.querySelector('.reviews-next-btn');
   
-  const scrollAmount = 350;
+  if (!prevBtn || !nextBtn) return;
+  
+  const getScrollAmount = () => {
+    const cardWidth = slider.querySelector('.review-card')?.offsetWidth || 350;
+    const gap = 24;
+    return cardWidth + gap;
+  };
   
   prevBtn.addEventListener('click', function() {
     slider.scrollBy({
-      left: -scrollAmount,
+      left: -getScrollAmount(),
       behavior: 'smooth'
     });
   });
   
   nextBtn.addEventListener('click', function() {
     slider.scrollBy({
-      left: scrollAmount,
+      left: getScrollAmount(),
       behavior: 'smooth'
     });
   });
   
-  // Управління видимістю кнопок
   function updateButtonsVisibility() {
     const isAtStart = slider.scrollLeft === 0;
     const isAtEnd = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 1;
     
-    prevBtn.style.opacity = isAtStart ? '0.3' : '1';
-    prevBtn.style.cursor = isAtStart ? 'default' : 'pointer';
-    
-    nextBtn.style.opacity = isAtEnd ? '0.3' : '1';
-    nextBtn.style.cursor = isAtEnd ? 'default' : 'pointer';
+    prevBtn.disabled = isAtStart;
+    nextBtn.disabled = isAtEnd;
   }
   
   slider.addEventListener('scroll', updateButtonsVisibility);
+  window.addEventListener('resize', updateButtonsVisibility);
   updateButtonsVisibility();
+  
+  document.querySelectorAll('.review-read-more').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const textEl = this.previousElementSibling;
+      if (textEl) {
+        textEl.style.webkitLineClamp = textEl.style.webkitLineClamp === 'unset' ? '4' : 'unset';
+        this.textContent = textEl.style.webkitLineClamp === 'unset' ? 'Згорнути' : 'Більше...';
+      }
+    });
+  });
 })();
