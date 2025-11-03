@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.utils import timezone
 import csv
-from .models import Category, Product, ProductReview, Brand
+from .models import Category, Product, TopProduct
 from .models_sales import Sale
 
 
@@ -197,43 +197,6 @@ class ProductAdmin(admin.ModelAdmin):
         return False
 
 
-@admin.register(ProductReview)
-class ProductReviewAdmin(admin.ModelAdmin):
-    list_display = ['product', 'author_name', 'rating', 'is_approved', 'created_at']
-    list_display_links = ['product', 'author_name']
-    list_filter = ['is_approved', 'rating', 'created_at']
-    list_editable = ['is_approved']
-    search_fields = ['product__name', 'author_name', 'text']
-    date_hierarchy = 'created_at'
-    list_per_page = 50
-    
-    fieldsets = (
-        ('Відгук', {
-            'fields': ('product', 'author_name', 'rating', 'text', 'category_badge')
-        }),
-        ('Модерація', {
-            'fields': ('is_approved',)
-        }),
-    )
-    
-    readonly_fields = ['created_at']
-    
-    actions = ['approve_reviews', 'disapprove_reviews']
-    
-    def approve_reviews(self, request, queryset):
-        updated = queryset.update(is_approved=True)
-        self.message_user(request, f'Схвалено {updated} відгуків', messages.SUCCESS)
-    approve_reviews.short_description = '✓ Схвалити відгуки'
-    
-    def disapprove_reviews(self, request, queryset):
-        updated = queryset.update(is_approved=False)
-        self.message_user(request, f'Відхилено {updated} відгуків', messages.WARNING)
-    disapprove_reviews.short_description = '✗ Відхилити відгуки'
-    
-    def get_queryset(self, request):
-        return super().get_queryset(request).select_related('product')
-
-
 @admin.register(Sale)
 class SaleAdmin(admin.ModelAdmin):
     list_display = [
@@ -348,22 +311,49 @@ class SaleAdmin(admin.ModelAdmin):
         return super().response_change(request, obj)
 
 
-@admin.register(Brand)
-class BrandAdmin(admin.ModelAdmin):
-    list_display = ['get_brand_logo', 'name', 'is_active', 'sort_order']
-    list_display_links = ['get_brand_logo', 'name']
-    list_editable = ['is_active', 'sort_order']
-    list_filter = ['is_active']
-    search_fields = ['name']
+@admin.register(TopProduct)
+class TopProductAdmin(admin.ModelAdmin):
+    list_display = ['get_product_image', 'get_product_name', 'get_product_price', 'sort_order', 'is_active', 'created_at']
+    list_display_links = ['get_product_image', 'get_product_name']
+    list_editable = ['sort_order', 'is_active']
+    list_filter = ['is_active', 'created_at']
+    search_fields = ['product__name', 'product__sku']
+    ordering = ['sort_order', '-created_at']
     
     fieldsets = (
-        ('Бренд', {
-            'fields': ('name', 'slug', 'logo', 'is_active', 'sort_order')
+        (None, {
+            'fields': ('product', 'sort_order', 'is_active')
         }),
     )
     
-    def get_brand_logo(self, obj):
-        if obj.logo:
-            return format_html('<img src="{}" class="admin-thumbnail-small" />', obj.logo.url)
-        return format_html('<div class="admin-icon-placeholder">🏷️</div>')
-    get_brand_logo.short_description = 'Лого'
+    def get_product_image(self, obj):
+        main_image = obj.product.images.filter(is_main=True).first() or obj.product.images.first()
+        if main_image:
+            return format_html('<img src="{}" class="admin-thumbnail-small" />', main_image.get_image_url())
+        return format_html('<div class="admin-icon-placeholder">📦</div>')
+    get_product_image.short_description = 'Фото'
+    
+    def get_product_name(self, obj):
+        return obj.product.name
+    get_product_name.short_description = 'Товар'
+    get_product_name.admin_order_field = 'product__name'
+    
+    def get_product_price(self, obj):
+        if obj.product.is_sale_active():
+            discount = obj.product.get_discount_percentage()
+            return format_html(
+                '<div><s>{} ₴</s> <strong style="color: #ff4444;">{} ₴</strong> <span style="background: #ff4444; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;">-{}%</span></div>',
+                obj.product.retail_price, obj.product.sale_price, discount
+            )
+        return format_html('<strong>{} ₴</strong>', obj.product.retail_price)
+    get_product_price.short_description = 'Ціна'
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'product':
+            # Показуємо тільки товари які ще не додані до лідерів продажу
+            existing_ids = TopProduct.objects.values_list('product_id', flat=True)
+            kwargs['queryset'] = Product.objects.filter(is_active=True).exclude(id__in=existing_ids)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('product').prefetch_related('product__images')

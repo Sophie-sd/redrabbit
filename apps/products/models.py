@@ -405,26 +405,24 @@ class ProductReview(models.Model):
         return f"Відгук від {self.author_name} на {self.product.name}"
 
 
-class Brand(models.Model):
-    """Бренди товарів"""
+class TopProduct(models.Model):
+    """Лідери продажу на головній сторінці"""
     
-    name = models.CharField('Назва бренду', max_length=100, unique=True)
-    slug = models.SlugField('URL', max_length=100, unique=True, blank=True)
-    logo = models.ImageField('Логотип', upload_to='brands/', blank=True)
-    description = models.TextField('Опис', blank=True)
+    product = models.OneToOneField(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='top_product_entry',
+        verbose_name='Товар',
+        limit_choices_to={'is_active': True}
+    )
+    sort_order = models.PositiveIntegerField('Порядок відображення', default=0)
     is_active = models.BooleanField('Активний', default=True)
-    sort_order = models.PositiveIntegerField('Порядок сортування', default=0)
-    created_at = models.DateTimeField('Створено', auto_now_add=True)
+    created_at = models.DateTimeField('Додано', auto_now_add=True)
     
     class Meta:
-        verbose_name = 'Бренд'
-        verbose_name_plural = 'Бренди'
-        ordering = ['sort_order', 'name']
-    
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
+        verbose_name = 'Лідер продажу'
+        verbose_name_plural = 'Лідери продажу'
+        ordering = ['sort_order', '-created_at']
     
     def __str__(self):
-        return self.name
+        return f"Лідер продажу: {self.product.name}"
