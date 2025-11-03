@@ -27,7 +27,7 @@ class Command(BaseCommand):
             {
                 'author_name': 'Дмитро',
                 'rating': 4,
-                'text': 'Хороший товар за свою ціну. Матеріал якісний, використання зручне. Єдиний мінус - трохи гучніше працює, ніж очікували. В цілому дружина задоволена.',
+                'text': 'Хороший товар за свою ціну. Матеріал якісний, використання зручне. В цілому гуд.',
                 'category_badge': 'Мастурбатори',
                 'product_name': 'Мастурбатор'
             },
@@ -97,6 +97,7 @@ class Command(BaseCommand):
 
         ProductReview.objects.filter(is_approved=True).delete()
         created_count = 0
+        used_products = set()
         
         review_dates = [
             datetime(2025, 7, 8),
@@ -110,13 +111,18 @@ class Command(BaseCommand):
         ]
 
         for idx, review_data in enumerate(reviews_data):
-            product = Product.objects.filter(
+            products = Product.objects.filter(
                 name__icontains=review_data['product_name'].split()[0],
                 is_active=True
-            ).first()
+            ).exclude(id__in=used_products)
+            
+            product = products.first()
             
             if not product:
-                product = random.choice(active_products)
+                remaining_products = [p for p in active_products if p.id not in used_products]
+                product = random.choice(remaining_products if remaining_products else active_products)
+            
+            used_products.add(product.id)
             
             review = ProductReview.objects.create(
                 product=product,
