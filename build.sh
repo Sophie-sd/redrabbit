@@ -15,4 +15,7 @@ python manage.py migrate --no-input
 echo "📦 Налаштування БД..."
 python production_setup.py || echo "⚠️  Імпорт завершено з попередженнями"
 
+echo "📝 Оновлення відгуків..."
+python manage.py create_reviews || echo "⚠️  Відгуки не оновлено"
+
 echo "✅ Build completed!"
