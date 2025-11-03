@@ -45,14 +45,17 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function(e) {
             e.preventDefault();
             const textElement = this.previousElementSibling;
+            const card = this.closest('.review-card');
             
             if (textElement.classList.contains('collapsed')) {
                 textElement.classList.remove('collapsed');
                 textElement.classList.add('expanded');
+                card.classList.add('expanded');
                 this.textContent = 'Згорнути ↑';
             } else {
                 textElement.classList.remove('expanded');
                 textElement.classList.add('collapsed');
+                card.classList.remove('expanded');
                 this.textContent = 'Читати далі →';
             }
         });
