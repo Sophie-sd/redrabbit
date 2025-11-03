@@ -98,10 +98,11 @@
 }
 
 .phone-popup-number {
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--neutral-dark);
     padding-right: 24px;
+    white-space: nowrap;
 }
 
 .phone-popup-copy {
