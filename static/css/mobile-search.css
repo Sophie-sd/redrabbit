@@ -96,20 +96,17 @@
 .mobile-search-input-group {
     display: flex;
     align-items: center;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-sm);
     width: 100%;
-    background: var(--gray-light);
-    border-radius: var(--border-radius);
-    padding: var(--spacing-xs);
-    border: 2px solid #ff4444;
 }
 
 /* Поле вводу мобільного пошуку */
 .mobile-search-input {
     flex: 1;
-    border: none;
-    background: transparent;
-    padding: var(--spacing-sm);
+    border: 2px solid #ff4444;
+    background: var(--white);
+    border-radius: 10px;
+    padding: 12px 16px;
     font-size: 16px; /* Запобігання зуму на iOS */
     color: var(--neutral-dark);
     outline: none;
@@ -125,36 +122,35 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: var(--border-radius);
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all var(--transition-fast);
-    padding: var(--spacing-xs);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border: none;
+    padding: 8px;
 }
 
 .mobile-search-close {
-    background: transparent;
+    background: var(--white);
+    border: 2px solid #ff4444;
     color: #ff4444;
 }
 
 .mobile-search-close:hover,
 .mobile-search-close:focus {
     background: rgba(255, 68, 68, 0.1);
-    transform: scale(1.05);
 }
 
 .mobile-search-submit {
     background: #ff4444;
+    border: 2px solid #ff4444;
     color: var(--white);
 }
 
 .mobile-search-submit:hover,
 .mobile-search-submit:focus {
     background: #e63946;
-    transform: scale(1.05);
+    border-color: #e63946;
 }
 
 .mobile-search-close svg,
