@@ -3,6 +3,10 @@ import django.db.models.deletion
 
 
 def create_models_if_not_exist(apps, schema_editor):
+    """Створюємо моделі тільки якщо їх ще немає"""
+    if connection.vendor != 'postgresql':
+        return
+    
     with connection.cursor() as cursor:
         cursor.execute("""
             SELECT table_name 
