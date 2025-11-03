@@ -10,7 +10,7 @@
 
 @media (min-width: 992px) {
   .sidebar-menu {
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 110px);
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
