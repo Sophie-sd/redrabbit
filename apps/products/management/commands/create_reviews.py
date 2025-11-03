@@ -1,5 +1,7 @@
 from django.core.management.base import BaseCommand
 from apps.products.models import Product, ProductReview, Category
+from datetime import datetime, timedelta
+from django.utils import timezone
 import random
 
 
@@ -95,8 +97,19 @@ class Command(BaseCommand):
 
         ProductReview.objects.filter(is_approved=True).delete()
         created_count = 0
+        
+        review_dates = [
+            datetime(2025, 1, 15),
+            datetime(2025, 2, 3),
+            datetime(2025, 2, 28),
+            datetime(2025, 3, 10),
+            datetime(2025, 4, 5),
+            datetime(2025, 5, 18),
+            datetime(2025, 6, 22),
+            datetime(2025, 7, 8),
+        ]
 
-        for review_data in reviews_data:
+        for idx, review_data in enumerate(reviews_data):
             product = Product.objects.filter(
                 name__icontains=review_data['product_name'].split()[0],
                 is_active=True
@@ -105,7 +118,7 @@ class Command(BaseCommand):
             if not product:
                 product = random.choice(active_products)
             
-            ProductReview.objects.create(
+            review = ProductReview.objects.create(
                 product=product,
                 author_name=review_data['author_name'],
                 rating=review_data['rating'],
@@ -113,6 +126,10 @@ class Command(BaseCommand):
                 category_badge=review_data['category_badge'],
                 is_approved=True
             )
+            
+            review.created_at = timezone.make_aware(review_dates[idx])
+            review.save(update_fields=['created_at'])
+            
             created_count += 1
 
         self.stdout.write(

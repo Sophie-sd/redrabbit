@@ -37,12 +37,12 @@
     flex: 0 0 380px;
     background: var(--white);
     border-radius: 16px;
-    padding: 24px;
+    padding: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     min-height: 280px;
 }
 
@@ -153,6 +153,8 @@
     font-size: 12px;
     color: var(--gray-medium);
     text-align: right;
+    margin-top: auto;
+    padding-top: 8px;
 }
 
 .reviews-nav-btn {
@@ -233,9 +235,9 @@
     }
 
     .review-card {
-        flex: 0 0 300px;
+        flex: 0 0 calc(100vw - 100px);
         padding: 16px;
-        gap: 12px;
+        gap: 10px;
         min-height: 260px;
     }
     
@@ -244,9 +246,9 @@
     }
 
     .reviews-slider {
-        gap: 16px;
-        padding: 16px 8px;
-        margin: 0 -8px;
+        gap: 20px;
+        padding: 16px 10px;
+        margin: 0 -10px;
     }
 
     .review-header {

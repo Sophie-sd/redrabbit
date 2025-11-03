@@ -7,10 +7,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (!prevBtn || !nextBtn) return;
 
-    const cardWidth = 380 + 24;
-    
     function getScrollAmount() {
-        return window.innerWidth <= 768 ? cardWidth : cardWidth * 2;
+        if (window.innerWidth <= 768) {
+            const card = slider.querySelector('.review-card');
+            if (card) {
+                return card.offsetWidth + 20;
+            }
+            return window.innerWidth - 80;
+        }
+        return (380 + 24) * 2;
     }
 
     function updateButtons() {
