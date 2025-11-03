@@ -1,3 +1,20 @@
+/* Main Content */
+.main-content {
+    min-height: 100vh;
+}
+
+@media (min-width: 992px) {
+    .main-content {
+        padding-top: 150px;
+    }
+}
+
+@media (max-width: 991px) {
+    .main-content {
+        padding-top: 120px;
+    }
+}
+
 /* Container System */
 .container,
 .container-fluid {

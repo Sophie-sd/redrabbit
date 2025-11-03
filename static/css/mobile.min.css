@@ -593,9 +593,11 @@
 /* Mobile Specific - Tablet (max-width: 767.98px) */
 @media (max-width: 767.98px) {
     .header {
-        position: sticky;
+        position: fixed;
         top: 0;
-        z-index: 100;
+        left: 0;
+        right: 0;
+        z-index: 1000;
         background: transparent;
         border-bottom: none;
     }

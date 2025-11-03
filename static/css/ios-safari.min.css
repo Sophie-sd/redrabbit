@@ -80,8 +80,8 @@
     }
     
     .header {
-        position: -webkit-sticky;
-        position: sticky;
+        position: -webkit-fixed;
+        position: fixed;
     }
     
     /* Emoji Optimization */

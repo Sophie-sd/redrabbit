@@ -13,25 +13,19 @@
 }
 
 .home-catalog-sidebar {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 110px;
-  z-index: 50;
   background: transparent;
   align-self: flex-start;
-  padding-top: var(--spacing-md, 16px);
 }
 
 .home-content {
   min-width: 0;
-  padding-top: var(--spacing-md, 16px);
 }
 
 .banner-slider-section {
   margin-bottom: var(--spacing-2xl);
 }
 
-@media (max-width: 992px) {
+@media (max-width: 991px) {
   .layout-grid {
     grid-template-columns: 1fr;
     gap: var(--spacing-md);
@@ -42,7 +36,7 @@
   }
   
   .home-main-layout {
-    padding: var(--spacing-md) 0;
+    padding: 0 0 var(--spacing-md) 0;
   }
 }
 
