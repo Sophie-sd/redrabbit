@@ -101,6 +101,7 @@
     background: var(--gray-light);
     border-radius: var(--border-radius);
     padding: var(--spacing-xs);
+    border: 2px solid #ff4444;
 }
 
 /* Поле вводу мобільного пошуку */
@@ -126,34 +127,33 @@
     justify-content: center;
     width: 36px;
     height: 36px;
-    background: var(--white);
-    border: 2px solid var(--gray-light);
     border-radius: var(--border-radius);
-    color: var(--neutral-dark);
     cursor: pointer;
     transition: all var(--transition-fast);
     padding: var(--spacing-xs);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: none;
 }
 
 .mobile-search-close {
-    background: var(--gray-light);
-    border-color: var(--gray-medium);
+    background: transparent;
+    color: #ff4444;
 }
 
 .mobile-search-close:hover,
 .mobile-search-close:focus {
-    background: #ff4757;
-    border-color: #ff4757;
-    color: var(--white);
+    background: rgba(255, 68, 68, 0.1);
     transform: scale(1.05);
+}
+
+.mobile-search-submit {
+    background: #ff4444;
+    color: var(--white);
 }
 
 .mobile-search-submit:hover,
 .mobile-search-submit:focus {
-    background: var(--color-brand-primary);
-    border-color: var(--color-brand-primary);
-    color: var(--white);
+    background: #e63946;
     transform: scale(1.05);
 }
 
