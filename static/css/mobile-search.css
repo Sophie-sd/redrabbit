@@ -70,7 +70,6 @@
     left: 0;
     right: 0;
     height: 100%;
-    background: var(--white);
     opacity: 0;
     visibility: hidden;
     transform: translateX(100%);
@@ -253,7 +252,7 @@
 }
 
 .mobile-search-input:focus {
-    box-shadow: inset 0 0 0 2px var(--color-brand-primary);
+    outline: none;
 }
 
 .mobile-search-close:focus-visible,
