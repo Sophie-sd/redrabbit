@@ -32,6 +32,12 @@
     transition: stroke 0.3s ease;
 }
 
+.messenger-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
 .phone-popup {
     position: absolute;
     top: calc(100% + 12px);
@@ -135,6 +141,11 @@
     }
     
     .contact-icon-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .messenger-icon {
         width: 20px;
         height: 20px;
     }
