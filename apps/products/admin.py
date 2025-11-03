@@ -64,21 +64,23 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('name', 'primary_category', 'categories', 'sku', 'stock')
         }),
         ('Ціноутворення', {
-            'fields': ('retail_price',),
+            'fields': ('retail_price', 'is_sale', 'sale_price', 'sale_name', 'sale_start_date', 'sale_end_date'),
         }),
         ('Бейджі', {
             'fields': ('is_top', 'is_new', 'is_featured', 'sort_order'),
-            'description': 'is_top - ХІТ ПРОДАЖ, is_new - НОВИНКА'
+            'description': 'is_top - ХІТ ПРОДАЖ (лідери продажу), is_new - НОВИНКА'
         }),
     )
     
-    readonly_fields = ['name', 'sku', 'retail_price', 'stock']
+    readonly_fields = ['name', 'sku']
     
     actions = [
         'mark_as_top',
         'unmark_as_top',
         'mark_as_new',
         'unmark_as_new',
+        'activate_sale',
+        'deactivate_sale',
         'export_products_csv',
     ]
     
@@ -140,6 +142,21 @@ class ProductAdmin(admin.ModelAdmin):
         updated = queryset.update(is_new=False)
         self.message_user(request, f"Знято НОВИНКА: {updated} товарів", messages.SUCCESS)
     unmark_as_new.short_description = "Зняти НОВИНКА"
+    
+    def activate_sale(self, request, queryset):
+        count = 0
+        for product in queryset:
+            if product.sale_price and product.sale_price < product.retail_price:
+                product.is_sale = True
+                product.save()
+                count += 1
+        self.message_user(request, f"Активовано акцію для {count} товарів", messages.SUCCESS)
+    activate_sale.short_description = "🔥 Активувати акцію"
+    
+    def deactivate_sale(self, request, queryset):
+        updated = queryset.update(is_sale=False)
+        self.message_user(request, f"Деактивовано акцію для {updated} товарів", messages.WARNING)
+    deactivate_sale.short_description = "❌ Деактивувати акцію"
     
     def export_products_csv(self, request, queryset):
         response = HttpResponse(content_type='text/csv; charset=utf-8')

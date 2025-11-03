@@ -34,11 +34,18 @@ class HomeView(TemplateView):
         # Отримуємо активні банери
         banners = Banner.objects.filter(is_active=True).order_by('order', '-created_at')
         
-        # Отримуємо акційні товари (товари з бейджем АКЦІЯ)
+        # Отримуємо акційні товари (тільки з АКТИВНИМИ акціями)
+        from django.utils import timezone
+        now = timezone.now()
+        
         sale_products = Product.objects.filter(
             is_active=True,
             is_sale=True,
             sale_price__isnull=False
+        ).filter(
+            Q(sale_start_date__isnull=True) | Q(sale_start_date__lte=now)
+        ).filter(
+            Q(sale_end_date__isnull=True) | Q(sale_end_date__gt=now)
         ).select_related('primary_category').prefetch_related('images').order_by('sort_order', '-created_at')[:20]
         
         # Отримуємо хіти (товари з бейджем ХІТ)
