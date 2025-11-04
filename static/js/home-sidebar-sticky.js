@@ -50,7 +50,6 @@
             const layoutRect = layoutGrid.getBoundingClientRect();
             
             const sidebarHeight = sidebar.offsetHeight;
-            const sidebarTop = 110; // top offset з CSS
             const viewportHeight = window.innerHeight;
             const scrollY = window.scrollY || window.pageYOffset;
             
@@ -66,21 +65,22 @@
             const layoutTopOffset = layoutGrid.offsetTop;
             const stopPosition = reviewsAbsoluteTop - layoutTopOffset - sidebarHeight - 40; // 40px відступ
             
-            // Якщо sidebar наближається до секції відгуків
+            // Якщо sidebar наближається до секції відгуків (менше 40px) і секція видима
             if (distanceToReviews <= 40 && reviewsRect.top < viewportHeight) {
                 // Змінюємо на absolute позицію і фіксуємо на місці
-                if (sidebar.style.position !== 'absolute') {
+                if (!sidebar.classList.contains('sidebar-stopped')) {
+                    sidebar.classList.add('sidebar-stopped');
                     sidebar.style.position = 'absolute';
                     sidebar.style.top = stopPosition + 'px';
-                    sidebar.style.bottom = 'auto';
                     console.log('Home Sidebar: Зупинено перед секцією відгуків на позиції', stopPosition);
                 }
             } else {
-                // Повертаємо sticky поведінку
-                if (sidebar.style.position !== 'sticky') {
-                    sidebar.style.position = 'sticky';
-                    sidebar.style.top = sidebarTop + 'px';
-                    sidebar.style.bottom = 'auto';
+                // Повертаємо sticky поведінку (прибираємо inline стилі, щоб працював CSS)
+                if (sidebar.classList.contains('sidebar-stopped')) {
+                    sidebar.classList.remove('sidebar-stopped');
+                    sidebar.style.position = '';
+                    sidebar.style.top = '';
+                    console.log('Home Sidebar: Повернено sticky поведінку');
                 }
             }
             

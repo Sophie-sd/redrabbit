@@ -48,6 +48,11 @@
   background: var(--color-brand-primary);
 }
 
+/* Коли sidebar зупинений перед секцією відгуків (контролюється JavaScript) */
+.home-catalog-sidebar.sidebar-stopped {
+  /* JavaScript встановить position: absolute та top */
+}
+
 .home-content {
   min-width: 0;
 }
