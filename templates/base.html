@@ -85,6 +85,7 @@
     <link rel="stylesheet" href="{% static 'css/wishlist.css' %}">
     <link rel="stylesheet" href="{% static 'css/age-verification.css' %}">
     <link rel="stylesheet" href="{% static 'css/sale-countdown.css' %}">
+    <link rel="stylesheet" href="{% static 'css/toast.css' %}">
     
     <!-- 9. Page-Specific Styles (завантажуються через extra_css блок) -->
     {% block extra_css %}{% endblock %}
@@ -168,6 +169,9 @@
     <script src="{% static 'js/age-verification.js' %}"></script>
     <script src="{% static 'js/utils.min.js' %}" defer></script>
     <script src="{% static 'js/main.min.js' %}" defer></script>
+    
+    <!-- Toast notifications -->
+    <script src="{% static 'js/toast.js' %}"></script>
     
     <!-- Unified Modules (замінюють множину старих файлів) -->
     <script src="{% static 'js/unified-search.js' %}" defer></script>

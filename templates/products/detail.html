@@ -237,13 +237,16 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.added) {
                     this.classList.add('active');
-                    alert('Додано до обраного!');
+                    Toast.success('Додано до обраного');
                 } else {
                     this.classList.remove('active');
-                    alert('Видалено з обраного');
+                    Toast.info('Видалено з обраного');
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                Toast.error('Помилка операції');
+            });
         });
     }
     
@@ -265,14 +268,17 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Товар додано в кошик!');
+                    Toast.success('Товар додано в кошик');
                     updateCartCount(data.cart_count);
                     document.dispatchEvent(new CustomEvent('cart:updated', { 
                         detail: { count: data.cart_count } 
                     }));
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                Toast.error('Помилка операції');
+            });
         });
     }
     
@@ -293,14 +299,17 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Товар додано в кошик!');
+                    Toast.success('Товар додано в кошик');
                     updateCartCount(data.cart_count);
                     document.dispatchEvent(new CustomEvent('cart:updated', { 
                         detail: { count: data.cart_count } 
                     }));
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                Toast.error('Помилка операції');
+            });
         });
     });
     
@@ -322,13 +331,16 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.added) {
                     this.classList.add('active');
-                    alert('Додано до обраного!');
+                    Toast.success('Додано до обраного');
                 } else {
                     this.classList.remove('active');
-                    alert('Видалено з обраного');
+                    Toast.info('Видалено з обраного');
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                Toast.error('Помилка операції');
+            });
         });
     });
     
