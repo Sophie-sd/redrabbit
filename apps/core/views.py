@@ -32,6 +32,8 @@ class HomeView(TemplateView):
         from django.utils import timezone
         now = timezone.now()
         
+        from apps.products.models import ProductImage
+        
         sale_products = Product.objects.filter(
             is_active=True,
             is_sale=True,
@@ -40,14 +42,23 @@ class HomeView(TemplateView):
             Q(sale_start_date__isnull=True) | Q(sale_start_date__lte=now)
         ).filter(
             Q(sale_end_date__isnull=True) | Q(sale_end_date__gt=now)
-        ).select_related('primary_category').prefetch_related('images').order_by('sort_order', '-created_at')[:20]
+        ).select_related('primary_category').prefetch_related(
+            Prefetch('images',
+                queryset=ProductImage.objects.filter(is_main=True).only('image', 'is_main', 'product_id'),
+                to_attr='main_images'
+            )
+        ).order_by('sort_order', '-created_at')[:20]
         
-        # Отримуємо лідери продажу з окремої таблиці
         from apps.products.models import TopProduct
         top_product_entries = TopProduct.objects.filter(
             is_active=True,
             product__is_active=True
-        ).select_related('product__primary_category').prefetch_related('product__images').order_by('sort_order', '-created_at')[:12]
+        ).select_related('product__primary_category').prefetch_related(
+            Prefetch('product__images',
+                queryset=ProductImage.objects.filter(is_main=True).only('image', 'is_main', 'product_id'),
+                to_attr='main_images'
+            )
+        ).order_by('sort_order', '-created_at')[:12]
         
         top_products = [entry.product for entry in top_product_entries]
         
@@ -169,47 +180,50 @@ def search_autocomplete(request):
         return JsonResponse({'results': []})
     
     try:
-        # Визначаємо тип БД
+        from apps.products.models import ProductImage
+        
         db_engine = connection.settings_dict['ENGINE']
         use_postgres_search = 'postgresql' in db_engine and POSTGRES_AVAILABLE
         
         if use_postgres_search:
-            # PostgreSQL Full-Text Search - НАБАГАТО швидший!
             from django.contrib.postgres.search import TrigramSimilarity
             
-            # Використовуємо тригами для більш гнучкого пошуку
             products = Product.objects.filter(
-                is_active=True
+                is_active=True,
+                name__icontains=query
             ).annotate(
                 similarity=TrigramSimilarity('name', query),
             ).filter(
-                similarity__gt=0.1  # Мінімальна схожість 10%
-            ).order_by('-similarity').select_related('primary_category').only(
+                similarity__gt=0.3
+            ).order_by('-similarity').select_related('primary_category').prefetch_related(
+                Prefetch('images', 
+                    queryset=ProductImage.objects.filter(is_main=True).only('image', 'is_main'),
+                    to_attr='main_images'
+                )
+            ).only(
                 'id', 'name', 'slug', 'retail_price', 'sale_price', 'is_sale', 
-                'sale_start_date', 'sale_end_date', 'primary_category__name'
+                'sale_start_date', 'sale_end_date'
             )[:5]
         else:
-            # SQLite fallback для розробки
             products = Product.objects.filter(
-                Q(name__icontains=query) | Q(description__icontains=query),
+                name__icontains=query,
                 is_active=True
-            ).select_related('primary_category').only(
+            ).select_related('primary_category').prefetch_related(
+                Prefetch('images',
+                    queryset=ProductImage.objects.filter(is_main=True).only('image', 'is_main'),
+                    to_attr='main_images'
+                )
+            ).only(
                 'id', 'name', 'slug', 'retail_price', 'sale_price', 'is_sale',
-                'sale_start_date', 'sale_end_date', 'primary_category__name'
+                'sale_start_date', 'sale_end_date'
             )[:5]
         
         results = []
         for p in products:
-            # Отримуємо тільки головне зображення (без prefetch_related)
             image_url = None
-            try:
-                main_image = p.images.filter(is_main=True).first() or p.images.first()
-                if main_image and main_image.image:
-                    image_url = main_image.image.url
-            except:
-                pass
+            if hasattr(p, 'main_images') and p.main_images:
+                image_url = p.main_images[0].image.url if p.main_images[0].image else None
             
-            # Визначаємо ціну
             price = p.sale_price if (p.is_sale and p.sale_price) else p.retail_price
             
             results.append({

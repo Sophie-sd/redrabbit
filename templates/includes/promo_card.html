@@ -1,7 +1,9 @@
 <div class="promo-card">
     <div class="promo-image">
         <a href="{{ product.get_absolute_url }}">
-            {% if product.images.first %}
+            {% if product.main_images %}
+                <img src="{{ product.main_images.0.image.url }}" alt="{{ product.name }}" loading="lazy">
+            {% elif product.images.first %}
                 <img src="{{ product.images.first.get_image_url }}" alt="{{ product.name }}" loading="lazy">
             {% else %}
                 <div class="product-placeholder">📦</div>

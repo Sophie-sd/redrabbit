@@ -179,14 +179,13 @@ class Product(models.Model):
         verbose_name_plural = 'Товари'
         ordering = ['-created_at']
         indexes = [
+            models.Index(fields=['name']),
+            models.Index(fields=['is_active', 'name']),
             models.Index(fields=['primary_category', 'is_active']),
             models.Index(fields=['is_active', 'is_sale', 'is_new', 'is_top']),
             models.Index(fields=['sku']),
             models.Index(fields=['slug']),
             models.Index(fields=['created_at']),
-            # Індекси для пошуку
-            models.Index(fields=['name']),
-            models.Index(fields=['is_active', 'name']),
         ]
     
     def save(self, *args, **kwargs):
@@ -290,6 +289,9 @@ class ProductImage(models.Model):
         verbose_name = 'Зображення товару'
         verbose_name_plural = 'Зображення товарів'
         ordering = ['sort_order']
+        indexes = [
+            models.Index(fields=['product', 'is_main']),
+        ]
     
     def get_image_url(self):
         """Повертає URL зображення (завантажене або зовнішнє)"""

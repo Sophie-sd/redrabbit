@@ -13,28 +13,30 @@ class CategoryView(ListView):
     paginate_by = 12
     
     def get_queryset(self):
+        from .models import ProductImage
+        
         self.category = get_object_or_404(
             Category.objects.select_related('parent').prefetch_related('children'),
             slug=self.kwargs['slug']
         )
         
-        # Отримуємо всі активні підкатегорії
         child_categories = self.category.children.filter(is_active=True)
         
-        # Базовий queryset з оптимізацією
         base_queryset = Product.objects.select_related(
             'primary_category'
         ).prefetch_related(
-            'images',
-            'categories'
+            Prefetch('images',
+                queryset=ProductImage.objects.filter(is_main=True).only('image', 'is_main', 'product_id'),
+                to_attr='main_images'
+            )
+        ).only(
+            'id', 'name', 'slug', 'retail_price', 'sale_price', 'is_sale',
+            'sale_start_date', 'sale_end_date', 'primary_category__name', 'created_at'
         )
         
-        # Якщо є підкатегорії - показуємо товари з УСІХ підкатегорій + з самої категорії
         if child_categories.exists():
-            # Отримуємо список ID підкатегорій для оптимізації
             child_ids = list(child_categories.values_list('id', flat=True))
             
-            # Товари з батьківської категорії ТА з усіх дочірніх категорій
             return base_queryset.filter(
                 Q(categories__id=self.category.id) | 
                 Q(primary_category__id=self.category.id) |
@@ -43,7 +45,6 @@ class CategoryView(ListView):
                 is_active=True
             ).distinct()
         
-        # Товари тільки з цієї категорії (якщо немає підкатегорій)
         return base_queryset.filter(
             Q(categories__id=self.category.id) | Q(primary_category__id=self.category.id),
             is_active=True
