@@ -10,7 +10,6 @@
 {% endblock %}
 
 {% block content %}
-<!-- Sale Products -->
 <section class="products-section section-padding">
     <div class="container">
         {% if products %}
@@ -36,7 +35,7 @@
             </div>
             
             <!-- Products Grid -->
-            <div class="products-grid sale-products-grid">
+            <div class="products-grid">
                 {% for product in products %}
                     {% include 'includes/product_card.html' with product=product %}
                 {% endfor %}
@@ -44,37 +43,27 @@
             
             <!-- Pagination -->
             {% if is_paginated %}
-            <nav class="pagination-wrapper" aria-label="Пагінація товарів">
-                <div class="pagination-container">
+                <nav class="pagination" role="navigation" aria-label="Навігація по сторінках">
                     {% if page_obj.has_previous %}
-                    <a href="?page=1" class="pagination-btn pagination-btn--first" aria-label="Перша сторінка">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M18 6L12 12L18 18M12 6L6 12L12 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
-                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn pagination-btn--prev" aria-label="Попередня сторінка">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
+                        <a href="?page=1" class="pagination__link" aria-label="Перша сторінка">⟨⟨</a>
+                        <a href="?page={{ page_obj.previous_page_number }}" class="pagination__link" aria-label="Попередня сторінка">⟨</a>
+                    {% else %}
+                        <span class="pagination__link pagination__link--disabled" aria-disabled="true">⟨⟨</span>
+                        <span class="pagination__link pagination__link--disabled" aria-disabled="true">⟨</span>
                     {% endif %}
                     
-                    <span class="pagination-info">Сторінка {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}</span>
+                    <span class="pagination__info" aria-live="polite">
+                        Сторінка {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}
+                    </span>
                     
                     {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn pagination-btn--next" aria-label="Наступна сторінка">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}" class="pagination-btn pagination-btn--last" aria-label="Остання сторінка">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M6 6L12 12L6 18M12 6L18 12L12 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
+                        <a href="?page={{ page_obj.next_page_number }}" class="pagination__link" aria-label="Наступна сторінка">⟩</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}" class="pagination__link" aria-label="Остання сторінка">⟩⟩</a>
+                    {% else %}
+                        <span class="pagination__link pagination__link--disabled" aria-disabled="true">⟩</span>
+                        <span class="pagination__link pagination__link--disabled" aria-disabled="true">⟩⟩</span>
                     {% endif %}
-                </div>
-            </nav>
+                </nav>
             {% endif %}
         {% else %}
             <!-- Empty State -->
