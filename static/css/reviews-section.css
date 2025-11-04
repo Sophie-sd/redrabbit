@@ -2,6 +2,8 @@
 
 .reviews-section {
     padding: 60px 0;
+    margin-top: 40px; /* Відступ від основного контенту */
+    clear: both; /* Гарантує що секція не перекривається з sidebar */
 }
 
 .reviews-section .section-title {

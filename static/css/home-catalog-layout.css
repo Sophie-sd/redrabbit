@@ -1,6 +1,7 @@
 .home-main-layout {
   padding: 0 0 var(--spacing-xl) 0;
   width: 100%;
+  position: relative;
 }
 
 .layout-grid {
@@ -10,11 +11,41 @@
   align-items: start;
   width: 100%;
   max-width: 100%;
+  position: relative;
 }
 
+/* Sidebar на головній - статичний до секції відгуків */
 .home-catalog-sidebar {
   background: transparent;
   align-self: flex-start;
+  position: sticky;
+  top: 110px;
+  z-index: 50;
+  max-height: calc(100vh - 110px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brand-light) transparent;
+  transition: all 0.3s ease;
+}
+
+/* Прокрутка для sidebar */
+.home-catalog-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.home-catalog-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.home-catalog-sidebar::-webkit-scrollbar-thumb {
+  background: var(--color-brand-light);
+  border-radius: 3px;
+}
+
+.home-catalog-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-primary);
 }
 
 .home-content {

@@ -50,13 +50,37 @@
 /*              БОКОВА ПАНЕЛЬ ФІЛЬТРІВ         */
 /* ============================================ */
 
+/* Sidebar для сторінок каталогу - статичний до футера */
 .catalog-sidebar {
   position: -webkit-sticky;
   position: sticky;
   top: 110px;
   z-index: 50;
-  height: fit-content;
+  max-height: calc(100vh - 110px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   align-self: flex-start;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brand-light) transparent;
+}
+
+/* Прокрутка для catalog sidebar */
+.catalog-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.catalog-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.catalog-sidebar::-webkit-scrollbar-thumb {
+  background: var(--color-brand-light);
+  border-radius: 3px;
+}
+
+.catalog-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-primary);
 }
 
 

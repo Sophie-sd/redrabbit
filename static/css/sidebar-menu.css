@@ -4,53 +4,26 @@
   border-radius: var(--radius-lg, 12px);
   padding: var(--spacing-md, 16px);
   align-self: flex-start;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-brand-light) transparent;
 }
 
+/* На десктопі - статичний sidebar */
 @media (min-width: 992px) {
-  .sidebar-menu {
-    position: fixed;
-    top: 110px;
-    left: 0;
-    z-index: 50;
-    max-height: calc(100vh - 110px);
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    margin-left: max(calc((100vw - 960px) / 2), 16px);
+  /* Sidebar для головної сторінки - управляється через home-catalog-layout.css */
+  .home-catalog-sidebar .sidebar-menu {
+    position: static;
+    margin-left: 0;
+  }
+  
+  /* Sidebar для інших сторінок (каталог, категорії) */
+  .catalog-sidebar .sidebar-menu {
+    position: static;
+    margin-left: 0;
   }
 }
 
-@media (min-width: 1200px) {
-  .sidebar-menu {
-    margin-left: max(calc((100vw - 1140px) / 2), 16px);
-  }
-}
-
-@media (min-width: 1400px) {
-  .sidebar-menu {
-    margin-left: max(calc((100vw - 1320px) / 2), 16px);
-  }
-}
-
-
-.sidebar-menu::-webkit-scrollbar {
-  width: 6px;
-}
-
-.sidebar-menu::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.sidebar-menu::-webkit-scrollbar-thumb {
-  background: var(--color-brand-light);
-  border-radius: 3px;
-}
-
-.sidebar-menu::-webkit-scrollbar-thumb:hover {
-  background: var(--color-brand-primary);
-}
+/* Відступи для sidebar перенесені в батьківські контейнери */
+/* .home-catalog-sidebar та .catalog-sidebar управляють позиціонуванням */
+/* Scrollbar стилі також управляються батьківськими контейнерами */
 
 .sidebar-menu__list {
   list-style: none;
