@@ -93,10 +93,10 @@
     border-bottom: 1px solid #f0f0f0;
 }
 
-.mobile-category-item:nth-child(7),
-.mobile-category-item:nth-child(8),
-.mobile-category-item:nth-child(9) {
-    background: rgba(220, 53, 69, 0.03);
+.mobile-category-item[data-category-type="women"],
+.mobile-category-item[data-category-type="men"],
+.mobile-category-item[data-category-type="couple"] {
+    background: rgba(220, 53, 69, 0.04);
 }
 
 .mobile-category-toggle,
