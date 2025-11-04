@@ -96,3 +96,8 @@ class SaleProductsView(ListView):
             sale_price__isnull=False,
             is_active=True
         ).select_related('primary_category').prefetch_related('images').order_by('-updated_at')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_products'] = self.get_queryset().count()
+        return context

@@ -18,17 +18,24 @@
                 <div class="row align-items-center">
                     <div class="col-md-6">
                         <p class="results-count">
-                            Знайдено <strong>{{ products|length }}</strong> акційних товарів
+                            Знайдено <strong>{{ total_products }}</strong> акційних товарів
                         </p>
                     </div>
                     <div class="col-md-6">
-                        <div class="sort-options">
-                            <select class="form-select" id="sortSelect">
-                                <option value="name">За назвою</option>
-                                <option value="price_low">Спочатку дешевші</option>
-                                <option value="price_high">Спочатку дорожчі</option>
-                                <option value="discount">За розміром знижки</option>
-                            </select>
+                        <div class="sort-control">
+                            <button type="button" class="sort-select-btn" id="sortSelectBtn">
+                                <span class="sort-select-text">Сортувати</span>
+                                <svg class="sort-select-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7 10L12 15L17 10H7Z" fill="currentColor"/>
+                                </svg>
+                            </button>
+                            <div class="sort-dropdown hidden" id="sortDropdown">
+                                <div class="sort-option" data-value="default">За замовчуванням</div>
+                                <div class="sort-option" data-value="price_low">За ціною: дешевші спочатку</div>
+                                <div class="sort-option" data-value="price_high">За ціною: дорожчі спочатку</div>
+                                <div class="sort-option" data-value="name">За назвою</div>
+                                <div class="sort-option" data-value="discount">За розміром знижки</div>
+                            </div>
                         </div>
                     </div>
                 </div>

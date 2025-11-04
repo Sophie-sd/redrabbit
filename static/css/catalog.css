@@ -636,7 +636,34 @@
 }
 
 .sort-control {
-  position: relative; /* Для absolute позиціонування dropdown */
+  position: relative;
+}
+
+.filters-section {
+  margin-bottom: var(--space-lg);
+}
+
+.filters-section .row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.filters-section .col-md-6 {
+  flex: 1;
+  min-width: 250px;
+}
+
+.results-count {
+  margin: 0;
+  color: var(--color-gray-700);
+  font-size: var(--font-size-base);
+}
+
+.results-count strong {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
 }
 
 /* ============================================ */
@@ -1007,13 +1034,13 @@
 /* Бейджі */
 .product-card__badges {
   position: absolute;
-  top: calc(-1 * var(--space-xs));
-  left: calc(-1 * var(--space-xs));
+  top: 8px;
+  left: 8px;
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
   z-index: 15;
-  transform: translateX(-2px) translateY(-2px);
+  max-width: calc(100% - 50px);
 }
 
 .product-badge {
@@ -1776,6 +1803,20 @@
   .sort-select-btn .sort-select-arrow {
     width: 16px;
     height: 16px;
+  }
+  
+  .filters-section .row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filters-section .col-md-6 {
+    width: 100%;
+  }
+  
+  .results-count {
+    text-align: center;
+    margin-bottom: var(--space-sm);
   }
   
   .products-grid {
