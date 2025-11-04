@@ -30,7 +30,14 @@
                             
                             <div class="item-details">
                                 <h3 class="item-name">{{ item.product.name }}</h3>
-                                <p class="item-price">{{ item.price }} ₴</p>
+                                <div class="item-price-wrapper">
+                                    {% if item.is_sale %}
+                                        <span class="item-price-current">{{ item.price }} ₴</span>
+                                        <span class="item-price-old">{{ item.retail_price }} ₴</span>
+                                    {% else %}
+                                        <span class="item-price-current">{{ item.price }} ₴</span>
+                                    {% endif %}
+                                </div>
                             </div>
                             
                             <div class="item-quantity">
@@ -40,11 +47,18 @@
                                        class="cart-quantity form-control" 
                                        value="{{ item.quantity }}" 
                                        min="1" 
+                                       max="{{ item.product.stock }}"
                                        data-product-id="{{ item.product.id }}">
                             </div>
                             
                             <div class="item-total">
-                                <span class="total-price">{{ item.total_price }} ₴</span>
+                                {% if item.is_sale %}
+                                    <div class="item-total-price">{{ item.total_price }} ₴</div>
+                                    <div class="item-total-old">{{ item.total_retail_price }} ₴</div>
+                                    <div class="item-discount">-{{ item.discount_amount }} ₴</div>
+                                {% else %}
+                                    <div class="item-total-price">{{ item.total_price }} ₴</div>
+                                {% endif %}
                             </div>
                             
                             <div class="item-actions">
@@ -60,7 +74,42 @@
                 
                 <div class="cart-summary">
                     <div class="summary-row">
-                        <span>Загальна сума:</span>
+                        <span>Сума товарів:</span>
+                        <span class="cart-subtotal">{{ cart.get_subtotal }} ₴</span>
+                    </div>
+                    
+                    {% if cart.get_product_discount > 0 %}
+                    <div class="summary-row discount-row">
+                        <span>Знижка на товари:</span>
+                        <span class="cart-discount">-{{ cart.get_product_discount }} ₴</span>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="promo-code-section">
+                        {% if cart.promo_code %}
+                            <div class="promo-applied">
+                                <span class="promo-label">Промокод: <strong>{{ cart.promo_code }}</strong></span>
+                                <button type="button" class="btn btn-outline btn-sm remove-promo">Видалити</button>
+                            </div>
+                            <div class="summary-row promo-discount-row">
+                                <span>Знижка по промокоду:</span>
+                                <span class="promo-discount-amount">-{{ cart.get_promo_discount }} ₴</span>
+                            </div>
+                        {% else %}
+                            <div class="promo-input-wrapper">
+                                <input type="text" 
+                                       id="promoCodeInput" 
+                                       class="form-control" 
+                                       placeholder="Введіть промокод"
+                                       maxlength="50">
+                                <button type="button" class="btn btn-secondary apply-promo">Застосувати</button>
+                            </div>
+                            <div class="promo-message"></div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="summary-row summary-total">
+                        <span>До сплати:</span>
                         <span class="cart-grand-total">{{ cart.get_total_price }} ₴</span>
                     </div>
                     
@@ -100,4 +149,178 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken');
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    function updateCartDisplay(data) {
+        if (data.subtotal) {
+            document.querySelector('.cart-subtotal').textContent = data.subtotal + ' ₴';
+        }
+        if (data.total) {
+            document.querySelector('.cart-grand-total').textContent = data.total + ' ₴';
+        }
+    }
+    
+    document.querySelectorAll('.cart-quantity').forEach(input => {
+        input.addEventListener('change', async function() {
+            const productId = this.dataset.productId;
+            const quantity = parseInt(this.value);
+            
+            if (quantity < 1) return;
+            
+            try {
+                const response = await fetch(`/cart/update/${productId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ quantity })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    location.reload();
+                }
+            } catch (error) {
+                console.error('Помилка:', error);
+            }
+        });
+    });
+    
+    document.querySelectorAll('.remove-from-cart').forEach(button => {
+        button.addEventListener('click', async function() {
+            const productId = this.dataset.productId;
+            const productName = this.dataset.productName;
+            
+            if (!confirm(`Видалити ${productName} з кошика?`)) return;
+            
+            try {
+                const response = await fetch(`/cart/remove/${productId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    }
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    location.reload();
+                }
+            } catch (error) {
+                console.error('Помилка:', error);
+            }
+        });
+    });
+    
+    const clearCartBtn = document.querySelector('.clear-cart');
+    if (clearCartBtn) {
+        clearCartBtn.addEventListener('click', async function() {
+            if (!confirm('Очистити кошик?')) return;
+            
+            try {
+                const response = await fetch('/cart/clear/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    }
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    location.reload();
+                }
+            } catch (error) {
+                console.error('Помилка:', error);
+            }
+        });
+    }
+    
+    const applyPromoBtn = document.querySelector('.apply-promo');
+    if (applyPromoBtn) {
+        applyPromoBtn.addEventListener('click', async function() {
+            const code = document.getElementById('promoCodeInput').value.trim();
+            const messageDiv = document.querySelector('.promo-message');
+            
+            if (!code) {
+                messageDiv.textContent = 'Введіть промокод';
+                messageDiv.className = 'promo-message error';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/cart/promo/apply/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ code })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    location.reload();
+                } else {
+                    messageDiv.textContent = data.message;
+                    messageDiv.className = 'promo-message error';
+                }
+            } catch (error) {
+                console.error('Помилка:', error);
+                messageDiv.textContent = 'Помилка при застосуванні промокоду';
+                messageDiv.className = 'promo-message error';
+            }
+        });
+        
+        document.getElementById('promoCodeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                applyPromoBtn.click();
+            }
+        });
+    }
+    
+    const removePromoBtn = document.querySelector('.remove-promo');
+    if (removePromoBtn) {
+        removePromoBtn.addEventListener('click', async function() {
+            try {
+                const response = await fetch('/cart/promo/remove/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    }
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    location.reload();
+                }
+            } catch (error) {
+                console.error('Помилка:', error);
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

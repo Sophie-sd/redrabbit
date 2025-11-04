@@ -220,7 +220,11 @@ class Promotion(models.Model):
         elif self.apply_to == 'non_sale':
             return not product.is_sale_active()
         elif self.apply_to == 'categories':
-            return self.categories.filter(id=product.category_id).exists()
+            product_categories = list(product.categories.all())
+            if product.primary_category:
+                product_categories.append(product.primary_category)
+            promo_categories = list(self.categories.all())
+            return any(cat in promo_categories for cat in product_categories)
         return False
     
     def calculate_discount(self, order_total):

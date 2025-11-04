@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
 from django.http import JsonResponse
 from apps.products.models import Product
 from .cart import Cart
+import json
 
 
 def cart_detail(request):
@@ -24,10 +25,9 @@ def cart_add(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     
     try:
-        import json
         data = json.loads(request.body) if request.body else {}
         quantity = int(data.get('quantity', request.POST.get('quantity', 1)))
-    except:
+    except (json.JSONDecodeError, ValueError, KeyError):
         quantity = int(request.POST.get('quantity', 1))
     
     cart.add(product=product, quantity=quantity)
@@ -48,4 +48,101 @@ def cart_remove(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
     cart.remove(product)
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.content_type == 'application/json':
+        return JsonResponse({
+            'success': True,
+            'message': 'Товар видалено з кошика',
+            'cart_count': len(cart)
+        })
+    
+    return redirect('cart:detail')
+
+
+@require_POST
+def cart_update(request, product_id):
+    """Оновлення кількості товару в кошику"""
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+    
+    try:
+        data = json.loads(request.body) if request.body else {}
+        quantity = int(data.get('quantity', request.POST.get('quantity', 1)))
+    except (json.JSONDecodeError, ValueError, KeyError):
+        quantity = int(request.POST.get('quantity', 1))
+    
+    if quantity > 0:
+        cart.add(product=product, quantity=quantity, override_quantity=True)
+        message = 'Кількість оновлено'
+        success = True
+    else:
+        cart.remove(product)
+        message = 'Товар видалено з кошика'
+        success = True
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.content_type == 'application/json':
+        return JsonResponse({
+            'success': success,
+            'message': message,
+            'cart_count': len(cart),
+            'subtotal': str(cart.get_subtotal()),
+            'total': str(cart.get_total_price())
+        })
+    
+    return redirect('cart:detail')
+
+
+@require_POST
+def apply_promo_code(request):
+    """Застосування промокоду"""
+    cart = Cart(request)
+    
+    try:
+        data = json.loads(request.body) if request.body else {}
+        code = data.get('code', request.POST.get('code', '')).strip()
+    except (json.JSONDecodeError, AttributeError):
+        code = request.POST.get('code', '').strip()
+    
+    if not code:
+        return JsonResponse({
+            'success': False,
+            'message': 'Введіть промокод'
+        })
+    
+    success, message = cart.apply_promo_code(code)
+    
+    return JsonResponse({
+        'success': success,
+        'message': message,
+        'promo_code': cart.promo_code if success else None,
+        'promo_discount': str(cart.get_promo_discount()) if success else '0',
+        'total': str(cart.get_total_price())
+    })
+
+
+@require_POST
+def remove_promo_code(request):
+    """Видалення промокоду"""
+    cart = Cart(request)
+    cart.remove_promo_code()
+    
+    return JsonResponse({
+        'success': True,
+        'message': 'Промокод видалено',
+        'total': str(cart.get_total_price())
+    })
+
+
+@require_POST
+def clear_cart(request):
+    """Очищення кошика"""
+    cart = Cart(request)
+    cart.clear()
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.content_type == 'application/json':
+        return JsonResponse({
+            'success': True,
+            'message': 'Кошик очищено'
+        })
+    
     return redirect('cart:detail')
