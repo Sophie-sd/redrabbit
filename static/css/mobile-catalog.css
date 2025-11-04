@@ -93,9 +93,9 @@
     border-bottom: 1px solid #f0f0f0;
 }
 
-.mobile-category-item[data-category-type="women"],
-.mobile-category-item[data-category-type="men"],
-.mobile-category-item[data-category-type="couple"] {
+.mobile-category-item:nth-child(7),
+.mobile-category-item:nth-child(8),
+.mobile-category-item:nth-child(9) {
     background: rgba(220, 53, 69, 0.03);
 }
 
@@ -119,25 +119,7 @@
 
 .mobile-category-toggle:active,
 .mobile-category-link:active {
-    background: rgba(220, 53, 69, 0.08);
-}
-
-.mobile-category-item[data-category-type="women"] .mobile-category-toggle,
-.mobile-category-item[data-category-type="women"] .mobile-category-link,
-.mobile-category-item[data-category-type="men"] .mobile-category-toggle,
-.mobile-category-item[data-category-type="men"] .mobile-category-link,
-.mobile-category-item[data-category-type="couple"] .mobile-category-toggle,
-.mobile-category-item[data-category-type="couple"] .mobile-category-link {
-    background: rgba(220, 53, 69, 0.03);
-}
-
-.mobile-category-item[data-category-type="women"] .mobile-category-toggle:active,
-.mobile-category-item[data-category-type="women"] .mobile-category-link:active,
-.mobile-category-item[data-category-type="men"] .mobile-category-toggle:active,
-.mobile-category-item[data-category-type="men"] .mobile-category-link:active,
-.mobile-category-item[data-category-type="couple"] .mobile-category-toggle:active,
-.mobile-category-item[data-category-type="couple"] .mobile-category-link:active {
-    background: rgba(220, 53, 69, 0.1);
+    background: rgba(220, 53, 69, 0.05);
 }
 
 .category-name {

@@ -63,9 +63,9 @@
   margin-bottom: var(--spacing-xs, 8px);
 }
 
-.sidebar-menu__item[data-category-type="women"] {
+.sidebar-menu__item:nth-child(7) {
   padding-top: var(--spacing-md, 16px);
-  border-top: 1px solid rgba(220, 53, 69, 0.2);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
   margin-top: var(--spacing-md, 16px);
 }
 
