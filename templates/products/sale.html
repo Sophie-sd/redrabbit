@@ -6,79 +6,23 @@
 {% block description %}Акції Beauty Shop зі знижками до 50%. Професійна косметика та інструменти за вигідними цінами.{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/sale-banners.css' %}?v=2">
-<link rel="stylesheet" href="{% static 'css/sale-page.css' %}?v=2">
+<link rel="stylesheet" href="{% static 'css/catalog.css' %}">
 {% endblock %}
 
 {% block content %}
-<!-- Sale Banners Slider -->
-<section class="sale-banners-section">
-    <div class="banner-slider-container" id="saleBannerSlider">
-        <div class="banner-slides">
-            <!-- Banner 1 -->
-            <div class="banner-slide active">
-                <div class="banner-image-wrapper">
-                    <img 
-                        src="{% static 'images/baner_sale1.jpg' %}" 
-                        alt="Акційна пропозиція 1" 
-                        class="banner-image"
-                    >
-                </div>
-            </div>
-            
-            <!-- Banner 2 -->
-            <div class="banner-slide">
-                <div class="banner-image-wrapper">
-                    <img 
-                        src="{% static 'images/baner_sale2.jpg' %}" 
-                        alt="Акційна пропозиція 2" 
-                        class="banner-image"
-                    >
-                </div>
-            </div>
-            
-            <!-- Banner 3 -->
-            <div class="banner-slide">
-                <div class="banner-image-wrapper">
-                    <img 
-                        src="{% static 'images/baner_sale3.jpg' %}" 
-                        alt="Акційна пропозиція 3" 
-                        class="banner-image"
-                    >
-                </div>
-            </div>
-        </div>
-        
-        <!-- Navigation Arrows -->
-        <button class="banner-nav banner-nav-prev" aria-label="Попередній банер">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </button>
-        <button class="banner-nav banner-nav-next" aria-label="Наступний банер">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </button>
-        
-        <!-- Navigation Dots -->
-        <div class="banner-dots"></div>
-    </div>
-</section>
-
 <!-- Sale Products -->
 <section class="products-section section-padding">
     <div class="container">
         {% if products %}
             <!-- Filters -->
-            <div class="filters-section">
-                <div class="filters-row">
-                    <div class="filters-left">
+            <div class="filters-section mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
                         <p class="results-count">
                             Знайдено <strong>{{ products|length }}</strong> акційних товарів
                         </p>
                     </div>
-                    <div class="filters-right">
+                    <div class="col-md-6">
                         <div class="sort-options">
                             <select class="form-select" id="sortSelect">
                                 <option value="name">За назвою</option>
@@ -92,7 +36,7 @@
             </div>
             
             <!-- Products Grid -->
-            <div class="products-grid">
+            <div class="products-grid sale-products-grid">
                 {% for product in products %}
                     {% include 'includes/product_card.html' with product=product %}
                 {% endfor %}
@@ -100,29 +44,37 @@
             
             <!-- Pagination -->
             {% if is_paginated %}
-                <nav aria-label="Пагінація товарів">
-                    <div class="pagination-wrapper">
-                        {% if page_obj.has_previous %}
-                            <a href="?page=1" class="btn btn-outline btn-sm" aria-label="Перша сторінка">
-                                <span aria-hidden="true">«</span>
-                            </a>
-                            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline btn-sm" aria-label="Попередня">
-                                <span aria-hidden="true">‹</span>
-                            </a>
-                        {% endif %}
-                        
-                        <span class="btn btn-primary btn-sm active" aria-current="page">Сторінка {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}</span>
-                        
-                        {% if page_obj.has_next %}
-                            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline btn-sm" aria-label="Наступна">
-                                <span aria-hidden="true">›</span>
-                            </a>
-                            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline btn-sm" aria-label="Остання сторінка">
-                                <span aria-hidden="true">»</span>
-                            </a>
-                        {% endif %}
-                    </div>
-                </nav>
+            <nav class="pagination-wrapper" aria-label="Пагінація товарів">
+                <div class="pagination-container">
+                    {% if page_obj.has_previous %}
+                    <a href="?page=1" class="pagination-btn pagination-btn--first" aria-label="Перша сторінка">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M18 6L12 12L18 18M12 6L6 12L12 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn pagination-btn--prev" aria-label="Попередня сторінка">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    {% endif %}
+                    
+                    <span class="pagination-info">Сторінка {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}</span>
+                    
+                    {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn pagination-btn--next" aria-label="Наступна сторінка">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="pagination-btn pagination-btn--last" aria-label="Остання сторінка">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M6 6L12 12L6 18M12 6L18 12L12 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    {% endif %}
+                </div>
+            </nav>
             {% endif %}
         {% else %}
             <!-- Empty State -->
@@ -141,8 +93,4 @@
         {% endif %}
     </div>
 </section>
-{% endblock %}
-
-{% block extra_js %}
-<script src="{% static 'js/sale-banners.js' %}"></script>
 {% endblock %}
