@@ -132,7 +132,7 @@
                 console.error('Search error:', err);
                 
                 if (query === this.lastQuery) {
-                    this.autocomplete.innerHTML = '<div class="autocomplete-empty">Помилка пошуку</div>';
+                    this.autocomplete.innerHTML = '<div class="autocomplete-empty">Нічого не знайдено</div>';
                     this.autocomplete.classList.add('active');
                 }
             }

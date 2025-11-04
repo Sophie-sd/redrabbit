@@ -130,34 +130,31 @@ class SearchView(TemplateView):
                 use_postgres = 'postgresql' in db_engine and POSTGRES_AVAILABLE
                 
                 if use_postgres:
-                    # PostgreSQL з триграмами
                     from django.contrib.postgres.search import TrigramSimilarity
                     
                     products = Product.objects.filter(
                         is_active=True
                     ).annotate(
-                        similarity=TrigramSimilarity('name', query),
+                        similarity=TrigramSimilarity('name', query)
                     ).filter(
-                        Q(similarity__gt=0.1) |
-                        Q(name__icontains=query) |
-                        Q(description__icontains=query)
-                    ).order_by('-similarity').select_related('primary_category').only(
-                        'id', 'name', 'slug', 'retail_price', 'sale_price', 'is_sale',
-                        'sale_start_date', 'sale_end_date', 'is_top', 'is_new',
-                        'primary_category__name', 'primary_category__slug'
-                    ).distinct()[:20]  # Завантажуємо одразу 20 товарів
-                else:
-                    # SQLite fallback
-                    products = Product.objects.filter(
-                        Q(name__icontains=query) | 
-                        Q(description__icontains=query) |
-                        Q(primary_category__name__icontains=query),
-                        is_active=True
-                    ).select_related('primary_category').only(
+                        Q(name__icontains=query) | Q(similarity__gt=0.3)
+                    ).order_by('-similarity', 'name').select_related('primary_category').only(
                         'id', 'name', 'slug', 'retail_price', 'sale_price', 'is_sale',
                         'sale_start_date', 'sale_end_date', 'is_top', 'is_new',
                         'primary_category__name', 'primary_category__slug'
                     ).distinct()[:20]
+                else:
+                    products = Product.objects.filter(
+                        is_active=True
+                    ).filter(
+                        Q(name__icontains=query) | 
+                        Q(sku__icontains=query) |
+                        Q(primary_category__name__icontains=query)
+                    ).select_related('primary_category').only(
+                        'id', 'name', 'slug', 'retail_price', 'sale_price', 'is_sale',
+                        'sale_start_date', 'sale_end_date', 'is_top', 'is_new',
+                        'primary_category__name', 'primary_category__slug'
+                    ).order_by('name').distinct()[:20]
                 
                 data = {
                     'products': products,
@@ -189,13 +186,12 @@ def search_autocomplete(request):
             from django.contrib.postgres.search import TrigramSimilarity
             
             products = Product.objects.filter(
-                is_active=True,
-                name__icontains=query
+                is_active=True
             ).annotate(
-                similarity=TrigramSimilarity('name', query),
+                similarity=TrigramSimilarity('name', query)
             ).filter(
-                similarity__gt=0.3
-            ).order_by('-similarity').select_related('primary_category').prefetch_related(
+                Q(name__icontains=query) | Q(similarity__gt=0.4)
+            ).order_by('-similarity', 'name').select_related('primary_category').prefetch_related(
                 Prefetch('images', 
                     queryset=ProductImage.objects.filter(is_main=True).only('image', 'is_main'),
                     to_attr='main_images'
@@ -206,8 +202,11 @@ def search_autocomplete(request):
             )[:5]
         else:
             products = Product.objects.filter(
-                name__icontains=query,
                 is_active=True
+            ).filter(
+                Q(name__icontains=query) | 
+                Q(sku__icontains=query) |
+                Q(primary_category__name__icontains=query)
             ).select_related('primary_category').prefetch_related(
                 Prefetch('images',
                     queryset=ProductImage.objects.filter(is_main=True).only('image', 'is_main'),
@@ -216,7 +215,7 @@ def search_autocomplete(request):
             ).only(
                 'id', 'name', 'slug', 'retail_price', 'sale_price', 'is_sale',
                 'sale_start_date', 'sale_end_date'
-            )[:5]
+            ).order_by('name')[:5]
         
         results = []
         for p in products:
@@ -264,34 +263,31 @@ def search_paginated(request):
         use_postgres_search = 'postgresql' in db_engine and POSTGRES_AVAILABLE
         
         if use_postgres_search:
-            # PostgreSQL Full-Text Search з триграмами для кращої продуктивності
             from django.contrib.postgres.search import TrigramSimilarity
             
             base_queryset = Product.objects.filter(
                 is_active=True
             ).annotate(
-                similarity=TrigramSimilarity('name', query),
+                similarity=TrigramSimilarity('name', query)
             ).filter(
-                Q(similarity__gt=0.1) |  # Пошук по схожості назви
-                Q(name__icontains=query) |  # Резервний пошук
-                Q(description__icontains=query)
-            ).order_by('-similarity', '-created_at').select_related('primary_category').only(
+                Q(name__icontains=query) | Q(similarity__gt=0.3)
+            ).order_by('-similarity', 'name').select_related('primary_category').only(
                 'id', 'name', 'slug', 'retail_price', 'sale_price', 'is_sale',
                 'sale_start_date', 'sale_end_date', 'is_top', 'is_new',
                 'primary_category__name', 'primary_category__slug'
             ).distinct()
         else:
-            # SQLite fallback
             base_queryset = Product.objects.filter(
-                Q(name__icontains=query) | 
-                Q(description__icontains=query) |
-                Q(primary_category__name__icontains=query),
                 is_active=True
+            ).filter(
+                Q(name__icontains=query) | 
+                Q(sku__icontains=query) |
+                Q(primary_category__name__icontains=query)
             ).select_related('primary_category').only(
                 'id', 'name', 'slug', 'retail_price', 'sale_price', 'is_sale',
                 'sale_start_date', 'sale_end_date', 'is_top', 'is_new',
                 'primary_category__name', 'primary_category__slug'
-            ).distinct()
+            ).order_by('name').distinct()
         
         # Загальна кількість (кешуємо окремо)
         count_cache_key = f'search_count:{query.lower()}'
