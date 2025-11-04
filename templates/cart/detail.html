@@ -47,25 +47,27 @@
                                 </div>
                             </div>
                             
-                            <div class="item-quantity">
-                                <label for="quantity-{{ item.product.id }}">Кількість:</label>
-                                <input type="number" 
-                                       id="quantity-{{ item.product.id }}"
-                                       class="cart-quantity form-control" 
-                                       value="{{ item.quantity }}" 
-                                       min="1" 
-                                       max="{{ item.product.stock }}"
-                                       data-product-id="{{ item.product.id }}">
-                            </div>
-                            
-                            <div class="item-total">
-                                {% if item.is_sale %}
-                                    <div class="item-total-price">{{ item.total_price }} ₴</div>
-                                    <div class="item-total-old">{{ item.total_retail_price }} ₴</div>
-                                    <div class="item-discount">-{{ item.discount_amount }} ₴</div>
-                                {% else %}
-                                    <div class="item-total-price">{{ item.total_price }} ₴</div>
-                                {% endif %}
+                            <div class="item-bottom">
+                                <div class="item-quantity">
+                                    <label for="quantity-{{ item.product.id }}">Кількість:</label>
+                                    <input type="number" 
+                                           id="quantity-{{ item.product.id }}"
+                                           class="cart-quantity form-control" 
+                                           value="{{ item.quantity }}" 
+                                           min="1" 
+                                           max="{{ item.product.stock }}"
+                                           data-product-id="{{ item.product.id }}">
+                                </div>
+                                
+                                <div class="item-total">
+                                    {% if item.is_sale %}
+                                        <div class="item-total-old">{{ item.total_retail_price }} ₴</div>
+                                        <div class="item-total-price">{{ item.total_price }} ₴</div>
+                                        <div class="item-discount">-{{ item.discount_amount }} ₴</div>
+                                    {% else %}
+                                        <div class="item-total-price">{{ item.total_price }} ₴</div>
+                                    {% endif %}
+                                </div>
                             </div>
                             
                             <div class="item-actions">
@@ -82,7 +84,7 @@
                 <div class="cart-summary">
                     <div class="summary-row">
                         <span>Сума товарів:</span>
-                        <span class="cart-subtotal">{{ cart.get_subtotal }} ₴</span>
+                        <span class="cart-subtotal">{{ cart.get_total_retail_price }} ₴</span>
                     </div>
                     
                     {% if cart.get_product_discount > 0 %}
@@ -92,22 +94,25 @@
                     </div>
                     {% endif %}
                     
+                    {% if cart.promo_code %}
+                        <div class="summary-row promo-discount-row">
+                            <span>Знижка по промокоду:</span>
+                            <span class="promo-discount-amount">-{{ cart.get_promo_discount }} ₴</span>
+                        </div>
+                    {% endif %}
+                    
                     <div class="promo-code-section">
                         {% if cart.promo_code %}
                             <div class="promo-applied">
                                 <span class="promo-label">Промокод: <strong>{{ cart.promo_code }}</strong></span>
-                                <button type="button" class="btn btn-outline btn-sm remove-promo">Видалити</button>
-                            </div>
-                            <div class="summary-row promo-discount-row">
-                                <span>Знижка по промокоду:</span>
-                                <span class="promo-discount-amount">-{{ cart.get_promo_discount }} ₴</span>
+                                <button type="button" class="btn-link remove-promo">Видалити</button>
                             </div>
                         {% else %}
                             <div class="promo-input-wrapper">
                                 <input type="text" 
                                        id="promoCodeInput" 
                                        class="form-control" 
-                                       placeholder="Введіть промокод"
+                                       placeholder="Промокод"
                                        maxlength="50">
                                 <button type="button" class="btn btn-secondary apply-promo">Застосувати</button>
                             </div>
@@ -121,8 +126,7 @@
                     </div>
                     
                     <div class="cart-actions">
-                        <a href="/" class="btn btn-outline">Продовжити покупки</a>
-                        <button class="btn btn-secondary clear-cart">Очистити кошик</button>
+                        <a href="/" class="btn btn-outline btn-continue">Продовжити покупки</a>
                         <a href="{% url 'orders:create' %}" class="btn btn-primary">Оформити замовлення</a>
                     </div>
                 </div>
@@ -225,30 +229,6 @@ document.addEventListener('DOMContentLoaded', function() {
             removeCartItem(this);
         });
     });
-    
-    const clearCartBtn = document.querySelector('.clear-cart');
-    if (clearCartBtn) {
-        clearCartBtn.addEventListener('click', async function() {
-            if (!confirm('Очистити кошик?')) return;
-            
-            try {
-                const response = await fetch('/cart/clear/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    }
-                });
-                
-                const data = await response.json();
-                if (data.success) {
-                    location.reload();
-                }
-            } catch (error) {
-                console.error('Помилка:', error);
-            }
-        });
-    }
     
     const applyPromoBtn = document.querySelector('.apply-promo');
     if (applyPromoBtn) {
