@@ -75,6 +75,22 @@
     border-radius: 10px 10px 0 0;
 }
 
+.promo-image .product-card__wishlist {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+.promo-badges {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 2;
+}
+
 .promo-image .promo-link {
     display: block;
     width: 100%;
@@ -313,7 +329,6 @@
     }
 }
 
-/* Адаптивність - МОБІЛЬНА ВЕРСІЯ (3 картки на екрані) */
 @media (max-width: 768px) {
     .promotions-section.mobile-only {
         display: block;
@@ -361,17 +376,36 @@
     }
     
     .promotions-slider {
-        gap: 10px;
+        gap: 12px;
         padding: 10px 0 15px;
     }
     
     .promo-card {
-        flex: 0 0 calc((100% - 10px) / 2);
-        min-width: 140px;
+        flex: 0 0 calc((100% - 12px) / 2);
+        min-width: 0;
+        max-width: calc((100% - 12px) / 2);
     }
     
     .promo-image {
-        height: 140px;
+        height: 150px;
+    }
+    
+    .promo-image .product-card__wishlist {
+        top: 6px;
+        right: 6px;
+        width: 30px;
+        height: 30px;
+        padding: 4px;
+    }
+    
+    .promo-image .product-card__wishlist-icon {
+        font-size: 18px;
+    }
+    
+    .promo-badges {
+        top: 6px;
+        left: 6px;
+        gap: 4px;
     }
     
     .promo-content {
@@ -379,38 +413,34 @@
     }
     
     .promo-name {
-        font-size: 0.75rem;
-        margin-bottom: 6px;
-        min-height: 2.25rem;
+        font-size: 0.8rem;
+        margin-bottom: 8px;
+        min-height: 2.4rem;
         line-height: 1.2;
     }
     
     .promo-price {
-        gap: 4px;
-        margin-bottom: 6px;
-        flex-wrap: nowrap;
+        gap: 5px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
     }
     
     .promo-price .price-old {
-        font-size: 0.65rem;
-        white-space: nowrap;
+        font-size: 0.7rem;
     }
     
     .promo-price .price-new {
-        font-size: 0.85rem;
-        white-space: nowrap;
+        font-size: 0.9rem;
     }
     
     .promo-add-cart {
-        padding: 6px 8px;
-        font-size: 0.7rem;
-        white-space: nowrap;
+        padding: 7px 10px;
+        font-size: 0.75rem;
     }
     
     .promo-content .btn {
-        padding: 5px 4px;
-        font-size: 0.65rem;
-        white-space: nowrap;
+        padding: 6px 8px;
+        font-size: 0.7rem;
     }
     
     .promo-nav-btn {
@@ -422,8 +452,6 @@
         width: 20px;
         height: 20px;
     }
-    
-    
 }
 
 @media (max-width: 480px) {
@@ -432,8 +460,9 @@
     }
     
     .promo-card {
-        flex: 0 0 calc((100% - 8px) / 2);
-        min-width: 140px;
+        flex: 0 0 calc((100% - 10px) / 2);
+        min-width: 0;
+        max-width: calc((100% - 10px) / 2);
     }
     
     .products-section .products-grid {
@@ -441,8 +470,30 @@
         gap: 8px;
     }
     
+    .promotions-slider {
+        gap: 10px;
+    }
+    
     .promo-image {
-        height: 120px;
+        height: 130px;
+    }
+    
+    .promo-image .product-card__wishlist {
+        top: 4px;
+        right: 4px;
+        width: 28px;
+        height: 28px;
+        padding: 3px;
+    }
+    
+    .promo-image .product-card__wishlist-icon {
+        font-size: 16px;
+    }
+    
+    .promo-badges {
+        top: 4px;
+        left: 4px;
+        gap: 3px;
     }
     
     .promo-content {
@@ -450,40 +501,35 @@
     }
     
     .promo-name {
-        font-size: 0.65rem;
-        margin-bottom: 5px;
-        min-height: 1.95rem;
+        font-size: 0.7rem;
+        margin-bottom: 6px;
+        min-height: 2.1rem;
         line-height: 1.15;
     }
     
     .promo-price {
-        gap: 3px;
-        margin-bottom: 5px;
-        flex-wrap: nowrap;
+        gap: 4px;
+        margin-bottom: 6px;
+        flex-wrap: wrap;
     }
     
     .promo-price .price-old {
-        font-size: 0.6rem;
-        white-space: nowrap;
+        font-size: 0.65rem;
     }
     
     .promo-price .price-new {
-        font-size: 0.75rem;
-        white-space: nowrap;
+        font-size: 0.8rem;
     }
     
     .promo-add-cart {
-        padding: 5px 6px;
-        font-size: 0.65rem;
-        white-space: nowrap;
+        padding: 6px 8px;
+        font-size: 0.7rem;
     }
     
     .promo-content .btn {
-        padding: 4px 3px;
-        font-size: 0.6rem;
-        white-space: nowrap;
+        padding: 5px 6px;
+        font-size: 0.65rem;
     }
-    
 }
 
 /* Анімація появи */
