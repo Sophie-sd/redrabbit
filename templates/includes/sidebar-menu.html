@@ -4,7 +4,7 @@
     <ul class="sidebar-menu__list">
         {% for cat in main_categories %}
         {% if cat.is_active and cat.slug %}
-        <li class="sidebar-menu__item {% if cat.children.all %}has-children{% endif %} {% if category and cat.id == category.id or category and category.parent and cat.id == category.parent.id %}active{% endif %}" data-category-id="{{ cat.id }}">
+        <li class="sidebar-menu__item {% if cat.children.all %}has-children{% endif %} {% if category and cat.id == category.id or category and category.parent and cat.id == category.parent.id %}active{% endif %}" data-category-id="{{ cat.id }}" data-category-type="{{ cat.category_type }}">
             <a href="{{ cat.get_absolute_url }}" class="sidebar-menu__link">
                 {% if cat.icon %}
                 <span class="category-icon">{{ cat.icon }}</span>
