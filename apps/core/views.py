@@ -4,7 +4,7 @@ Core Views - основні представлення сайту
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http import JsonResponse
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.db import connection
 from apps.products.models import Product, Category, ProductReview
 from .models import Banner
@@ -318,19 +318,28 @@ def search_paginated(request):
             except:
                 pass
             
-            # Визначаємо ціну
-            price = p.sale_price if (p.is_sale and p.sale_price) else p.retail_price
+            # Перевіряємо наявність
+            is_in_stock = getattr(p, 'is_in_stock', True)
+            
+            # Отримуємо дату закінчення акції
+            sale_end_timestamp = None
+            if p.is_sale_active() and p.sale_end_date:
+                from django.utils import timezone
+                sale_end_timestamp = int(p.sale_end_date.timestamp() * 1000)
             
             results.append({
                 'id': p.id,
                 'name': p.name,
                 'url': p.get_absolute_url(),
-                'price': str(int(price)),
+                'retail_price': str(int(p.retail_price)) if p.retail_price else '0',
+                'sale_price': str(int(p.sale_price)) if p.sale_price else None,
                 'image': image_url,
                 'category': p.primary_category.name if p.primary_category else '',
                 'is_sale': p.is_sale_active(),
                 'is_top': p.is_top,
                 'is_new': p.is_new,
+                'is_in_stock': is_in_stock,
+                'sale_end_timestamp': sale_end_timestamp,
             })
         
         # Підраховуємо сторінки

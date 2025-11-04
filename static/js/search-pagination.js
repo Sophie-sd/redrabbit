@@ -37,46 +37,241 @@
                    (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) ? 'и' : 'ів';
     resultsCount.textContent = `Знайдено ${count} товар${plural}`;
   }
+  
+  /**
+   * Ініціалізує функціонал для доданих карток
+   */
+  function initializeProductCards() {
+    // Ініціалізуємо таймери акцій
+    const countdowns = productsGrid.querySelectorAll('[data-countdown]');
+    countdowns.forEach(countdown => {
+      updateCountdown(countdown);
+      const interval = setInterval(() => {
+        const stillActive = updateCountdown(countdown);
+        if (!stillActive) clearInterval(interval);
+      }, 1000);
+    });
+    
+    // Ініціалізуємо кнопки списку бажань
+    productsGrid.querySelectorAll('.product-card__wishlist').forEach(btn => {
+      if (btn.hasAttribute('data-wishlist-initialized')) return;
+      btn.setAttribute('data-wishlist-initialized', 'true');
+    });
+    
+    // Ініціалізуємо кнопки кошика
+    productsGrid.querySelectorAll('.product-card__add-cart:not([disabled])').forEach(btn => {
+      if (btn.hasAttribute('data-cart-initialized')) return;
+      
+      btn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        const productId = this.getAttribute('data-product-id');
+        await addToCart(productId, this);
+      });
+      
+      btn.setAttribute('data-cart-initialized', 'true');
+    });
+    
+    // Оновлюємо стан wishlist кнопок
+    if (window.wishlistManager) {
+      window.wishlistManager.initializeWishlistState();
+    }
+  }
+  
+  /**
+   * Оновлює таймер зворотного відліку
+   */
+  function updateCountdown(element) {
+    const endTime = parseInt(element.dataset.countdown);
+    if (!endTime) return false;
+    
+    const now = Date.now();
+    const diff = endTime - now;
+    
+    if (diff <= 0) {
+      element.textContent = '⏰ Завершено';
+      element.classList.add('countdown-ended');
+      return false;
+    }
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    let text = '⏰ ';
+    if (days > 0) {
+      text += `${days}д ${hours}г`;
+    } else if (hours > 0) {
+      text += `${hours}г ${minutes}хв`;
+    } else if (minutes > 0) {
+      text += `${minutes}хв ${seconds}с`;
+    } else {
+      text += `${seconds}с`;
+    }
+    
+    element.textContent = text;
+    return true;
+  }
+  
+  /**
+   * Додає товар до кошика
+   */
+  async function addToCart(productId, button) {
+    if (!button) return;
+    
+    const originalText = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = 'Додається...';
+    
+    try {
+      const response = await fetch('/cart/add/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ product_id: productId, quantity: 1 })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        button.innerHTML = '✓ Додано';
+        showToast('Товар додано до кошика');
+        
+        // Оновлюємо badge
+        document.dispatchEvent(new CustomEvent('cart:updated', { 
+          detail: { count: data.cart_count } 
+        }));
+        
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.disabled = false;
+        }, 2000);
+      } else {
+        throw new Error(data.message || 'Помилка');
+      }
+    } catch (error) {
+      console.error('Cart error:', error);
+      button.innerHTML = originalText;
+      button.disabled = false;
+      showToast('Помилка при додаванні до кошика', 'error');
+    }
+  }
+  
+  /**
+   * Показує спливаюче повідомлення
+   */
+  function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast--${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+  
+  /**
+   * Отримує CSRF токен з cookies
+   */
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
 
   /**
    * Створює HTML для картки товару
    */
   function createProductCard(product) {
     const imageHtml = product.image 
-      ? `<img src="${product.image}" alt="${product.name}" loading="lazy">`
+      ? `<img src="${product.image}" alt="${product.name}" loading="lazy" class="product-card__image" width="300" height="300">`
       : '<div class="product-card__placeholder">📦</div>';
     
     // Бейджі
     let badgesHtml = '';
-    if (product.is_sale) {
-      badgesHtml += '<span class="badge badge-sale">АКЦІЯ</span>';
+    
+    // Таймер акції
+    if (product.is_sale && product.sale_end_timestamp) {
+      badgesHtml += `<div class="sale-countdown" data-countdown="${product.sale_end_timestamp}">Завантаження...</div>`;
     }
-    if (product.is_top) {
-      badgesHtml += '<span class="badge badge-top">ТОП</span>';
-    }
+    
     if (product.is_new) {
-      badgesHtml += '<span class="badge badge-new">Новинка</span>';
+      badgesHtml += '<span class="product-badge product-badge--new">NEW</span>';
     }
+    
+    if (product.is_top) {
+      badgesHtml += '<span class="product-badge product-badge--hit">ХІТ</span>';
+    }
+    
+    // Ціна
+    let priceHtml = '';
+    if (product.is_sale && product.sale_price) {
+      priceHtml = `
+        <span class="product-card__price-current">${product.sale_price} ₴</span>
+        <span class="product-card__price-old">${product.retail_price} ₴</span>
+      `;
+    } else {
+      priceHtml = `<span class="product-card__price-current">${product.retail_price} ₴</span>`;
+    }
+    
+    // Кнопка
+    const buttonHtml = product.is_in_stock 
+      ? `<button type="button" class="product-card__add-cart" data-product-id="${product.id}">До кошика</button>`
+      : `<button type="button" class="product-card__add-cart product-card__add-cart--disabled" disabled>Немає в наявності</button>`;
 
     return `
-      <article class="product-card" data-product-id="${product.id}">
-        <a href="${product.url}" class="product-card__link">
-          <div class="product-card__image-wrapper">
+      <article class="product-card" 
+        data-sale-price="${product.is_sale ? product.sale_price : product.retail_price}"
+        data-name="${product.name}"
+        data-is-top="${product.is_top}"
+        data-is-new="${product.is_new}"
+        data-is-sale="${product.is_sale}"
+        data-categories="">
+        <div class="product-card__media">
+          <a href="${product.url}">
             ${imageHtml}
-            ${badgesHtml ? `<div class="product-card__badges">${badgesHtml}</div>` : ''}
-          </div>
-          <div class="product-card__content">
-            <h3 class="product-card__name">${product.name}</h3>
-            <div class="product-card__price">${product.price} ₴</div>
-          </div>
-        </a>
-        <div class="product-card__actions">
-          <button class="btn btn-primary btn-block add-to-cart" data-product-id="${product.id}">
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none">
-              <path d="M9 2L6 6H3L3 22H21L21 6H18L15 2H9Z" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            Купити
+          </a>
+          
+          <button 
+            type="button"
+            class="product-card__wishlist" 
+            data-product-id="${product.id}" 
+            aria-label="Додати в обране"
+            title="Додати в обране">
+            <span class="product-card__wishlist-icon">♡</span>
           </button>
+          
+          <div class="product-card__badges">
+            ${badgesHtml}
+          </div>
+        </div>
+        
+        <div class="product-card__content">
+          <h3 class="product-card__name">
+            <a href="${product.url}" class="product-card__link">${product.name}</a>
+          </h3>
+          
+          <div class="product-card__price">
+            ${priceHtml}
+          </div>
+        </div>
+        
+        <div class="product-card__actions">
+          ${buttonHtml}
         </div>
       </article>
     `;
@@ -114,6 +309,9 @@
           const cardHtml = createProductCard(product);
           productsGrid.insertAdjacentHTML('beforeend', cardHtml);
         });
+        
+        // Ініціалізуємо функціонал після додавання карток
+        initializeProductCards();
       } else if (page === 1) {
         productsGrid.innerHTML = '<div class="no-results">Товарів не знайдено</div>';
       }
@@ -234,6 +432,12 @@
    * Ініціалізація
    */
   function init() {
+    // Ініціалізуємо функціонал для початкових карток (якщо є)
+    const initialCards = productsGrid.querySelectorAll('.product-card');
+    if (initialCards.length > 0) {
+      initializeProductCards();
+    }
+    
     // Завантажуємо першу сторінку для отримання загальної кількості
     loadPage(1);
   }
