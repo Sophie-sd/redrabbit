@@ -54,19 +54,29 @@ class Cart:
         """Ітерація по товарах в кошику"""
         product_ids = self.cart.keys()
         products = Product.objects.filter(id__in=product_ids)
-        cart = self.cart.copy()
         
-        for product in products:
-            cart[str(product.id)]['product'] = product
+        products_dict = {str(p.id): p for p in products}
         
-        for item in cart.values():
-            item['price'] = Decimal(item['price'])
-            item['retail_price'] = Decimal(item.get('retail_price', item['price']))
-            item['is_sale'] = item.get('is_sale', False)
-            item['total_price'] = item['price'] * item['quantity']
-            item['total_retail_price'] = item['retail_price'] * item['quantity']
-            item['discount_amount'] = item['total_retail_price'] - item['total_price'] if item['is_sale'] else Decimal('0')
-            yield item
+        for product_id, item_data in self.cart.items():
+            product = products_dict.get(product_id)
+            if not product:
+                continue
+            
+            price = Decimal(item_data['price'])
+            retail_price = Decimal(item_data.get('retail_price', item_data['price']))
+            quantity = item_data['quantity']
+            is_sale = item_data.get('is_sale', False)
+            
+            yield {
+                'product': product,
+                'price': price,
+                'retail_price': retail_price,
+                'quantity': quantity,
+                'is_sale': is_sale,
+                'total_price': price * quantity,
+                'total_retail_price': retail_price * quantity,
+                'discount_amount': (retail_price - price) * quantity if is_sale else Decimal('0')
+            }
     
     def __len__(self):
         """Кількість товарів в кошику"""
