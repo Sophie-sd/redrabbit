@@ -658,23 +658,25 @@ class CatalogManager {
                 const productId = button.dataset.productId;
                 
                 try {
-            const response = await fetch('/cart/add/', {
-                method: 'POST',
-                headers: {
+                    const response = await fetch(`/cart/add/${productId}/`, {
+                        method: 'POST',
+                        headers: {
                             'Content-Type': 'application/json',
                             'X-CSRFToken': this.getCSRFToken()
-                },
-                        body: JSON.stringify({ product_id: productId, quantity: 1 })
-            });
+                        },
+                        body: JSON.stringify({ quantity: 1 })
+                    });
             
             const data = await response.json();
             
-            if (data.success) {
-                this.showToast('Товар додано до кошика');
-                        this.updateCartBadge(data.cart_count);
+                    if (data.success) {
+                        this.showToast('Товар додано до кошика');
+                        document.dispatchEvent(new CustomEvent('cart:updated', { 
+                            detail: { count: data.cart_count } 
+                        }));
                     } else {
                         this.showToast(data.message || 'Помилка при додаванні до кошика', 'error');
-            }
+                    }
         } catch (error) {
                     console.error('Помилка:', error);
                     this.showToast('Помилка при додаванні до кошика', 'error');
@@ -700,13 +702,6 @@ class CatalogManager {
         }, 3000);
     }
     
-    updateCartBadge(count) {
-        const badges = document.querySelectorAll('.cart-badge, .mobile-cart-badge');
-        badges.forEach(badge => {
-            badge.textContent = count;
-            badge.style.display = count > 0 ? 'flex' : 'none';
-        });
-    }
     
     debounce(func, wait) {
         let timeout;

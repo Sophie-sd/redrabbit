@@ -35,4 +35,11 @@ def base_context(request):
         context['cart_total_items'] = len(cart)
         context['cart_total_price'] = cart.get_total_price()
     
+    # Додаємо кількість обраного
+    if hasattr(request, 'user') and request.user.is_authenticated:
+        context['wishlist_count'] = request.user.wishlist_items.count()
+    else:
+        wishlist_ids = request.session.get('wishlist', [])
+        context['wishlist_count'] = len(wishlist_ids)
+    
     return context
