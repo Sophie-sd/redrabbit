@@ -1,6 +1,13 @@
-/* Мобільна версія сайту */
+/**
+ * MOBILE RESPONSIVE STYLES - UNIFIED
+ * Об'єднує mobile-app.css та mobile.min.css без дублювань
+ * Оптимізовано для всіх пристроїв
+ */
 
-/* Мобільна нижня навігація */
+/* ============================================
+   MOBILE BOTTOM NAVIGATION
+============================================ */
+
 .mobile-bottom-nav {
     display: none;
     position: fixed;
@@ -28,6 +35,8 @@
     padding: 4px 0;
     background: transparent;
     border: none;
+    min-height: 44px;
+    min-width: 44px;
 }
 
 .mobile-bottom-nav .nav-item.active {
@@ -59,11 +68,16 @@
     text-align: center;
 }
 
-.mobile-bottom-nav .nav-badge-hidden {
+.mobile-bottom-nav .nav-badge-hidden,
+.nav-badge.hidden,
+.badge.hidden {
     display: none;
 }
 
-/* Мобільний футер */
+/* ============================================
+   MOBILE FOOTER
+============================================ */
+
 .mobile-footer {
     display: none;
     background: #2c2c2c;
@@ -71,6 +85,7 @@
     padding: 30px 20px calc(80px + env(safe-area-inset-bottom));
 }
 
+/* Subscribe Section */
 .mobile-subscribe {
     margin-bottom: 30px;
 }
@@ -162,7 +177,7 @@
     background: var(--color-brand-accent);
 }
 
-/* Соціальні мережі */
+/* Social Networks */
 .mobile-social {
     display: flex;
     justify-content: center;
@@ -195,7 +210,7 @@
     height: 20px;
 }
 
-/* Акордеони */
+/* Accordions */
 .mobile-accordions {
     margin-bottom: 30px;
 }
@@ -257,17 +272,21 @@
     color: var(--color-brand-primary);
 }
 
-.contact-info {
-    padding-bottom: 15px;
+/* Contact Info */
+.contact-info,
+.mobile-contact-info {
+    padding: 15px 0;
     font-size: 14px;
 }
 
-.contact-info p {
+.contact-info p,
+.mobile-contact-info p {
     margin-bottom: 8px;
     color: #ccc;
 }
 
-.contact-info strong {
+.contact-info strong,
+.mobile-contact-info strong {
     color: white;
 }
 
@@ -276,7 +295,6 @@
     font-size: 13px;
 }
 
-/* Сітка контактів - 2 стовпчики */
 .contact-info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -319,66 +337,13 @@
     color: white;
 }
 
-.mobile-contact-info {
-    padding: 15px 0;
-}
-
-.mobile-contact-info p {
-    margin-bottom: 8px;
-    font-size: 14px;
-    color: #ccc;
-}
-
-.mobile-contact-info strong {
-    color: white;
-}
-
 .mobile-address {
     margin-top: 12px;
     padding-top: 12px;
     border-top: 1px solid #444;
 }
 
-@media (max-width: 480px) {
-    .contact-info-grid {
-        gap: 12px;
-    }
-    
-    .contact-column p,
-    .schedule-column p {
-        font-size: 12px;
-    }
-    
-    /* Ще менші розміри для маленьких екранів */
-    .logo-img {
-        max-width: 60px;
-    }
-    
-    .header-content {
-        gap: 8px;
-        padding: 0 8px;
-    }
-    
-    .search-input {
-        padding: 6px 10px;
-        font-size: 12px;
-    }
-    
-    .search-input::placeholder {
-        font-size: 12px;
-    }
-    
-    .search-btn {
-        padding: 6px 10px;
-    }
-    
-    .search-icon {
-        width: 16px;
-        height: 16px;
-    }
-}
-
-/* Копірайт */
+/* Copyright */
 .mobile-copyright {
     padding-top: 20px;
     text-align: center;
@@ -410,12 +375,120 @@
     color: var(--color-brand-light);
 }
 
-/* Кнопка каталогу для мобільних */
+/* ============================================
+   MOBILE CATALOG BUTTON
+============================================ */
+
 .mobile-catalog-btn {
     display: none;
 }
 
+/* ============================================
+   RESPONSIVE BREAKPOINTS - OPTIMIZED
+============================================ */
+
+/* Extra Small Devices - Mobile Portrait (max-width: 575.98px) */
+@media (max-width: 575.98px) {
+    :root {
+        --spacing-xs: 0.25rem;
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 1.5rem;
+        --spacing-xl: 2rem;
+        --spacing-xxl: 2.5rem;
+    }
+    
+    html {
+        font-size: 14px;
+    }
+    
+    h1 {
+        font-size: 1.75rem;
+        text-align: center;
+        line-height: 1.2;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+        text-align: center;
+        line-height: 1.3;
+    }
+    
+    h3 {
+        font-size: 1.25rem;
+        text-align: center;
+        line-height: 1.3;
+    }
+    
+    .btn {
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: 1rem;
+        min-height: 48px;
+        min-width: 48px;
+        border-radius: var(--border-radius-md);
+    }
+    
+    .form-control {
+        padding: var(--spacing-md);
+        font-size: 16px;
+        min-height: 48px;
+    }
+    
+    .contact-info-grid {
+        gap: 12px;
+    }
+    
+    .contact-column p,
+    .schedule-column p {
+        font-size: 12px;
+    }
+    
+    .logo-img {
+        max-width: 60px;
+    }
+    
+    .header-content {
+        gap: 8px;
+        padding: 0 8px;
+    }
+    
+    .search-input {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}
+
+/* Tablet and Below (max-width: 991.98px) */
+@media (max-width: 991.98px) {
+    .desktop-only {
+        display: none;
+    }
+    
+    .mobile-only {
+        display: block;
+    }
+    
+    .container {
+        padding-left: var(--spacing-md);
+        padding-right: var(--spacing-md);
+    }
+    
+    .section-padding {
+        padding: var(--spacing-xl) 0;
+    }
+}
+
+/* MOBILE ACTIVATION - Main Breakpoint */
 @media (max-width: 768px) {
+    /* Show mobile elements */
+    .mobile-bottom-nav {
+        display: flex;
+    }
+    
+    .mobile-footer {
+        display: block;
+    }
+    
     .mobile-catalog-btn {
         display: block;
         text-align: center;
@@ -441,33 +514,20 @@
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
     }
-}
-
-/* Media запити */
-@media (max-width: 768px) {
-    /* Показуємо мобільні елементи */
-    .mobile-bottom-nav {
-        display: flex;
-    }
     
-    .mobile-footer {
-        display: block;
-    }
-    
-    /* Ховаємо десктопний футер */
+    /* Hide desktop elements */
     .footer-main,
     .footer-bottom {
         display: none;
     }
     
-    /* Ховаємо елементи header на мобільних */
     .top-bar,
     .main-nav,
     .desktop-nav {
         display: none;
     }
     
-    /* Спрощений header для мобільних - тільки логотип та кнопка пошуку */
+    /* Simplified header */
     .main-header {
         padding: 8px 0;
     }
@@ -496,12 +556,11 @@
         display: block;
     }
     
-    /* Ховаємо категорії на мобільних */
     .categories-section {
         display: none;
     }
     
-    /* Додаємо відступ знизу для контенту */
+    /* Content padding */
     body {
         padding-bottom: calc(60px + env(safe-area-inset-bottom));
     }
@@ -511,7 +570,17 @@
     }
 }
 
-/* iOS Safari специфічні стилі */
+/* Very Small Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+    .contact-info-grid {
+        gap: 8px;
+    }
+}
+
+/* ============================================
+   IOS SAFARI OPTIMIZATIONS
+============================================ */
+
 @supports (-webkit-touch-callout: none) {
     .mobile-bottom-nav {
         padding-bottom: max(8px, env(safe-area-inset-bottom));
@@ -519,6 +588,33 @@
     
     .mobile-footer {
         padding-bottom: max(80px, calc(80px + env(safe-area-inset-bottom)));
+    }
+    
+    .mobile-bottom-nav .nav-item {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+}
+
+/* ============================================
+   SLIDER BUTTON STATES
+============================================ */
+
+.promo-nav-btn.disabled,
+.reviews-nav-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   ACCESSIBILITY
+============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .mobile-bottom-nav .nav-item,
+    .accordion-icon,
+    .social-link {
+        transition: none;
     }
 }
 

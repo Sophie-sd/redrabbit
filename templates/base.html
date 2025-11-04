@@ -74,10 +74,9 @@
     <link rel="stylesheet" href="{% static 'css/delivery.css' %}">
     <link rel="stylesheet" href="{% static 'css/pricing.css' %}">
     
-    <!-- 6. Mobile Styles -->
-    <link rel="stylesheet" href="{% static 'css/mobile.min.css' %}">
+    <!-- 6. Mobile Styles - UNIFIED -->
+    <link rel="stylesheet" href="{% static 'css/mobile-responsive.css' %}">
     <link rel="stylesheet" href="{% static 'css/mobile-catalog.css' %}">
-    <link rel="stylesheet" href="{% static 'css/mobile-app.css' %}">
     <link rel="stylesheet" href="{% static 'css/ios-safari.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/mobile-search.css' %}">
     
@@ -163,21 +162,24 @@
     <!-- Mobile Bottom Navigation -->
     {% include 'includes/mobile-bottom-nav.html' %}
     
-    <!-- JavaScript - Optimized -->
+    <!-- JavaScript - UNIFIED & OPTIMIZED -->
+    <!-- Core Scripts -->
     <script src="{% static 'js/age-verification.js' %}"></script>
-    <script src="{% static 'js/live-search.js' %}" defer></script>
     <script src="{% static 'js/utils.min.js' %}" defer></script>
+    <script src="{% static 'js/main.min.js' %}" defer></script>
+    
+    <!-- Unified Modules (замінюють множину старих файлів) -->
+    <script src="{% static 'js/unified-search.js' %}" defer></script>
+    <script src="{% static 'js/unified-cart-badge.js' %}" defer></script>
+    <script src="{% static 'js/unified-slider.js' %}" defer></script>
+    
+    <!-- Feature Modules -->
     <script src="{% static 'js/common-handlers.js' %}" defer></script>
     <script src="{% static 'js/mobile-catalog.js' %}" defer></script>
     <script src="{% static 'js/sidebar-menu.js' %}" defer></script>
-    <script src="{% static 'js/mobile-search.js' %}" defer></script>
     <script src="{% static 'js/header-contacts.js' %}" defer></script>
-    <script src="{% static 'js/mobile-cart-badge.js' %}" defer></script>
     <script src="{% static 'js/wishlist.js' %}" defer></script>
-    <script src="{% static 'js/sliders.min.js' %}" defer></script>
     <script src="{% static 'js/cart.min.js' %}" defer></script>
-    <script src="{% static 'js/cart-badge-integration.js' %}" defer></script>
-    <script src="{% static 'js/main.min.js' %}" defer></script>
     <script src="{% static 'js/footer-subscribe.js' %}" defer></script>
     <script src="{% static 'js/sale-countdown.js' %}" defer></script>
     {% block extra_js %}{% endblock %}
