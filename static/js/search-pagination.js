@@ -124,13 +124,13 @@
     button.innerHTML = 'Додається...';
     
     try {
-      const response = await fetch('/cart/add/', {
+      const response = await fetch(`/cart/add/${productId}/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-CSRFToken': getCookie('csrftoken')
         },
-        body: JSON.stringify({ product_id: productId, quantity: 1 })
+        body: JSON.stringify({ quantity: 1 })
       });
       
       const data = await response.json();
