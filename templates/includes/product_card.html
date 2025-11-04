@@ -8,7 +8,7 @@
 >
     <div class="product-card__media">
         <a href="{{ product.get_absolute_url }}">
-            {% if product.main_images %}
+            {% if product.main_images and product.main_images.0.image %}
                 <img src="{{ product.main_images.0.image.url }}" alt="{{ product.name }}" loading="lazy" class="product-card__image" width="300" height="300">
             {% elif product.images.first %}
                 <img src="{{ product.images.first.get_image_url }}" alt="{{ product.name }}" loading="lazy" class="product-card__image" width="300" height="300">
