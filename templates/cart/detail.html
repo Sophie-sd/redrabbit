@@ -18,6 +18,13 @@
                 <div class="cart-items">
                     {% for item in cart %}
                         <div class="cart-item" data-product-id="{{ item.product.id }}" data-price="{{ item.price }}">
+                            <button class="item-remove" 
+                                    data-product-id="{{ item.product.id }}"
+                                    data-product-name="{{ item.product.name }}"
+                                    aria-label="Видалити товар">
+                                ×
+                            </button>
+                            
                             <div class="item-image">
                                 {% if item.product.images.first %}
                                     <img src="{{ item.product.images.first.get_image_url }}" alt="{{ item.product.name }}">
@@ -191,29 +198,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    document.querySelectorAll('.remove-from-cart').forEach(button => {
-        button.addEventListener('click', async function() {
-            const productId = this.dataset.productId;
-            const productName = this.dataset.productName;
-            
-            if (!confirm(`Видалити ${productName} з кошика?`)) return;
-            
-            try {
-                const response = await fetch(`/cart/remove/${productId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    }
-                });
-                
-                const data = await response.json();
-                if (data.success) {
-                    location.reload();
-                }
-            } catch (error) {
-                console.error('Помилка:', error);
+    function removeCartItem(button) {
+        const productId = button.dataset.productId;
+        const productName = button.dataset.productName;
+        
+        if (!confirm(`Видалити ${productName} з кошика?`)) return;
+        
+        fetch(`/cart/remove/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
             }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            }
+        })
+        .catch(error => console.error('Помилка:', error));
+    }
+    
+    document.querySelectorAll('.remove-from-cart, .item-remove').forEach(button => {
+        button.addEventListener('click', function() {
+            removeCartItem(this);
         });
     });
     
