@@ -432,14 +432,38 @@
    * Ініціалізація
    */
   function init() {
-    // Ініціалізуємо функціонал для початкових карток (якщо є)
     const initialCards = productsGrid.querySelectorAll('.product-card');
-    if (initialCards.length > 0) {
-      initializeProductCards();
-    }
     
-    // Завантажуємо першу сторінку для отримання загальної кількості
-    loadPage(1);
+    if (initialCards.length > 0) {
+      // Є початкові товари від Django - просто ініціалізуємо функціонал
+      initializeProductCards();
+      updateResultsCount(window.initialCount || initialCards.length);
+      
+      // Завантажуємо дані для пагінації без очищення сітки
+      fetchPaginationData();
+    } else {
+      // Немає товарів - завантажуємо з API
+      loadPage(1);
+    }
+  }
+  
+  /**
+   * Завантажує дані пагінації без очищення сітки
+   */
+  async function fetchPaginationData() {
+    try {
+      const response = await fetch(`/api/search/paginated/?q=${encodeURIComponent(query)}&page=1&per_page=20`);
+      if (!response.ok) return;
+      
+      const data = await response.json();
+      updateResultsCount(data.total_count);
+      currentPage = 1;
+      totalPages = data.total_pages;
+      allProductsLoaded = !data.has_next;
+      renderPagination(data);
+    } catch (error) {
+      console.error('Pagination data error:', error);
+    }
   }
 
   // Запускаємо ініціалізацію
