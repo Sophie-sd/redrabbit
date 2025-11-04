@@ -106,7 +106,8 @@ class PromotionAdmin(admin.ModelAdmin):
     
     fieldsets = (
         ('Основна інформація', {
-            'fields': ('name', 'code', 'is_active')
+            'fields': ('name', 'code', 'is_active'),
+            'description': '<strong>Назва</strong> - для вашої зручності в адмінці. <strong>Промокод</strong> - що вводить покупець у кошику.'
         }),
         ('Умови знижки', {
             'fields': (

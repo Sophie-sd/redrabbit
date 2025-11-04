@@ -151,8 +151,17 @@ class Promotion(models.Model):
         ('categories', 'Обрані категорії'),
     ]
     
-    name = models.CharField('Назва промокоду', max_length=200)
-    code = models.CharField('Промокод', max_length=50, unique=True)
+    name = models.CharField(
+        'Назва промокоду', 
+        max_length=200,
+        help_text='Описова назва для внутрішнього використання (наприклад: "Літня розпродаж 2024")'
+    )
+    code = models.CharField(
+        'Промокод', 
+        max_length=50, 
+        unique=True,
+        help_text='Код який вводить покупець (наприклад: SUMMER2024). Буде автоматично конвертовано у верхній регістр'
+    )
     discount_type = models.CharField('Тип знижки', max_length=20, choices=[
         ('percentage', 'Відсоток від суми'),
         ('fixed', 'Фіксована знижка'),
@@ -196,6 +205,12 @@ class Promotion(models.Model):
             models.Index(fields=['code', 'is_active']),
             models.Index(fields=['start_date', 'end_date']),
         ]
+    
+    def save(self, *args, **kwargs):
+        """Автоматично конвертує код у верхній регістр"""
+        if self.code:
+            self.code = self.code.strip().upper()
+        super().save(*args, **kwargs)
     
     def is_valid(self):
         """Перевіряє чи дійсний промокод"""

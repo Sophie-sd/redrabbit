@@ -107,29 +107,31 @@ class Cart:
         
         from apps.orders.models import Promotion
         try:
-            promotion = Promotion.objects.get(code=self.promo_code)
-            if promotion.is_valid():
-                subtotal = self.get_subtotal()
-                
-                applicable_total = Decimal('0')
-                for item_data in self.cart.values():
-                    try:
-                        product = Product.objects.get(id=int(list(self.cart.keys())[list(self.cart.values()).index(item_data)]))
-                        if promotion.can_apply_to_product(product):
-                            applicable_total += Decimal(item_data['price']) * item_data['quantity']
-                    except:
-                        pass
-                
-                if applicable_total >= promotion.min_order_amount:
-                    if promotion.discount_type == 'percentage':
-                        discount = applicable_total * (promotion.discount_value / 100)
-                    else:
-                        discount = promotion.discount_value
-                    return min(discount, applicable_total)
+            promotion = Promotion.objects.get(code__iexact=self.promo_code)
+            if not promotion.is_valid():
+                return Decimal('0')
+            
+            product_ids = list(self.cart.keys())
+            products = Product.objects.filter(id__in=product_ids)
+            products_dict = {str(p.id): p for p in products}
+            
+            applicable_total = Decimal('0')
+            for product_id, item_data in self.cart.items():
+                product = products_dict.get(product_id)
+                if product and promotion.can_apply_to_product(product):
+                    applicable_total += Decimal(item_data['price']) * item_data['quantity']
+            
+            if applicable_total < promotion.min_order_amount:
+                return Decimal('0')
+            
+            if promotion.discount_type == 'percentage':
+                discount = applicable_total * (promotion.discount_value / 100)
+            else:
+                discount = promotion.discount_value
+            
+            return min(discount, applicable_total)
         except Promotion.DoesNotExist:
-            pass
-        
-        return Decimal('0')
+            return Decimal('0')
     
     def get_total_price(self):
         """Загальна вартість з урахуванням промокоду"""
@@ -138,18 +140,29 @@ class Cart:
     def apply_promo_code(self, code):
         """Застосувати промокод"""
         from apps.orders.models import Promotion
+        
+        code = code.strip().upper()
+        if not code:
+            return False, "Введіть промокод"
+        
         try:
-            promotion = Promotion.objects.get(code=code.upper())
-            if promotion.is_valid():
-                if self.get_subtotal() >= promotion.min_order_amount:
-                    self.session['promo_code'] = code.upper()
-                    self.promo_code = code.upper()
-                    self.save()
-                    return True, "Промокод успішно застосовано"
-                else:
-                    return False, f"Мінімальна сума замовлення для цього промокоду: {promotion.min_order_amount} ₴"
-            else:
+            promotion = Promotion.objects.get(code__iexact=code)
+            
+            if not promotion.is_active:
+                return False, "Промокод неактивний"
+            
+            if not promotion.is_valid():
                 return False, "Промокод недійсний або закінчився"
+            
+            subtotal = self.get_subtotal()
+            if subtotal < promotion.min_order_amount:
+                return False, f"Мінімальна сума замовлення для цього промокоду: {promotion.min_order_amount} ₴"
+            
+            self.session['promo_code'] = promotion.code
+            self.promo_code = promotion.code
+            self.save()
+            return True, "Промокод успішно застосовано"
+            
         except Promotion.DoesNotExist:
             return False, "Промокод не знайдено"
     
