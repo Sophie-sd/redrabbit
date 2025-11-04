@@ -108,25 +108,38 @@
                     {% endif %}
                 </div>
                 
-                <!-- Опис -->
-                {% if product.description %}
-                <div class="product-description">
-                    {{ product.description|safe }}
-                </div>
-                {% endif %}
-                
-                <!-- Характеристики -->
-                {% if product.attributes.all %}
-                <div class="product-attributes">
-                    <h3>Характеристики:</h3>
-                    {% for attr in product.attributes.all %}
-                    <div class="attribute-row">
-                        <span class="attribute-name">{{ attr.name }}:</span>
-                        <span class="attribute-value">{{ attr.value }}</span>
+                <!-- Вкладки з описом та характеристиками -->
+                <div class="product-tabs">
+                    <div class="tabs-header">
+                        <button class="tab-btn active" data-tab="description">Опис</button>
+                        <button class="tab-btn" data-tab="characteristics">Характеристики</button>
                     </div>
-                    {% endfor %}
+                    
+                    <div class="tabs-content">
+                        <!-- Опис -->
+                        <div class="tab-panel active" id="description">
+                            {% if product.description %}
+                                {{ product.description|safe }}
+                            {% else %}
+                                <p>Опис товару відсутній</p>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Характеристики -->
+                        <div class="tab-panel" id="characteristics">
+                            {% if product.attributes.all %}
+                                {% for attr in product.attributes.all %}
+                                <div class="attribute-row">
+                                    <span class="attribute-name">{{ attr.name }}:</span>
+                                    <span class="attribute-value">{{ attr.value }}</span>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <p>Характеристики товару відсутні</p>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-                {% endif %}
                 
                 <!-- Категорія -->
                 <div class="product-category-link">
@@ -156,6 +169,22 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Перемикання вкладок
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+    
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const tabId = this.dataset.tab;
+            
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabPanels.forEach(p => p.classList.remove('active'));
+            
+            this.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+    
     // Перемикання зображень
     const thumbnails = document.querySelectorAll('.thumbnail');
     const currentImage = document.getElementById('currentImage');
