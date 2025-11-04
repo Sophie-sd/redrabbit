@@ -42,7 +42,7 @@
             </div>
             
             <!-- Products Grid -->
-            <div class="products-grid">
+            <div class="products-grid" id="productsGrid">
                 {% for product in products %}
                     {% include 'includes/product_card.html' with product=product %}
                 {% endfor %}
@@ -89,4 +89,8 @@
         {% endif %}
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/catalog_new.js' %}"></script>
 {% endblock %}
