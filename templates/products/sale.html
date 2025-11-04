@@ -7,7 +7,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/sale-banners.css' %}">
-<link rel="stylesheet" href="{% static 'css/promotions-slider.css' %}">
+<link rel="stylesheet" href="{% static 'css/sale-page.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -71,14 +71,14 @@
     <div class="container">
         {% if products %}
             <!-- Filters -->
-            <div class="filters-section mb-4">
-                <div class="row align-items-center">
-                    <div class="col-md-6">
+            <div class="filters-section">
+                <div class="filters-row">
+                    <div class="filters-left">
                         <p class="results-count">
                             Знайдено <strong>{{ products|length }}</strong> акційних товарів
                         </p>
                     </div>
-                    <div class="col-md-6">
+                    <div class="filters-right">
                         <div class="sort-options">
                             <select class="form-select" id="sortSelect">
                                 <option value="name">За назвою</option>
@@ -100,31 +100,25 @@
             
             <!-- Pagination -->
             {% if is_paginated %}
-                <nav aria-label="Пагінація товарів" class="mt-5">
-                    <div class="pagination-wrapper d-flex justify-content-center gap-1">
+                <nav aria-label="Пагінація товарів">
+                    <div class="pagination-wrapper">
                         {% if page_obj.has_previous %}
                             <a href="?page=1" class="btn btn-outline btn-sm" aria-label="Перша сторінка">
-                                <span aria-hidden="true">&laquo;&laquo;</span>
+                                <span aria-hidden="true">«</span>
                             </a>
                             <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline btn-sm" aria-label="Попередня">
-                                <span aria-hidden="true">&laquo;</span>
+                                <span aria-hidden="true">‹</span>
                             </a>
                         {% endif %}
                         
-                        {% for num in page_obj.paginator.page_range %}
-                            {% if page_obj.number == num %}
-                                <span class="btn btn-primary btn-sm active" aria-current="page">{{ num }}</span>
-                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                                <a href="?page={{ num }}" class="btn btn-outline btn-sm">{{ num }}</a>
-                            {% endif %}
-                        {% endfor %}
+                        <span class="btn btn-primary btn-sm active" aria-current="page">Сторінка {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}</span>
                         
                         {% if page_obj.has_next %}
                             <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline btn-sm" aria-label="Наступна">
-                                <span aria-hidden="true">&raquo;</span>
+                                <span aria-hidden="true">›</span>
                             </a>
                             <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline btn-sm" aria-label="Остання сторінка">
-                                <span aria-hidden="true">&raquo;&raquo;</span>
+                                <span aria-hidden="true">»</span>
                             </a>
                         {% endif %}
                     </div>
