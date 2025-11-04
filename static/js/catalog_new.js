@@ -487,41 +487,9 @@ class CatalogManager {
     }
     
     initCartActions() {
-        const addToCartButtons = document.querySelectorAll('.product-card__add-cart');
-        
-        addToCartButtons.forEach(button => {
-            if (button.disabled) return;
-            
-            button.addEventListener('click', async (e) => {
-                e.preventDefault();
-                const productId = button.dataset.productId;
-                
-                try {
-                    const response = await fetch(`/cart/add/${productId}/`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': this.getCSRFToken()
-                        },
-                        body: JSON.stringify({ quantity: 1 })
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        this.showToast('Товар додано до кошика');
-                        document.dispatchEvent(new CustomEvent('cart:updated', { 
-                            detail: { count: data.cart_count } 
-                        }));
-                    } else {
-                        this.showToast(data.message || 'Помилка при додаванні до кошика', 'error');
-                    }
-                } catch (error) {
-                    console.error('Помилка:', error);
-                    this.showToast('Помилка при додаванні до кошика', 'error');
-                }
-            });
-        });
+        if (window.cartHandler) {
+            window.cartHandler.bindCartButtons();
+        }
     }
     
     getCSRFToken() {

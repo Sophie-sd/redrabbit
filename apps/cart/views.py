@@ -24,10 +24,14 @@ def cart_add(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
     
-    try:
-        data = json.loads(request.body) if request.body else {}
-        quantity = int(data.get('quantity', request.POST.get('quantity', 1)))
-    except (json.JSONDecodeError, ValueError, KeyError):
+    quantity = 1
+    if request.content_type == 'application/json':
+        try:
+            data = json.loads(request.body)
+            quantity = int(data.get('quantity', 1))
+        except (json.JSONDecodeError, ValueError, KeyError):
+            quantity = 1
+    else:
         quantity = int(request.POST.get('quantity', 1))
     
     cart.add(product=product, quantity=quantity)

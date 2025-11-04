@@ -212,26 +212,10 @@ class WishlistManager {
     async addToCartFromWishlist(button) {
         const productId = button.dataset.productId;
         
-        button.disabled = true;
-        const originalText = button.innerHTML;
-        button.innerHTML = '<span>Додається...</span>';
-
-        try {
-            // Використовуємо існуючий cart.js функціонал
-            if (window.cartManager) {
-                await window.cartManager.addToCart(productId, 1);
-                button.innerHTML = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Додано';
-                
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                    button.disabled = false;
-                }, 2000);
-            }
-        } catch (error) {
-            console.error('Add to cart error:', error);
-            button.innerHTML = originalText;
-            button.disabled = false;
-            this.showNotification('Виникла помилка. Спробуйте ще раз.', 'error');
+        if (window.cartHandler) {
+            await window.cartHandler.addToCart(button);
+        } else {
+            console.error('CartHandler not initialized');
         }
     }
 
