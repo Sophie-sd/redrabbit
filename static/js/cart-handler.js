@@ -19,10 +19,10 @@
         }
 
         bindCartButtons() {
-            const buttons = document.querySelectorAll('.product-card__add-cart, .btn-add-cart, .add-to-cart');
+            const buttons = document.querySelectorAll('.product-card__add-cart, .btn-add-cart, .add-to-cart, .promo-add-cart');
             
             buttons.forEach(button => {
-                if (button.hasAttribute('data-cart-initialized')) return;
+                if (button.disabled || button.hasAttribute('data-cart-initialized')) return;
                 button.setAttribute('data-cart-initialized', 'true');
                 
                 button.addEventListener('click', (e) => {

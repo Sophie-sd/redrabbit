@@ -18,8 +18,8 @@
         }
 
         init() {
-            // Знаходимо всі badge елементи
-            this.desktopBadges = document.querySelectorAll('.cart-badge, .header-cart-badge, .badge');
+            // Знаходимо всі badge елементи (тільки cart, не wishlist)
+            this.desktopBadges = document.querySelectorAll('.cart-badge, .header-cart-badge');
             this.mobileBadges = document.querySelectorAll('#mobileCartBadge, .mobile-cart-badge');
             
             // Отримуємо початкову кількість
@@ -48,7 +48,7 @@
 
             // Mutation observer для нових badge елементів
             const observer = new MutationObserver(() => {
-                const newDesktop = document.querySelectorAll('.cart-badge, .header-cart-badge, .badge');
+                const newDesktop = document.querySelectorAll('.cart-badge, .header-cart-badge');
                 const newMobile = document.querySelectorAll('#mobileCartBadge, .mobile-cart-badge');
                 
                 if (newDesktop.length > this.desktopBadges.length || 
