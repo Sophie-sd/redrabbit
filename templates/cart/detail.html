@@ -50,13 +50,18 @@
                             <div class="item-bottom">
                                 <div class="item-quantity">
                                     <label for="quantity-{{ item.product.id }}">Кількість:</label>
-                                    <input type="number" 
-                                           id="quantity-{{ item.product.id }}"
-                                           class="cart-quantity form-control" 
-                                           value="{{ item.quantity }}" 
-                                           min="1" 
-                                           max="{{ item.product.stock }}"
-                                           data-product-id="{{ item.product.id }}">
+                                    <div class="quantity-controls">
+                                        <button type="button" class="qty-btn qty-minus" data-product-id="{{ item.product.id }}">−</button>
+                                        <input type="number" 
+                                               id="quantity-{{ item.product.id }}"
+                                               class="cart-quantity" 
+                                               value="{{ item.quantity }}" 
+                                               min="1" 
+                                               max="{{ item.product.stock }}"
+                                               data-product-id="{{ item.product.id }}"
+                                               readonly>
+                                        <button type="button" class="qty-btn qty-plus" data-product-id="{{ item.product.id }}" data-max="{{ item.product.stock }}">+</button>
+                                    </div>
                                 </div>
                                 
                                 <div class="item-total">
@@ -175,29 +180,45 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    document.querySelectorAll('.cart-quantity').forEach(input => {
-        input.addEventListener('change', async function() {
+    function updateQuantity(productId, quantity) {
+        if (quantity < 1) return;
+        
+        fetch(`/cart/update/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ quantity })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            }
+        })
+        .catch(error => console.error('Помилка:', error));
+    }
+    
+    document.querySelectorAll('.qty-minus').forEach(btn => {
+        btn.addEventListener('click', function() {
             const productId = this.dataset.productId;
-            const quantity = parseInt(this.value);
-            
-            if (quantity < 1) return;
-            
-            try {
-                const response = await fetch(`/cart/update/${productId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    body: JSON.stringify({ quantity })
-                });
-                
-                const data = await response.json();
-                if (data.success) {
-                    location.reload();
-                }
-            } catch (error) {
-                console.error('Помилка:', error);
+            const input = document.getElementById(`quantity-${productId}`);
+            const currentVal = parseInt(input.value);
+            if (currentVal > 1) {
+                updateQuantity(productId, currentVal - 1);
+            }
+        });
+    });
+    
+    document.querySelectorAll('.qty-plus').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const productId = this.dataset.productId;
+            const max = parseInt(this.dataset.max);
+            const input = document.getElementById(`quantity-${productId}`);
+            const currentVal = parseInt(input.value);
+            if (currentVal < max) {
+                updateQuantity(productId, currentVal + 1);
             }
         });
     });
