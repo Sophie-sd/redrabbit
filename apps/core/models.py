@@ -42,7 +42,7 @@ class Banner(models.Model):
         max_length=255,
         verbose_name="Alt текст",
         help_text="Текст для accessibility та SEO",
-        default="Банер Beauty Shop"
+        default="Банер RedRabbit"
     )
     
     is_active = models.BooleanField(

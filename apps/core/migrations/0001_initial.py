@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('desktop_image', models.ImageField(help_text='Розмір: 1200×400 пікселів (співвідношення 3:1)', upload_to='banners/desktop/', validators=[django.core.validators.FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'webp'])], verbose_name='Зображення для десктопу')),
                 ('mobile_image', models.ImageField(help_text='Розмір: 375×200 пікселів (співвідношення 1.875:1)', upload_to='banners/mobile/', validators=[django.core.validators.FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'webp'])], verbose_name='Зображення для мобільного')),
                 ('link_url', models.URLField(blank=True, help_text='URL на який переходити при натисканні на банер', null=True, verbose_name='Посилання')),
-                ('alt_text', models.CharField(default='Банер Beauty Shop', help_text='Текст для accessibility та SEO', max_length=255, verbose_name='Alt текст')),
+                ('alt_text', models.CharField(default='Банер RedRabbit', help_text='Текст для accessibility та SEO', max_length=255, verbose_name='Alt текст')),
                 ('is_active', models.BooleanField(default=True, help_text='Показувати банер на сайті', verbose_name='Активний')),
                 ('order', models.PositiveIntegerField(default=0, help_text='Менше число = вище в списку', verbose_name='Порядок сортування')),
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Створено')),

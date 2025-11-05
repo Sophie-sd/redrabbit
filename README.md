@@ -76,20 +76,20 @@ python manage.py runserver
 ## 📁 Структура проекту
 
 ```
-beautyshop/
+intshop/
 ├── apps/                    # Django додатки
 │   ├── core/               # Основний функціонал
 │   ├── products/           # Товари та категорії
 │   ├── cart/               # Кошик покупок
 │   ├── orders/             # Замовлення
 │   ├── users/              # Користувачі
-│   └── blog/               # Блог та статті
+│   └── wishlist/           # Список бажань
 ├── static/                 # Статичні файли
 │   ├── css/               # Стилі
 │   ├── js/                # JavaScript
 │   └── images/            # Зображення
 ├── templates/             # HTML шаблони
-└── beautyshop/           # Налаштування Django
+└── shop/                  # Налаштування Django
 ```
 
 ## 🎯 Основні сторінки
@@ -133,7 +133,7 @@ EMAIL_USE_TLS=True
 EMAIL_USE_SSL=False
 EMAIL_HOST_USER=your-email@gmail.com
 EMAIL_HOST_PASSWORD=ВСТАВТЕ_ТУТ_ВАШ_APP_PASSWORD
-DEFAULT_FROM_EMAIL=Beauty Shop <your-email@gmail.com>
+DEFAULT_FROM_EMAIL=RedRabbit <your-email@gmail.com>
 
 # Site URL
 SITE_URL=http://127.0.0.1:8000
@@ -215,7 +215,7 @@ EMAIL_PORT=587
 EMAIL_USE_TLS=True
 EMAIL_HOST_USER=your-email@gmail.com
 EMAIL_HOST_PASSWORD=your-app-password-here
-DEFAULT_FROM_EMAIL=Beauty Shop <your-email@gmail.com>
+DEFAULT_FROM_EMAIL=RedRabbit <your-email@gmail.com>
 ```
 
 ## 🎨 Кастомізація

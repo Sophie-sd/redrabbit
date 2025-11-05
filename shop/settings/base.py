@@ -1,5 +1,5 @@
 """
-Базові налаштування для Beauty Shop проекту.
+Базові налаштування для RedRabbit проекту.
 """
 import os
 from pathlib import Path

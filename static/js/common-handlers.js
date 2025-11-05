@@ -1,6 +1,6 @@
 /**
  * Common Event Handlers
- * Загальні обробники подій для сайту Beauty Shop
+ * Загальні обробники подій для сайту RedRabbit
  */
 
 (function() {
@@ -143,15 +143,21 @@
                 const orderId = this.getAttribute('data-cancel-order');
                 
                 if (confirm('Ви впевнені, що хочете скасувати це замовлення?')) {
-                    // AJAX запит на скасування
-                    if (window.BeautyShop && window.BeautyShop.Ajax) {
-                        window.BeautyShop.Ajax.post('/orders/cancel/', { order_id: orderId })
-                            .then(response => {
-                                if (response.success) {
-                                    location.reload();
-                                } else {
-                                    alert(response.error || 'Помилка скасування замовлення');
-                                }
+                    fetch('/orders/cancel/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken')
+                        },
+                        body: JSON.stringify({ order_id: orderId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert(data.error || 'Помилка скасування замовлення');
+                        }
                             })
                             .catch(error => {
                                 console.error('Cancel order error:', error);
@@ -184,8 +190,10 @@
         closeButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const alert = this.closest('.alert');
-                if (alert && window.BeautyShop && window.BeautyShop.Animations) {
-                    window.BeautyShop.Animations.fadeOut(alert, 200);
+                if (alert) {
+                    alert.style.transition = 'opacity 0.2s';
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 200);
                 } else if (alert) {
                     alert.style.display = 'none';
                 }

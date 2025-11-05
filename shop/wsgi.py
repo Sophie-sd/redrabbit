@@ -1,5 +1,5 @@
 """
-WSGI config for beautyshop project.
+WSGI config for RedRabbit project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
