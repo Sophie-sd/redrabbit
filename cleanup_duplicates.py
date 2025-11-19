@@ -150,11 +150,32 @@ def show_statistics():
     print('='*70 + '\n')
 
 
+def remove_old_categories():
+    """Видаляє всі старі категорії перед імпортом нових"""
+    
+    print('\n' + '='*70)
+    print('🗑️  ВИДАЛЕННЯ ВСІХ КАТЕГОРІЙ')
+    print('='*70 + '\n')
+    
+    total_categories = Category.objects.count()
+    
+    if total_categories == 0:
+        print('✅ Категорій немає')
+        return
+    
+    print(f'📋 Знайдено категорій: {total_categories}')
+    print('⚠️  Видаляємо всі категорії та зв\'язки...')
+    
+    Category.objects.all().delete()
+    
+    print('✅ Всі категорії видалено!')
+    print('='*70 + '\n')
+
+
 if __name__ == '__main__':
     try:
         show_statistics()
-        cleanup_duplicate_categories()
-        check_products_without_categories()
+        remove_old_categories()
         show_statistics()
     except Exception as e:
         print(f'\n❌ Помилка: {e}')
