@@ -13,9 +13,6 @@ python manage.py migrate products 0028 --fake --no-input 2>/dev/null || true
 python manage.py migrate products 0029 --fake --no-input 2>/dev/null || true
 python manage.py migrate --no-input
 
-echo "📦 Налаштування БД..."
-python production_setup.py || echo "⚠️  Імпорт завершено з попередженнями"
-
 echo "📝 Оновлення відгуків..."
 python manage.py create_reviews || echo "⚠️  Відгуки не оновлено"
 
