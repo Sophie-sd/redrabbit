@@ -9,6 +9,7 @@ dj-database-url==2.1.0
 python-decouple==3.8
 Pillow==11.3.0
 requests==2.32.5
+openpyxl==3.1.2
 
 # Static files  
 whitenoise==6.11.0

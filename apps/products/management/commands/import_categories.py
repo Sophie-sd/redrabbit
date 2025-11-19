@@ -73,30 +73,35 @@ class Command(BaseCommand):
             # Спочатку створюємо всі головні категорії (без parent)
             for cat_data in categories_data:
                 if not cat_data['parent_id']:
-                    # Генеруємо унікальний slug
-                    base_slug = slugify(cat_data['name'])
-                    slug = base_slug
-                    counter = 1
+                    # Перевіряємо чи категорія вже існує
+                    existing_cat = Category.objects.filter(external_id=cat_data['external_id']).first()
                     
-                    # Перевіряємо унікальність slug (крім поточної категорії)
-                    while Category.objects.filter(slug=slug).exclude(external_id=cat_data['external_id']).exists():
-                        slug = f"{base_slug}-{counter}"
-                        counter += 1
-                    
-                    category, created = Category.objects.update_or_create(
-                        external_id=cat_data['external_id'],
-                        defaults={
-                            'name': cat_data['name'],
-                            'slug': slug,
-                            'is_active': True,
-                        }
-                    )
-                    created_categories[cat_data['external_id']] = category
-                    
-                    if created:
-                        self.stdout.write(f'  ✓ Створено головну категорію: {category.name}')
+                    if existing_cat:
+                        # Оновлюємо існуючу категорію, зберігаючи slug
+                        existing_cat.name = cat_data['name']
+                        existing_cat.is_active = True
+                        existing_cat.save()
+                        created_categories[cat_data['external_id']] = existing_cat
+                        self.stdout.write(f'  ↻ Оновлено головну категорію: {existing_cat.name}')
                     else:
-                        self.stdout.write(f'  ↻ Оновлено головну категорію: {category.name}')
+                        # Генеруємо унікальний slug для нової категорії
+                        base_slug = slugify(cat_data['name'])
+                        slug = base_slug
+                        counter = 1
+                        
+                        while Category.objects.filter(slug=slug).exists():
+                            slug = f"{base_slug}-{counter}"
+                            counter += 1
+                        
+                        # Створюємо нову категорію
+                        category = Category.objects.create(
+                            external_id=cat_data['external_id'],
+                            name=cat_data['name'],
+                            slug=slug,
+                            is_active=True,
+                        )
+                        created_categories[cat_data['external_id']] = category
+                        self.stdout.write(f'  ✓ Створено головну категорію: {category.name}')
             
             # Потім створюємо підкатегорії (кілька проходів для глибокої вкладеності)
             max_iterations = 10
@@ -114,31 +119,37 @@ class Command(BaseCommand):
                     if parent_external_id in created_categories:
                         parent_category = created_categories[parent_external_id]
                         
-                        # Генеруємо унікальний slug
-                        base_slug = slugify(f"{parent_category.slug}-{cat_data['name']}")
-                        slug = base_slug
-                        counter = 1
+                        # Перевіряємо чи підкатегорія вже існує
+                        existing_cat = Category.objects.filter(external_id=cat_data['external_id']).first()
                         
-                        # Перевіряємо унікальність slug
-                        while Category.objects.filter(slug=slug).exclude(external_id=cat_data['external_id']).exists():
-                            slug = f"{base_slug}-{counter}"
-                            counter += 1
-                        
-                        category, created = Category.objects.update_or_create(
-                            external_id=cat_data['external_id'],
-                            defaults={
-                                'name': cat_data['name'],
-                                'slug': slug,
-                                'parent': parent_category,
-                                'is_active': True,
-                            }
-                        )
-                        created_categories[cat_data['external_id']] = category
-                        
-                        if created:
-                            self.stdout.write(f'  ✓ Створено підкатегорію: {category.name} (батько: {parent_category.name})')
+                        if existing_cat:
+                            # Оновлюємо існуючу підкатегорію, зберігаючи slug
+                            existing_cat.name = cat_data['name']
+                            existing_cat.parent = parent_category
+                            existing_cat.is_active = True
+                            existing_cat.save()
+                            created_categories[cat_data['external_id']] = existing_cat
+                            self.stdout.write(f'  ↻ Оновлено підкатегорію: {existing_cat.name}')
                         else:
-                            self.stdout.write(f'  ↻ Оновлено підкатегорію: {category.name}')
+                            # Генеруємо унікальний slug для нової підкатегорії
+                            base_slug = slugify(f"{parent_category.slug}-{cat_data['name']}")
+                            slug = base_slug
+                            counter = 1
+                            
+                            while Category.objects.filter(slug=slug).exists():
+                                slug = f"{base_slug}-{counter}"
+                                counter += 1
+                            
+                            # Створюємо нову підкатегорію
+                            category = Category.objects.create(
+                                external_id=cat_data['external_id'],
+                                name=cat_data['name'],
+                                slug=slug,
+                                parent=parent_category,
+                                is_active=True,
+                            )
+                            created_categories[cat_data['external_id']] = category
+                            self.stdout.write(f'  ✓ Створено підкатегорію: {category.name} (батько: {parent_category.name})')
                         
                         processed.append(cat_data)
                 
@@ -149,11 +160,41 @@ class Command(BaseCommand):
                 if not processed:
                     break
             
-            # Якщо залишилися необроблені
+            # Якщо залишилися необроблені - створюємо їх як головні категорії
             if remaining:
-                self.stdout.write(self.style.WARNING(f'Не вдалося обробити {len(remaining)} категорій (батьківські категорії не знайдені)'))
+                self.stdout.write(self.style.WARNING(f'Залишилося {len(remaining)} категорій без батьківських - створюємо як головні'))
                 for cat_data in remaining:
-                    self.stdout.write(f'  - {cat_data["name"]} (parent_id: {cat_data["parent_id"]})')
+                    self.stdout.write(f'  ⚠ {cat_data["name"]} (parent_id: {cat_data["parent_id"]} не знайдено)')
+                    
+                    # Перевіряємо чи категорія вже існує
+                    existing_cat = Category.objects.filter(external_id=cat_data['external_id']).first()
+                    
+                    if existing_cat:
+                        # Оновлюємо, але робимо головною (parent=None)
+                        existing_cat.name = cat_data['name']
+                        existing_cat.parent = None
+                        existing_cat.is_active = True
+                        existing_cat.save()
+                        created_categories[cat_data['external_id']] = existing_cat
+                        self.stdout.write(f'    ↻ Оновлено як головну категорію: {existing_cat.name}')
+                    else:
+                        # Створюємо як нову головну категорію
+                        base_slug = slugify(cat_data['name'])
+                        slug = base_slug
+                        counter = 1
+                        
+                        while Category.objects.filter(slug=slug).exists():
+                            slug = f"{base_slug}-{counter}"
+                            counter += 1
+                        
+                        category = Category.objects.create(
+                            external_id=cat_data['external_id'],
+                            name=cat_data['name'],
+                            slug=slug,
+                            is_active=True,
+                        )
+                        created_categories[cat_data['external_id']] = category
+                        self.stdout.write(f'    ✓ Створено як головну категорію: {category.name}')
             
             total_created = len(created_categories)
             self.stdout.write(self.style.SUCCESS(f'\n✓ Імпорт завершено! Створено/оновлено {total_created} категорій'))

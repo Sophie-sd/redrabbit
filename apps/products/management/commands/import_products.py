@@ -136,12 +136,14 @@ class Command(BaseCommand):
                         continue
                     
                     # Дані для створення/оновлення
+                    # is_active завжди True при імпорті (контролюється адміном вручну)
+                    # available впливає тільки на stock (наявність на складі)
                     product_data = {
                         'name': name[:200],
                         'description': description or '',
                         'retail_price': retail_price,
                         'vendor_name': vendor[:200] if vendor else '',
-                        'is_active': available,
+                        'is_active': True,
                         'stock': 5 if available else 0,
                         'is_sale': False,
                         'sale_price': None,
@@ -153,14 +155,13 @@ class Command(BaseCommand):
                         for key, value in product_data.items():
                             setattr(existing_product, key, value)
                         
-                        # Оновлюємо категорії
-                        if not existing_product.primary_category:
-                            existing_product.primary_category = category
+                        # Завжди оновлюємо primary_category з фіду
+                        existing_product.primary_category = category
                         
                         existing_product.save()
                         
                         # Додаємо в categories якщо немає
-                        if category not in existing_product.categories.all():
+                        if not existing_product.categories.filter(id=category.id).exists():
                             existing_product.categories.add(category)
                         
                         product = existing_product

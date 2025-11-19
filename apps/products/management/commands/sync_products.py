@@ -129,12 +129,11 @@ class Command(BaseCommand):
                                     except (ValueError, TypeError):
                                         pass
 
-                                if product.is_active != available:
-                                    product.is_active = available
-                                    updated = True
-
-                                if product.stock != (5 if available else 0):
-                                    product.stock = 5 if available else 0
+                                # is_active контролюється вручну адміном, не чіпаємо
+                                # available впливає тільки на stock (наявність)
+                                new_stock = 5 if available else 0
+                                if product.stock != new_stock:
+                                    product.stock = new_stock
                                     updated = True
 
                                 if name and product.name != name[:200]:
@@ -159,7 +158,7 @@ class Command(BaseCommand):
                                         updated = True
                                     
                                     # Додаємо в categories якщо немає
-                                    if new_category not in product.categories.all():
+                                    if not product.categories.filter(id=new_category.id).exists():
                                         product.categories.add(new_category)
 
                                 if updated:
