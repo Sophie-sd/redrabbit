@@ -175,9 +175,8 @@ class Command(BaseCommand):
                                     for key, value in product_data.items():
                                         setattr(existing_product, key, value)
                                     
-                                    # primary_category оновлюємо ТІЛЬКИ якщо він None
-                                    if not existing_product.primary_category:
-                                        existing_product.primary_category = category
+                                    # ЗАВЖДИ оновлюємо primary_category з XML
+                                    existing_product.primary_category = category
                                     
                                     existing_product.save()
                                     
