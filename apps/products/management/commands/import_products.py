@@ -180,6 +180,11 @@ class Command(BaseCommand):
                                     
                                     existing_product.save()
                                     
+                                    # Видаляємо всі головні категорії (без parent) з товару
+                                    main_categories = existing_product.categories.filter(parent__isnull=True)
+                                    if main_categories.exists():
+                                        existing_product.categories.remove(*main_categories)
+                                    
                                     # Додаємо в categories якщо немає
                                     if not existing_product.categories.filter(id=category.id).exists():
                                         existing_product.categories.add(category)
