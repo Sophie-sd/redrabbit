@@ -72,7 +72,6 @@ class HomeView(TemplateView):
             'sale_products': sale_products,
             'top_products': top_products,
             'reviews': reviews,
-            'categories': Category.objects.filter(parent=None, is_active=True).order_by('sort_order', 'name'),
         })
         return context
 
