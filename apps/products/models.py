@@ -30,7 +30,7 @@ class Category(models.Model):
     )
     parent = models.ForeignKey(
         'self', 
-        on_delete=models.CASCADE, 
+        on_delete=models.SET_NULL, 
         null=True, 
         blank=True, 
         related_name='children',
@@ -137,6 +137,7 @@ class Product(models.Model):
         max_length=50, 
         blank=True, 
         null=True,
+        unique=True,
         db_index=True,
         help_text='Артикул постачальника (vendorCode)'
     )
@@ -189,9 +190,20 @@ class Product(models.Model):
         ]
     
     def save(self, *args, **kwargs):
+        # Генерація slug з перевіркою унікальності
         if not self.slug:
-            self.slug = slugify(self.name)
+            base_slug = slugify(self.name)
+            slug = base_slug
+            counter = 1
+            
+            # Перевіряємо унікальність slug (окрім поточного об'єкта)
+            while Product.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            
+            self.slug = slug
         
+        # Генерація SKU
         generate_sku = not self.sku
         
         if generate_sku:

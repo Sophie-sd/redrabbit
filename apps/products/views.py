@@ -3,7 +3,15 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Count, Q, Prefetch
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
+from django.conf import settings
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+from django.core.management import call_command
+import logging
 from .models import Product, Category
+
+logger = logging.getLogger(__name__)
 
 
 class CategoryView(ListView):
@@ -106,3 +114,24 @@ class SaleProductsView(ListView):
         context = super().get_context_data(**kwargs)
         context['total_products'] = self.get_queryset().count()
         return context
+
+
+@csrf_exempt
+@require_POST
+def trigger_sync(request):
+    """Endpoint для тригеру синхронізації (для cron-job.org)"""
+    secret = request.POST.get('secret', '')
+    
+    if secret != getattr(settings, 'CRON_SECRET', 'change-me'):
+        logger.warning(f'Unauthorized cron attempt from {request.META.get("REMOTE_ADDR")}')
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+    
+    try:
+        logger.info('Starting sync from cron trigger')
+        call_command('sync_products', '--skip-images')
+        call_command('update_prices_xls')
+        logger.info('Sync completed successfully')
+        return JsonResponse({'status': 'success'})
+    except Exception as e:
+        logger.error(f'Sync error: {e}', exc_info=True)
+        return JsonResponse({'error': str(e)}, status=500)

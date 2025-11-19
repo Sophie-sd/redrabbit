@@ -1,0 +1,70 @@
+# Generated migration to fix critical issues
+from django.db import migrations, models
+from django.db.models import Count
+
+
+def remove_duplicate_products(apps, schema_editor):
+    """Видаляє дублікати Product.external_id перед додаванням unique constraint"""
+    Product = apps.get_model('products', 'Product')
+    
+    # Знаходимо дублікати по external_id
+    duplicates = Product.objects.values('external_id').annotate(
+        count=Count('id')
+    ).filter(count__gt=1, external_id__isnull=False)
+    
+    removed_count = 0
+    for dup in duplicates:
+        ext_id = dup['external_id']
+        # Залишаємо найстаріший товар, видаляємо інші
+        products = Product.objects.filter(external_id=ext_id).order_by('created_at')
+        for product in products[1:]:
+            product.delete()
+            removed_count += 1
+    
+    if removed_count > 0:
+        print(f'Видалено {removed_count} дублікатів товарів')
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('products', '0029_productimage_products_pr_product_a6a200_idx'),
+    ]
+
+    operations = [
+        # КРОК 1: Видалити дублікати Product.external_id
+        migrations.RunPython(
+            code=remove_duplicate_products,
+            reverse_code=migrations.RunPython.noop,
+        ),
+        
+        # КРОК 2: Зробити Product.external_id unique
+        migrations.AlterField(
+            model_name='product',
+            name='external_id',
+            field=models.CharField(
+                blank=True,
+                db_index=True,
+                help_text='Артикул постачальника (vendorCode)',
+                max_length=50,
+                null=True,
+                unique=True,
+                verbose_name='Зовнішній ID'
+            ),
+        ),
+        
+        # КРОК 3: Змінити Category.parent з CASCADE на SET_NULL
+        migrations.AlterField(
+            model_name='category',
+            name='parent',
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=models.SET_NULL,
+                related_name='children',
+                to='products.category',
+                verbose_name='Батьківська категорія'
+            ),
+        ),
+    ]
+

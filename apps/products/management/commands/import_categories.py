@@ -73,27 +73,30 @@ class Command(BaseCommand):
             # Спочатку створюємо всі головні категорії (без parent)
             for cat_data in categories_data:
                 if not cat_data['parent_id']:
-                    # Перевіряємо чи категорія вже існує
-                    existing_cat = Category.objects.filter(external_id=cat_data['external_id']).first()
+                    # Шукаємо ТІЛЬКИ за external_id
+                    existing_cat = Category.objects.filter(
+                        external_id=cat_data['external_id']
+                    ).first()
                     
                     if existing_cat:
-                        # Оновлюємо існуючу категорію, зберігаючи slug
+                        # Оновлюємо існуючу (зберігаємо slug!)
                         existing_cat.name = cat_data['name']
                         existing_cat.is_active = True
+                        existing_cat.parent = None
                         existing_cat.save()
                         created_categories[cat_data['external_id']] = existing_cat
                         self.stdout.write(f'  ↻ Оновлено головну категорію: {existing_cat.name}')
                     else:
-                        # Генеруємо унікальний slug для нової категорії
+                        # Створюємо нову ТІЛЬКИ якщо external_id новий
                         base_slug = slugify(cat_data['name'])
                         slug = base_slug
                         counter = 1
                         
+                        # Генеруємо унікальний slug
                         while Category.objects.filter(slug=slug).exists():
                             slug = f"{base_slug}-{counter}"
                             counter += 1
                         
-                        # Створюємо нову категорію
                         category = Category.objects.create(
                             external_id=cat_data['external_id'],
                             name=cat_data['name'],
@@ -119,11 +122,13 @@ class Command(BaseCommand):
                     if parent_external_id in created_categories:
                         parent_category = created_categories[parent_external_id]
                         
-                        # Перевіряємо чи підкатегорія вже існує
-                        existing_cat = Category.objects.filter(external_id=cat_data['external_id']).first()
+                        # Шукаємо ТІЛЬКИ за external_id
+                        existing_cat = Category.objects.filter(
+                            external_id=cat_data['external_id']
+                        ).first()
                         
                         if existing_cat:
-                            # Оновлюємо існуючу підкатегорію, зберігаючи slug
+                            # Оновлюємо існуючу (зберігаємо slug!)
                             existing_cat.name = cat_data['name']
                             existing_cat.parent = parent_category
                             existing_cat.is_active = True
@@ -131,16 +136,16 @@ class Command(BaseCommand):
                             created_categories[cat_data['external_id']] = existing_cat
                             self.stdout.write(f'  ↻ Оновлено підкатегорію: {existing_cat.name}')
                         else:
-                            # Генеруємо унікальний slug для нової підкатегорії
+                            # Створюємо нову ТІЛЬКИ якщо external_id новий
                             base_slug = slugify(f"{parent_category.slug}-{cat_data['name']}")
                             slug = base_slug
                             counter = 1
                             
+                            # Генеруємо унікальний slug
                             while Category.objects.filter(slug=slug).exists():
                                 slug = f"{base_slug}-{counter}"
                                 counter += 1
                             
-                            # Створюємо нову підкатегорію
                             category = Category.objects.create(
                                 external_id=cat_data['external_id'],
                                 name=cat_data['name'],
@@ -166,8 +171,10 @@ class Command(BaseCommand):
                 for cat_data in remaining:
                     self.stdout.write(f'  ⚠ {cat_data["name"]} (parent_id: {cat_data["parent_id"]} не знайдено)')
                     
-                    # Перевіряємо чи категорія вже існує
-                    existing_cat = Category.objects.filter(external_id=cat_data['external_id']).first()
+                    # Шукаємо ТІЛЬКИ за external_id
+                    existing_cat = Category.objects.filter(
+                        external_id=cat_data['external_id']
+                    ).first()
                     
                     if existing_cat:
                         # Оновлюємо, але робимо головною (parent=None)

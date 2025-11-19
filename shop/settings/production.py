@@ -232,3 +232,9 @@ USE_TZ = True
 TIME_ZONE = 'Europe/Kiev'
 
 # Налаштування завершено - STORAGES вже налаштований вище
+
+# Секрет для cron тригера (додати в Render Environment Variables)
+CRON_SECRET = os.getenv('CRON_SECRET', 'change-me-in-production')
+
+# Збільшити timeout для довгих операцій імпорту
+CONN_MAX_AGE = 600  # 10 хвилин

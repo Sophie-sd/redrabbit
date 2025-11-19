@@ -3,6 +3,7 @@ import requests
 import html
 from decimal import Decimal
 from django.core.management.base import BaseCommand
+from django.db import transaction
 from apps.products.models import Category, Product, ProductAttribute
 from apps.products.utils import download_product_images
 
@@ -86,8 +87,15 @@ class Command(BaseCommand):
             skipped_count = 0
             error_count = 0
             
-            for idx, offer in enumerate(offers, 1):
+            # Обробляємо ПАКЕТАМИ по 100 товарів з транзакціями
+            batch_size = 100
+            for batch_start in range(0, len(offers), batch_size):
+                batch = offers[batch_start:batch_start + batch_size]
+                
                 try:
+                    with transaction.atomic():
+                        for idx, offer in enumerate(batch, batch_start + 1):
+                            try:
                     # Отримуємо дані товару
                     offer_id = offer.get('id')
                     available = offer.get('available', 'true') == 'true'
@@ -143,7 +151,7 @@ class Command(BaseCommand):
                         'description': description or '',
                         'retail_price': retail_price,
                         'vendor_name': vendor[:200] if vendor else '',
-                        'is_active': True,
+                        'is_active': available,
                         'stock': 5 if available else 0,
                         'is_sale': False,
                         'sale_price': None,
@@ -155,8 +163,9 @@ class Command(BaseCommand):
                         for key, value in product_data.items():
                             setattr(existing_product, key, value)
                         
-                        # Завжди оновлюємо primary_category з фіду
-                        existing_product.primary_category = category
+                        # primary_category оновлюємо ТІЛЬКИ якщо він None
+                        if not existing_product.primary_category:
+                            existing_product.primary_category = category
                         
                         existing_product.save()
                         
@@ -211,9 +220,15 @@ class Command(BaseCommand):
                     if idx % 50 == 0:
                         self.stdout.write(f'  {action} Оброблено {idx}/{len(offers)} товарів...')
                     
+                            except Exception as e:
+                                error_count += 1
+                                self.stdout.write(self.style.ERROR(f'  ✗ Помилка обробки товару {offer_id}: {e}'))
+                
                 except Exception as e:
-                    error_count += 1
-                    self.stdout.write(self.style.ERROR(f'  ✗ Помилка обробки товару {offer_id}: {e}'))
+                    self.stdout.write(self.style.ERROR(
+                        f'Помилка в пакеті {batch_start}-{batch_start+batch_size}: {e}'
+                    ))
+                    error_count += batch_size
             
             # Підсумок
             self.stdout.write(self.style.SUCCESS('\n' + '='*60))
