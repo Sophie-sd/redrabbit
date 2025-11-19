@@ -15,12 +15,21 @@ class CategoryView(ListView):
     def get_queryset(self):
         from .models import ProductImage
         
+        children_with_products = Category.objects.filter(
+            is_active=True
+        ).annotate(
+            products_count=Count('products', filter=Q(products__is_active=True), distinct=True) +
+                           Count('primary_products', filter=Q(primary_products__is_active=True), distinct=True)
+        ).filter(products_count__gt=0)
+        
         self.category = get_object_or_404(
-            Category.objects.select_related('parent').prefetch_related('children'),
+            Category.objects.select_related('parent').prefetch_related(
+                Prefetch('children', queryset=children_with_products)
+            ),
             slug=self.kwargs['slug']
         )
         
-        child_categories = self.category.children.filter(is_active=True)
+        child_categories = self.category.children.all()
         
         base_queryset = Product.objects.select_related(
             'primary_category'
@@ -54,14 +63,9 @@ class CategoryView(ListView):
         context = super().get_context_data(**kwargs)
         context['category'] = self.category
         
-        # Підкатегорії (розділи)
-        subcategories = self.category.children.filter(
-            is_active=True, 
-            slug__isnull=False
-        ).exclude(slug='')
+        subcategories = self.category.children.all()
         context['subcategories'] = subcategories
         
-        # Якщо є підкатегорії - це фільтр "Розділи"
         if subcategories:
             context['available_subcategories'] = subcategories
         
