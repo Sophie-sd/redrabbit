@@ -121,6 +121,18 @@ class Command(BaseCommand):
                         skipped_count += 1
                         continue
                     
+                    # ВИПРАВЛЕННЯ: Якщо category - це ГОЛОВНА категорія (без parent),
+                    # шукаємо першу активну підкатегорію і додаємо товар туди
+                    if not category.parent:
+                        # Це головна категорія - шукаємо підкатегорію
+                        subcategories = category.children.filter(is_active=True).order_by('name')
+                        if subcategories.exists():
+                            category = subcategories.first()
+                            self.stdout.write(f'  ℹ Товар {name}: переміщено з головної в підкатегорію {category.name}')
+                        else:
+                            # Немає підкатегорій - залишаємо в головній (рідкісний випадок)
+                            self.stdout.write(f'  ⚠ Товар {name}: залишено в головній категорії (немає підкатегорій)')
+                    
                     # Конвертуємо ціну
                     try:
                         retail_price = Decimal(price)
