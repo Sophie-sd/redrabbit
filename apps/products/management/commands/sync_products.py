@@ -190,14 +190,13 @@ class Command(BaseCommand):
                                 if pictures:
                                     picture_urls = [p.text for p in pictures if p.text]
                                     
-                                    # Завантажуємо тільки якщо немає картинок або це режим images_only
                                     has_images = product.images.exists()
-                                    if not has_images or images_only:
+                                    if not has_images:
                                         try:
                                             success, errors = download_product_images(
                                                 product, 
                                                 picture_urls, 
-                                                clear_existing=images_only and has_images
+                                                clear_existing=False
                                             )
                                             if success > 0:
                                                 images_updated += 1
