@@ -5,12 +5,6 @@ from django.db.models import Count, Q, Prefetch
 
 
 def base_context(request):
-    new_category_slugs = [
-        'for-women', 'for-men', 'for-couples', 
-        'lubricants', 'foreplay', 'underwear-costumes', 
-        'bdsm-fetish', 'sexual-health'
-    ]
-    
     children_queryset = Category.objects.filter(
         is_active=True
     ).annotate(
@@ -21,8 +15,7 @@ def base_context(request):
     context = {
         'main_categories': Category.objects.filter(
             parent=None, 
-            is_active=True,
-            slug__in=new_category_slugs
+            is_active=True
         ).prefetch_related(
             Prefetch('children', queryset=children_queryset)
         ).order_by('sort_order', 'name'),
