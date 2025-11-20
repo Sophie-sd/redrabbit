@@ -16,9 +16,6 @@ python manage.py migrate --no-input
 echo "📁 Імпорт категорій..."
 python manage.py import_categories || echo "⚠️  Категорії не імпортовано"
 
-echo "📦 Імпорт товарів..."
-python manage.py import_products --skip-images || echo "⚠️  Товари не імпортовано"
-
 echo "📝 Оновлення відгуків..."
 python manage.py create_reviews || echo "⚠️  Відгуки не оновлено"
 
