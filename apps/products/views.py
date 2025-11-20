@@ -71,10 +71,14 @@ class CategoryView(ListView):
         context = super().get_context_data(**kwargs)
         context['category'] = self.category
         
-        subcategories = self.category.children.all()
+        subcategories = self.category.children.filter(is_active=True).annotate(
+            products_count=Count('products', filter=Q(products__is_active=True), distinct=True) +
+                           Count('primary_products', filter=Q(primary_products__is_active=True), distinct=True)
+        ).filter(products_count__gt=0)
+        
         context['subcategories'] = subcategories
         
-        if subcategories:
+        if subcategories.exists():
             context['available_subcategories'] = subcategories
         
         # Мін/Макс ціна для фільтру ціни

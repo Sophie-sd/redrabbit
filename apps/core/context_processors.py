@@ -1,7 +1,7 @@
 from apps.products.models import Category
 from apps.cart.cart import Cart
 from apps.wishlist.wishlist import Wishlist
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Count, Q
 from django.core.cache import cache
 
 
@@ -12,12 +12,18 @@ def base_context(request):
         children_queryset = Category.objects.filter(
             is_active=True,
             parent__isnull=False
-        ).select_related('parent').only('id', 'name', 'slug', 'parent_id', 'sort_order')
+        ).annotate(
+            products_count=Count('products', filter=Q(products__is_active=True), distinct=True) +
+                           Count('primary_products', filter=Q(primary_products__is_active=True), distinct=True)
+        ).filter(products_count__gt=0).select_related('parent').only('id', 'name', 'slug', 'parent_id', 'sort_order')
         
         main_categories = list(Category.objects.filter(
             parent=None, 
             is_active=True
-        ).prefetch_related(
+        ).annotate(
+            products_count=Count('products', filter=Q(products__is_active=True), distinct=True) +
+                           Count('primary_products', filter=Q(primary_products__is_active=True), distinct=True)
+        ).filter(products_count__gt=0).prefetch_related(
             Prefetch('children', queryset=children_queryset)
         ).only('id', 'name', 'slug', 'sort_order').order_by('sort_order', 'name'))
         
