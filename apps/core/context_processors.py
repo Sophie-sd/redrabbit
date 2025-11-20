@@ -20,10 +20,7 @@ def base_context(request):
         main_categories = list(Category.objects.filter(
             parent=None, 
             is_active=True
-        ).annotate(
-            products_count=Count('products', filter=Q(products__is_active=True), distinct=True) +
-                           Count('primary_products', filter=Q(primary_products__is_active=True), distinct=True)
-        ).filter(products_count__gt=0).prefetch_related(
+        ).prefetch_related(
             Prefetch('children', queryset=children_queryset)
         ).only('id', 'name', 'slug', 'sort_order').order_by('sort_order', 'name'))
         
