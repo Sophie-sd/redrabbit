@@ -11,10 +11,8 @@ echo "🔄 Застосування міграцій..."
 python manage.py migrate products 0027 --fake --no-input 2>/dev/null || true
 python manage.py migrate products 0028 --fake --no-input 2>/dev/null || true
 python manage.py migrate products 0029 --fake --no-input 2>/dev/null || true
-python manage.py migrate --no-input
-
-echo "📝 Fake проблемних міграцій..."
 python manage.py migrate products 0031 --fake --no-input 2>/dev/null || true
+python manage.py migrate --no-input
 
 echo "📁 Імпорт категорій..."
 python manage.py import_categories || echo "⚠️  Категорії не імпортовано"
