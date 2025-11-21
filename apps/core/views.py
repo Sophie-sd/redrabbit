@@ -22,7 +22,7 @@ def healthcheck(request):
     return HttpResponse("OK", status=200)
 
 
-
+@method_decorator(cache_page(60 * 10), name='dispatch')
 class HomeView(TemplateView):
     """Головна сторінка"""
     template_name = 'core/home.html'
@@ -49,10 +49,10 @@ class HomeView(TemplateView):
             Q(sale_end_date__isnull=True) | Q(sale_end_date__gt=now)
         ).select_related('primary_category').prefetch_related(
             Prefetch('images',
-                queryset=ProductImage.objects.filter(is_main=True).only('image', 'is_main', 'product_id'),
+                queryset=ProductImage.objects.filter(is_main=True).only('image', 'image_url', 'is_main', 'product_id'),
                 to_attr='main_images'
             )
-        ).order_by('sort_order', '-created_at')[:20]
+        ).order_by('sort_order', '-created_at')[:8]
         
         from apps.products.models import TopProduct
         top_product_entries = TopProduct.objects.filter(
@@ -60,17 +60,17 @@ class HomeView(TemplateView):
             product__is_active=True
         ).select_related('product__primary_category').prefetch_related(
             Prefetch('product__images',
-                queryset=ProductImage.objects.filter(is_main=True).only('image', 'is_main', 'product_id'),
+                queryset=ProductImage.objects.filter(is_main=True).only('image', 'image_url', 'is_main', 'product_id'),
                 to_attr='main_images'
             )
-        ).order_by('sort_order', '-created_at')[:12]
+        ).order_by('sort_order', '-created_at')[:8]
         
         top_products = [entry.product for entry in top_product_entries]
         
         # Отримуємо схвалені відгуки
         reviews = ProductReview.objects.filter(
             is_approved=True
-        ).select_related('product').prefetch_related('product__images').order_by('-created_at')[:10]
+        ).select_related('product').prefetch_related('product__images').order_by('-created_at')[:6]
         
         context.update({
             'banners': banners,
