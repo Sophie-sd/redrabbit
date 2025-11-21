@@ -6,6 +6,8 @@ from django.views.generic import TemplateView
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Q, Prefetch
 from django.db import connection
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 from apps.products.models import Product, Category, ProductReview
 from .models import Banner
 
