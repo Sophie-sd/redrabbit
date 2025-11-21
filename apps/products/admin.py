@@ -50,11 +50,12 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     list_display = [
         'get_product_image', 'name', 'get_categories_display', 'sku', 
-        'get_price_display', 'get_badges', 'stock'
+        'get_price_display', 'get_badges', 'stock', 'is_active'
     ]
     list_display_links = ['get_product_image', 'name']
-    list_filter = ['primary_category', 'is_sale', 'is_top', 'is_new']
+    list_filter = ['primary_category', 'is_sale', 'is_top', 'is_new', 'is_active']
     search_fields = ['name', 'sku', 'external_id', 'vendor_name']
+    list_editable = ['is_active']
     ordering = ['sort_order', '-updated_at']
     list_per_page = 50
     filter_horizontal = ['categories']

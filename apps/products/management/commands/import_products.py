@@ -9,7 +9,6 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils.text import slugify
 from apps.products.models import Category, Product, ProductAttribute
-from apps.products.utils import download_product_images
 
 
 class Command(BaseCommand):
@@ -25,13 +24,8 @@ class Command(BaseCommand):
         parser.add_argument(
             '--batch-size',
             type=int,
-            default=100,
+            default=50,
             help='Розмір пакету для обробки'
-        )
-        parser.add_argument(
-            '--skip-images',
-            action='store_true',
-            help='Не завантажувати картинки'
         )
         parser.add_argument(
             '--limit',
@@ -42,7 +36,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         url = options['url']
         batch_size = options['batch_size']
-        skip_images = options['skip_images']
         limit = options.get('limit')
 
         self.stdout.write(self.style.SUCCESS('🆕 ІМПОРТ НОВИХ ТОВАРІВ'))
@@ -90,7 +83,6 @@ class Command(BaseCommand):
             updated_count = 0
             skipped_count = 0
             error_count = 0
-            images_loaded = 0
 
             # Обробляємо товари пакетами
             for i in range(0, len(offers), batch_size):
@@ -196,22 +188,22 @@ class Command(BaseCommand):
                                             sort_order=param_idx,
                                         )
                             
-                            # Завантажуємо картинки
-                            if not skip_images:
-                                pictures = offer.findall('picture')
-                                if pictures and not product.images.exists():
-                                    picture_urls = [p.text for p in pictures if p.text]
-                                    
-                                    try:
-                                        success, errors = download_product_images(
-                                            product, 
-                                            picture_urls, 
-                                            clear_existing=False
-                                        )
-                                        if success > 0:
-                                            images_loaded += 1
-                                    except Exception as e:
-                                        self.stdout.write(f'    ⚠️ Помилка завантаження картинок для {product.name}: {e}')
+                            # Додаємо зображення як URL
+                            pictures = offer.findall('picture')
+                            if pictures and not product.images.exists():
+                                for idx, picture in enumerate(pictures):
+                                    picture_url = picture.text
+                                    if picture_url:
+                                        try:
+                                            from apps.products.models import ProductImage
+                                            ProductImage.objects.create(
+                                                product=product,
+                                                image_url=picture_url,
+                                                is_main=(idx == 0),
+                                                sort_order=idx,
+                                            )
+                                        except Exception:
+                                            pass
 
                         except Exception as e:
                             error_count += 1
@@ -228,8 +220,6 @@ class Command(BaseCommand):
             self.stdout.write(f'📊 Статистика:')
             self.stdout.write(f'   • Створено нових товарів: {created_count}')
             self.stdout.write(f'   • Оновлено існуючих: {updated_count}')
-            if not skip_images:
-                self.stdout.write(f'   • Завантажено картинок: {images_loaded}')
             self.stdout.write(f'   • Пропущено: {skipped_count}')
             if error_count > 0:
                 self.stdout.write(self.style.WARNING(f'   • Помилок: {error_count}'))

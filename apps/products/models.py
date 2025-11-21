@@ -4,7 +4,6 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
-from PIL import Image
 import time
 
 
@@ -312,36 +311,6 @@ class ProductImage(models.Model):
         return self.image_url
     
     def save(self, *args, **kwargs):
-        if self.image and hasattr(self.image, 'file'):
-            try:
-                from io import BytesIO
-                from django.core.files.uploadedfile import InMemoryUploadedFile
-                
-                img = Image.open(self.image)
-                
-                if img.height > 800 or img.width > 800:
-                    if img.mode in ('RGBA', 'LA', 'P'):
-                        background = Image.new('RGB', img.size, (255, 255, 255))
-                        background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
-                        img = background
-                    
-                    img.thumbnail((800, 800), Image.Resampling.LANCZOS)
-                    
-                    output = BytesIO()
-                    img.save(output, format='JPEG', optimize=True, quality=85)
-                    output.seek(0)
-                    
-                    self.image = InMemoryUploadedFile(
-                        output,
-                        'ImageField',
-                        f"{self.image.name.split('.')[0]}.jpg",
-                        'image/jpeg',
-                        output.getbuffer().nbytes,
-                        None
-                    )
-            except Exception:
-                pass
-        
         super().save(*args, **kwargs)
     
     def __str__(self):
