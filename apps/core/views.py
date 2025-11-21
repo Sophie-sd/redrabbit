@@ -3,7 +3,7 @@ Core Views - основні представлення сайту
 """
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.db.models import Q, Prefetch
 from django.db import connection
 from apps.products.models import Product, Category, ProductReview
@@ -15,6 +15,11 @@ try:
     POSTGRES_AVAILABLE = True
 except ImportError:
     POSTGRES_AVAILABLE = False
+
+
+def healthcheck(request):
+    """Простий healthcheck endpoint для Render"""
+    return HttpResponse("OK", status=200)
 
 
 

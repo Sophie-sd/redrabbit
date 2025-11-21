@@ -14,6 +14,7 @@ from .models import Product, Category
 logger = logging.getLogger(__name__)
 
 
+@method_decorator(cache_page(60 * 5), name='dispatch')  # Кеш на 5 хвилин
 class CategoryView(ListView):
     model = Product
     template_name = 'products/category.html'
@@ -77,11 +78,14 @@ class CategoryView(ListView):
         if subcategories:
             context['available_subcategories'] = subcategories
         
-        # Мін/Макс ціна для фільтру ціни
-        if self.object_list:
-            prices = self.object_list.values_list('retail_price', flat=True)
-            context['min_price'] = int(min(prices)) if prices else 0
-            context['max_price'] = int(max(prices)) if prices else 10000
+        # Мін/Макс ціна для фільтру (ОПТИМІЗОВАНО - використовуємо aggregate)
+        from django.db.models import Min, Max
+        price_range = self.get_queryset().aggregate(
+            min_price=Min('retail_price'),
+            max_price=Max('retail_price')
+        )
+        context['min_price'] = int(price_range['min_price']) if price_range['min_price'] else 0
+        context['max_price'] = int(price_range['max_price']) if price_range['max_price'] else 10000
         
         return context
 

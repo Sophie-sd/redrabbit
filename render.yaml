@@ -4,7 +4,7 @@ services:
     env: python
     plan: free
     buildCommand: bash build.sh
-    startCommand: gunicorn shop.wsgi:application --bind 0.0.0.0:$PORT --timeout 300 --workers 2 --max-requests 1000 --max-requests-jitter 50
+    startCommand: gunicorn shop.wsgi:application --bind 0.0.0.0:$PORT --timeout 600 --workers 1 --threads 2 --worker-class gthread --max-requests 500 --max-requests-jitter 50
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.18
