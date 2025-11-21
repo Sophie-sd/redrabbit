@@ -92,7 +92,7 @@ class CategoryView(ListView):
         products = context.get('object_list', [])
         if products:
             # Рахуємо мін/макс ціну в Python (швидше ніж aggregate для сторінки з 15 товарів)
-            prices = [p.retail_price for p in products if p.retail_price]
+            prices = [p.get_current_price() for p in products if p.get_current_price()]
             context['min_price'] = int(min(prices)) if prices else 0
             context['max_price'] = int(max(prices)) if prices else 10000
         else:
@@ -112,6 +112,7 @@ class ProductDetailView(DetailView):
         return Product.objects.filter(is_active=True)
 
 
+@method_decorator(cache_page(60 * 5), name='dispatch')
 class SaleProductsView(ListView):
     """Акції - показує товари з активними акціями"""
     model = Product
@@ -120,11 +121,22 @@ class SaleProductsView(ListView):
     paginate_by = 15
     
     def get_queryset(self):
+        from .models import ProductImage
+        
         return Product.objects.filter(
             is_sale=True,
             sale_price__isnull=False,
             is_active=True
-        ).select_related('primary_category').prefetch_related('images').order_by('-updated_at')
+        ).select_related('primary_category').prefetch_related(
+            Prefetch(
+                'images',
+                queryset=ProductImage.objects.filter(is_main=True).only('image', 'image_url', 'is_main', 'product_id'),
+                to_attr='main_images'
+            )
+        ).only(
+            'id', 'name', 'slug', 'retail_price', 'sale_price', 'is_sale',
+            'sale_start_date', 'sale_end_date', 'primary_category__name', 'stock'
+        ).order_by('-updated_at')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
