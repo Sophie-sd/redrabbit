@@ -18,14 +18,6 @@ class Migration(migrations.Migration):
                 name='cat_active_parent_idx'
             ),
         ),
-        # Індекс для фільтрації активних товарів по primary_category
-        migrations.AddIndex(
-            model_name='product',
-            index=models.Index(
-                fields=['primary_category', 'is_active'], 
-                name='prod_pcat_active_idx'
-            ),
-        ),
         # Індекс для швидкого сортування по retail_price
         migrations.AddIndex(
             model_name='product',
