@@ -40,9 +40,9 @@ services:
   - type: cron
     name: sync-products-cron
     env: python
-    schedule: "0 */2 * * *"
+    schedule: "0 3 * * *"
     buildCommand: pip install -r requirements.txt
-    startCommand: python manage.py sync_products --skip-images && python manage.py update_prices_xls
+    startCommand: python manage.py sync_products --skip-images --batch-size 50
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.18
