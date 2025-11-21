@@ -24,36 +24,42 @@ class CategoryView(ListView):
     def get_queryset(self):
         from .models import ProductImage
         
-        children_with_products = Category.objects.filter(
-            is_active=True
-        ).annotate(
-            products_count=Count('products', filter=Q(products__is_active=True), distinct=True) +
-                           Count('primary_products', filter=Q(primary_products__is_active=True), distinct=True)
-        ).filter(products_count__gt=0)
-        
+        # Крок 1: Отримуємо категорію з оптимізованими prefetch
         self.category = get_object_or_404(
             Category.objects.select_related('parent').prefetch_related(
-                Prefetch('children', queryset=children_with_products)
+                Prefetch(
+                    'children',
+                    queryset=Category.objects.filter(is_active=True)
+                )
             ),
             slug=self.kwargs['slug']
         )
         
-        child_categories = self.category.children.all()
+        # Крок 2: Отримуємо дочірні категорії (з prefetch, БЕЗ додаткового запиту)
+        child_categories = [
+            child for child in self.category.children.all()
+            if child.is_active
+        ]
         
+        # Крок 3: Будуємо base queryset з усіма оптимізаціями
         base_queryset = Product.objects.select_related(
             'primary_category'
         ).prefetch_related(
-            Prefetch('images',
-                queryset=ProductImage.objects.filter(is_main=True).only('image', 'is_main', 'product_id'),
+            'categories',  # ДОДАНО: запобігає N+1 для product.categories.all()
+            Prefetch(
+                'images',
+                queryset=ProductImage.objects.filter(is_main=True).only('image', 'image_url', 'is_main', 'product_id'),
                 to_attr='main_images'
             )
         ).only(
             'id', 'name', 'slug', 'retail_price', 'sale_price', 'is_sale',
-            'sale_start_date', 'sale_end_date', 'primary_category__name', 'created_at'
+            'sale_start_date', 'sale_end_date', 'primary_category__name', 'created_at',
+            'stock'  # ДОДАНО: потрібно для product.is_in_stock()
         )
         
-        if child_categories.exists():
-            child_ids = list(child_categories.values_list('id', flat=True))
+        # Крок 4: Фільтруємо товари
+        if child_categories:
+            child_ids = [child.id for child in child_categories]
             
             return base_queryset.filter(
                 Q(categories__id=self.category.id) | 
@@ -72,20 +78,26 @@ class CategoryView(ListView):
         context = super().get_context_data(**kwargs)
         context['category'] = self.category
         
-        subcategories = self.category.children.all()
+        # Використовуємо вже завантажені дані з prefetch
+        subcategories = [
+            child for child in self.category.children.all()
+            if child.is_active
+        ]
         context['subcategories'] = subcategories
         
         if subcategories:
             context['available_subcategories'] = subcategories
         
-        # Мін/Макс ціна для фільтру (ОПТИМІЗОВАНО - використовуємо aggregate)
-        from django.db.models import Min, Max
-        price_range = self.get_queryset().aggregate(
-            min_price=Min('retail_price'),
-            max_price=Max('retail_price')
-        )
-        context['min_price'] = int(price_range['min_price']) if price_range['min_price'] else 0
-        context['max_price'] = int(price_range['max_price']) if price_range['max_price'] else 10000
+        # Оптимізація: використовуємо object_list (вже завантажені товари) замість повторного get_queryset()
+        products = context.get('object_list', [])
+        if products:
+            # Рахуємо мін/макс ціну в Python (швидше ніж aggregate для сторінки з 15 товарів)
+            prices = [p.retail_price for p in products if p.retail_price]
+            context['min_price'] = int(min(prices)) if prices else 0
+            context['max_price'] = int(max(prices)) if prices else 10000
+        else:
+            context['min_price'] = 0
+            context['max_price'] = 10000
         
         return context
 

@@ -158,12 +158,11 @@
                         } else {
                             alert(data.error || 'Помилка скасування замовлення');
                         }
-                            })
-                            .catch(error => {
-                                console.error('Cancel order error:', error);
-                                alert('Помилка скасування замовлення');
-                            });
-                    }
+                    })
+                    .catch(error => {
+                        console.error('Cancel order error:', error);
+                        alert('Помилка скасування замовлення');
+                    });
                 }
             });
         });
