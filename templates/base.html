@@ -29,6 +29,10 @@
     <link rel="icon" type="image/png" href="{% static 'images/redrabbit_logo.png' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/redrabbit_logo.png' %}">
     
+    <!-- CSRF Token -->
+    {% csrf_token %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    
     <!-- iOS Safari specific -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">

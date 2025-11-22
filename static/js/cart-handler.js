@@ -92,8 +92,11 @@
         }
 
         getCSRFToken() {
-            const token = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-            if (token) return token;
+            const metaToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            if (metaToken) return metaToken;
+            
+            const inputToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+            if (inputToken) return inputToken;
             
             const cookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken='));
             return cookie ? cookie.split('=')[1] : '';

@@ -143,11 +143,14 @@
                 const orderId = this.getAttribute('data-cancel-order');
                 
                 if (confirm('Ви впевнені, що хочете скасувати це замовлення?')) {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || 
+                                     document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+                    
                     fetch('/orders/cancel/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken')
+                            'X-CSRFToken': csrfToken
                         },
                         body: JSON.stringify({ order_id: orderId })
                     })

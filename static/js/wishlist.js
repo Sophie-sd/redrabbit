@@ -283,6 +283,14 @@ class WishlistManager {
     }
 
     getCookie(name) {
+        if (name === 'csrftoken') {
+            const metaToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            if (metaToken) return metaToken;
+            
+            const inputToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+            if (inputToken) return inputToken;
+        }
+        
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
             const cookies = document.cookie.split(';');

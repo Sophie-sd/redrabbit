@@ -23,8 +23,6 @@ class CatalogManager {
         this.bindEvents();
         this.loadInitialData();
         this.initMobileFilters();
-        this.initWishlist();
-        this.initCartActions();
         this.initFiltersToggle();
     }
     
@@ -307,8 +305,9 @@ class CatalogManager {
             this.productsGrid.appendChild(card.cloneNode(true));
         });
         
-        this.initWishlist();
-        this.initCartActions();
+        if (window.cartHandler) {
+            window.cartHandler.bindCartButtons();
+        }
         
         this.toggleEmptyState(products.length === 0);
         this.hidePagination(products.length !== this.originalCards.length);
@@ -612,81 +611,15 @@ class CatalogManager {
         document.body.style.overflow = '';
     }
     
-    initWishlist() {
-        const wishlistButtons = document.querySelectorAll('.product-card__wishlist');
-        
-        wishlistButtons.forEach(button => {
-            button.addEventListener('click', async (e) => {
-                e.preventDefault();
-                const productId = button.dataset.productId;
-                
-                try {
-                    const response = await fetch('/wishlist/toggle/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                            'X-CSRFToken': this.getCSRFToken()
-                        },
-                        body: JSON.stringify({ product_id: productId })
-            });
-            
-            const data = await response.json();
-            
-                    if (data.added) {
-                        button.classList.add('active');
-                        this.showToast('Додано до обраного');
-                } else {
-                        button.classList.remove('active');
-                        this.showToast('Видалено з обраного');
-                    }
-                } catch (error) {
-                    console.error('Помилка:', error);
-                    this.showToast('Помилка при додаванні до обраного', 'error');
-                }
-            });
-        });
-    }
-    
-    initCartActions() {
-        const addToCartButtons = document.querySelectorAll('.product-card__add-cart');
-        
-        addToCartButtons.forEach(button => {
-            if (button.disabled) return;
-            
-            button.addEventListener('click', async (e) => {
-                e.preventDefault();
-                const productId = button.dataset.productId;
-                
-                try {
-                    const response = await fetch(`/cart/add/${productId}/`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': this.getCSRFToken()
-                        },
-                        body: JSON.stringify({ quantity: 1 })
-                    });
-            
-            const data = await response.json();
-            
-                    if (data.success) {
-                        this.showToast('Товар додано до кошика');
-                        document.dispatchEvent(new CustomEvent('cart:updated', { 
-                            detail: { count: data.cart_count } 
-                        }));
-                    } else {
-                        this.showToast(data.message || 'Помилка при додаванні до кошика', 'error');
-                    }
-        } catch (error) {
-                    console.error('Помилка:', error);
-                    this.showToast('Помилка при додаванні до кошика', 'error');
-                }
-            });
-        });
-    }
-    
     getCSRFToken() {
-        return document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+        const metaToken = document.querySelector('meta[name="csrf-token"]')?.content;
+        if (metaToken) return metaToken;
+        
+        const inputToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+        if (inputToken) return inputToken;
+        
+        const cookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken='));
+        return cookie ? cookie.split('=')[1] : '';
     }
     
     showToast(message, type = 'success') {
