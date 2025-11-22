@@ -109,7 +109,12 @@ class ProductDetailView(DetailView):
     context_object_name = 'product'
     
     def get_queryset(self):
-        return Product.objects.filter(is_active=True)
+        from .models import ProductImage
+        return Product.objects.filter(is_active=True).prefetch_related(
+            Prefetch('images',
+                queryset=ProductImage.objects.only('image', 'image_url', 'is_main', 'alt_text', 'product_id').order_by('sort_order', 'id')
+            )
+        )
 
 
 @method_decorator(cache_page(60 * 5), name='dispatch')
@@ -140,7 +145,7 @@ class SaleProductsView(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['total_products'] = self.get_queryset().count()
+        # total_products видалено - не використовується в template
         return context
 
 

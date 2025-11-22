@@ -158,7 +158,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Session settings
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # 7 днів (замість 30 для безпеки)
-SESSION_SAVE_EVERY_REQUEST = True
+SESSION_SAVE_EVERY_REQUEST = False  # Тільки при зміні (не на кожному запиті)
 SESSION_COOKIE_SECURE = not DEBUG  # HTTPS only в production
 SESSION_COOKIE_HTTPONLY = True  # Захист від XSS
 SESSION_COOKIE_SAMESITE = 'Lax'  # Захист від CSRF

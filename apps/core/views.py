@@ -72,7 +72,12 @@ class HomeView(TemplateView):
         # Отримуємо схвалені відгуки
         reviews = ProductReview.objects.filter(
             is_approved=True
-        ).select_related('product').prefetch_related('product__images').order_by('-created_at')[:6]
+        ).select_related('product').prefetch_related(
+            Prefetch('product__images',
+                queryset=ProductImage.objects.filter(is_main=True).only('image', 'image_url', 'is_main', 'product_id'),
+                to_attr='main_images'
+            )
+        ).order_by('-created_at')[:6]
         
         context.update({
             'banners': banners,
@@ -199,12 +204,12 @@ def search_autocomplete(request):
                 Q(name__icontains=query) | Q(similarity__gt=0.4)
             ).order_by('-similarity', 'name').select_related('primary_category').prefetch_related(
                 Prefetch('images', 
-                    queryset=ProductImage.objects.filter(is_main=True).only('image', 'is_main'),
+                    queryset=ProductImage.objects.filter(is_main=True).only('image', 'image_url', 'is_main'),
                     to_attr='main_images'
                 )
             ).only(
                 'id', 'name', 'slug', 'retail_price', 'sale_price', 'is_sale', 
-                'sale_start_date', 'sale_end_date'
+                'sale_start_date', 'sale_end_date', 'primary_category__name', 'primary_category__slug'
             )[:5]
         else:
             products = Product.objects.filter(
@@ -215,19 +220,20 @@ def search_autocomplete(request):
                 Q(primary_category__name__icontains=query)
             ).select_related('primary_category').prefetch_related(
                 Prefetch('images',
-                    queryset=ProductImage.objects.filter(is_main=True).only('image', 'is_main'),
+                    queryset=ProductImage.objects.filter(is_main=True).only('image', 'image_url', 'is_main'),
                     to_attr='main_images'
                 )
             ).only(
                 'id', 'name', 'slug', 'retail_price', 'sale_price', 'is_sale',
-                'sale_start_date', 'sale_end_date'
+                'sale_start_date', 'sale_end_date', 'primary_category__name', 'primary_category__slug'
             ).order_by('name')[:5]
         
         results = []
         for p in products:
             image_url = None
             if hasattr(p, 'main_images') and p.main_images:
-                image_url = p.main_images[0].image.url if p.main_images[0].image else None
+                img = p.main_images[0]
+                image_url = img.image_url if img.image_url else (img.image.url if img.image else None)
             
             price = p.sale_price if (p.is_sale and p.sale_price) else p.retail_price
             
@@ -312,16 +318,16 @@ def search_paginated(request):
             # Отримуємо тільки головне зображення без додаткових запитів
             image_url = None
             try:
-                main_image = p.images.filter(is_main=True).only('image').first()
+                main_image = p.images.filter(is_main=True).only('image', 'image_url').first()
                 if not main_image:
-                    main_image = p.images.only('image').first()
-                if main_image and main_image.image:
-                    image_url = main_image.image.url
+                    main_image = p.images.only('image', 'image_url').first()
+                if main_image:
+                    image_url = main_image.image_url if main_image.image_url else (main_image.image.url if main_image.image else None)
             except:
                 pass
             
             # Перевіряємо наявність
-            is_in_stock = getattr(p, 'is_in_stock', True)
+            is_in_stock = p.is_in_stock() if hasattr(p, 'is_in_stock') else True
             
             # Отримуємо дату закінчення акції
             sale_end_timestamp = None

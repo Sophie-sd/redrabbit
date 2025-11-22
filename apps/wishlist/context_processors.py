@@ -6,8 +6,9 @@ from .wishlist import Wishlist
 
 def wishlist(request):
     """Додає wishlist в контекст всіх шаблонів"""
+    wl = Wishlist(request)
     return {
-        'wishlist': Wishlist(request),
-        'wishlist_count': len(Wishlist(request))
+        'wishlist': wl,
+        'wishlist_count': len(wl)
     }
 

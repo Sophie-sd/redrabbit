@@ -228,7 +228,7 @@
                 {% for review in reviews %}
                 <div class="review-card">
                     <div class="review-header">
-                        {% with main_image=review.product.images.all.0 %}
+                        {% with main_image=review.product.main_images.0 %}
                         <img src="{% if main_image %}{{ main_image.get_image_url }}{% else %}{% static 'images/placeholder-product.png' %}{% endif %}" 
                              alt="{{ review.product.name }}" 
                              class="review-product-image"

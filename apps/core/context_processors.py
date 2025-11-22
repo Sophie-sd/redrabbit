@@ -12,10 +12,7 @@ def base_context(request):
         children_queryset = Category.objects.filter(
             is_active=True,
             parent__isnull=False
-        ).annotate(
-            products_count=Count('products', filter=Q(products__is_active=True), distinct=True) +
-                           Count('primary_products', filter=Q(primary_products__is_active=True), distinct=True)
-        ).filter(products_count__gt=0).select_related('parent').only('id', 'name', 'slug', 'parent_id', 'sort_order')
+        ).select_related('parent').only('id', 'name', 'slug', 'parent_id', 'sort_order')
         
         main_categories = list(Category.objects.filter(
             parent=None, 
