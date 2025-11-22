@@ -220,7 +220,7 @@
     cursor: not-allowed;
 }
 
-/* Кнопки навігації */
+/* Кнопки навігації десктоп */
 .promo-nav-btn {
     position: absolute;
     top: 50%;
@@ -256,6 +256,10 @@
 .promo-nav-btn svg {
     width: 24px;
     height: 24px;
+}
+
+.promo-nav-buttons-mobile {
+    display: none;
 }
 
 /* Сторінка акцій - сітка карток */
@@ -372,7 +376,55 @@
     }
     
     .promotions-slider-container {
-        padding: 0 45px;
+        padding: 0;
+    }
+    
+    .promo-prev-btn,
+    .promo-next-btn {
+        display: none;
+    }
+    
+    .promo-nav-buttons-mobile {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 12px;
+    }
+    
+    .promo-prev-btn-mobile,
+    .promo-next-btn-mobile {
+        position: static;
+        transform: none;
+        width: 32px;
+        height: 32px;
+        background: white;
+        border: 1px solid #d32f2f;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: #d32f2f;
+    }
+    
+    .promo-prev-btn-mobile:hover:not(:disabled),
+    .promo-next-btn-mobile:hover:not(:disabled) {
+        background: #d32f2f;
+        color: white;
+        transform: scale(1.05);
+    }
+    
+    .promo-prev-btn-mobile:disabled,
+    .promo-next-btn-mobile:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+    
+    .promo-prev-btn-mobile svg,
+    .promo-next-btn-mobile svg {
+        width: 16px;
+        height: 16px;
     }
     
     .promotions-slider {
@@ -442,21 +494,11 @@
         padding: 6px 8px;
         font-size: 0.7rem;
     }
-    
-    .promo-nav-btn {
-        width: 35px;
-        height: 35px;
-    }
-    
-    .promo-nav-btn svg {
-        width: 20px;
-        height: 20px;
-    }
 }
 
 @media (max-width: 480px) {
     .promotions-slider-container {
-        padding: 0 40px;
+        padding: 0;
     }
     
     .promo-card {
@@ -529,6 +571,18 @@
     .promo-content .btn {
         padding: 5px 6px;
         font-size: 0.65rem;
+    }
+    
+    .promo-prev-btn-mobile,
+    .promo-next-btn-mobile {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .promo-prev-btn-mobile svg,
+    .promo-next-btn-mobile svg {
+        width: 14px;
+        height: 14px;
     }
 }
 

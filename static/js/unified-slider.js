@@ -25,6 +25,8 @@
             this.container = null;
             this.prevBtn = null;
             this.nextBtn = null;
+            this.mobilePrevBtn = null;
+            this.mobileNextBtn = null;
             this.items = null;
             
             this.init();
@@ -45,6 +47,8 @@
 
             this.prevBtn = this.container.querySelector(`.${this.prevBtnClass}`);
             this.nextBtn = this.container.querySelector(`.${this.nextBtnClass}`);
+            this.mobilePrevBtn = this.container.querySelector('.promo-prev-btn-mobile');
+            this.mobileNextBtn = this.container.querySelector('.promo-next-btn-mobile');
             this.items = this.slider.querySelectorAll(`.${this.itemClass}`);
 
             if (this.items.length === 0) {
@@ -76,16 +80,24 @@
         }
 
         updateButtonStates() {
-            if (!this.prevBtn || !this.nextBtn) return;
-            
             const isAtStart = this.slider.scrollLeft <= 0;
             const isAtEnd = this.slider.scrollLeft >= this.slider.scrollWidth - this.slider.clientWidth - 1;
             
-            this.prevBtn.disabled = isAtStart;
-            this.prevBtn.classList.toggle('disabled', isAtStart);
+            if (this.prevBtn && this.nextBtn) {
+                this.prevBtn.disabled = isAtStart;
+                this.prevBtn.classList.toggle('disabled', isAtStart);
+                
+                this.nextBtn.disabled = isAtEnd;
+                this.nextBtn.classList.toggle('disabled', isAtEnd);
+            }
             
-            this.nextBtn.disabled = isAtEnd;
-            this.nextBtn.classList.toggle('disabled', isAtEnd);
+            if (this.mobilePrevBtn && this.mobileNextBtn) {
+                this.mobilePrevBtn.disabled = isAtStart;
+                this.mobilePrevBtn.classList.toggle('disabled', isAtStart);
+                
+                this.mobileNextBtn.disabled = isAtEnd;
+                this.mobileNextBtn.classList.toggle('disabled', isAtEnd);
+            }
         }
 
         bindEvents() {
@@ -96,6 +108,14 @@
             
             if (this.nextBtn) {
                 this.nextBtn.addEventListener('click', () => this.scrollSlider('next'));
+            }
+            
+            if (this.mobilePrevBtn) {
+                this.mobilePrevBtn.addEventListener('click', () => this.scrollSlider('prev'));
+            }
+            
+            if (this.mobileNextBtn) {
+                this.mobileNextBtn.addEventListener('click', () => this.scrollSlider('next'));
             }
 
             // Update button states on scroll (throttled)
@@ -194,7 +214,7 @@
             });
         }
 
-        // Promotions slider (mobile)
+        // Promotions slider
         if (document.getElementById('promotionsSlider')) {
             new UnifiedSlider({
                 sliderId: 'promotionsSlider',
