@@ -117,6 +117,8 @@ class WishlistManager {
     async toggleWishlist(button) {
         const productId = button.dataset.productId;
         const isInWishlist = button.classList.contains('active');
+        const productCard = button.closest('.product-card');
+        const isOnWishlistPage = document.querySelector('.wishlist-page') !== null;
         
         button.disabled = true;
 
@@ -138,21 +140,29 @@ class WishlistManager {
             const data = await response.json();
 
             if (data.success) {
-                // Оновлюємо стан кнопки
-                button.classList.toggle('active');
-                
-                // Оновлюємо іконку за допомогою нового методу
-                this.updateButtonIcon(button, button.classList.contains('active'));
+                if (isInWishlist && isOnWishlistPage && productCard) {
+                    productCard.style.transition = 'all 0.3s ease';
+                    productCard.style.opacity = '0';
+                    productCard.style.transform = 'scale(0.95)';
+                    
+                    setTimeout(() => {
+                        productCard.remove();
+                        
+                        const remainingItems = document.querySelectorAll('.wishlist-page .product-card');
+                        if (remainingItems.length === 0) {
+                            location.reload();
+                        }
+                    }, 300);
+                } else {
+                    button.classList.toggle('active');
+                    this.updateButtonIcon(button, button.classList.contains('active'));
+                    
+                    button.classList.add('animate-heart');
+                    setTimeout(() => button.classList.remove('animate-heart'), 300);
+                }
 
-                // Оновлюємо лічильники
                 this.updateWishlistBadges(data.count);
-
-                // Показуємо повідомлення
                 this.showNotification(data.message);
-
-                // Анімація
-                button.classList.add('animate-heart');
-                setTimeout(() => button.classList.remove('animate-heart'), 600);
             }
         } catch (error) {
             console.error('Wishlist error:', error);

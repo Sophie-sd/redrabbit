@@ -415,21 +415,15 @@
 .btn-wishlist.animate-heart,
 .wishlist-btn.animate-heart,
 .product-card__wishlist.animate-heart {
-    animation: heartBeat 0.6s ease;
+    animation: heartBeat 0.3s ease;
 }
 
 @keyframes heartBeat {
     0%, 100% {
         transform: scale(1);
     }
-    25% {
-        transform: scale(1.2);
-    }
     50% {
-        transform: scale(0.95);
-    }
-    75% {
-        transform: scale(1.1);
+        transform: scale(1.15);
     }
 }
 
