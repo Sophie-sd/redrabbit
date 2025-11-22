@@ -387,15 +387,25 @@
     .promo-nav-buttons-mobile {
         display: flex;
         justify-content: center;
+        align-items: center;
         gap: 10px;
         margin-top: 12px;
+        padding: 0;
+        height: 32px;
+        min-height: 32px;
+        max-height: 32px;
     }
     
     .promo-prev-btn-mobile,
     .promo-next-btn-mobile {
-        position: static;
+        position: relative;
+        flex-shrink: 0;
         width: 32px;
         height: 32px;
+        min-width: 32px;
+        min-height: 32px;
+        max-width: 32px;
+        max-height: 32px;
         background: white;
         border: 1px solid #d32f2f;
         border-radius: 50%;
@@ -403,16 +413,15 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
         color: #d32f2f;
         touch-action: manipulation;
         -webkit-tap-highlight-color: transparent;
-    }
-    
-    .promo-prev-btn-mobile:active:not(:disabled),
-    .promo-next-btn-mobile:active:not(:disabled) {
-        background: #d32f2f;
-        color: white;
+        -webkit-user-select: none;
+        user-select: none;
+        padding: 0;
+        margin: 0;
+        outline: none;
+        box-sizing: border-box;
     }
     
     .promo-prev-btn-mobile:disabled,
@@ -428,7 +437,11 @@
     .promo-next-btn-mobile svg {
         width: 16px;
         height: 16px;
+        min-width: 16px;
+        min-height: 16px;
         pointer-events: none;
+        display: block;
+        flex-shrink: 0;
     }
     
     .promotions-slider {
@@ -581,44 +594,16 @@
     .promo-next-btn-mobile {
         width: 30px;
         height: 30px;
-    }
-    
-    .promo-prev-btn-mobile:active:not(:disabled),
-    .promo-next-btn-mobile:active:not(:disabled),
-    .promo-prev-btn-mobile:disabled,
-    .promo-next-btn-mobile:disabled {
-        transform: none;
+        min-width: 30px;
+        min-height: 30px;
+        max-width: 30px;
+        max-height: 30px;
     }
     
     .promo-prev-btn-mobile svg,
     .promo-next-btn-mobile svg {
         width: 14px;
         height: 14px;
-    }
-}
-
-@supports (-webkit-touch-callout: none) {
-    .promo-prev-btn-mobile,
-    .promo-next-btn-mobile {
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
-    }
-    
-    .promo-prev-btn-mobile:active:not(:disabled),
-    .promo-next-btn-mobile:active:not(:disabled),
-    .promo-prev-btn-mobile:disabled,
-    .promo-next-btn-mobile:disabled {
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .promo-prev-btn-mobile,
-    .promo-next-btn-mobile {
-        transition: none;
     }
 }
 
