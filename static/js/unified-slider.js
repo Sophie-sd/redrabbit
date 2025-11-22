@@ -103,19 +103,77 @@
         bindEvents() {
             // Navigation buttons
             if (this.prevBtn) {
-                this.prevBtn.addEventListener('click', () => this.scrollSlider('prev'));
+                this.prevBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (!this.prevBtn.disabled) {
+                        this.scrollSlider('prev');
+                    }
+                });
             }
             
             if (this.nextBtn) {
-                this.nextBtn.addEventListener('click', () => this.scrollSlider('next'));
+                this.nextBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (!this.nextBtn.disabled) {
+                        this.scrollSlider('next');
+                    }
+                });
             }
             
             if (this.mobilePrevBtn) {
-                this.mobilePrevBtn.addEventListener('click', () => this.scrollSlider('prev'));
+                this.mobilePrevBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (!this.mobilePrevBtn.disabled) {
+                        this.scrollSlider('prev');
+                    }
+                });
+                
+                this.mobilePrevBtn.addEventListener('touchstart', (e) => {
+                    if (!this.mobilePrevBtn.disabled) {
+                        e.currentTarget.style.backgroundColor = '#d32f2f';
+                        e.currentTarget.style.color = 'white';
+                    }
+                }, { passive: true });
+                
+                this.mobilePrevBtn.addEventListener('touchend', (e) => {
+                    if (!this.mobilePrevBtn.disabled) {
+                        e.currentTarget.style.backgroundColor = '';
+                        e.currentTarget.style.color = '';
+                    }
+                }, { passive: true });
+                
+                this.mobilePrevBtn.addEventListener('touchcancel', (e) => {
+                    e.currentTarget.style.backgroundColor = '';
+                    e.currentTarget.style.color = '';
+                }, { passive: true });
             }
             
             if (this.mobileNextBtn) {
-                this.mobileNextBtn.addEventListener('click', () => this.scrollSlider('next'));
+                this.mobileNextBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (!this.mobileNextBtn.disabled) {
+                        this.scrollSlider('next');
+                    }
+                });
+                
+                this.mobileNextBtn.addEventListener('touchstart', (e) => {
+                    if (!this.mobileNextBtn.disabled) {
+                        e.currentTarget.style.backgroundColor = '#d32f2f';
+                        e.currentTarget.style.color = 'white';
+                    }
+                }, { passive: true });
+                
+                this.mobileNextBtn.addEventListener('touchend', (e) => {
+                    if (!this.mobileNextBtn.disabled) {
+                        e.currentTarget.style.backgroundColor = '';
+                        e.currentTarget.style.color = '';
+                    }
+                }, { passive: true });
+                
+                this.mobileNextBtn.addEventListener('touchcancel', (e) => {
+                    e.currentTarget.style.backgroundColor = '';
+                    e.currentTarget.style.color = '';
+                }, { passive: true });
             }
 
             // Update button states on scroll (throttled)
