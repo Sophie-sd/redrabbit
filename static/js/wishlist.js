@@ -10,8 +10,20 @@ class WishlistManager {
 
     init() {
         this.setupEventListeners();
-        this.updateWishlistBadges();
+        this.fetchWishlistCount().then(count => {
+            this.updateBadgesDOM(count);
+        });
         this.initializeWishlistState();
+        this.setupStorageListener();
+    }
+
+    setupStorageListener() {
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'wishlist_count') {
+                const count = parseInt(event.newValue) || 0;
+                this.updateBadgesDOM(count);
+            }
+        });
     }
 
     async initializeWishlistState() {
@@ -161,7 +173,7 @@ class WishlistManager {
                     setTimeout(() => button.classList.remove('animate-heart'), 300);
                 }
 
-                this.updateWishlistBadges(data.count);
+                this.updateBadgesDOM(data.count);
                 this.showNotification(data.message);
             }
         } catch (error) {
@@ -192,24 +204,20 @@ class WishlistManager {
             const data = await response.json();
 
             if (data.success) {
-                // Анімація видалення
+                wishlistItem.style.transition = 'all 0.3s ease';
                 wishlistItem.style.opacity = '0';
-                wishlistItem.style.transform = 'translateX(-20px)';
+                wishlistItem.style.transform = 'scale(0.95)';
                 
                 setTimeout(() => {
                     wishlistItem.remove();
                     
-                    // Перевірка чи список порожній
-                    const remainingItems = document.querySelectorAll('.wishlist-item, .product-card[data-product-id]');
+                    const remainingItems = document.querySelectorAll('.wishlist-page .product-card');
                     if (remainingItems.length === 0) {
-                        location.reload(); // Перезавантажуємо сторінку щоб показати "порожній" стан
+                        location.reload();
                     }
                 }, 300);
 
-                // Оновлюємо лічильники
-                this.updateWishlistBadges(data.count);
-
-                // Показуємо повідомлення
+                this.updateBadgesDOM(data.count);
                 this.showNotification(data.message);
             }
         } catch (error) {
@@ -229,30 +237,54 @@ class WishlistManager {
         }
     }
 
-    updateWishlistBadges(count = null) {
-        // Якщо count не передано, отримуємо з DOM
-        if (count === null) {
-            const wishlistLinks = document.querySelectorAll('.wishlist-link');
-            if (wishlistLinks.length > 0) {
-                const badge = wishlistLinks[0].querySelector('.badge');
-                count = badge ? parseInt(badge.textContent) : 0;
+    async fetchWishlistCount() {
+        try {
+            const response = await fetch('/wishlist/api/count/', {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                credentials: 'same-origin'
+            });
+
+            if (!response.ok) {
+                console.warn('Failed to fetch wishlist count');
+                return 0;
             }
+
+            const data = await response.json();
+            return data.count || 0;
+        } catch (error) {
+            console.error('Error fetching wishlist count:', error);
+            return 0;
         }
+    }
 
-        // Оновлюємо всі badge елементи
-        document.querySelectorAll('.wishlist-link .badge').forEach(badge => {
-            if (count > 0) {
-                badge.textContent = count;
-                badge.classList.remove('badge-hidden');
-            } else {
-                badge.textContent = '';
-                badge.classList.add('badge-hidden');
-            }
-        });
+    updateWishlistBadges(count = null) {
+        if (count === null) {
+            this.fetchWishlistCount().then(fetchedCount => {
+                this.updateBadgesDOM(fetchedCount);
+            });
+            return;
+        }
+        
+        this.updateBadgesDOM(count);
+    }
 
-        // Оновлюємо mobile navigation badge
-        document.querySelectorAll('.nav-item .nav-badge').forEach(badge => {
-            if (badge.closest('.nav-item')?.href?.includes('wishlist')) {
+    updateBadgesDOM(count) {
+        requestAnimationFrame(() => {
+            document.querySelectorAll('.wishlist-link .badge, .wishlist-badge').forEach(badge => {
+                if (count > 0) {
+                    badge.textContent = count;
+                    badge.classList.remove('badge-hidden', 'hidden');
+                } else {
+                    badge.textContent = '';
+                    badge.classList.add('hidden');
+                }
+            });
+
+            document.querySelectorAll('.nav-item-wishlist .nav-badge').forEach(badge => {
                 if (count > 0) {
                     badge.textContent = count;
                     badge.classList.remove('nav-badge-hidden');
@@ -260,6 +292,12 @@ class WishlistManager {
                     badge.textContent = '';
                     badge.classList.add('nav-badge-hidden');
                 }
+            });
+
+            try {
+                localStorage.setItem('wishlist_count', count.toString());
+            } catch (e) {
+                console.warn('Could not save wishlist count to localStorage:', e);
             }
         });
     }

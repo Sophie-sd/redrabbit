@@ -1,7 +1,7 @@
 """
 Views для списку бажань
 """
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
@@ -19,6 +19,12 @@ class WishlistView(TemplateView):
         context['wishlist'] = wishlist
         context['products'] = wishlist.get_products()
         return context
+
+
+def wishlist_count(request):
+    """API для отримання кількості товарів у wishlist"""
+    wishlist = Wishlist(request)
+    return JsonResponse({'count': len(wishlist)})
 
 
 @require_POST
