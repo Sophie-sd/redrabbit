@@ -10,51 +10,57 @@
             this.init();
         }
 
-        init() {
-            this.bindCartButtons();
-            
+    init() {
+        if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
                 this.bindCartButtons();
             });
+        } else {
+            this.bindCartButtons();
         }
+    }
 
-        bindCartButtons() {
-            const buttons = document.querySelectorAll('.product-card__add-cart, .btn-add-cart, .add-to-cart, .promo-add-cart');
+    bindCartButtons() {
+        const buttons = document.querySelectorAll('.product-card__add-cart, .btn-add-cart, .add-to-cart, .promo-add-cart');
+        
+        buttons.forEach(button => {
+            if (button.disabled || button.hasAttribute('data-cart-initialized')) return;
             
-            buttons.forEach(button => {
-                if (button.disabled || button.hasAttribute('data-cart-initialized')) return;
-                button.setAttribute('data-cart-initialized', 'true');
-                
-                button.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.addToCart(button);
-                });
+            button.setAttribute('data-cart-initialized', 'true');
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                this.addToCart(button);
             });
+        });
+    }
+
+    async addToCart(button) {
+        const productId = button.dataset.productId;
+        
+        if (!productId) {
+            console.error('Product ID not found');
+            return;
         }
 
-        async addToCart(button) {
-            const productId = button.dataset.productId;
-            
-            if (!productId) {
-                console.error('Product ID not found');
-                return;
-            }
+        if (button.disabled) return;
+        
+        button.disabled = true;
+        const originalHTML = button.innerHTML;
+        button.innerHTML = 'Додається...';
 
-            if (button.disabled) return;
-            
-            button.disabled = true;
-            const originalHTML = button.innerHTML;
-            button.innerHTML = 'Додається...';
+        const quantityInput = document.getElementById('productQuantity');
+        const quantity = quantityInput ? parseInt(quantityInput.value) || 1 : 1;
 
-            try {
-                const response = await fetch(`/cart/add/${productId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': this.getCSRFToken()
-                    },
-                    body: JSON.stringify({ quantity: 1 })
-                });
+        try {
+            const response = await fetch(`/cart/add/${productId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': this.getCSRFToken()
+                },
+                body: JSON.stringify({ quantity })
+            });
 
                 const data = await response.json();
 

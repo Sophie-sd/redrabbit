@@ -88,13 +88,13 @@ class WishlistManager {
     }
 
     setupEventListeners() {
-        // Додавання/видалення з wishlist (toggle) - підтримка всіх варіантів селекторів
         document.addEventListener('click', (e) => {
             const wishlistBtn = e.target.closest(
                 '.btn-toggle-wishlist, .wishlist-toggle, .btn-wishlist, .wishlist-btn, .product-card__wishlist'
             );
             if (wishlistBtn) {
                 e.preventDefault();
+                e.stopImmediatePropagation();
                 this.toggleWishlist(wishlistBtn);
             }
 
