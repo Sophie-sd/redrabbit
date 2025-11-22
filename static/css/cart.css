@@ -52,11 +52,17 @@
 }
 
 .item-image {
+    display: block;
     width: 100px;
     height: 100px;
     border-radius: 8px;
     overflow: hidden;
     background: #f5f5f5;
+    transition: transform 0.2s ease;
+}
+
+.item-image:hover {
+    transform: scale(1.05);
 }
 
 .item-image img {
@@ -78,6 +84,16 @@
     font-weight: 600;
     margin-bottom: 8px;
     color: #333;
+}
+
+.item-name a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.item-name a:hover {
+    color: #FF1493;
 }
 
 .item-price-wrapper {
@@ -361,10 +377,15 @@
     }
     
     .item-image {
+        display: block;
         width: 80px;
         height: 80px;
         grid-row: 1;
         grid-column: 1;
+    }
+    
+    .item-image:active {
+        transform: scale(0.98);
     }
     
     .item-details {
@@ -589,9 +610,18 @@
     }
     
     .item-image {
+        display: block;
         width: 70px;
         height: 70px;
         border-radius: 6px;
+    }
+    
+    .item-image:hover {
+        transform: none;
+    }
+    
+    .item-image:active {
+        transform: scale(0.95);
     }
     
     .item-name {

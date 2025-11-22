@@ -25,7 +25,7 @@
                                 ×
                             </button>
                             
-                            <div class="item-image">
+                            <a href="{{ item.product.get_absolute_url }}" class="item-image">
                                 {% if item.product.images.first %}
                                     <img src="{{ item.product.images.first.get_image_url }}" alt="{{ item.product.name }}">
                                 {% else %}
@@ -33,10 +33,12 @@
                                         <i class="icon-product">📦</i>
                                     </div>
                                 {% endif %}
-                            </div>
+                            </a>
                             
                             <div class="item-details">
-                                <h3 class="item-name">{{ item.product.name }}</h3>
+                                <h3 class="item-name">
+                                    <a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a>
+                                </h3>
                                 <div class="item-price-wrapper">
                                     {% if item.is_sale %}
                                         <span class="item-price-current">{{ item.price }} ₴</span>
