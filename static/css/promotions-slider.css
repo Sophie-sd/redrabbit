@@ -17,7 +17,6 @@
     margin-bottom: 40px;
 }
 
-/* Показ блоків на різних пристроях */
 .promotions-section.mobile-only {
     display: none;
 }
@@ -26,7 +25,6 @@
     display: block;
 }
 
-/* Контейнер слайдера */
 .promotions-slider-container {
     position: relative;
     max-width: 1200px;
@@ -49,7 +47,6 @@
     display: none;
 }
 
-/* Картка акційного товару - КОМПАКТНИЙ ДИЗАЙН */
 .promo-card {
     flex: 0 0 calc((100% - 45px) / 4);
     min-width: 200px;
@@ -65,7 +62,6 @@
     box-shadow: 0 8px 24px rgba(211, 47, 47, 0.15);
 }
 
-/* Зображення товару - ЗМЕНШЕНИЙ РОЗМІР */
 .promo-image {
     position: relative;
     width: 100%;
@@ -117,7 +113,6 @@
     font-size: 4rem;
 }
 
-/* Контент картки - КОМПАКТНИЙ */
 .promo-content {
     padding: 12px;
 }
@@ -144,7 +139,6 @@
     color: #d32f2f;
 }
 
-/* Ціни - КОМПАКТНІ */
 .promo-price {
     display: flex;
     align-items: center;
@@ -165,7 +159,6 @@
     font-weight: 700;
 }
 
-/* Кнопка купити - КОМПАКТНА */
 .promo-actions {
     margin-top: 8px;
 }
@@ -220,8 +213,8 @@
     cursor: not-allowed;
 }
 
-/* Кнопки навігації десктоп */
-.promo-nav-btn {
+.promo-prev-btn,
+.promo-next-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -239,10 +232,17 @@
     color: #d32f2f;
 }
 
-.promo-nav-btn:hover {
+.promo-prev-btn:hover:not(:disabled),
+.promo-next-btn:hover:not(:disabled) {
     background: #d32f2f;
     color: white;
     transform: translateY(-50%) scale(1.1);
+}
+
+.promo-prev-btn:disabled,
+.promo-next-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .promo-prev-btn {
@@ -253,16 +253,17 @@
     right: 0;
 }
 
-.promo-nav-btn svg {
+.promo-prev-btn svg,
+.promo-next-btn svg {
     width: 24px;
     height: 24px;
+    pointer-events: none;
 }
 
 .promo-nav-buttons-mobile {
     display: none;
 }
 
-/* Сторінка акцій - сітка карток */
 .products-section .products-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -270,7 +271,6 @@
     margin-bottom: 40px;
 }
 
-/* Кнопка "Дивитись всі акції" */
 .promotions-view-all {
     text-align: center;
     margin: 20px 0 0;
@@ -320,7 +320,6 @@
     transform: translateY(-1px);
 }
 
-/* Адаптивність сторінки акцій */
 @media (max-width: 1200px) {
     .products-section .products-grid {
         grid-template-columns: repeat(4, 1fr);
@@ -333,7 +332,13 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) and (max-width: 1023.98px) {
+    .promotions-slider-container {
+        padding: 0 45px;
+    }
+}
+
+@media (max-width: 767.98px) {
     .promotions-section.mobile-only {
         display: block;
     }
@@ -391,21 +396,12 @@
         gap: 10px;
         margin-top: 12px;
         padding: 0;
-        height: 32px;
-        min-height: 32px;
-        max-height: 32px;
     }
     
     .promo-prev-btn-mobile,
     .promo-next-btn-mobile {
-        position: relative;
-        flex-shrink: 0;
         width: 32px;
         height: 32px;
-        min-width: 32px;
-        min-height: 32px;
-        max-width: 32px;
-        max-height: 32px;
         background: white;
         border: 1px solid #d32f2f;
         border-radius: 50%;
@@ -414,14 +410,7 @@
         justify-content: center;
         cursor: pointer;
         color: #d32f2f;
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
-        -webkit-user-select: none;
-        user-select: none;
         padding: 0;
-        margin: 0;
-        outline: none;
-        box-sizing: border-box;
     }
     
     .promo-prev-btn-mobile:disabled,
@@ -430,18 +419,13 @@
     .promo-next-btn-mobile.disabled {
         opacity: 0.4;
         cursor: not-allowed;
-        pointer-events: none;
     }
     
     .promo-prev-btn-mobile svg,
     .promo-next-btn-mobile svg {
         width: 16px;
         height: 16px;
-        min-width: 16px;
-        min-height: 16px;
         pointer-events: none;
-        display: block;
-        flex-shrink: 0;
     }
     
     .promotions-slider {
@@ -451,8 +435,6 @@
     
     .promo-card {
         flex: 0 0 calc((100% - 12px) / 2);
-        min-width: 0;
-        max-width: calc((100% - 12px) / 2);
     }
     
     .promo-image {
@@ -514,14 +496,8 @@
 }
 
 @media (max-width: 480px) {
-    .promotions-slider-container {
-        padding: 0;
-    }
-    
     .promo-card {
         flex: 0 0 calc((100% - 10px) / 2);
-        min-width: 0;
-        max-width: calc((100% - 10px) / 2);
     }
     
     .products-section .products-grid {
@@ -569,7 +545,6 @@
     .promo-price {
         gap: 4px;
         margin-bottom: 6px;
-        flex-wrap: wrap;
     }
     
     .promo-price .price-old {
@@ -594,10 +569,6 @@
     .promo-next-btn-mobile {
         width: 30px;
         height: 30px;
-        min-width: 30px;
-        min-height: 30px;
-        max-width: 30px;
-        max-height: 30px;
     }
     
     .promo-prev-btn-mobile svg,
@@ -607,7 +578,6 @@
     }
 }
 
-/* Анімація появи */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -629,7 +599,6 @@
 .promo-card:nth-child(4) { animation-delay: 0.25s; }
 .promo-card:nth-child(5) { animation-delay: 0.3s; }
 
-/* iOS Safari специфічні стилі */
 @supports (-webkit-touch-callout: none) {
     .promo-card {
         -webkit-transform: translateZ(0);
@@ -639,6 +608,24 @@
     .promo-card:hover {
         -webkit-transform: translateY(-5px) translateZ(0);
         transform: translateY(-5px) translateZ(0);
+    }
+    
+    .promo-prev-btn-mobile,
+    .promo-next-btn-mobile {
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .promo-card {
+        animation: none;
+    }
+    
+    .promo-prev-btn,
+    .promo-next-btn,
+    .promo-prev-btn-mobile,
+    .promo-next-btn-mobile {
+        transition: none;
     }
 }
 
