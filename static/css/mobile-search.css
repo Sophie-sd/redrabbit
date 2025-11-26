@@ -106,7 +106,7 @@
     background: var(--white);
     border-radius: 10px;
     padding: 12px 16px;
-    font-size: 16px; /* Запобігання зуму на iOS */
+    font-size: 14px; /* Запобігання зуму на iOS */
     color: var(--neutral-dark);
     outline: none;
 }
