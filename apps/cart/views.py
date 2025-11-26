@@ -9,6 +9,7 @@ import json
 def cart_detail(request):
     """Перегляд кошика"""
     cart = Cart(request)
+    cart.refresh_prices()
     return render(request, 'cart/detail.html', {'cart': cart})
 
 

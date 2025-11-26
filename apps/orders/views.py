@@ -6,6 +6,7 @@ from apps.cart.cart import Cart
 def order_create(request):
     """Створення замовлення"""
     cart = Cart(request)
+    cart.refresh_prices()
     if len(cart) == 0:
         messages.error(request, 'Ваш кошик порожній')
         return redirect('cart:detail')

@@ -119,7 +119,7 @@ class ProductDetailView(DetailView):
         )
 
 
-@method_decorator(cache_page(60 * 5), name='dispatch')
+@method_decorator(cache_page(60 * 1), name='dispatch')
 class SaleProductsView(ListView):
     """Акції - показує товари з активними акціями"""
     model = Product
@@ -128,13 +128,20 @@ class SaleProductsView(ListView):
     paginate_by = 15
     
     def get_queryset(self):
+        from django.utils import timezone
         from .models import ProductImage
+        
+        now = timezone.now()
         
         return Product.objects.filter(
             is_sale=True,
             sale_price__isnull=False,
             is_active=True,
             stock__gt=0
+        ).filter(
+            Q(sale_start_date__isnull=True) | Q(sale_start_date__lte=now)
+        ).filter(
+            Q(sale_end_date__isnull=True) | Q(sale_end_date__gt=now)
         ).select_related('primary_category').prefetch_related(
             Prefetch(
                 'images',

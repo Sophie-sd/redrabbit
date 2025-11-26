@@ -20,7 +20,13 @@ class Command(BaseCommand):
         count = expired_sales.count()
         
         if count > 0:
-            expired_sales.update(is_sale=False)
+            expired_sales.update(
+                is_sale=False,
+                sale_price=None,
+                sale_name='',
+                sale_start_date=None,
+                sale_end_date=None
+            )
             self.stdout.write(
                 self.style.SUCCESS(f'✓ Завершено {count} акцій')
             )
