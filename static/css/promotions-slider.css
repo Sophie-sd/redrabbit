@@ -435,6 +435,8 @@
     
     .promo-card {
         flex: 0 0 calc((100% - 12px) / 2);
+        min-width: 0;
+        max-width: calc((100% - 12px) / 2);
     }
     
     .promo-image {
@@ -498,6 +500,8 @@
 @media (max-width: 480px) {
     .promo-card {
         flex: 0 0 calc((100% - 10px) / 2);
+        min-width: 0;
+        max-width: calc((100% - 10px) / 2);
     }
     
     .products-section .products-grid {
