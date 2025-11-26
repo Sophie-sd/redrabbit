@@ -22,7 +22,17 @@ def cart_count(request):
 def cart_add(request, product_id):
     """Додавання товару в кошик"""
     cart = Cart(request)
-    product = get_object_or_404(Product, id=product_id)
+    product = get_object_or_404(Product, id=product_id, is_active=True)
+    
+    # Перевірка наявності на складі
+    if product.stock <= 0:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.content_type == 'application/json':
+            return JsonResponse({
+                'success': False,
+                'message': 'Товару немає в наявності',
+                'cart_count': len(cart)
+            }, status=400)
+        return redirect('cart:detail')
     
     quantity = 1
     if request.content_type == 'application/json':
@@ -33,6 +43,16 @@ def cart_add(request, product_id):
             quantity = 1
     else:
         quantity = int(request.POST.get('quantity', 1))
+    
+    # Перевірка чи достатньо товару на складі
+    if quantity > product.stock:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.content_type == 'application/json':
+            return JsonResponse({
+                'success': False,
+                'message': f'На складі доступно лише {product.stock} шт.',
+                'cart_count': len(cart)
+            }, status=400)
+        return redirect('cart:detail')
     
     cart.add(product=product, quantity=quantity)
     

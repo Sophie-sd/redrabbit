@@ -53,7 +53,7 @@ class Cart:
     def __iter__(self):
         """Ітерація по товарах в кошику"""
         product_ids = self.cart.keys()
-        products = Product.objects.filter(id__in=product_ids)
+        products = Product.objects.filter(id__in=product_ids, stock__gt=0)
         
         products_dict = {str(p.id): p for p in products}
         
@@ -112,7 +112,7 @@ class Cart:
                 return Decimal('0')
             
             product_ids = list(self.cart.keys())
-            products = Product.objects.filter(id__in=product_ids)
+            products = Product.objects.filter(id__in=product_ids, stock__gt=0)
             products_dict = {str(p.id): p for p in products}
             
             applicable_total = Decimal('0')

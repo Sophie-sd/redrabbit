@@ -44,7 +44,8 @@ class HomeView(TemplateView):
         sale_products = Product.objects.filter(
             is_active=True,
             is_sale=True,
-            sale_price__isnull=False
+            sale_price__isnull=False,
+            stock__gt=0
         ).filter(
             Q(sale_start_date__isnull=True) | Q(sale_start_date__lte=now)
         ).filter(
@@ -59,7 +60,8 @@ class HomeView(TemplateView):
         from apps.products.models import TopProduct
         top_product_entries = TopProduct.objects.filter(
             is_active=True,
-            product__is_active=True
+            product__is_active=True,
+            product__stock__gt=0
         ).select_related('product__primary_category').prefetch_related(
             Prefetch('product__images',
                 queryset=ProductImage.objects.filter(is_main=True).only('image', 'image_url', 'is_main', 'product_id'),
@@ -144,7 +146,8 @@ class SearchView(TemplateView):
                     from django.contrib.postgres.search import TrigramSimilarity
                     
                     products = Product.objects.filter(
-                        is_active=True
+                        is_active=True,
+                        stock__gt=0
                     ).annotate(
                         similarity=TrigramSimilarity('name', query)
                     ).filter(
@@ -156,7 +159,8 @@ class SearchView(TemplateView):
                     ).distinct()[:20]
                 else:
                     products = Product.objects.filter(
-                        is_active=True
+                        is_active=True,
+                        stock__gt=0
                     ).filter(
                         Q(name__icontains=query) | 
                         Q(sku__icontains=query) |
@@ -197,7 +201,8 @@ def search_autocomplete(request):
             from django.contrib.postgres.search import TrigramSimilarity
             
             products = Product.objects.filter(
-                is_active=True
+                is_active=True,
+                stock__gt=0
             ).annotate(
                 similarity=TrigramSimilarity('name', query)
             ).filter(
@@ -213,7 +218,8 @@ def search_autocomplete(request):
             )[:5]
         else:
             products = Product.objects.filter(
-                is_active=True
+                is_active=True,
+                stock__gt=0
             ).filter(
                 Q(name__icontains=query) | 
                 Q(sku__icontains=query) |
@@ -278,7 +284,8 @@ def search_paginated(request):
             from django.contrib.postgres.search import TrigramSimilarity
             
             base_queryset = Product.objects.filter(
-                is_active=True
+                is_active=True,
+                stock__gt=0
             ).annotate(
                 similarity=TrigramSimilarity('name', query)
             ).filter(
@@ -290,7 +297,8 @@ def search_paginated(request):
             ).distinct()
         else:
             base_queryset = Product.objects.filter(
-                is_active=True
+                is_active=True,
+                stock__gt=0
             ).filter(
                 Q(name__icontains=query) | 
                 Q(sku__icontains=query) |

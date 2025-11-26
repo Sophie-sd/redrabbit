@@ -38,7 +38,7 @@ class CategoryAdmin(admin.ModelAdmin):
     get_category_image.short_description = 'Фото'
     
     def get_products_count(self, obj):
-        count = obj.products.filter(is_active=True).count()
+        count = obj.products.filter(is_active=True, stock__gt=0).count()
         return format_html('<span class="badge badge-info">{}</span>', count)
     get_products_count.short_description = 'Товарів'
     

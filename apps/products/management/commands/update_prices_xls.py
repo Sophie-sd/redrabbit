@@ -127,6 +127,12 @@ class Command(BaseCommand):
             self.stdout.write(f'   • Не знайдено в базі: {not_found_count}')
             if error_count > 0:
                 self.stdout.write(self.style.WARNING(f'   • Помилок: {error_count}'))
+            
+            # Очищення кешу після оновлення
+            from django.core.cache import cache
+            cache.clear()
+            self.stdout.write(self.style.SUCCESS('   • Кеш очищено ✓'))
+            
             self.stdout.write('='*60)
 
         except requests.RequestException as e:

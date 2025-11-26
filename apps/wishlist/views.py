@@ -31,7 +31,7 @@ def wishlist_count(request):
 def wishlist_add(request, product_id):
     """Додавання товару в список бажань (AJAX)"""
     wishlist = Wishlist(request)
-    product = get_object_or_404(Product, id=product_id, is_active=True)
+    product = get_object_or_404(Product, id=product_id, is_active=True, stock__gt=0)
     
     added = wishlist.add(product)
     

@@ -64,14 +64,16 @@ class Sale(models.Model):
         for category in self.categories.all():
             category_products = Product.objects.filter(
                 Q(primary_category=category) | Q(categories=category),
-                is_active=True
+                is_active=True,
+                stock__gt=0
             ).distinct()
             products.update(category_products)
             
             for child_category in category.get_all_children():
                 child_products = Product.objects.filter(
                     Q(primary_category=child_category) | Q(categories=child_category),
-                    is_active=True
+                    is_active=True,
+                    stock__gt=0
                 ).distinct()
                 products.update(child_products)
         

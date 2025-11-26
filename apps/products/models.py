@@ -275,7 +275,8 @@ class Product(models.Model):
         
         return Product.objects.filter(
             primary_category=self.primary_category,
-            is_active=True
+            is_active=True,
+            stock__gt=0
         ).exclude(id=self.id).order_by('?')[:limit]
     
     def is_in_stock(self):

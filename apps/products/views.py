@@ -66,12 +66,14 @@ class CategoryView(ListView):
                 Q(primary_category__id=self.category.id) |
                 Q(categories__id__in=child_ids) | 
                 Q(primary_category__id__in=child_ids),
-                is_active=True
+                is_active=True,
+                stock__gt=0
             ).distinct()
         
         return base_queryset.filter(
             Q(categories__id=self.category.id) | Q(primary_category__id=self.category.id),
-            is_active=True
+            is_active=True,
+            stock__gt=0
         ).distinct()
     
     def get_context_data(self, **kwargs):
@@ -110,7 +112,7 @@ class ProductDetailView(DetailView):
     
     def get_queryset(self):
         from .models import ProductImage
-        return Product.objects.filter(is_active=True).prefetch_related(
+        return Product.objects.filter(is_active=True, stock__gt=0).prefetch_related(
             Prefetch('images',
                 queryset=ProductImage.objects.only('image', 'image_url', 'is_main', 'alt_text', 'product_id').order_by('sort_order', 'id')
             )
@@ -131,7 +133,8 @@ class SaleProductsView(ListView):
         return Product.objects.filter(
             is_sale=True,
             sale_price__isnull=False,
-            is_active=True
+            is_active=True,
+            stock__gt=0
         ).select_related('primary_category').prefetch_related(
             Prefetch(
                 'images',
