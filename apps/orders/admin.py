@@ -59,7 +59,7 @@ class OrderAdmin(admin.ModelAdmin):
         }),
     )
     
-    actions = ['mark_as_confirmed', 'mark_as_shipped', 'mark_as_delivered']
+    actions = ['mark_as_confirmed', 'mark_as_cancelled', 'mark_as_completed']
     
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related('items__product')
@@ -69,15 +69,15 @@ class OrderAdmin(admin.ModelAdmin):
         self.message_user(request, f"Підтверджено {updated} замовлень")
     mark_as_confirmed.short_description = "Підтвердити замовлення"
     
-    def mark_as_shipped(self, request, queryset):
-        updated = queryset.update(status='shipped')
-        self.message_user(request, f"Відправлено {updated} замовлень")
-    mark_as_shipped.short_description = "Відправити замовлення"
+    def mark_as_cancelled(self, request, queryset):
+        updated = queryset.update(status='cancelled')
+        self.message_user(request, f"Скасовано {updated} замовлень")
+    mark_as_cancelled.short_description = "✗ Скасувати замовлення"
     
-    def mark_as_delivered(self, request, queryset):
-        updated = queryset.update(status='delivered')
-        self.message_user(request, f"Доставлено {updated} замовлень")
-    mark_as_delivered.short_description = "Доставлено замовлення"
+    def mark_as_completed(self, request, queryset):
+        updated = queryset.update(status='completed')
+        self.message_user(request, f"Завершено {updated} замовлень")
+    mark_as_completed.short_description = "✓ Завершити замовлення"
     
     def changelist_view(self, request, extra_context=None):
         from datetime import datetime, time
@@ -93,8 +93,8 @@ class OrderAdmin(admin.ModelAdmin):
         
         # Загальна статистика по статусах
         pending_count = qs.filter(status='pending').count()
-        in_progress_count = qs.filter(status__in=['confirmed', 'processing']).count()
-        completed_count = qs.filter(status__in=['delivered', 'completed']).count()
+        in_progress_count = qs.filter(status='confirmed').count()
+        completed_count = qs.filter(status='completed').count()
         
         # Статистика за сьогодні (UTC діапазон)
         today_utc = timezone.now().date()
@@ -111,7 +111,6 @@ class OrderAdmin(admin.ModelAdmin):
         
         new_today_count = today_orders.filter(status='pending').count()
         today_sum = today_orders.exclude(status='cancelled').aggregate(Sum('final_total'))['final_total__sum'] or 0
-        shipped_today_count = qs.filter(status='shipped', updated_at__gte=start_of_day, updated_at__lte=end_of_day).count()
         cancelled_today_count = qs.filter(status='cancelled', updated_at__gte=start_of_day, updated_at__lte=end_of_day).count()
         
         metrics = {
@@ -124,7 +123,6 @@ class OrderAdmin(admin.ModelAdmin):
                 'date': today_utc,
                 'new_orders': new_today_count,
                 'sum': today_sum,
-                'shipped': shipped_today_count,
                 'cancelled': cancelled_today_count,
             }
         }
