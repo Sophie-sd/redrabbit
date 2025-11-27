@@ -11,7 +11,7 @@
 
 @media (max-width: 991px) {
     .main-content {
-        padding-top: 100px;
+        padding-top: 51px;
     }
 }
 
@@ -20,8 +20,6 @@
 .container-fluid {
     width: 100%;
     max-width: 100%;
-    padding-right: var(--spacing-md);
-    padding-left: var(--spacing-md);
     margin-right: auto;
     margin-left: auto;
 }

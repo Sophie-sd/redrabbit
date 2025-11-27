@@ -41,7 +41,7 @@ class Order(models.Model):
     email = models.EmailField('Email', blank=True)
     
     # Доставка
-    delivery_method = models.CharField('Спосіб доставки', max_length=20, choices=DELIVERY_METHOD_CHOICES)
+    delivery_method = models.CharField('Спосіб доставки', max_length=20, choices=DELIVERY_METHOD_CHOICES, default='nova_poshta')
     nova_poshta_city = models.CharField('Місто (НП)', max_length=100, blank=True)
     nova_poshta_warehouse = models.CharField('Відділення/Поштомат (НП)', max_length=200, blank=True)
     ukrposhta_city = models.CharField('Місто (Укрпошта)', max_length=100, blank=True)
@@ -50,7 +50,7 @@ class Order(models.Model):
     delivery_cost = models.DecimalField('Вартість доставки', max_digits=10, decimal_places=2, default=0)
     
     # Оплата
-    payment_method = models.CharField('Спосіб оплати', max_length=20, choices=PAYMENT_METHOD_CHOICES)
+    payment_method = models.CharField('Спосіб оплати', max_length=20, choices=PAYMENT_METHOD_CHOICES, default='online')
     is_paid = models.BooleanField('Оплачено', default=False)
     payment_date = models.DateTimeField('Дата оплати', null=True, blank=True)
     

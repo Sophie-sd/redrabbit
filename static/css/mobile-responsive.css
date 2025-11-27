@@ -468,10 +468,6 @@
         display: block;
     }
     
-    .container {
-        padding-left: var(--spacing-md);
-        padding-right: var(--spacing-md);
-    }
     
     .section-padding {
         padding: var(--spacing-xl) 0;
