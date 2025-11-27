@@ -350,6 +350,21 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+.payment-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.payment-actions form {
+    margin: 0;
+}
+
+.payment-actions .btn {
+    width: 100%;
+}
+
 @media (max-width: 992px) {
     .order-layout {
         grid-template-columns: 1fr;
