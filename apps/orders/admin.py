@@ -80,6 +80,8 @@ class OrderAdmin(admin.ModelAdmin):
     mark_as_delivered.short_description = "Доставлено замовлення"
     
     def changelist_view(self, request, extra_context=None):
+        from datetime import datetime, time
+        
         extra_context = extra_context or {}
         
         response = super().changelist_view(request, extra_context=extra_context)
@@ -89,11 +91,42 @@ class OrderAdmin(admin.ModelAdmin):
         except (AttributeError, KeyError):
             return response
         
+        # Загальна статистика по статусах
+        pending_count = qs.filter(status='pending').count()
+        in_progress_count = qs.filter(status__in=['confirmed', 'processing']).count()
+        completed_count = qs.filter(status__in=['delivered', 'completed']).count()
+        
+        # Статистика за сьогодні (UTC діапазон)
+        today_utc = timezone.now().date()
+        start_of_day = timezone.make_aware(
+            datetime.combine(today_utc, time.min),
+            timezone.utc
+        )
+        end_of_day = timezone.make_aware(
+            datetime.combine(today_utc, time.max),
+            timezone.utc
+        )
+        
+        today_orders = qs.filter(created_at__gte=start_of_day, created_at__lte=end_of_day)
+        
+        new_today_count = today_orders.filter(status='pending').count()
+        today_sum = today_orders.exclude(status='cancelled').aggregate(Sum('final_total'))['final_total__sum'] or 0
+        shipped_today_count = qs.filter(status='shipped', updated_at__gte=start_of_day, updated_at__lte=end_of_day).count()
+        cancelled_today_count = qs.filter(status='cancelled', updated_at__gte=start_of_day, updated_at__lte=end_of_day).count()
+        
         metrics = {
-            'total': qs.count(),
-            'total_revenue': qs.aggregate(Sum('final_total'))['final_total__sum'] or 0,
-            'average_order': qs.aggregate(Avg('final_total'))['final_total__avg'] or 0,
-            'paid_orders': qs.filter(is_paid=True).count(),
+            'status_stats': {
+                'pending': pending_count,
+                'in_progress': in_progress_count,
+                'completed': completed_count,
+            },
+            'today_stats': {
+                'date': today_utc,
+                'new_orders': new_today_count,
+                'sum': today_sum,
+                'shipped': shipped_today_count,
+                'cancelled': cancelled_today_count,
+            }
         }
         
         response.context_data['summary'] = metrics
