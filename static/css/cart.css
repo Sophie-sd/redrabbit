@@ -12,7 +12,6 @@
 .cart-items {
     display: flex;
     flex-direction: column;
-    gap: 20px;
 }
 
 .cart-item {
@@ -587,10 +586,6 @@
 @media (max-width: 576px) {
     .cart-section {
         padding: 16px 0;
-    }
-    
-    .cart-items {
-        gap: 10px;
     }
     
     .cart-item {

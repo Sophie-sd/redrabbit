@@ -1412,7 +1412,7 @@
     padding: var(--spacing-lg);
     border: 1px solid var(--neutral-light);
     border-radius: var(--border-radius-md);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: 10px;
 }
 
 @media (max-width: 767.98px) {

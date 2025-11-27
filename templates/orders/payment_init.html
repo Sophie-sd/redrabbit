@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Оплата замовлення - RedRabbit{% endblock %}
+
+{% block content %}
+<section class="payment-section section-padding">
+    <div class="container">
+        <div class="payment-wrapper">
+            <h1>Оплата замовлення №{{ order.order_number }}</h1>
+            <p>Сума до сплати: <strong>{{ order.final_total }} ₴</strong></p>
+            <p>Тут буде інтеграція з платіжною системою</p>
+            <a href="{% url 'orders:success' order.id %}" class="btn btn-primary">Повернутися до замовлення</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

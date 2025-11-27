@@ -2,7 +2,6 @@
 Моделі замовлень
 """
 from django.db import models
-from django.conf import settings
 from decimal import Decimal
 from apps.products.models import Product
 
@@ -21,40 +20,33 @@ class Order(models.Model):
     ]
     
     PAYMENT_METHOD_CHOICES = [
-        ('cash', 'Готівка при отриманні'),
-        ('card', 'Оплата карткою'),
-        ('bank_transfer', 'Банківський переказ'),
-        ('liqpay', 'LiqPay'),
+        ('online', 'Оплата на сайті'),
+        ('cash_on_delivery', 'Оплата при отриманні'),
     ]
     
     DELIVERY_METHOD_CHOICES = [
         ('nova_poshta', 'Нова Пошта'),
         ('ukrposhta', 'Укрпошта'),
-        ('courier', 'Кур\'єр'),
-        ('pickup', 'Самовивіз'),
     ]
     
     # Основна інформація
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, 
-        on_delete=models.CASCADE, 
-        verbose_name='Користувач',
-        null=True,
-        blank=True
-    )
     order_number = models.CharField('Номер замовлення', max_length=20, unique=True, blank=True)
     status = models.CharField('Статус', max_length=20, choices=STATUS_CHOICES, default='pending')
     
     # Контактні дані
     first_name = models.CharField('Ім\'я', max_length=100)
     last_name = models.CharField('Прізвище', max_length=100)
-    email = models.EmailField('Email')
+    patronymic = models.CharField('По-батькові', max_length=100, blank=True)
     phone = models.CharField('Телефон', max_length=20)
+    email = models.EmailField('Email', blank=True)
     
     # Доставка
     delivery_method = models.CharField('Спосіб доставки', max_length=20, choices=DELIVERY_METHOD_CHOICES)
-    delivery_city = models.CharField('Місто доставки', max_length=100)
-    delivery_address = models.TextField('Адреса доставки')
+    nova_poshta_city = models.CharField('Місто (НП)', max_length=100, blank=True)
+    nova_poshta_warehouse = models.CharField('Відділення/Поштомат (НП)', max_length=200, blank=True)
+    ukrposhta_city = models.CharField('Місто (Укрпошта)', max_length=100, blank=True)
+    ukrposhta_address = models.CharField('Адреса (Укрпошта)', max_length=200, blank=True)
+    ukrposhta_index = models.CharField('Індекс (Укрпошта)', max_length=10, blank=True)
     delivery_cost = models.DecimalField('Вартість доставки', max_digits=10, decimal_places=2, default=0)
     
     # Оплата
@@ -63,9 +55,11 @@ class Order(models.Model):
     payment_date = models.DateTimeField('Дата оплати', null=True, blank=True)
     
     # Ціни
-    subtotal = models.DecimalField('Сума товарів', max_digits=10, decimal_places=2)
-    discount = models.DecimalField('Знижка', max_digits=10, decimal_places=2, default=0)
-    total = models.DecimalField('Загальна сума', max_digits=10, decimal_places=2)
+    subtotal_retail = models.DecimalField('Повна сума товарів', max_digits=10, decimal_places=2, default=0)
+    product_discount = models.DecimalField('Знижка на товари', max_digits=10, decimal_places=2, default=0)
+    promo_code = models.CharField('Промокод', max_length=50, blank=True, default='')
+    promo_discount = models.DecimalField('Знижка промокоду', max_digits=10, decimal_places=2, default=0)
+    final_total = models.DecimalField('Підсумкова сума', max_digits=10, decimal_places=2, default=0)
     
     # Додаткові поля
     notes = models.TextField('Примітки до замовлення', blank=True)
@@ -86,17 +80,22 @@ class Order(models.Model):
         ordering = ['-created_at']
     
     def save(self, *args, **kwargs):
-        if not self.order_number:
-            self.order_number = f"BS{self.id or '000'}{self.created_at.strftime('%Y%m%d') if hasattr(self, 'created_at') else ''}"
+        if not self.pk and not self.order_number:
+            from django.utils import timezone
+            timestamp = timezone.now().strftime('%Y%m%d%H%M%S')
+            self.order_number = f"RR{timestamp}"
         super().save(*args, **kwargs)
     
     def get_total_cost(self):
         """Повертає загальну вартість замовлення"""
-        return self.subtotal + self.delivery_cost - self.discount
+        return self.final_total + self.delivery_cost
     
     def get_customer_name(self):
         """Повертає повне ім'я клієнта"""
-        return f"{self.first_name} {self.last_name}"
+        parts = [self.last_name, self.first_name]
+        if self.patronymic:
+            parts.append(self.patronymic)
+        return ' '.join(parts)
     
     def can_be_cancelled(self):
         """Чи може бути скасовано замовлення"""

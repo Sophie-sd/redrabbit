@@ -20,11 +20,17 @@ class OrderItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     list_display = [
         'order_number', 'get_customer_name', 'status', 
-        'total', 'payment_method', 'is_paid', 'created_at'
+        'final_total', 'payment_method', 'is_paid', 'promo_code', 'created_at'
     ]
     list_filter = ['status', 'payment_method', 'delivery_method', 'is_paid', 'created_at']
-    search_fields = ['order_number', 'first_name', 'last_name', 'email', 'phone']
-    readonly_fields = ['order_number', 'created_at', 'updated_at']
+    search_fields = ['order_number', 'first_name', 'last_name', 'phone', 'promo_code']
+    readonly_fields = [
+        'order_number', 'created_at', 'updated_at',
+        'first_name', 'last_name', 'patronymic', 'phone', 'email',
+        'payment_method', 'payment_date', 'payment_intent_id',
+        'subtotal_retail', 'product_discount', 'promo_code', 'promo_discount', 'final_total',
+        'notes'
+    ]
     list_editable = ['status', 'is_paid']
     date_hierarchy = 'created_at'
     
@@ -35,13 +41,17 @@ class OrderAdmin(admin.ModelAdmin):
             'fields': ('order_number', 'status', 'created_at', 'updated_at')
         }),
         ('Клієнт', {
-            'fields': ('first_name', 'last_name', 'email', 'phone')
+            'fields': ('first_name', 'last_name', 'patronymic', 'phone', 'email')
         }),
         ('Доставка', {
-            'fields': ('delivery_method', 'delivery_city', 'delivery_address', 'delivery_cost')
+            'fields': ('delivery_method', 'nova_poshta_city', 'nova_poshta_warehouse',
+                      'ukrposhta_city', 'ukrposhta_address', 'ukrposhta_index')
+        }),
+        ('Ціни', {
+            'fields': ('subtotal_retail', 'product_discount', 'promo_code', 'promo_discount', 'final_total')
         }),
         ('Оплата', {
-            'fields': ('payment_method', 'is_paid', 'payment_date', 'subtotal', 'discount', 'total')
+            'fields': ('payment_method', 'is_paid', 'payment_date', 'payment_intent_id')
         }),
         ('Примітки', {
             'fields': ('notes', 'admin_notes'),
@@ -52,7 +62,7 @@ class OrderAdmin(admin.ModelAdmin):
     actions = ['mark_as_confirmed', 'mark_as_shipped', 'mark_as_delivered']
     
     def get_queryset(self, request):
-        return super().get_queryset(request).select_related('user').prefetch_related('items__product')
+        return super().get_queryset(request).prefetch_related('items__product')
     
     def mark_as_confirmed(self, request, queryset):
         updated = queryset.update(status='confirmed')
