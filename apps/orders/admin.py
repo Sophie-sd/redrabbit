@@ -91,8 +91,8 @@ class OrderAdmin(admin.ModelAdmin):
         
         metrics = {
             'total': qs.count(),
-            'total_revenue': qs.aggregate(Sum('total'))['total__sum'] or 0,
-            'average_order': qs.aggregate(Avg('total'))['total__avg'] or 0,
+            'total_revenue': qs.aggregate(Sum('final_total'))['final_total__sum'] or 0,
+            'average_order': qs.aggregate(Avg('final_total'))['final_total__avg'] or 0,
             'paid_orders': qs.filter(is_paid=True).count(),
         }
         

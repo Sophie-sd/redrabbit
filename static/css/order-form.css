@@ -73,6 +73,11 @@
     color: #e74c3c;
     font-size: 0.875rem;
     margin-top: 5px;
+    display: block;
+}
+
+.form-control.invalid {
+    border-color: #e74c3c;
 }
 
 .radio-group {
@@ -359,6 +364,7 @@
 @media (max-width: 576px) {
     .form-row {
         grid-template-columns: 1fr;
+        gap: 0;
     }
     
     .order-form-wrapper,

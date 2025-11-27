@@ -53,6 +53,8 @@ class OrderCreateForm(forms.ModelForm):
         self.fields['ukrposhta_city'].required = False
         self.fields['ukrposhta_address'].required = False
         self.fields['ukrposhta_index'].required = False
+        self.fields['payment_method'].initial = 'online'
+        self.fields['delivery_method'].initial = 'nova_poshta'
     
     def clean(self):
         cleaned_data = super().clean()

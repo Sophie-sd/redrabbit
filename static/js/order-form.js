@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const deliveryRadios = document.querySelectorAll('input[name="delivery_method"]');
     const novaPoshtaFields = document.getElementById('novaPoshtaFields');
     const ukrposhtaFields = document.getElementById('ukrposhtaFields');
+    const phoneInput = document.querySelector('input[name="phone"]');
+    const emailInput = document.querySelector('input[name="email"]');
     
     if (!deliveryRadios.length || !form) return;
     
@@ -30,6 +32,58 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     toggleDeliveryFields();
+    
+    if (phoneInput) {
+        phoneInput.value = '+380';
+        phoneInput.placeholder = '+380(__) ___-__-__';
+        
+        phoneInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.startsWith('3800')) {
+                value = '380' + value.substring(4);
+            } else if (value.startsWith('0') && !value.startsWith('380')) {
+                value = '380' + value.substring(1);
+            } else if (!value.startsWith('380')) {
+                value = '380' + value;
+            }
+            
+            if (value.length > 12) {
+                value = value.substring(0, 12);
+            }
+            
+            e.target.value = '+' + value;
+        });
+        
+        phoneInput.addEventListener('keydown', (e) => {
+            if (e.target.selectionStart < 4 && ['Backspace', 'Delete'].includes(e.key)) {
+                e.preventDefault();
+            }
+        });
+    }
+    
+    if (emailInput && emailInput.value === '') {
+        const validateEmail = () => {
+            const value = emailInput.value.trim();
+            let errorEl = emailInput.parentElement.querySelector('.error');
+            
+            if (value && !value.includes('@')) {
+                emailInput.classList.add('invalid');
+                if (!errorEl) {
+                    errorEl = document.createElement('span');
+                    errorEl.className = 'error';
+                    emailInput.parentElement.appendChild(errorEl);
+                }
+                errorEl.textContent = 'Невірний формат email';
+            } else {
+                emailInput.classList.remove('invalid');
+                if (errorEl) errorEl.remove();
+            }
+        };
+        
+        emailInput.addEventListener('blur', validateEmail);
+        emailInput.addEventListener('input', validateEmail);
+    }
     
     form.addEventListener('submit', (e) => {
         if (submitBtn) {
