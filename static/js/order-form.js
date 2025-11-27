@@ -33,8 +33,21 @@ document.addEventListener('DOMContentLoaded', () => {
     
     toggleDeliveryFields();
     
+    const paymentOnline = document.querySelector('input[name="payment_method"][value="online"]');
+    const deliveryNP = document.querySelector('input[name="delivery_method"][value="nova_poshta"]');
+    
+    if (paymentOnline && !document.querySelector('input[name="payment_method"]:checked')) {
+        paymentOnline.checked = true;
+    }
+    if (deliveryNP && !document.querySelector('input[name="delivery_method"]:checked')) {
+        deliveryNP.checked = true;
+        toggleDeliveryFields();
+    }
+    
     if (phoneInput) {
-        phoneInput.value = '+380';
+        if (!phoneInput.value || phoneInput.value === '+' || phoneInput.value === '') {
+            phoneInput.value = '+380';
+        }
         phoneInput.placeholder = '+380(__) ___-__-__';
         
         phoneInput.addEventListener('input', (e) => {
@@ -62,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    if (emailInput && emailInput.value === '') {
+    if (emailInput) {
         const validateEmail = () => {
             const value = emailInput.value.trim();
             let errorEl = emailInput.parentElement.querySelector('.error');
