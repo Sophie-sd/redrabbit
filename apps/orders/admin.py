@@ -27,6 +27,8 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields = [
         'order_number', 'created_at', 'updated_at',
         'first_name', 'last_name', 'patronymic', 'phone', 'email',
+        'delivery_method', 'nova_poshta_city', 'nova_poshta_warehouse',
+        'ukrposhta_city', 'ukrposhta_address', 'ukrposhta_index',
         'payment_method', 'payment_date', 'payment_intent_id',
         'subtotal_retail', 'product_discount', 'promo_code', 'promo_discount', 'final_total',
         'notes'
