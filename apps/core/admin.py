@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Banner
+from .models import Banner, TrackingPixel
 
 
 @admin.register(Banner)
@@ -34,6 +34,29 @@ class BannerAdmin(admin.ModelAdmin):
             return format_html('<img src="{}" alt="{}" class="admin-thumbnail-small" />', obj.mobile_image.url, obj.alt_text)
         return "Немає"
     mobile_preview.short_description = "Мобільний"
+
+
+@admin.register(TrackingPixel)
+class TrackingPixelAdmin(admin.ModelAdmin):
+    list_display = ['name', 'pixel_type', 'pixel_id', 'placement', 'is_active', 'created_at']
+    list_filter = ['pixel_type', 'placement', 'is_active', 'created_at']
+    search_fields = ['name', 'pixel_id']
+    list_editable = ['is_active']
+    readonly_fields = ['created_at', 'updated_at']
+    
+    fieldsets = (
+        ('Основна інформація', {
+            'fields': ('name', 'pixel_type', 'pixel_id', 'is_active')
+        }),
+        ('Код пікселя', {
+            'fields': ('code_snippet', 'placement'),
+            'description': 'Вставте повний код включно з <script> тегами'
+        }),
+        ('Метадані', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
 
 
 admin.site.site_header = "Адміністрування"

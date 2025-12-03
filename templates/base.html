@@ -49,6 +49,7 @@
     
     <!-- CSS - Optimized with Design System -->
     {% load static %}
+    {% load core_tags %}
     <!-- 1. Design System Variables (завжди першим) -->
     <link rel="stylesheet" href="{% static 'css/variables.css' %}">
     
@@ -120,6 +121,14 @@
     </script>
     {% endblock %}
     
+    <!-- Tracking Pixels (Head Section) -->
+    {% get_tracking_pixels as all_pixels %}
+    {% for pixel in all_pixels %}
+        {% if pixel.placement == 'head' %}
+            {{ pixel.code_snippet|safe }}
+        {% endif %}
+    {% endfor %}
+    
     <!-- Modernizr для перевірки можливостей браузера -->
     <script>
         document.documentElement.classList.remove('no-js');
@@ -127,6 +136,13 @@
     </script>
 </head>
 <body class="{% block body_class %}{% endblock %}">
+    <!-- Tracking Pixels (Body Start) -->
+    {% for pixel in all_pixels %}
+        {% if pixel.placement == 'body_start' %}
+            {{ pixel.code_snippet|safe }}
+        {% endif %}
+    {% endfor %}
+    
     <!-- Skip link для accessibility -->
     <a href="#main-content" class="skip-link">Перейти до основного вмісту</a>
     
@@ -193,16 +209,11 @@
     <script src="{% static 'js/sale-countdown.js' %}" defer></script>
     {% block extra_js %}{% endblock %}
     
-    
-    <!-- Google Analytics (замініть на ваш ID) -->
-    {% if not debug %}
-    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'GA_MEASUREMENT_ID');
-    </script>
-    {% endif %}
+    <!-- Tracking Pixels (Body End) -->
+    {% for pixel in all_pixels %}
+        {% if pixel.placement == 'body_end' %}
+            {{ pixel.code_snippet|safe }}
+        {% endif %}
+    {% endfor %}
 </body>
 </html>
