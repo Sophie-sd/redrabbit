@@ -129,6 +129,13 @@ class TrackingPixel(models.Model):
         help_text="Де вставити код на сторінці"
     )
     
+    pages = models.CharField(
+        max_length=500,
+        default='all',
+        verbose_name="Сторінки",
+        help_text="Розділені комами: 'all' для всіх, або home,delivery,about..."
+    )
+    
     is_active = models.BooleanField(
         default=True,
         verbose_name="Активний",
