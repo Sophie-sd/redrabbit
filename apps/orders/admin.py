@@ -167,7 +167,18 @@ class OrderAdmin(admin.ModelAdmin):
         try:
             np_service = NovaPostService(settings.NOVAPOST_API_KEY)
             
-            # Отримуємо список адрес та контактів відправника
+            # Отримуємо контрагента (правильний sender_ref)
+            counterparty = np_service.get_counterparty()
+            if not counterparty:
+                self.message_user(
+                    request,
+                    "Помилка: Не знайдено контрагента (відправника). "
+                    "Перевірте налаштування в кабінету Нової Пошти",
+                    messages.ERROR
+                )
+                return
+            
+            # Отримуємо адреси та контакти
             sender_addresses = np_service.get_sender_addresses()
             sender_contacts = np_service.get_sender_contacts()
             
@@ -180,12 +191,14 @@ class OrderAdmin(admin.ModelAdmin):
                 )
                 return
             
-            # Беремо першу адресу та контакт як стандартні
-            sender_address_ref = sender_addresses[0].get('Ref')
-            sender_ref = sender_addresses[0].get('CompanyRef')  # Ref компанії
+            # Беремо правильні REF
+            sender_ref = counterparty.get('Ref')
+            sender_address = sender_addresses[0]
+            sender_address_ref = sender_address.get('Ref')
+            sender_city_ref = sender_address.get('CityRef')
             contact_ref = sender_contacts[0].get('Ref')
             
-            if not all([sender_address_ref, sender_ref, contact_ref]):
+            if not all([sender_ref, sender_address_ref, sender_city_ref, contact_ref]):
                 self.message_user(
                     request,
                     "Помилка: Неповні дані відправника. "
@@ -214,6 +227,7 @@ class OrderAdmin(admin.ModelAdmin):
                         recipient_name=order.get_customer_name(),
                         recipient_phone=order.phone,
                         sender_ref=sender_ref,
+                        sender_city_ref=sender_city_ref,
                         sender_address_ref=sender_address_ref,
                         sender_contact_ref=contact_ref,
                         description=f"Замовлення #{order.order_number}",
