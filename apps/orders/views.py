@@ -337,8 +337,16 @@ def novaposhta_cities(request):
         return JsonResponse({'success': False, 'data': [], 'message': 'Мінімум 3 символи'})
     
     try:
+        # region agent log
+        api_key = settings.NOVAPOST_API_KEY
+        logger.warning(f"DEBUG: NOVAPOST_API_KEY length={len(api_key) if api_key else 0}, first_10={api_key[:10] if api_key else 'EMPTY'}, query={query}")
+        # endregion
         service = NovaPostService(settings.NOVAPOST_API_KEY)
         cities = service.search_cities(query, limit=10)
+        
+        # region agent log
+        logger.warning(f"DEBUG: search_cities returned {len(cities)} cities, type={type(cities)}, first_city={cities[0] if cities else 'NONE'}")
+        # endregion
         
         # Форматуємо для autocomplete
         # Згідно з API getSettlements правильні поля: Ref, Description

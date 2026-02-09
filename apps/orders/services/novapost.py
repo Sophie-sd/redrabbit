@@ -51,6 +51,10 @@ class NovaPostService:
         except: pass
         # endregion
         
+        # region agent log
+        logger.warning(f"DEBUG NOVAPOST: Sending request to {self.API_URL}, model={model_name}, method={called_method}, props={properties}, api_key_len={len(self.api_key)}")
+        # endregion
+        
         try:
             response = requests.post(
                 self.API_URL,
@@ -63,6 +67,10 @@ class NovaPostService:
             # region agent log
             try: import json; open('/Users/sofiadmitrenko/Sites/intshop/.cursor/debug.log', 'a').write(json.dumps({"location":"novapost.py:52","message":"API Response received","data":{"success":result.get('success'),"data_count":len(result.get('data',[])) if isinstance(result.get('data'),list) else 'N/A',"errors":result.get('errors'),"full_result":result},"timestamp":__import__('time').time()*1000,"hypothesisId":"A,C,D","runId":"run1"}) + '\n')
             except: pass
+            # endregion
+            
+            # region agent log
+            logger.warning(f"DEBUG NOVAPOST: API Response - success={result.get('success')}, errors={result.get('errors')}, data_count={len(result.get('data',[]))} full_response={result}")
             # endregion
             
             if not result.get('success'):
