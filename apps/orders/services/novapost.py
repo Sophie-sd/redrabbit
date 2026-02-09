@@ -61,41 +61,40 @@ class NovaPostService:
             logger.error(f"Nova Poshta API request failed: {called_method}, error: {e}")
             return {'success': False, 'data': [], 'errors': [str(e)]}
     
-    def search_cities(self, query: str, limit: int = 50) -> List[Dict]:
+    def search_cities(self, query: str, limit: int = 20) -> List[Dict]:
         """
-        Пошук населених пунктів (міст) для autocomplete.
+        Пошук міст за назвою для autocomplete.
         
-        API: Address.getSettlements (рекомендовано згідно FAQ)
-        Returns: список населених пунктів з Ref та Description
+        API: Address.getCities
+        Returns: список міст з Ref та Description
         """
         try:
             result = self._request(
                 "Address",
-                "getSettlements",
+                "getCities",
                 {
                     "FindByString": query,
-                    "Limit": str(limit),
-                    "Page": "1"
+                    "Limit": limit
                 }
             )
             return result.get('data', [])
         except Exception as e:
-            logger.error(f"Settlement search failed for query='{query}': {e}")
+            logger.error(f"City search failed for query='{query}': {e}")
             return []
     
-    def get_warehouses(self, city_ref: str, limit: int = 100) -> List[Dict]:
+    def get_warehouses(self, city_ref: str, limit: int = 500) -> List[Dict]:
         """
         Отримує відділення/поштомати для обраного міста
         
-        API: AddressGeneral.getWarehouses
+        API: Address.getWarehouses
         Args:
-            city_ref: Ref міста з методу getSettlements
+            city_ref: Ref міста з методу getCities
             limit: Максимальна кількість результатів
         Returns: список відділень з Ref, Description, Address тощо
         """
         try:
             result = self._request(
-                "AddressGeneral",
+                "Address",
                 "getWarehouses",
                 {"CityRef": city_ref, "Limit": limit}
             )
