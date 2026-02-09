@@ -332,8 +332,9 @@ def novaposhta_cities(request):
     """AJAX endpoint для пошуку міст Нової Пошти"""
     query = request.GET.get('q', '').strip()
     
+    # Мінімум 2 символи для пошуку
     if len(query) < 2:
-        return JsonResponse({'success': False, 'data': []})
+        return JsonResponse({'success': False, 'data': [], 'message': 'Мінімум 2 символи'})
     
     try:
         service = NovaPostService(settings.NOVAPOST_API_KEY)
@@ -343,15 +344,15 @@ def novaposhta_cities(request):
         results = []
         for city in cities:
             results.append({
-                'ref': city.get('Ref', ''),
-                'label': city.get('Description', ''),
-                'area': city.get('Area', '')
+                'ref': city.get('Ref', city.get('DeliveryCity', '')),
+                'label': city.get('Description', city.get('Present', '')),
+                'area': city.get('Area', city.get('AreaDescription', ''))
             })
         
         return JsonResponse({'success': True, 'data': results})
     except Exception as e:
         logger.error(f"Nova Poshta cities API error: {e}")
-        return JsonResponse({'success': False, 'error': str(e)})
+        return JsonResponse({'success': False, 'error': str(e), 'data': []})
 
 
 @require_http_methods(["GET"])

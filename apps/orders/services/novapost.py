@@ -56,16 +56,25 @@ class NovaPostService:
         """
         Пошук міст для autocomplete
         
-        API: Address.getCities
+        API: Address.searchSettlements (з параметрами за v2.0)
         Returns: список міст з Ref та Description
         """
         try:
             result = self._request(
                 "Address",
-                "getCities",
-                {"FindByString": query, "Limit": limit}
+                "searchSettlements",
+                {
+                    "CityName": query,
+                    "Limit": str(limit)
+                }
             )
-            return result.get('data', [])
+            
+            # searchSettlements повертає структуру data:[{Addresses:[...]}]
+            data = result.get('data', [])
+            if isinstance(data, list) and len(data) > 0:
+                addresses = data[0].get('Addresses', []) if data else []
+                return addresses
+            return []
         except Exception as e:
             logger.error(f"City search failed for query='{query}': {e}")
             return []
