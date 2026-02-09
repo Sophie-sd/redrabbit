@@ -332,9 +332,9 @@ def novaposhta_cities(request):
     """AJAX endpoint для пошуку міст Нової Пошти"""
     query = request.GET.get('q', '').strip()
     
-    # Мінімум 2 символи для пошуку
-    if len(query) < 2:
-        return JsonResponse({'success': False, 'data': [], 'message': 'Мінімум 2 символи'})
+    # Мінімум 3 символи для пошуку
+    if len(query) < 3:
+        return JsonResponse({'success': False, 'data': [], 'message': 'Мінімум 3 символи'})
     
     try:
         service = NovaPostService(settings.NOVAPOST_API_KEY)
