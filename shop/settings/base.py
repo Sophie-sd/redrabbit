@@ -196,3 +196,10 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
+
+# Nova Post API v1.0 settings
+NOVAPOST_API_KEY = config('NOVAPOST_API_KEY', default='')
+
+# Monobank Acquiring settings
+MONOBANK_TOKEN = config('MONOBANK_TOKEN', default='')
+MONOBANK_WEBHOOK_URL = config('MONOBANK_WEBHOOK_URL', default='')

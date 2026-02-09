@@ -34,3 +34,8 @@ django-cloudinary-storage==0.3.0
 # Redis для кешування (опціонально)
 redis==5.0.1
 django-redis==5.4.0
+
+# Nova Post API v1.0 та Monobank Acquiring
+cachetools==5.3.2
+ecdsa==0.18.0
+cryptography==42.0.0

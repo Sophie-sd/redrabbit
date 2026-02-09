@@ -11,6 +11,7 @@ class Order(models.Model):
     
     STATUS_CHOICES = [
         ('pending', 'Очікує підтвердження'),
+        ('pending_payment', 'Очікує оплати'),
         ('confirmed', 'Підтверджено'),
         ('cancelled', 'Скасовано'),
         ('completed', 'Завершено'),
@@ -39,8 +40,8 @@ class Order(models.Model):
     
     # Доставка
     delivery_method = models.CharField('Спосіб доставки', max_length=20, choices=DELIVERY_METHOD_CHOICES, default='nova_poshta')
-    nova_poshta_city = models.CharField('Місто (НП)', max_length=100, blank=True)
-    nova_poshta_warehouse = models.CharField('Відділення/Поштомат (НП)', max_length=200, blank=True)
+    nova_poshta_city = models.CharField('Місто (НП)', max_length=300, blank=True)
+    nova_poshta_warehouse = models.CharField('Відділення/Поштомат (НП)', max_length=300, blank=True)
     ukrposhta_city = models.CharField('Місто (Укрпошта)', max_length=100, blank=True)
     ukrposhta_address = models.CharField('Адреса (Укрпошта)', max_length=200, blank=True)
     ukrposhta_index = models.CharField('Індекс (Укрпошта)', max_length=10, blank=True)
@@ -66,6 +67,7 @@ class Order(models.Model):
     nova_poshta_ttn = models.CharField('ТТН Нової Пошти', max_length=50, blank=True)
     payment_intent_id = models.CharField('ID платежу', max_length=100, blank=True, help_text='LiqPay або Monobank')
     monobank_parts = models.BooleanField('Оплата частинами Monobank', default=False)
+    idempotency_key = models.CharField('Ключ ідемпотентності', max_length=100, blank=True, unique=True, null=True, help_text='Для запобігання подвійного оброблення webhook')
     
     # Дати
     created_at = models.DateTimeField('Дата створення', auto_now_add=True)

@@ -36,6 +36,12 @@ services:
         sync: false
       - key: CRON_SECRET
         generateValue: true
+      - key: NOVAPOST_API_KEY
+        sync: false
+      - key: MONOBANK_TOKEN
+        sync: false
+      - key: MONOBANK_WEBHOOK_URL
+        sync: false
 
   - type: cron
     name: sync-products-cron
