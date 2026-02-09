@@ -23,6 +23,9 @@ class NovaPostService:
     
     def __init__(self, api_key: str):
         self.api_key = api_key
+        # region agent log
+        import json; open('/Users/sofiadmitrenko/Sites/intshop/.cursor/debug.log', 'a').write(json.dumps({"location":"novapost.py:24","message":"NovaPostService init","data":{"api_key_length":len(api_key) if api_key else 0,"api_key_first_10":api_key[:10] if api_key else "EMPTY"},"timestamp":__import__('time').time()*1000,"hypothesisId":"A","runId":"run1"}) + '\n')
+        # endregion
         if not api_key:
             raise NovaPostServiceError("NOVAPOST_API_KEY не налаштований")
     
@@ -42,6 +45,10 @@ class NovaPostService:
             "methodProperties": properties or {}
         }
         
+        # region agent log
+        import json; open('/Users/sofiadmitrenko/Sites/intshop/.cursor/debug.log', 'a').write(json.dumps({"location":"novapost.py:38","message":"Request payload BEFORE send","data":{"url":self.API_URL,"model":model_name,"method":called_method,"properties":properties,"full_payload":payload},"timestamp":__import__('time').time()*1000,"hypothesisId":"C,D,E","runId":"run1"}) + '\n')
+        # endregion
+        
         try:
             response = requests.post(
                 self.API_URL,
@@ -50,6 +57,10 @@ class NovaPostService:
             )
             response.raise_for_status()
             result = response.json()
+            
+            # region agent log
+            import json; open('/Users/sofiadmitrenko/Sites/intshop/.cursor/debug.log', 'a').write(json.dumps({"location":"novapost.py:52","message":"API Response received","data":{"success":result.get('success'),"data_count":len(result.get('data',[])) if isinstance(result.get('data'),list) else 'N/A',"errors":result.get('errors'),"full_result":result},"timestamp":__import__('time').time()*1000,"hypothesisId":"A,C,D","runId":"run1"}) + '\n')
+            # endregion
             
             if not result.get('success'):
                 error_msg = result.get('errors', ['Невідома помилка API'])
@@ -68,6 +79,9 @@ class NovaPostService:
         API: Address.getCities
         Returns: список міст з Ref та Description
         """
+        # region agent log
+        import json; open('/Users/sofiadmitrenko/Sites/intshop/.cursor/debug.log', 'a').write(json.dumps({"location":"novapost.py:71","message":"search_cities ENTRY","data":{"query":query,"limit":limit},"timestamp":__import__('time').time()*1000,"hypothesisId":"B,C","runId":"run1"}) + '\n')
+        # endregion
         try:
             result = self._request(
                 "Address",
@@ -77,6 +91,9 @@ class NovaPostService:
                     "Limit": limit
                 }
             )
+            # region agent log
+            import json; open('/Users/sofiadmitrenko/Sites/intshop/.cursor/debug.log', 'a').write(json.dumps({"location":"novapost.py:80","message":"search_cities result","data":{"result_type":str(type(result)),"result_keys":list(result.keys()) if isinstance(result,dict) else None,"data_returned":result.get('data',[]) if isinstance(result,dict) else None},"timestamp":__import__('time').time()*1000,"hypothesisId":"B,C,D","runId":"run1"}) + '\n')
+            # endregion
             return result.get('data', [])
         except Exception as e:
             logger.error(f"City search failed for query='{query}': {e}")
