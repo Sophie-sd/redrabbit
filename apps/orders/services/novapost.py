@@ -52,17 +52,17 @@ class NovaPostService:
             logger.error(f"Nova Poshta API request failed: {called_method}, error: {e}")
             return {'success': False, 'data': []}
     
-    def search_cities(self, query: str, limit: int = 10) -> List[Dict]:
+    def search_cities(self, query: str, limit: int = 50) -> List[Dict]:
         """
-        Пошук міст для autocomplete
+        Пошук населених пунктів (міст) для autocomplete.
         
-        API: Address.getCities з параметрами Page
-        Returns: список міст з Ref та Description
+        API: Address.getSettlements (рекомендовано згідно FAQ)
+        Returns: список населених пунктів з Ref та Description
         """
         try:
             result = self._request(
                 "Address",
-                "getCities",
+                "getSettlements",
                 {
                     "FindByString": query,
                     "Limit": str(limit),
@@ -71,7 +71,7 @@ class NovaPostService:
             )
             return result.get('data', [])
         except Exception as e:
-            logger.error(f"City search failed for query='{query}': {e}")
+            logger.error(f"Settlement search failed for query='{query}': {e}")
             return []
     
     def get_warehouses(self, city_ref: str, limit: int = 100) -> List[Dict]:
