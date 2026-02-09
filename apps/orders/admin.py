@@ -2,7 +2,17 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.db.models import Sum, Avg, Count
 from django.utils import timezone
+from django.contrib import messages
+from django.urls import path
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
 from .models import Order, OrderItem, Promotion, Newsletter
+from .services.novapost import NovaPostService, NovaPostServiceError
+from django.conf import settings
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class OrderItemInline(admin.TabularInline):
@@ -27,11 +37,12 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields = [
         'order_number', 'created_at', 'updated_at',
         'first_name', 'last_name', 'patronymic', 'phone', 'email',
-        'delivery_method', 'nova_poshta_city', 'nova_poshta_warehouse',
+        'delivery_method', 'nova_poshta_city', 'nova_poshta_city_ref',
+        'nova_poshta_warehouse', 'nova_poshta_warehouse_ref',
         'ukrposhta_city', 'ukrposhta_address', 'ukrposhta_index',
         'payment_method', 'payment_date', 'payment_intent_id',
         'subtotal_retail', 'product_discount', 'promo_code', 'promo_discount', 'final_total',
-        'notes'
+        'notes', 'nova_poshta_ttn', 'get_ttn_link'
     ]
     list_editable = ['status', 'is_paid']
     date_hierarchy = 'created_at'
@@ -46,8 +57,11 @@ class OrderAdmin(admin.ModelAdmin):
             'fields': ('first_name', 'last_name', 'patronymic', 'phone', 'email')
         }),
         ('Доставка', {
-            'fields': ('delivery_method', 'nova_poshta_city', 'nova_poshta_warehouse',
-                      'ukrposhta_city', 'ukrposhta_address', 'ukrposhta_index')
+            'fields': ('delivery_method', 
+                      ('nova_poshta_city', 'nova_poshta_city_ref'),
+                      ('nova_poshta_warehouse', 'nova_poshta_warehouse_ref'),
+                      'ukrposhta_city', 'ukrposhta_address', 'ukrposhta_index',
+                      ('nova_poshta_ttn', 'get_ttn_link'))
         }),
         ('Ціни', {
             'fields': ('subtotal_retail', 'product_discount', 'promo_code', 'promo_discount', 'final_total')
@@ -61,7 +75,7 @@ class OrderAdmin(admin.ModelAdmin):
         }),
     )
     
-    actions = ['mark_as_confirmed', 'mark_as_cancelled', 'mark_as_completed']
+    actions = ['mark_as_confirmed', 'mark_as_cancelled', 'mark_as_completed', 'create_nova_poshta_ttn']
     
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related('items__product')
@@ -80,6 +94,201 @@ class OrderAdmin(admin.ModelAdmin):
         updated = queryset.update(status='completed')
         self.message_user(request, f"Завершено {updated} замовлень")
     mark_as_completed.short_description = "✓ Завершити замовлення"
+    
+    def get_ttn_link(self, obj):
+        """Посилання на ТТН у Новій Пошті"""
+        if obj.nova_poshta_ttn:
+            ttn = obj.nova_poshta_ttn
+            url = f"https://track.novaposhta.ua/uk?number={ttn}"
+            return format_html('<a href="{}" target="_blank">{}</a>', url, ttn)
+        return "-"
+    get_ttn_link.short_description = "Посилання на ТТН"
+    
+    def create_nova_poshta_ttn(self, request, queryset):
+        """
+        Action для створення ТТН через Nova Poshta API
+        Перевіряє наявність всіх необхідних даних замовлення та контактів відправника
+        """
+        if not settings.NOVAPOST_API_KEY:
+            self.message_user(
+                request,
+                "Помилка: NOVAPOST_API_KEY не налаштований",
+                messages.ERROR
+            )
+            return
+        
+        # Фільтруємо замовлення
+        valid_orders = []
+        invalid_orders = []
+        
+        for order in queryset:
+            # Перевірка умов для створення ТТН
+            errors = []
+            
+            if order.delivery_method != 'nova_poshta':
+                errors.append("Метод доставки не Nova Poshta")
+            
+            if not order.nova_poshta_city_ref:
+                errors.append("Не вказаний REF міста")
+            
+            if not order.nova_poshta_warehouse_ref:
+                errors.append("Не вказаний REF відділення")
+            
+            if not order.is_paid:
+                errors.append("Замовлення не оплачено")
+            
+            if order.nova_poshta_ttn:
+                errors.append("ТТН вже створена")
+            
+            if errors:
+                invalid_orders.append((order.order_number, errors))
+            else:
+                valid_orders.append(order)
+        
+        # Повідомлення про невалідні замовлення
+        if invalid_orders:
+            for order_num, errors in invalid_orders:
+                self.message_user(
+                    request,
+                    f"Замовлення #{order_num}: {'; '.join(errors)}",
+                    messages.WARNING
+                )
+        
+        if not valid_orders:
+            if not invalid_orders:
+                self.message_user(
+                    request,
+                    "Не вибрано замовлень для створення ТТН",
+                    messages.INFO
+                )
+            return
+        
+        # Спробуємо отримати дані відправника
+        try:
+            np_service = NovaPostService(settings.NOVAPOST_API_KEY)
+            
+            # Отримуємо список адрес та контактів відправника
+            sender_addresses = np_service.get_sender_addresses()
+            sender_contacts = np_service.get_sender_contacts()
+            
+            if not sender_addresses or not sender_contacts:
+                self.message_user(
+                    request,
+                    "Помилка: Не можна отримати дані відправника. "
+                    "Перевірте налаштування в кабінету Нової Пошти",
+                    messages.ERROR
+                )
+                return
+            
+            # Беремо першу адресу та контакт як стандартні
+            sender_address_ref = sender_addresses[0].get('Ref')
+            sender_ref = sender_addresses[0].get('CompanyRef')  # Ref компанії
+            contact_ref = sender_contacts[0].get('Ref')
+            
+            if not all([sender_address_ref, sender_ref, contact_ref]):
+                self.message_user(
+                    request,
+                    "Помилка: Неповні дані відправника. "
+                    "Перевірте налаштування в кабінету Нової Пошти",
+                    messages.ERROR
+                )
+                return
+            
+            # Створюємо ТТН для кожного замовлення
+            successful = 0
+            failed = 0
+            
+            for order in valid_orders:
+                try:
+                    # Розраховуємо вагу та вартість
+                    weight = max(1000, sum(
+                        item.product.weight * item.quantity 
+                        for item in order.items.all()
+                    )) if hasattr(order.items.first().product if order.items.exists() else None, 'weight') else 1000
+                    
+                    cost = str(int(order.final_total))
+                    
+                    result = np_service.create_shipment(
+                        recipient_city_ref=order.nova_poshta_city_ref,
+                        recipient_warehouse_ref=order.nova_poshta_warehouse_ref,
+                        recipient_name=order.get_customer_name(),
+                        recipient_phone=order.phone,
+                        sender_ref=sender_ref,
+                        sender_address_ref=sender_address_ref,
+                        sender_contact_ref=contact_ref,
+                        description=f"Замовлення #{order.order_number}",
+                        cost=cost,
+                        weight=str(int(weight))
+                    )
+                    
+                    if result.get('success') and result.get('data'):
+                        # Отримуємо номер документа (ТТН)
+                        ttn = result['data'][0].get('IntDocNumber')
+                        if ttn:
+                            order.nova_poshta_ttn = ttn
+                            order.save(update_fields=['nova_poshta_ttn'])
+                            successful += 1
+                        else:
+                            self.message_user(
+                                request,
+                                f"Замовлення #{order.order_number}: Не отримано номер ТТН",
+                                messages.WARNING
+                            )
+                            failed += 1
+                    else:
+                        errors = result.get('errors', ['Невідома помилка'])
+                        self.message_user(
+                            request,
+                            f"Замовлення #{order.order_number}: {'; '.join(errors)}",
+                            messages.WARNING
+                        )
+                        failed += 1
+                
+                except NovaPostServiceError as e:
+                    self.message_user(
+                        request,
+                        f"Замовлення #{order.order_number}: {str(e)}",
+                        messages.WARNING
+                    )
+                    failed += 1
+                except Exception as e:
+                    logger.exception(f"Error creating TTN for order {order.id}: {e}")
+                    self.message_user(
+                        request,
+                        f"Замовлення #{order.order_number}: Внутрішня помилка",
+                        messages.ERROR
+                    )
+                    failed += 1
+            
+            # Фінальне повідомлення
+            if successful > 0:
+                self.message_user(
+                    request,
+                    f"✓ Успішно створено {successful} ТТН",
+                    messages.SUCCESS
+                )
+            if failed > 0:
+                self.message_user(
+                    request,
+                    f"✗ Помилок при створенні ТТН: {failed}",
+                    messages.ERROR
+                )
+        
+        except NovaPostServiceError as e:
+            self.message_user(
+                request,
+                f"Помилка API Нової Пошти: {str(e)}",
+                messages.ERROR
+            )
+        except Exception as e:
+            logger.exception(f"Error in create_nova_poshta_ttn action: {e}")
+            self.message_user(
+                request,
+                "Внутрішня помилка при створенні ТТН",
+                messages.ERROR
+            )
+    
+    create_nova_poshta_ttn.short_description = "📮 Створити ТТН для Нової Пошти"
     
     def changelist_view(self, request, extra_context=None):
         from datetime import datetime, time

@@ -341,12 +341,14 @@ def novaposhta_cities(request):
         cities = service.search_cities(query, limit=10)
         
         # Форматуємо для autocomplete
+        # Згідно з API getSettlements правильні поля: Ref, Description
         results = []
         for city in cities:
             results.append({
-                'ref': city.get('Ref', city.get('DeliveryCity', '')),
-                'label': city.get('Description', city.get('Present', '')),
-                'area': city.get('Area', city.get('AreaDescription', ''))
+                'ref': city.get('Ref', ''),
+                'label': city.get('Description', ''),
+                'area': city.get('AreaDescription', ''),
+                'region': city.get('RegionsDescription', '')
             })
         
         return JsonResponse({'success': True, 'data': results})
@@ -368,6 +370,7 @@ def novaposhta_warehouses(request):
         warehouses = service.get_warehouses(city_ref, limit=100)
         
         # Форматуємо для autocomplete
+        # Згідно з API getWarehouses правильні поля: Ref, Description, Number
         results = []
         for wh in warehouses:
             results.append({

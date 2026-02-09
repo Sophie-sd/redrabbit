@@ -41,7 +41,9 @@ class Order(models.Model):
     # Доставка
     delivery_method = models.CharField('Спосіб доставки', max_length=20, choices=DELIVERY_METHOD_CHOICES, default='nova_poshta')
     nova_poshta_city = models.CharField('Місто (НП)', max_length=300, blank=True)
+    nova_poshta_city_ref = models.CharField('Місто REF (НП)', max_length=100, blank=True, help_text='Унікальний ідентифікатор міста з API НП')
     nova_poshta_warehouse = models.CharField('Відділення/Поштомат (НП)', max_length=300, blank=True)
+    nova_poshta_warehouse_ref = models.CharField('Відділення REF (НП)', max_length=100, blank=True, help_text='Унікальний ідентифікатор відділення з API НП')
     ukrposhta_city = models.CharField('Місто (Укрпошта)', max_length=100, blank=True)
     ukrposhta_address = models.CharField('Адреса (Укрпошта)', max_length=200, blank=True)
     ukrposhta_index = models.CharField('Індекс (Укрпошта)', max_length=10, blank=True)

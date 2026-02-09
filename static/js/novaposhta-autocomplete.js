@@ -2,6 +2,8 @@ class NovaPoshtaAutocomplete {
     constructor() {
         this.cityInput = document.querySelector('[data-type="city"]');
         this.warehouseInput = document.querySelector('[data-type="warehouse"]');
+        this.cityRefInput = document.querySelector('input[name="nova_poshta_city_ref"]');
+        this.warehouseRefInput = document.querySelector('input[name="nova_poshta_warehouse_ref"]');
         this.cityRef = null;
         this.debounceTimer = null;
         
@@ -132,6 +134,12 @@ class NovaPoshtaAutocomplete {
     selectCity(city) {
         this.cityInput.value = city.label;
         this.cityRef = city.ref;
+        
+        // Зберігаємо REF у hidden input
+        if (this.cityRefInput) {
+            this.cityRefInput.value = city.ref;
+        }
+        
         this.hideDropdown(this.cityDropdown);
         
         // Активувати поле відділення
@@ -139,6 +147,10 @@ class NovaPoshtaAutocomplete {
             this.warehouseInput.disabled = false;
             this.warehouseInput.placeholder = 'Почніть вводити номер відділення...';
             this.warehouseInput.value = '';
+            // Очищуємо REF відділення при зміні міста
+            if (this.warehouseRefInput) {
+                this.warehouseRefInput.value = '';
+            }
             this.loadWarehouses(city.ref);
         }
     }
@@ -189,6 +201,12 @@ class NovaPoshtaAutocomplete {
     
     selectWarehouse(warehouse) {
         this.warehouseInput.value = warehouse.label;
+        
+        // Зберігаємо REF у hidden input
+        if (this.warehouseRefInput) {
+            this.warehouseRefInput.value = warehouse.ref;
+        }
+        
         this.hideDropdown(this.warehouseDropdown);
     }
     
