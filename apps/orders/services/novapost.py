@@ -138,6 +138,24 @@ class NovaPostService:
             logger.error(f"Sender contacts fetch failed: {e}")
             return []
     
+    def get_counterparty(self) -> Dict:
+        """
+        Отримує дані контрагента (відправника)
+        
+        API: Counterparty.getCounterparties
+        Returns: перший контрагент зі списку (власна компанія)
+        """
+        try:
+            result = self._request(
+                "Counterparty",
+                "getCounterparties"
+            )
+            data = result.get('data', [])
+            return data[0] if data else {}
+        except Exception as e:
+            logger.error(f"Counterparty fetch failed: {e}")
+            return {}
+    
     def create_shipment(
         self,
         recipient_city_ref: str,
@@ -145,12 +163,14 @@ class NovaPostService:
         recipient_name: str,
         recipient_phone: str,
         sender_ref: str,
+        sender_city_ref: str,
         sender_address_ref: str,
         sender_contact_ref: str,
         description: str = "Товари з інтернет-магазину",
         cost: str = "0",
         weight: str = "1000",
-        seats_amount: str = "1"
+        seats_amount: str = "1",
+        senders_phone: str = "0800000000"
     ) -> Dict:
         """
         Створення ТТН (Інтернет-документу)
@@ -162,13 +182,15 @@ class NovaPostService:
             recipient_warehouse_ref: REF відділення одержувача (обов'язково!)
             recipient_name: ПІБ одержувача
             recipient_phone: Телефон одержувача
-            sender_ref: REF відправника (контрагента)
+            sender_ref: REF контрагента (відправника)
+            sender_city_ref: REF міста відправника (обов'язково!)
             sender_address_ref: REF адреси відправника
             sender_contact_ref: REF контакту відправника
             description: Опис вантажу
             cost: Вартість відправлення
             weight: Вага вантажу (у грамах)
             seats_amount: Кількість місць
+            senders_phone: Телефон відправника
         
         Returns: dict з даними ТТН (документа) - можна отримати IntDocNumber
         
@@ -182,6 +204,7 @@ class NovaPostService:
             'recipient_name': recipient_name,
             'recipient_phone': recipient_phone,
             'sender_ref': sender_ref,
+            'sender_city_ref': sender_city_ref,
             'sender_address_ref': sender_address_ref,
             'sender_contact_ref': sender_contact_ref,
         }
@@ -203,9 +226,11 @@ class NovaPostService:
             "Weight": str(weight),  # У грамах
             
             # Дані відправника (власні реквізити)
-            "Sender": sender_ref,
+            "CitySender": sender_city_ref,  # REF міста відправника (ОБОВ'ЯЗКОВО!)
+            "Sender": sender_ref,  # REF контрагента
             "SenderAddress": sender_address_ref,
             "ContactSender": sender_contact_ref,
+            "SendersPhone": senders_phone,  # Телефон відправника
             
             # Дані одержувача - використовуємо REF!
             "RecipientCityRef": recipient_city_ref,
