@@ -4,7 +4,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('orders', '0009_alter_order_delivery_method_and_more'),
+        ('orders', '0010_alter_order_status'),
     ]
 
     operations = [
@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
             ),
         ),
         
-        # Додаємо новий статус
+        # Додаємо новий статус до статусів
         migrations.AlterField(
             model_name='order',
             name='status',
