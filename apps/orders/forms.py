@@ -35,8 +35,19 @@ class OrderCreateForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'email@example.com'}),
             'payment_method': forms.RadioSelect(),
             'delivery_method': forms.RadioSelect(),
-            'nova_poshta_city': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Оберіть місто'}),
-            'nova_poshta_warehouse': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Оберіть відділення або поштомат'}),
+            'nova_poshta_city': forms.TextInput(attrs={
+                'class': 'form-control np-autocomplete',
+                'placeholder': 'Почніть вводити назву міста...',
+                'autocomplete': 'off',
+                'data-type': 'city'
+            }),
+            'nova_poshta_warehouse': forms.TextInput(attrs={
+                'class': 'form-control np-autocomplete',
+                'placeholder': 'Спочатку оберіть місто',
+                'autocomplete': 'off',
+                'data-type': 'warehouse',
+                'disabled': 'disabled'
+            }),
             'ukrposhta_city': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Місто'}),
             'ukrposhta_address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Вулиця, будинок, квартира'}),
             'ukrposhta_index': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '12345'}),

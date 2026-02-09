@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.db import transaction
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
 from decimal import Decimal
 import json
@@ -12,6 +12,8 @@ from apps.cart.cart import Cart
 from apps.products.models import Product
 from .models import Order, OrderItem, Promotion
 from .forms import OrderCreateForm
+from .services.novapost import NovaPostService
+from django.conf import settings
 
 
 logger = logging.getLogger(__name__)
@@ -323,3 +325,57 @@ def order_payment_callback(request, order_id):
     # Немає payment_intent_id — щось пішло не так
     messages.error(request, 'Дані оплати не знайдено')
     return redirect('orders:create')
+
+
+@require_http_methods(["GET"])
+def novaposhta_cities(request):
+    """AJAX endpoint для пошуку міст Нової Пошти"""
+    query = request.GET.get('q', '').strip()
+    
+    if len(query) < 2:
+        return JsonResponse({'success': False, 'data': []})
+    
+    try:
+        service = NovaPostService(settings.NOVAPOST_API_KEY)
+        cities = service.search_cities(query, limit=10)
+        
+        # Форматуємо для autocomplete
+        results = []
+        for city in cities:
+            results.append({
+                'ref': city.get('Ref', ''),
+                'label': city.get('Description', ''),
+                'area': city.get('Area', '')
+            })
+        
+        return JsonResponse({'success': True, 'data': results})
+    except Exception as e:
+        logger.error(f"Nova Poshta cities API error: {e}")
+        return JsonResponse({'success': False, 'error': str(e)})
+
+
+@require_http_methods(["GET"])
+def novaposhta_warehouses(request):
+    """AJAX endpoint для отримання відділень Нової Пошти"""
+    city_ref = request.GET.get('city_ref', '').strip()
+    
+    if not city_ref:
+        return JsonResponse({'success': False, 'data': []})
+    
+    try:
+        service = NovaPostService(settings.NOVAPOST_API_KEY)
+        warehouses = service.get_warehouses(city_ref, limit=100)
+        
+        # Форматуємо для autocomplete
+        results = []
+        for wh in warehouses:
+            results.append({
+                'ref': wh.get('Ref', ''),
+                'label': wh.get('Description', ''),
+                'number': wh.get('Number', '')
+            })
+        
+        return JsonResponse({'success': True, 'data': results})
+    except Exception as e:
+        logger.error(f"Nova Poshta warehouses API error: {e}")
+        return JsonResponse({'success': False, 'error': str(e)})
