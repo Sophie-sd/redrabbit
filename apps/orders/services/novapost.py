@@ -19,7 +19,7 @@ class NovaPostServiceError(Exception):
 class NovaPostService:
     """Wrapper для Nova Poshta API v2.0"""
     
-    API_URL = "https://api.novaposhta.ua/v2.0/json"
+    API_URL = "https://api.novaposhta.ua/v2.0/json/"
     
     def __init__(self, api_key: str):
         self.api_key = api_key
