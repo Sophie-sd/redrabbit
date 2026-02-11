@@ -95,12 +95,17 @@ class NovaPoshtaAutocomplete {
             }
         });
         
-        // Пошук відділень
+        // Пошук та фільтрація відділень
         if (this.warehouseInput) {
             this.warehouseInput.addEventListener('focus', () => {
                 if (this.cityRef) {
                     this.loadWarehouses(this.cityRef);
                 }
+            });
+            
+            // Фільтрація списку при введенні номера відділення
+            this.warehouseInput.addEventListener('input', (e) => {
+                this.filterWarehouses(e.target.value.trim());
             });
         }
     }
@@ -258,6 +263,37 @@ class NovaPoshtaAutocomplete {
         }
         
         this.hideDropdown(this.warehouseDropdown);
+    }
+    
+    filterWarehouses(query) {
+        // Якщо немає обраного міста або немає кешованих даних - нічого не робити
+        if (!this.cityRef || !this.warehousesCache.has(this.cityRef)) {
+            return;
+        }
+        
+        // Отримуємо повний список відділень для цього міста з кешу
+        const allWarehouses = this.warehousesCache.get(this.cityRef);
+        
+        // Якщо поле порожнє - показуємо повний список
+        if (query.length === 0) {
+            this.showWarehousesDropdown(allWarehouses);
+            return;
+        }
+        
+        // Фільтруємо список по номеру або за описом
+        const queryLower = query.toLowerCase();
+        const filtered = allWarehouses.filter(wh => {
+            const numberMatch = wh.number && wh.number.includes(query);
+            const labelMatch = wh.label && wh.label.toLowerCase().includes(queryLower);
+            return numberMatch || labelMatch;
+        });
+        
+        // Показуємо результати або повідомлення про відсутність результатів
+        if (filtered.length === 0) {
+            this.showNoResults(this.warehouseDropdown, 'За номером нічого не знайдено');
+        } else {
+            this.showWarehousesDropdown(filtered);
+        }
     }
     
     hideDropdown(dropdown) {
