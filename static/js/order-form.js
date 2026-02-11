@@ -99,6 +99,53 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     form.addEventListener('submit', (e) => {
+        const deliveryMethod = document.querySelector('input[name="delivery_method"]:checked');
+        
+        if (deliveryMethod && deliveryMethod.value === 'nova_poshta') {
+            const cityRef = document.querySelector('input[name="nova_poshta_city_ref"]');
+            const warehouseRef = document.querySelector('input[name="nova_poshta_warehouse_ref"]');
+            const cityInput = document.querySelector('input[name="nova_poshta_city"]');
+            const warehouseInput = document.querySelector('input[name="nova_poshta_warehouse"]');
+            
+            let hasError = false;
+            
+            if (!cityRef || !cityRef.value) {
+                if (cityInput) {
+                    const errorEl = cityInput.parentElement.querySelector('.error') || document.createElement('div');
+                    errorEl.className = 'error';
+                    errorEl.textContent = 'Виберіть місто зі списку автодоповнення';
+                    if (!cityInput.parentElement.querySelector('.error')) {
+                        cityInput.parentElement.appendChild(errorEl);
+                    }
+                    cityInput.classList.add('invalid');
+                }
+                hasError = true;
+            }
+            
+            if (!warehouseRef || !warehouseRef.value) {
+                if (warehouseInput) {
+                    const errorEl = warehouseInput.parentElement.querySelector('.error') || document.createElement('div');
+                    errorEl.className = 'error';
+                    errorEl.textContent = 'Виберіть відділення зі списку автодоповнення';
+                    if (!warehouseInput.parentElement.querySelector('.error')) {
+                        warehouseInput.parentElement.appendChild(errorEl);
+                    }
+                    warehouseInput.classList.add('invalid');
+                }
+                hasError = true;
+            }
+            
+            if (hasError) {
+                e.preventDefault();
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Оформити замовлення';
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return false;
+            }
+        }
+        
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Обробка...';

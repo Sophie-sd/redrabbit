@@ -17,6 +17,12 @@
                 <form method="post" id="orderForm" novalidate>
                     {% csrf_token %}
                     
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    
                     <div class="form-section">
                         <h2>Контактні дані</h2>
                         <div class="form-row">
@@ -50,6 +56,9 @@
                             <div class="form-group">
                                 <label for="{{ form.email.id_for_label }}">Email</label>
                                 {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="error">{{ form.email.errors.0 }}</div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -81,6 +90,7 @@
                             <div class="form-group">
                                 <label for="{{ form.nova_poshta_city.id_for_label }}">Місто <span class="required">*</span></label>
                                 {{ form.nova_poshta_city }}
+                                {{ form.nova_poshta_city_ref }}
                                 {% if form.nova_poshta_city.errors %}
                                     <div class="error">{{ form.nova_poshta_city.errors.0 }}</div>
                                 {% endif %}
@@ -88,6 +98,7 @@
                             <div class="form-group">
                                 <label for="{{ form.nova_poshta_warehouse.id_for_label }}">Відділення або поштомат <span class="required">*</span></label>
                                 {{ form.nova_poshta_warehouse }}
+                                {{ form.nova_poshta_warehouse_ref }}
                                 {% if form.nova_poshta_warehouse.errors %}
                                     <div class="error">{{ form.nova_poshta_warehouse.errors.0 }}</div>
                                 {% endif %}

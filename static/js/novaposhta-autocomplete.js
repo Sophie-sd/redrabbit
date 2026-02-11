@@ -76,6 +76,11 @@ class NovaPoshtaAutocomplete {
             clearTimeout(this.debounceTimer);
             const query = e.target.value.trim();
             
+            // Очищуємо REF при зміні тексту вручну
+            if (this.cityRefInput) {
+                this.cityRefInput.value = '';
+            }
+            
             if (query.length < 3) {
                 this.hideDropdown(this.cityDropdown);
                 return;
@@ -105,6 +110,10 @@ class NovaPoshtaAutocomplete {
             
             // Фільтрація списку при введенні номера відділення
             this.warehouseInput.addEventListener('input', (e) => {
+                // Очищуємо REF при зміні тексту вручну
+                if (this.warehouseRefInput) {
+                    this.warehouseRefInput.value = '';
+                }
                 this.filterWarehouses(e.target.value.trim());
             });
         }
@@ -178,6 +187,11 @@ class NovaPoshtaAutocomplete {
         if (this.cityRefInput) {
             this.cityRefInput.value = city.ref;
         }
+        
+        // Очищуємо помилку якщо була
+        this.cityInput.classList.remove('invalid');
+        const errorEl = this.cityInput.parentElement.querySelector('.error');
+        if (errorEl) errorEl.remove();
         
         this.hideDropdown(this.cityDropdown);
         
@@ -261,6 +275,11 @@ class NovaPoshtaAutocomplete {
         if (this.warehouseRefInput) {
             this.warehouseRefInput.value = warehouse.ref;
         }
+        
+        // Очищуємо помилку якщо була
+        this.warehouseInput.classList.remove('invalid');
+        const errorEl = this.warehouseInput.parentElement.querySelector('.error');
+        if (errorEl) errorEl.remove();
         
         this.hideDropdown(this.warehouseDropdown);
     }
