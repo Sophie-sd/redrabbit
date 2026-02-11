@@ -58,18 +58,10 @@
       btn.setAttribute('data-wishlist-initialized', 'true');
     });
     
-    // Ініціалізуємо кнопки кошика
-    productsGrid.querySelectorAll('.product-card__add-cart:not([disabled])').forEach(btn => {
-      if (btn.hasAttribute('data-cart-initialized')) return;
-      
-      btn.addEventListener('click', async function(e) {
-        e.preventDefault();
-        const productId = this.getAttribute('data-product-id');
-        await addToCart(productId, this);
-      });
-      
-      btn.setAttribute('data-cart-initialized', 'true');
-    });
+    // Використовуємо CartHandler для кнопок кошика
+    if (window.cartHandler) {
+      window.cartHandler.bindCartButtons();
+    }
     
     // Оновлюємо стан wishlist кнопок
     if (window.wishlistManager) {
@@ -113,51 +105,6 @@
     return true;
   }
   
-  /**
-   * Додає товар до кошика
-   */
-  async function addToCart(productId, button) {
-    if (!button) return;
-    
-    const originalText = button.innerHTML;
-    button.disabled = true;
-    button.innerHTML = 'Додається...';
-    
-    try {
-      const response = await fetch(`/cart/add/${productId}/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken')
-        },
-        body: JSON.stringify({ quantity: 1 })
-      });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        button.innerHTML = '✓ Додано';
-        showToast('Товар додано до кошика');
-        
-        // Оновлюємо badge
-        document.dispatchEvent(new CustomEvent('cart:updated', { 
-          detail: { count: data.cart_count } 
-        }));
-        
-        setTimeout(() => {
-          button.innerHTML = originalText;
-          button.disabled = false;
-        }, 2000);
-      } else {
-        throw new Error(data.message || 'Помилка');
-      }
-    } catch (error) {
-      console.error('Cart error:', error);
-      button.innerHTML = originalText;
-      button.disabled = false;
-      showToast('Помилка при додаванні до кошика', 'error');
-    }
-  }
   
   function showToast(message, type = 'success') {
     if (window.Toast) {

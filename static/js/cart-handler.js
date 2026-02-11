@@ -7,6 +7,7 @@
 
     class CartHandler {
         constructor() {
+            this.isProcessing = new Set(); // Відслідковування товарів, що обробляються
             this.init();
         }
 
@@ -29,7 +30,6 @@
             button.setAttribute('data-cart-initialized', 'true');
             button.addEventListener('click', (e) => {
                 e.preventDefault();
-                e.stopImmediatePropagation();
                 this.addToCart(button);
             });
         });
@@ -43,8 +43,16 @@
             return;
         }
 
+        // Запобігаємо одночасній обробці одного товару
+        if (this.isProcessing.has(productId)) {
+            console.warn(`Product ${productId} is already being processed`);
+            return;
+        }
+
         if (button.disabled) return;
         
+        // Позначаємо товар як "в процесі обробки"
+        this.isProcessing.add(productId);
         button.disabled = true;
         const originalHTML = button.innerHTML;
         button.innerHTML = 'Додається...';
@@ -77,6 +85,8 @@
                     setTimeout(() => {
                         button.innerHTML = originalHTML;
                         button.disabled = false;
+                        // Видаляємо товар з набору "в процесі"
+                        this.isProcessing.delete(productId);
                     }, 2000);
                 } else {
                     throw new Error(data.message || 'Помилка додавання');
@@ -88,6 +98,8 @@
                 }
                 button.innerHTML = originalHTML;
                 button.disabled = false;
+                // Видаляємо товар з набору "в процесі" при помилці
+                this.isProcessing.delete(productId);
             }
         }
 

@@ -116,13 +116,6 @@ class WishlistManager {
                 e.preventDefault();
                 this.removeFromWishlist(removeBtn);
             }
-
-            // Додавання в кошик зі списку бажань
-            const addToCartBtn = e.target.closest('.btn-add-to-cart, .product-card__add-cart');
-            if (addToCartBtn && addToCartBtn.closest('.wishlist-page')) {
-                e.preventDefault();
-                this.addToCartFromWishlist(addToCartBtn);
-            }
         });
     }
 
@@ -224,16 +217,6 @@ class WishlistManager {
             console.error('Remove from wishlist error:', error);
             this.showNotification('Виникла помилка. Спробуйте ще раз.', 'error');
             button.disabled = false;
-        }
-    }
-
-    async addToCartFromWishlist(button) {
-        const productId = button.dataset.productId;
-        
-        if (window.cartHandler) {
-            await window.cartHandler.addToCart(button);
-        } else {
-            console.error('CartHandler not initialized');
         }
     }
 
