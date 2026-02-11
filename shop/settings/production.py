@@ -192,7 +192,8 @@ if REDIS_URL:
                 'RETRY_ON_TIMEOUT': True,
                 'MAX_CONNECTIONS': 50,
                 'COMPRESSOR': 'django_redis.compressors.zlib.ZlibCompressor',
-                'PARSER_CLASS': 'redis.connection.HiredisParser',
+                # Hiredis is optional - use if available for better performance
+                # 'PARSER_CLASS': 'redis.connection.HiredisParser',
             },
             'KEY_PREFIX': 'intshop',
             'TIMEOUT': 300,  # 5 хвилин за замовчуванням

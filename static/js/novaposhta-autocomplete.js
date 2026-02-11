@@ -7,6 +7,10 @@ class NovaPoshtaAutocomplete {
         this.cityRef = null;
         this.debounceTimer = null;
         
+        // Client-side кешування для мінімізації запитів
+        this.citiesCache = new Map();
+        this.warehousesCache = new Map();
+        
         if (this.cityInput) {
             this.init();
         }
@@ -51,6 +55,21 @@ class NovaPoshtaAutocomplete {
         return dropdown;
     }
     
+    showLoading(dropdown) {
+        dropdown.innerHTML = '<div style="padding: 15px; text-align: center; color: #999;"><span style="display: inline-block; width: 6px; height: 6px; background: #999; border-radius: 50%; margin: 0 3px; animation: pulse 1.5s infinite;"></span> Завантаження...</div>';
+        dropdown.style.display = 'block';
+    }
+    
+    showNoResults(dropdown, message) {
+        dropdown.innerHTML = `<div style="padding: 15px; text-align: center; color: #999;">${message}</div>`;
+        dropdown.style.display = 'block';
+    }
+    
+    showError(dropdown, message) {
+        dropdown.innerHTML = `<div style="padding: 15px; text-align: center; color: #e74c3c; font-weight: 500;">⚠ ${message}</div>`;
+        dropdown.style.display = 'block';
+    }
+    
     attachEvents() {
         // Пошук міст
         this.cityInput.addEventListener('input', (e) => {
@@ -62,9 +81,10 @@ class NovaPoshtaAutocomplete {
                 return;
             }
             
+            // Збільшений debounce для зменшення зайвих запитів
             this.debounceTimer = setTimeout(() => {
                 this.searchCities(query);
-            }, 300);
+            }, 500);
         });
         
         // Закриття при кліку поза dropdown
@@ -87,16 +107,30 @@ class NovaPoshtaAutocomplete {
     
     async searchCities(query) {
         try {
+            // Перевірка client-side кешу
+            if (this.citiesCache.has(query)) {
+                this.showCitiesDropdown(this.citiesCache.get(query));
+                return;
+            }
+            
+            // Показуємо індикатор завантаження
+            this.showLoading(this.cityDropdown);
+            
             const response = await fetch(`/orders/api/np/cities/?q=${encodeURIComponent(query)}`);
             const data = await response.json();
             
             if (data.success && data.data.length > 0) {
+                // Зберігаємо в client-side кеш
+                this.citiesCache.set(query, data.data);
                 this.showCitiesDropdown(data.data);
+            } else if (data.success && data.data.length === 0) {
+                this.showNoResults(this.cityDropdown, 'Міста не знайдено');
             } else {
-                this.hideDropdown(this.cityDropdown);
+                this.showError(this.cityDropdown, 'Помилка завантаження');
             }
         } catch (error) {
             console.error('Nova Poshta cities error:', error);
+            this.showError(this.cityDropdown, 'Помилка мережі');
         }
     }
     
@@ -157,14 +191,30 @@ class NovaPoshtaAutocomplete {
     
     async loadWarehouses(cityRef) {
         try {
+            // Перевірка client-side кешу
+            if (this.warehousesCache.has(cityRef)) {
+                this.showWarehousesDropdown(this.warehousesCache.get(cityRef));
+                return;
+            }
+            
+            // Показуємо індикатор завантаження
+            this.showLoading(this.warehouseDropdown);
+            
             const response = await fetch(`/orders/api/np/warehouses/?city_ref=${encodeURIComponent(cityRef)}`);
             const data = await response.json();
             
             if (data.success && data.data.length > 0) {
+                // Зберігаємо в client-side кеш
+                this.warehousesCache.set(cityRef, data.data);
                 this.showWarehousesDropdown(data.data);
+            } else if (data.success && data.data.length === 0) {
+                this.showNoResults(this.warehouseDropdown, 'Відділення не знайдено');
+            } else {
+                this.showError(this.warehouseDropdown, 'Помилка завантаження');
             }
         } catch (error) {
             console.error('Nova Poshta warehouses error:', error);
+            this.showError(this.warehouseDropdown, 'Помилка мережі');
         }
     }
     

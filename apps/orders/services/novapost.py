@@ -5,6 +5,7 @@ import requests
 import logging
 from typing import List, Dict, Optional
 from django.conf import settings
+from django.core.cache import cache
 from datetime import datetime
 
 
@@ -23,10 +24,6 @@ class NovaPostService:
     
     def __init__(self, api_key: str):
         self.api_key = api_key
-        # region agent log
-        try: import json; open('/Users/sofiadmitrenko/Sites/intshop/.cursor/debug.log', 'a').write(json.dumps({"location":"novapost.py:24","message":"NovaPostService init","data":{"api_key_length":len(api_key) if api_key else 0,"api_key_first_10":api_key[:10] if api_key else "EMPTY"},"timestamp":__import__('time').time()*1000,"hypothesisId":"A","runId":"run1"}) + '\n')
-        except: pass
-        # endregion
         if not api_key:
             raise NovaPostServiceError("NOVAPOST_API_KEY не налаштований")
     
@@ -46,32 +43,14 @@ class NovaPostService:
             "methodProperties": properties or {}
         }
         
-        # region agent log
-        try: import json; open('/Users/sofiadmitrenko/Sites/intshop/.cursor/debug.log', 'a').write(json.dumps({"location":"novapost.py:38","message":"Request payload BEFORE send","data":{"url":self.API_URL,"model":model_name,"method":called_method,"properties":properties,"full_payload":payload},"timestamp":__import__('time').time()*1000,"hypothesisId":"C,D,E","runId":"run1"}) + '\n')
-        except: pass
-        # endregion
-        
-        # region agent log
-        logger.warning(f"DEBUG NOVAPOST: Sending request to {self.API_URL}, model={model_name}, method={called_method}, props={properties}, api_key_len={len(self.api_key)}")
-        # endregion
-        
         try:
             response = requests.post(
                 self.API_URL,
                 json=payload,
-                timeout=10
+                timeout=15
             )
             response.raise_for_status()
             result = response.json()
-            
-            # region agent log
-            try: import json; open('/Users/sofiadmitrenko/Sites/intshop/.cursor/debug.log', 'a').write(json.dumps({"location":"novapost.py:52","message":"API Response received","data":{"success":result.get('success'),"data_count":len(result.get('data',[])) if isinstance(result.get('data'),list) else 'N/A',"errors":result.get('errors'),"full_result":result},"timestamp":__import__('time').time()*1000,"hypothesisId":"A,C,D","runId":"run1"}) + '\n')
-            except: pass
-            # endregion
-            
-            # region agent log
-            logger.warning(f"DEBUG NOVAPOST: API Response - success={result.get('success')}, errors={result.get('errors')}, data_count={len(result.get('data',[]))} full_response={result}")
-            # endregion
             
             if not result.get('success'):
                 error_msg = result.get('errors', ['Невідома помилка API'])
@@ -89,11 +68,16 @@ class NovaPostService:
         
         API: Address.getCities
         Returns: список міст з Ref та Description
+        
+        Результати кешуються на 24 години
         """
-        # region agent log
-        try: import json; open('/Users/sofiadmitrenko/Sites/intshop/.cursor/debug.log', 'a').write(json.dumps({"location":"novapost.py:71","message":"search_cities ENTRY","data":{"query":query,"limit":limit},"timestamp":__import__('time').time()*1000,"hypothesisId":"B,C","runId":"run1"}) + '\n')
-        except: pass
-        # endregion
+        # Перевірка кешу
+        cache_key = f'np_cities:{query.lower()}:{limit}'
+        cached = cache.get(cache_key)
+        if cached:
+            logger.debug(f"City cache hit for query='{query}'")
+            return cached
+        
         try:
             result = self._request(
                 "Address",
@@ -103,11 +87,13 @@ class NovaPostService:
                     "Limit": limit
                 }
             )
-            # region agent log
-            try: import json; open('/Users/sofiadmitrenko/Sites/intshop/.cursor/debug.log', 'a').write(json.dumps({"location":"novapost.py:80","message":"search_cities result","data":{"result_type":str(type(result)),"result_keys":list(result.keys()) if isinstance(result,dict) else None,"data_returned":result.get('data',[]) if isinstance(result,dict) else None},"timestamp":__import__('time').time()*1000,"hypothesisId":"B,C,D","runId":"run1"}) + '\n')
-            except: pass
-            # endregion
-            return result.get('data', [])
+            cities = result.get('data', [])
+            
+            # Кешуємо результат на 24 години
+            if cities:
+                cache.set(cache_key, cities, 86400)
+            
+            return cities
         except Exception as e:
             logger.error(f"City search failed for query='{query}': {e}")
             return []
@@ -121,14 +107,29 @@ class NovaPostService:
             city_ref: Ref міста з методу getCities
             limit: Максимальна кількість результатів
         Returns: список відділень з Ref, Description, Address тощо
+        
+        Результати кешуються на 1 годину
         """
+        # Перевірка кешу
+        cache_key = f'np_warehouses:{city_ref}:{limit}'
+        cached = cache.get(cache_key)
+        if cached:
+            logger.debug(f"Warehouse cache hit for city_ref='{city_ref}'")
+            return cached
+        
         try:
             result = self._request(
                 "Address",
                 "getWarehouses",
                 {"CityRef": city_ref, "Limit": limit}
             )
-            return result.get('data', [])
+            warehouses = result.get('data', [])
+            
+            # Кешуємо результат на 1 годину
+            if warehouses:
+                cache.set(cache_key, warehouses, 3600)
+            
+            return warehouses
         except Exception as e:
             logger.error(f"Warehouses fetch failed for city_ref='{city_ref}': {e}")
             return []
