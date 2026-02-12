@@ -70,49 +70,70 @@
                 body: JSON.stringify({ quantity })
             });
 
-                const data = await response.json();
+            const data = await response.json();
 
-                if (data.success) {
-                    if (window.Toast) {
-                        window.Toast.success('Товар додано в кошик');
-                    }
-                    
-                    document.dispatchEvent(new CustomEvent('cart:updated', {
-                        detail: { count: data.cart_count }
-                    }));
-
-                    button.innerHTML = '✓ Додано';
-                    setTimeout(() => {
-                        button.innerHTML = originalHTML;
-                        button.disabled = false;
-                        // Видаляємо товар з набору "в процесі"
-                        this.isProcessing.delete(productId);
-                    }, 2000);
-                } else {
-                    throw new Error(data.message || 'Помилка додавання');
-                }
-            } catch (error) {
-                console.error('Cart add error:', error);
+            // Перевіряємо HTTP статус відповіді
+            if (!response.ok) {
+                // HTTP помилка (400, 500, тощо)
+                const errorMessage = data.message || 'Помилка при додаванні в кошик';
                 if (window.Toast) {
-                    window.Toast.error('Помилка при додаванні в кошик');
+                    window.Toast.error(errorMessage);
                 }
                 button.innerHTML = originalHTML;
                 button.disabled = false;
-                // Видаляємо товар з набору "в процесі" при помилці
+                this.isProcessing.delete(productId);
+                return;
+            }
+
+            // Обробляємо тільки успішні відповіді (200)
+            if (data.success) {
+                if (window.Toast) {
+                    window.Toast.success('Товар додано в кошик');
+                }
+                
+                document.dispatchEvent(new CustomEvent('cart:updated', {
+                    detail: { count: data.cart_count }
+                }));
+
+                button.innerHTML = '✓ Додано';
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.disabled = false;
+                    // Видаляємо товар з набору "в процесі"
+                    this.isProcessing.delete(productId);
+                }, 2000);
+            } else {
+                // success: false при статусі 200 (рідкісний випадок)
+                const errorMessage = data.message || 'Помилка додавання';
+                if (window.Toast) {
+                    window.Toast.error(errorMessage);
+                }
+                button.innerHTML = originalHTML;
+                button.disabled = false;
                 this.isProcessing.delete(productId);
             }
+        } catch (error) {
+            // Тепер тут тільки справжні помилки (мережа, JSON парсинг)
+            console.error('Cart add error:', error);
+            if (window.Toast) {
+                window.Toast.error('Помилка з\'єднання. Перевірте інтернет.');
+            }
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+            this.isProcessing.delete(productId);
         }
+    }
 
-        getCSRFToken() {
-            const metaToken = document.querySelector('meta[name="csrf-token"]')?.content;
-            if (metaToken) return metaToken;
-            
-            const inputToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-            if (inputToken) return inputToken;
-            
-            const cookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken='));
-            return cookie ? cookie.split('=')[1] : '';
-        }
+    getCSRFToken() {
+        const metaToken = document.querySelector('meta[name="csrf-token"]')?.content;
+        if (metaToken) return metaToken;
+        
+        const inputToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+        if (inputToken) return inputToken;
+        
+        const cookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken='));
+        return cookie ? cookie.split('=')[1] : '';
+    }
     }
 
     const cartHandler = new CartHandler();
