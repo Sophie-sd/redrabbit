@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST, require_http_methods
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
 from apps.products.models import Product
 from .cart import Cart
 import json
 
 
+@ensure_csrf_cookie
 def cart_detail(request):
     """Перегляд кошика"""
     cart = Cart(request)
@@ -13,6 +15,7 @@ def cart_detail(request):
     return render(request, 'cart/detail.html', {'cart': cart})
 
 
+@ensure_csrf_cookie
 def cart_count(request):
     """API для отримання кількості товарів у кошику"""
     cart = Cart(request)

@@ -7,22 +7,18 @@
     'use strict';
 
     document.addEventListener('DOMContentLoaded', function() {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || getCookie('csrftoken');
-        
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
+        // Читаємо CSRF токен з cookie (для iOS Safari це надійніше)
+        function getCSRFToken() {
+            const cookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken='));
+            if (cookie) {
+                return cookie.split('=')[1];
             }
-            return cookieValue;
+            const metaToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            return metaToken || '';
         }
+        
+        const csrfToken = getCSRFToken();
+        console.log('Cart detail CSRF token:', csrfToken ? csrfToken.substring(0, 10) + '...' : 'NOT FOUND');
         
         function updateCartDisplay(data) {
             if (data.subtotal) {

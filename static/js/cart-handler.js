@@ -162,14 +162,30 @@
     }
 
     getCSRFToken() {
-        const metaToken = document.querySelector('meta[name="csrf-token"]')?.content;
-        if (metaToken) return metaToken;
-        
-        const inputToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-        if (inputToken) return inputToken;
-        
+        // Спочатку намагаємося прочитати з cookie (для iOS Safari)
         const cookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken='));
-        return cookie ? cookie.split('=')[1] : '';
+        if (cookie) {
+            const token = cookie.split('=')[1];
+            console.log('CSRF from cookie:', token.substring(0, 10) + '...');
+            return token;
+        }
+        
+        // Fallback на meta tag
+        const metaToken = document.querySelector('meta[name="csrf-token"]')?.content;
+        if (metaToken) {
+            console.log('CSRF from meta:', metaToken.substring(0, 10) + '...');
+            return metaToken;
+        }
+        
+        // Fallback на hidden input
+        const inputToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+        if (inputToken) {
+            console.log('CSRF from input:', inputToken.substring(0, 10) + '...');
+            return inputToken;
+        }
+        
+        console.error('CSRF token not found!');
+        return '';
     }
     }
 
