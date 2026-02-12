@@ -60,70 +60,105 @@
         const quantityInput = document.getElementById('productQuantity');
         const quantity = quantityInput ? parseInt(quantityInput.value) || 1 : 1;
 
-        try {
-            const response = await fetch(`/cart/add/${productId}/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': this.getCSRFToken()
-                },
-                body: JSON.stringify({ quantity })
-            });
+        // Retry logic для iOS Safari
+        let retryCount = 0;
+        const maxRetries = 1;
 
-            // Перевіряємо HTTP статус ПЕРЕД парсингом JSON
-            if (!response.ok) {
-                // Парсимо JSON для помилок
-                const data = await response.json();
-                const errorMessage = data.message || 'Помилка при додаванні в кошик';
-                if (window.Toast) {
-                    window.Toast.error(errorMessage);
-                }
-                button.innerHTML = originalHTML;
-                button.disabled = false;
-                this.isProcessing.delete(productId);
-                return;
-            }
+        const performFetch = async () => {
+            try {
+                const response = await fetch(`/cart/add/${productId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': this.getCSRFToken(),
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ quantity })
+                });
 
-            // Парсимо JSON тільки для успішних відповідей
-            const data = await response.json();
-
-            // Обробляємо успішну відповідь
-            if (data.success) {
-                if (window.Toast) {
-                    window.Toast.success('Товар додано в кошик');
-                }
-                
-                document.dispatchEvent(new CustomEvent('cart:updated', {
-                    detail: { count: data.cart_count }
-                }));
-
-                button.innerHTML = '✓ Додано';
-                setTimeout(() => {
+                // Перевіряємо HTTP статус ПЕРЕД парсингом JSON
+                if (!response.ok) {
+                    // Парсимо JSON для помилок
+                    try {
+                        const data = await response.json();
+                        const errorMessage = data.message || 'Помилка при додаванні в кошик';
+                        if (window.Toast) {
+                            window.Toast.error(errorMessage);
+                        }
+                    } catch (jsonError) {
+                        // Якщо не можемо спарсити JSON (наприклад, 403 повертає HTML)
+                        console.error('Failed to parse error response:', response.status, jsonError);
+                        if (window.Toast) {
+                            const statusMessage = response.status === 403 
+                                ? 'Проблема з безпекою запиту. Спробуйте оновити сторінку.'
+                                : `Помилка сервера (${response.status})`;
+                            window.Toast.error(statusMessage);
+                        }
+                    }
                     button.innerHTML = originalHTML;
                     button.disabled = false;
-                    // Видаляємо товар з набору "в процесі"
                     this.isProcessing.delete(productId);
-                }, 2000);
-            } else {
-                // success: false при статусі 200 (рідкісний випадок)
-                const errorMessage = data.message || 'Помилка додавання';
+                    return;
+                }
+
+                // Парсимо JSON тільки для успішних відповідей
+                const data = await response.json();
+
+                // Обробляємо успішну відповідь
+                if (data.success) {
+                    if (window.Toast) {
+                        window.Toast.success('Товар додано в кошик');
+                    }
+                    
+                    document.dispatchEvent(new CustomEvent('cart:updated', {
+                        detail: { count: data.cart_count }
+                    }));
+
+                    button.innerHTML = '✓ Додано';
+                    setTimeout(() => {
+                        button.innerHTML = originalHTML;
+                        button.disabled = false;
+                        // Видаляємо товар з набору "в процесі"
+                        this.isProcessing.delete(productId);
+                    }, 2000);
+                } else {
+                    // success: false при статусі 200 (рідкісний випадок)
+                    const errorMessage = data.message || 'Помилка додавання';
+                    if (window.Toast) {
+                        window.Toast.error(errorMessage);
+                    }
+                    button.innerHTML = originalHTML;
+                    button.disabled = false;
+                    this.isProcessing.delete(productId);
+                }
+            } catch (error) {
+                // Retry logic для iOS Safari - повторимо один раз при помилці мережи
+                if (retryCount < maxRetries && error.message.includes('Failed')) {
+                    retryCount++;
+                    console.warn(`Network error, retrying... (${retryCount}/${maxRetries})`);
+                    await new Promise(resolve => setTimeout(resolve, 500)); // 500ms затримка перед retry
+                    return performFetch();
+                }
+
+                // Тепер тут СПРАВДІ тільки помилки мережи або JSON парсингу
+                console.error('Cart add error:', {
+                    message: error.message,
+                    stack: error.stack,
+                    productId: productId,
+                    timestamp: new Date().toISOString(),
+                    retryCount: retryCount
+                });
                 if (window.Toast) {
-                    window.Toast.error(errorMessage);
+                    window.Toast.error('Помилка з\'єднання. Перевірте інтернет.');
                 }
                 button.innerHTML = originalHTML;
                 button.disabled = false;
                 this.isProcessing.delete(productId);
             }
-        } catch (error) {
-            // Тепер тут СПРАВДІ тільки помилки мережи або JSON парсингу
-            console.error('Cart add error:', error);
-            if (window.Toast) {
-                window.Toast.error('Помилка з\'єднання. Перевірте інтернет.');
-            }
-            button.innerHTML = originalHTML;
-            button.disabled = false;
-            this.isProcessing.delete(productId);
-        }
+        };
+
+        return performFetch();
     }
 
     getCSRFToken() {

@@ -89,6 +89,9 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+# ✅ iOS Safari ITP fix: SameSite=None дозволяє cookies на iOS при HTTPS
+SESSION_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SAMESITE = 'None'
 X_FRAME_OPTIONS = 'DENY'
 
 # Email settings для продакшну
