@@ -70,11 +70,10 @@
                 body: JSON.stringify({ quantity })
             });
 
-            const data = await response.json();
-
-            // Перевіряємо HTTP статус відповіді
+            // Перевіряємо HTTP статус ПЕРЕД парсингом JSON
             if (!response.ok) {
-                // HTTP помилка (400, 500, тощо)
+                // Парсимо JSON для помилок
+                const data = await response.json();
                 const errorMessage = data.message || 'Помилка при додаванні в кошик';
                 if (window.Toast) {
                     window.Toast.error(errorMessage);
@@ -85,7 +84,10 @@
                 return;
             }
 
-            // Обробляємо тільки успішні відповіді (200)
+            // Парсимо JSON тільки для успішних відповідей
+            const data = await response.json();
+
+            // Обробляємо успішну відповідь
             if (data.success) {
                 if (window.Toast) {
                     window.Toast.success('Товар додано в кошик');
@@ -113,7 +115,7 @@
                 this.isProcessing.delete(productId);
             }
         } catch (error) {
-            // Тепер тут тільки справжні помилки (мережа, JSON парсинг)
+            // Тепер тут СПРАВДІ тільки помилки мережи або JSON парсингу
             console.error('Cart add error:', error);
             if (window.Toast) {
                 window.Toast.error('Помилка з\'єднання. Перевірте інтернет.');
