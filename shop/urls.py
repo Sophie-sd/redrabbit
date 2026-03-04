@@ -35,7 +35,4 @@ else:
     # Production: додаємо тільки media файли, static обробляє Whitenoise
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# Admin customization
-admin.site.site_header = "Адміністрування"
-admin.site.site_title = "Admin Panel"
-admin.site.index_title = "Панель управління"
+# Admin customization (moved to apps.core.admin to avoid duplicates)

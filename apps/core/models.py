@@ -80,6 +80,10 @@ class Banner(models.Model):
         if not self.alt_text:
             self.alt_text = f"Банер: {self.title}"
         super().save(*args, **kwargs)
+        
+        # Очищаємо кеш головної сторінки при зміні банерів
+        from django.core.cache import cache
+        cache.clear()
 
 
 
@@ -142,6 +146,10 @@ class SiteSettings(models.Model):
         if not self.pk and SiteSettings.objects.exists():
             return
         super().save(*args, **kwargs)
+        
+        # Очищаємо кеш головної сторінки при зміні налаштувань
+        from django.core.cache import cache
+        cache.clear()
 
 
 class TrackingPixel(models.Model):

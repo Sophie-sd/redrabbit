@@ -55,10 +55,14 @@
     height: 100%;
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .banner-slide.active {
     opacity: 1;
+    pointer-events: auto;
+    z-index: 2;
 }
 
 .banner-image {
