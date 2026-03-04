@@ -2,9 +2,15 @@
 Template tags для Core контенту
 """
 from django import template
-from apps.core.models import TrackingPixel
+from apps.core.models import TrackingPixel, SiteSettings
 
 register = template.Library()
+
+
+@register.simple_tag
+def get_site_settings():
+    """Отримати глобальні налаштування сайту"""
+    return SiteSettings.objects.first()
 
 
 @register.simple_tag(takes_context=True)

@@ -122,6 +122,15 @@
     </script>
     {% endblock %}
     
+    <!-- Global Site Settings (GTM, FB Pixel, GA) -->
+    {% get_site_settings as site_settings %}
+    {% if site_settings %}
+        {% if site_settings.gtm_code %}{{ site_settings.gtm_code|safe }}{% endif %}
+        {% if site_settings.fb_pixel_code %}{{ site_settings.fb_pixel_code|safe }}{% endif %}
+        {% if site_settings.ga_code %}{{ site_settings.ga_code|safe }}{% endif %}
+        {% if site_settings.custom_head_code %}{{ site_settings.custom_head_code|safe }}{% endif %}
+    {% endif %}
+    
     <!-- Tracking Pixels (Head Section) -->
     {% get_tracking_pixels as all_pixels %}
     {% for pixel in all_pixels %}
@@ -137,6 +146,11 @@
     </script>
 </head>
 <body class="{% block body_class %}{% endblock %}">
+    <!-- Global Site Settings (Body Start) -->
+    {% if site_settings and site_settings.custom_body_start_code %}
+        {{ site_settings.custom_body_start_code|safe }}
+    {% endif %}
+    
     <!-- Tracking Pixels (Body Start) -->
     {% for pixel in all_pixels %}
         {% if pixel.placement == 'body_start' %}
@@ -209,6 +223,11 @@
     <script src="{% static 'js/footer-subscribe.js' %}" defer></script>
     <script src="{% static 'js/sale-countdown.js' %}" defer></script>
     {% block extra_js %}{% endblock %}
+    
+    <!-- Global Site Settings (Body End) -->
+    {% if site_settings and site_settings.custom_body_end_code %}
+        {{ site_settings.custom_body_end_code|safe }}
+    {% endif %}
     
     <!-- Tracking Pixels (Body End) -->
     {% for pixel in all_pixels %}

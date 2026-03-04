@@ -1,7 +1,50 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django import forms
-from .models import Banner, TrackingPixel
+from django.shortcuts import redirect
+from django.urls import path
+from .models import Banner, TrackingPixel, SiteSettings
+
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    """Адмін-панель для глобальних налаштувань (Singleton)"""
+    
+    fieldsets = (
+        ('Google Tag Manager', {
+            'fields': ('gtm_code',),
+            'description': 'Вставте повний код GTM'
+        }),
+        ('Facebook Pixel', {
+            'fields': ('fb_pixel_code',),
+            'description': 'Вставте повний код Facebook Pixel'
+        }),
+        ('Google Analytics', {
+            'fields': ('ga_code',),
+            'description': 'Вставте повний код Google Analytics'
+        }),
+        ('Додатковий код (Custom Scripts)', {
+            'fields': ('custom_head_code', 'custom_body_start_code', 'custom_body_end_code'),
+            'description': 'Для вставки будь-яких інших скриптів'
+        }),
+    )
+
+    def has_add_permission(self, request):
+        # Забороняємо додавати більше одного запису
+        if self.model.objects.exists():
+            return False
+        return super().has_add_permission(request)
+
+    def has_delete_permission(self, request, obj=None):
+        # Забороняємо видаляти налаштування
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        # Якщо запис існує, перенаправляємо одразу на редагування
+        obj = self.model.objects.first()
+        if obj:
+            return redirect('admin:core_sitesettings_change', obj.pk)
+        return super().changelist_view(request, extra_context)
 
 
 @admin.register(Banner)

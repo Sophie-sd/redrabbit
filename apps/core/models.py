@@ -82,6 +82,68 @@ class Banner(models.Model):
         super().save(*args, **kwargs)
 
 
+
+class SiteSettings(models.Model):
+    """Глобальні налаштування сайту (GTM, FB Pixel, Google Analytics)"""
+    
+    gtm_code = models.TextField(
+        verbose_name="Код Google Tag Manager (GTM)",
+        help_text="Повний код GTM (зазвичай вставляється в head)",
+        blank=True,
+        null=True
+    )
+    
+    fb_pixel_code = models.TextField(
+        verbose_name="Код Facebook Pixel",
+        help_text="Повний код Facebook Pixel",
+        blank=True,
+        null=True
+    )
+    
+    ga_code = models.TextField(
+        verbose_name="Код Google Analytics (GA4)",
+        help_text="Повний код Google Analytics",
+        blank=True,
+        null=True
+    )
+    
+    custom_head_code = models.TextField(
+        verbose_name="Додатковий код у <head>",
+        help_text="Будь-які інші скрипти або стилі для секції head",
+        blank=True,
+        null=True
+    )
+    
+    custom_body_start_code = models.TextField(
+        verbose_name="Додатковий код на початку <body>",
+        help_text="Скрипти, що вставляються одразу після відкриваючого тегу body",
+        blank=True,
+        null=True
+    )
+    
+    custom_body_end_code = models.TextField(
+        verbose_name="Додатковий код у кінці <body>",
+        help_text="Скрипти, що вставляються перед закриваючим тегом body",
+        blank=True,
+        null=True
+    )
+
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Оновлено")
+
+    class Meta:
+        verbose_name = "Налаштування сайту"
+        verbose_name_plural = "⚙️ Налаштування сайту"
+
+    def __str__(self):
+        return "Глобальні налаштування сайту"
+
+    def save(self, *args, **kwargs):
+        # Гарантуємо, що буде лише один запис
+        if not self.pk and SiteSettings.objects.exists():
+            return
+        super().save(*args, **kwargs)
+
+
 class TrackingPixel(models.Model):
     """Модель для керування tracking pixels (Google Analytics, Facebook Pixel, GTM)"""
     
