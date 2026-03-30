@@ -94,8 +94,7 @@ def order_create(request):
                         if cart.promo_code:
                             try:
                                 promo = Promotion.objects.get(code__iexact=cart.promo_code)
-                                promo.uses_count += 1
-                                promo.save()
+                                promo.increment_uses()
                             except Promotion.DoesNotExist:
                                 pass
                         
@@ -225,8 +224,7 @@ def order_payment_webhook(request):
                 if order.promo_code:
                     try:
                         promo = Promotion.objects.get(code__iexact=order.promo_code)
-                        promo.uses_count += 1
-                        promo.save()
+                        promo.increment_uses()
                     except Promotion.DoesNotExist:
                         pass
                 
@@ -296,8 +294,7 @@ def order_payment_callback(request, order_id):
                         if order.promo_code:
                             try:
                                 promo = Promotion.objects.get(code__iexact=order.promo_code)
-                                promo.uses_count += 1
-                                promo.save()
+                                promo.increment_uses()
                             except Promotion.DoesNotExist:
                                 pass
                 

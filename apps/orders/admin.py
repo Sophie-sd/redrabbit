@@ -437,12 +437,24 @@ class PromotionAdmin(admin.ModelAdmin):
     deactivate_promotions.short_description = "✗ Деактивувати"
     
     def duplicate_promo(self, request, queryset):
+        created = 0
         for promo in queryset:
+            original_code = promo.code
             promo.pk = None
-            promo.code = f"{promo.code}_copy"
             promo.uses_count = 0
+            new_code = f"{original_code}_COPY"
+            if len(new_code) > 50:
+                new_code = f"{original_code[:44]}_COPY"
+            counter = 1
+            while Promotion.objects.filter(code=new_code).exists():
+                suffix = f"_COPY{counter}"
+                max_base = 50 - len(suffix)
+                new_code = f"{original_code[:max_base]}{suffix}"
+                counter += 1
+            promo.code = new_code
             promo.save()
-        self.message_user(request, f"Створено {queryset.count()} копій промокодів")
+            created += 1
+        self.message_user(request, f"Створено {created} копій промокодів")
     duplicate_promo.short_description = "📋 Дублювати"
 
 

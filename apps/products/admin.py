@@ -1,11 +1,14 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.contrib import messages
+from django.db import models
 from django.http import HttpResponse
 from django.utils import timezone
+from django.core.cache import cache
 import csv
 from .models import Category, Product, TopProduct
 from .models_sales import Sale
+from .forms import ProductAdminForm
 
 
 @admin.register(Category)
@@ -48,6 +51,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    form = ProductAdminForm
+    
     list_display = [
         'get_product_image', 'name', 'get_categories_display', 'sku', 
         'get_price_display', 'get_badges', 'stock', 'is_active'
@@ -145,17 +150,21 @@ class ProductAdmin(admin.ModelAdmin):
     unmark_as_new.short_description = "Зняти НОВИНКА"
     
     def activate_sale(self, request, queryset):
-        count = 0
-        for product in queryset:
-            if product.sale_price and product.sale_price < product.retail_price:
-                product.is_sale = True
-                product.save()
-                count += 1
+        count = queryset.filter(
+            sale_price__isnull=False,
+            sale_price__lt=models.F('retail_price')
+        ).update(is_sale=True)
         self.message_user(request, f"Активовано акцію для {count} товарів", messages.SUCCESS)
     activate_sale.short_description = "🔥 Активувати акцію"
     
     def deactivate_sale(self, request, queryset):
-        updated = queryset.update(is_sale=False)
+        updated = queryset.update(
+            is_sale=False,
+            sale_price=None,
+            sale_name='',
+            sale_start_date=None,
+            sale_end_date=None
+        )
         self.message_user(request, f"Деактивовано акцію для {updated} товарів", messages.WARNING)
     deactivate_sale.short_description = "❌ Деактивувати акцію"
     
@@ -275,30 +284,44 @@ class SaleAdmin(admin.ModelAdmin):
         for sale in queryset:
             sale.is_active = True
             sale.save()
+            sale.apply_to_products()
+        self._invalidate_sale_cache()
         self.message_user(request, f"Активовано {queryset.count()} акцій", messages.SUCCESS)
     activate_sales.short_description = "✓ Активувати"
     
     def deactivate_sales(self, request, queryset):
         for sale in queryset:
+            sale.remove_from_products()
             sale.is_active = False
             sale.save()
+        self._invalidate_sale_cache()
         self.message_user(request, f"Деактивовано {queryset.count()} акцій", messages.SUCCESS)
     deactivate_sales.short_description = "✗ Деактивувати"
     
     def apply_now(self, request, queryset):
         for sale in queryset:
             sale.apply_to_products()
+        self._invalidate_sale_cache()
         self.message_user(request, f"Застосовано {queryset.count()} акцій до товарів", messages.SUCCESS)
     apply_now.short_description = "🔄 Застосувати зараз"
     
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
     
+    def delete_model(self, request, obj):
+        super().delete_model(request, obj)
+        self._invalidate_sale_cache()
+    
+    def delete_queryset(self, request, queryset):
+        super().delete_queryset(request, queryset)
+        self._invalidate_sale_cache()
+    
     def response_add(self, request, obj, post_url_continue=None):
         if obj.is_active:
             obj.apply_to_products()
             count = len(obj.get_affected_products())
             self.message_user(request, f"Акцію застосовано до {count} товарів", messages.SUCCESS)
+        self._invalidate_sale_cache()
         return super().response_add(request, obj, post_url_continue)
     
     def response_change(self, request, obj):
@@ -309,7 +332,15 @@ class SaleAdmin(admin.ModelAdmin):
         else:
             obj.remove_from_products()
             self.message_user(request, "Акцію знято з товарів", messages.WARNING)
+        self._invalidate_sale_cache()
         return super().response_change(request, obj)
+    
+    @staticmethod
+    def _invalidate_sale_cache():
+        try:
+            cache.clear()
+        except Exception:
+            pass
 
 
 @admin.register(TopProduct)

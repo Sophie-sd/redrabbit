@@ -12,15 +12,16 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         now = timezone.now()
         
-        expired_sales = Product.objects.filter(
+        expired_products = Product.objects.filter(
             is_sale=True,
             sale_end_date__lte=now
         )
         
-        count = expired_sales.count()
+        expired_names = list(expired_products.values_list('name', flat=True))
+        count = len(expired_names)
         
         if count > 0:
-            expired_sales.update(
+            expired_products.update(
                 is_sale=False,
                 sale_price=None,
                 sale_name='',
@@ -31,8 +32,8 @@ class Command(BaseCommand):
                 self.style.SUCCESS(f'✓ Завершено {count} акцій')
             )
             
-            for product in expired_sales:
-                self.stdout.write(f'  - {product.name}')
+            for name in expired_names:
+                self.stdout.write(f'  - {name}')
         else:
             self.stdout.write(
                 self.style.SUCCESS('✓ Немає акцій для завершення')

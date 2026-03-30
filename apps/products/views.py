@@ -155,7 +155,8 @@ class SaleProductsView(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # total_products видалено - не використовується в template
+        paginator = context.get('paginator')
+        context['total_products'] = paginator.count if paginator else 0
         return context
 
 

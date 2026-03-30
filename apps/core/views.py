@@ -241,7 +241,7 @@ def search_autocomplete(request):
                 img = p.main_images[0]
                 image_url = img.image_url if img.image_url else (img.image.url if img.image else None)
             
-            price = p.sale_price if (p.is_sale and p.sale_price) else p.retail_price
+            price = p.sale_price if p.is_sale_active() else p.retail_price
             
             results.append({
                 'name': p.name,

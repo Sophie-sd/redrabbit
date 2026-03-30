@@ -2,6 +2,7 @@
 Моделі замовлень
 """
 from django.db import models
+from django.db.models import F
 from decimal import Decimal
 from apps.products.models import Product
 
@@ -253,6 +254,10 @@ class Promotion(models.Model):
             discount = self.discount_value
         
         return min(discount, order_total)
+    
+    def increment_uses(self):
+        """Атомарно збільшує лічильник використань"""
+        Promotion.objects.filter(pk=self.pk).update(uses_count=F('uses_count') + 1)
     
     def __str__(self):
         return f"{self.code} - {self.name}"
